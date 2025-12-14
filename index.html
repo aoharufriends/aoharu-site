@@ -62,10 +62,71 @@
         .section-title { text-align: center; margin-bottom: 30px; margin-top: 40px; } .en-title { font-family: 'Poppins', sans-serif; font-size: 28px; font-weight: bold; color: var(--primary); letter-spacing: 2px; } .ja-title { display: block; font-size: 12px; color: var(--text-sub); margin-top: 5px; font-weight: bold; }
         .more-btn { background: transparent; border: 1px solid #ccc; padding: 10px 30px; border-radius: 30px; cursor: pointer; color: var(--text-main); font-family: 'Poppins', sans-serif; font-size: 14px; margin-top: 20px; transition: all 0.3s ease; outline: none; } .more-btn:hover { background: var(--primary); color: white; border-color: var(--primary); }
 
-        /* おみくじエリア */
-        .omikuji-area { text-align: center; margin-bottom: 50px; background: #fff; padding: 20px; border-radius: 20px; box-shadow: 0 5px 20px rgba(0,0,0,0.05); border: 2px dashed var(--primary); }
-        .omikuji-btn { background: linear-gradient(135deg, #ff9a9e, #fecfef); color: white; font-weight: 900; padding: 15px 40px; border-radius: 50px; border: none; font-size: 20px; cursor: pointer; box-shadow: 0 5px 15px rgba(255, 105, 180, 0.4); transition: transform 0.2s; animation: pulse-live 2s infinite; font-family: 'M PLUS Rounded 1c', sans-serif; letter-spacing: 1px; }
-        .omikuji-btn:hover { transform: scale(1.05); }
+        /* ★★★ おみくじエリア（派手カワ・リニューアル版） ★★★ */
+        .omikuji-area { 
+            text-align: center; margin-bottom: 60px; 
+            background: linear-gradient(135deg, #fff5f8 0%, #f0faff 100%); /* ふんわりグラデ */
+            padding: 30px 20px; border-radius: 25px; 
+            box-shadow: 0 10px 30px rgba(0,0,0,0.05); 
+            border: 4px solid white; outline: 4px dashed #ff9a9e; /* 二重線でポップに */
+            position: relative; overflow: hidden;
+            max-width: 600px; margin-left: auto; margin-right: auto;
+        }
+        /* 背景の水玉模様 */
+        .omikuji-area::before {
+            content: ""; position: absolute; inset: 0; opacity: 0.1;
+            background-image: radial-gradient(#ff9a9e 20%, transparent 20%), radial-gradient(#27C6F5 20%, transparent 20%);
+            background-size: 30px 30px; background-position: 0 0, 15px 15px;
+            pointer-events: none;
+        }
+        
+        /* 飾りアイコン（浮遊する星など） */
+        .omi-deco { position: absolute; font-size: 24px; animation: float-deco 3s ease-in-out infinite; z-index: 1; }
+        .d-1 { top: 10px; left: 10px; color: #FFD700; animation-delay: 0s; }
+        .d-2 { bottom: 10px; right: 10px; color: #27C6F5; animation-delay: 1.5s; font-size: 30px; }
+        @keyframes float-deco { 0%, 100% { transform: translateY(0) rotate(0deg); } 50% { transform: translateY(-10px) rotate(20deg); } }
+
+        /* メインビジュアル */
+        .omi-visual-box {
+            font-size: 60px; color: #ff4757; margin: 10px 0 20px;
+            text-shadow: 0 5px 0 rgba(0,0,0,0.1);
+            animation: omi-bounce 2s infinite; display: inline-block;
+        }
+        @keyframes omi-bounce { 0%, 20%, 50%, 80%, 100% { transform: translateY(0); } 40% { transform: translateY(-20px); } 60% { transform: translateY(-10px); } }
+
+        /* タイトル装飾 */
+        .omi-title-ribbon {
+            background: #ff4757; color: white; display: inline-block;
+            padding: 5px 20px; border-radius: 20px; font-weight: bold; font-size: 14px;
+            box-shadow: 0 4px 0 #cc1e2b; margin-bottom: 10px; position: relative; z-index: 2;
+        }
+        .omi-main-text {
+            font-family: 'M PLUS Rounded 1c', sans-serif; font-weight: 900;
+            font-size: 28px; color: #444; margin: 0 0 20px; letter-spacing: 2px;
+            position: relative; z-index: 2;
+            background: linear-gradient(to right, #ff4757, #ff9a9e);
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+        }
+
+        /* おみくじボタン（超豪華版） */
+        .omikuji-btn { 
+            background: linear-gradient(to bottom, #FFD700, #FFA500); 
+            color: #fff; font-weight: 900; padding: 18px 50px; 
+            border-radius: 50px; border: 4px solid #fff; 
+            font-size: 22px; cursor: pointer; 
+            box-shadow: 0 8px 0 #d35400, 0 15px 20px rgba(0,0,0,0.2); 
+            transition: transform 0.1s, box-shadow 0.1s; 
+            font-family: 'M PLUS Rounded 1c', sans-serif; letter-spacing: 2px;
+            position: relative; z-index: 5; text-shadow: 1px 1px 0 rgba(0,0,0,0.2);
+        }
+        .omikuji-btn:hover { transform: translateY(4px); box-shadow: 0 4px 0 #d35400, 0 8px 10px rgba(0,0,0,0.2); }
+        .omikuji-btn:active { transform: translateY(8px); box-shadow: 0 0 0 #d35400, inset 0 2px 5px rgba(0,0,0,0.2); }
+        .omikuji-btn::after {
+            content: "FREE!"; position: absolute; top: -15px; right: -20px;
+            background: #27C6F5; color: white; font-size: 12px; padding: 5px 10px;
+            border-radius: 50%; transform: rotate(20deg); border: 2px solid white;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2); animation: pulse-red 1s infinite;
+        }
         
         /* 派手カワおみくじアニメーション */
         .omi-anim-container { position: relative; width: 100%; height: 300px; display: flex; justify-content: center; align-items: center; overflow: hidden; }
@@ -121,8 +182,30 @@
         /* スクロールエリア */
         .scroll-wrapper { position: relative; display: flex; align-items: center; } .scroll-grid { display: flex; overflow-x: auto; scroll-snap-type: x mandatory; gap: 15px; padding-bottom: 10px; scrollbar-width: none; flex-grow: 1; margin: 0 10px; } .scroll-grid::-webkit-scrollbar { display: none; } .scroll-btn { width: 30px; height: 30px; border-radius: 50%; background: rgba(255, 255, 255, 0.8); color: var(--primary); border: 1px solid #eee; box-shadow: 0 2px 5px rgba(0,0,0,0.1); display: flex; align-items: center; justify-content: center; font-size: 14px; font-weight: bold; cursor: pointer; z-index: 10; transition: all 0.2s; flex-shrink: 0; } .scroll-btn:hover { background: var(--primary); color: white; box-shadow: 0 4px 8px rgba(39, 198, 245, 0.3); } .scroll-btn.left { margin-right: -15px; } .scroll-btn.right { margin-left: -15px; }
 
-        /* NOW ON AIR */
-        #nowOnAirSection { display: none; margin-bottom: 60px; animation: fadeIn 0.5s ease; } .noa-title { text-align: center; font-family: 'Poppins', sans-serif; font-weight: 900; font-size: 32px; color: #ff0000; margin-bottom: 20px; letter-spacing: 2px; text-shadow: 0 2px 10px rgba(255,0,0,0.1); } .noa-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 25px; padding: 0 10px; } .noa-card { background: white; border-radius: 16px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); overflow: hidden; cursor: pointer; transition: transform 0.3s, box-shadow 0.3s; text-decoration: none; color: inherit; display: block; border: 2px solid transparent; position: relative; } .noa-card:hover { transform: translateY(-5px); box-shadow: 0 15px 35px rgba(255, 0, 0, 0.15); border-color: #ff0000; } .noa-thumb-wrapper { position: relative; width: 100%; aspect-ratio: 16 / 9; background: #000; } .noa-thumb { width: 100%; height: 100%; object-fit: cover; opacity: 0.9; } .noa-badge { position: absolute; top: 10px; left: 10px; background: #ff0000; color: white; font-size: 10px; font-weight: 900; padding: 3px 8px; border-radius: 4px; animation: pulse-red 1.5s infinite; z-index: 10; } @keyframes pulse-red { 0% { opacity: 1; } 50% { opacity: 0.7; } 100% { opacity: 1; } } .noa-icon-wrapper { position: absolute; bottom: -25px; left: 50%; transform: translateX(-50%); width: 50px; height: 50px; border-radius: 50%; border: 3px solid white; background: white; overflow: hidden; box-shadow: 0 4px 10px rgba(0,0,0,0.2); z-index: 5; } .noa-icon { width: 100%; height: 100%; object-fit: cover; } .noa-info { padding: 30px 15px 20px 15px; text-align: center; } .noa-member-name { font-size: 13px; font-weight: bold; color: var(--text-sub); margin-bottom: 5px; } .noa-stream-title { font-size: 14px; font-weight: bold; color: #333; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; line-height: 1.4; }
+        /* ★★★ NOW ON AIR (Live Embed) ★★★ */
+        #nowOnAirSection { display: none; margin-bottom: 60px; animation: fadeIn 0.5s ease; width: 100%; }
+        .noa-title { text-align: center; font-family: 'Poppins', sans-serif; font-weight: 900; font-size: 32px; color: #ff0000; margin-bottom: 20px; letter-spacing: 2px; text-shadow: 0 2px 10px rgba(255,0,0,0.1); display: flex; align-items: center; justify-content: center; gap: 10px; }
+        .noa-title::before, .noa-title::after { content: "●"; font-size: 14px; animation: pulse-red 1s infinite; }
+        
+        .live-hero-wrapper { width: 100%; max-width: 900px; margin: 0 auto; background: #000; border-radius: 16px; overflow: hidden; box-shadow: 0 20px 50px rgba(0,0,0,0.2); position: relative; border: 4px solid #ff0000; }
+        .live-iframe-box { position: relative; width: 100%; padding-top: 56.25%; /* 16:9 */ }
+        .live-iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: none; }
+        .live-info-bar { padding: 15px; background: white; display: flex; align-items: center; gap: 15px; border-bottom: 2px solid #f0f0f0; }
+        .live-info-icon { width: 50px; height: 50px; border-radius: 50%; border: 2px solid #ff0000; object-fit: cover; }
+        .live-info-text { flex: 1; }
+        .live-status-badge { background: #ff0000; color: white; font-weight: bold; font-size: 12px; padding: 2px 8px; border-radius: 4px; vertical-align: middle; margin-right: 5px; }
+        .live-status-badge.upcoming { background: #FF9800; }
+        .live-info-name { font-weight: bold; font-size: 14px; color: #555; }
+        .live-info-title { font-weight: bold; font-size: 16px; color: #333; display: -webkit-box; -webkit-line-clamp: 1; -webkit-box-orient: vertical; overflow: hidden; }
+        
+        /* 複数配信がある場合のサブグリッド */
+        .sub-live-grid { display: flex; gap: 10px; overflow-x: auto; padding: 15px 0; max-width: 900px; margin: 0 auto; }
+        .sub-live-card { min-width: 200px; background: white; border-radius: 8px; overflow: hidden; box-shadow: 0 4px 10px rgba(0,0,0,0.1); cursor: pointer; transition: 0.2s; border: 2px solid transparent; }
+        .sub-live-card:hover { border-color: #ff0000; transform: translateY(-3px); }
+        .sub-live-thumb { width: 100%; height: 110px; object-fit: cover; }
+        .sub-live-title { font-size: 12px; font-weight: bold; padding: 8px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+
+        @keyframes pulse-red { 0% { opacity: 1; } 50% { opacity: 0.3; } 100% { opacity: 1; } }
 
         /* 各種カード */
         .schedule-card { flex: 0 0 160px; background: white; border-radius: 8px; overflow: hidden; box-shadow: 0 2px 5px rgba(0,0,0,0.05); transition: transform 0.3s; scroll-snap-align: start; text-align: center; border: 1px solid #eee; } .schedule-card:hover { transform: translateY(-3px); border-color: var(--primary); } .sch-thumb-box { background: linear-gradient(135deg, var(--primary), #89CFF0); color: white; padding: 10px 0; display: flex; flex-direction: column; justify-content: center; align-items: center; aspect-ratio: 16 / 9; } .sch-date-big { font-size: 16px; font-weight: bold; font-family: 'Poppins', sans-serif; } .sch-time-big { font-size: 12px; font-family: 'Poppins', sans-serif; background: rgba(0,0,0,0.2); padding: 2px 8px; border-radius: 10px; margin-top: 3px;} .sch-info { padding: 8px; } .sch-title { font-size: 10px; font-weight: bold; margin-bottom: 2px; color: var(--text-main); display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; line-height: 1.4; text-align: left; } .sch-badge-mini { font-size: 9px; color: var(--primary); border: 1px solid var(--primary); padding: 1px 4px; border-radius: 3px; display: inline-block; margin-bottom: 3px; }
@@ -471,7 +554,8 @@
         <div class="container">
             <div id="nowOnAirSection">
                 <div class="noa-title">NOW ON AIR</div>
-                <div class="noa-grid" id="nowOnAirGrid"></div>
+                <div id="heroLiveArea"></div>
+                <div id="subLiveGrid" class="sub-live-grid"></div>
             </div>
 
             <div class="section-title" style="margin-top: 0;"><div class="en-title">NEWS</div><span class="ja-title">最新情報</span></div>
@@ -743,16 +827,17 @@
     </footer>
 
 <script>
-        // ★★★ ここにGASのURLを貼り付けてください！（これだけは必須です） ★★★
+        // ★★★ ここにGASのURLを貼り付けてください！ ★★★
         const GAS_API_URL = "https://script.google.com/macros/s/AKfycbwpMkLuZlQdCPWf4A3cOJQaL8SNy_VEKRaiOUuCyttdDIFAqWhc1io2L0N-qtISCet57g/exec";
 
-        // ※以下の変数はスプレッドシートから読み込まれるため、空のままでOKです
-        let YOUTUBE_API_KEY = "";
-        let GROUP_CONFIG = {};
-        let memberData = [];
-        let goodsData = [{ name: "Loading...", price: "-", img: "icon.png", link: "#" }]; // 読み込み中の仮表示
+        // ★★★ YouTube Data APIキーを入れてください（空欄でもRSSで動作しますが、APIキーがあるとより正確です） ★★★
+        let YOUTUBE_API_KEY = ""; 
 
         // --- 変数定義 ---
+        let GROUP_CONFIG = {};
+        let memberData = [];
+        let goodsData = [{ name: "Loading...", price: "-", img: "icon.png", link: "#" }]; 
+
         const fortuneTypes = ["大吉", "中吉", "小吉", "吉", "末吉"];
         const luckyItems = ["ゲーミングPC", "エナジードリンク", "マイク", "配信機材", "推し活グッズ", "唐揚げ", "ラーメン", "猫", "ヘッドホン", "サイリウム"];
         const fortuneComments = [
@@ -777,15 +862,15 @@
         // ★読み込み開始
         window.onload = function() { 
             handleLocation(); 
-            // データを取得してから描画
             fetchSheetData().then(() => {
-                renderStaticParts(); // メンバー・グッズ描画
-                checkLiveStatus();   // 配信チェック
-                initCardMaker();     // 会員証準備
-                renderRadioDiary();  // 日記描画
-                fetchLikes();        // いいね取得
-                initOmikuji();       // おみくじ準備
-                initEasterEgg();     // 隠しコマンド
+                renderStaticParts(); 
+                // ★チェック: LiveStatusはメンバーデータ読み込み完了後に実行
+                setTimeout(checkLiveStatus, 500);
+                initCardMaker(); 
+                renderRadioDiary(); 
+                fetchLikes(); 
+                initOmikuji(); 
+                initEasterEgg(); 
             });
         };
 
@@ -795,7 +880,6 @@
             const hash = location.hash;
             if (hash.startsWith('#member_')) {
                 const index = parseInt(hash.split('_')[1]);
-                // データ読み込み後でないと開けないため、少し待つか読み込み完了後に実行される
                 if(memberData.length > 0) openMemberDetail(index, false); 
             } else if (hash) {
                 const id = hash.replace('#', '');
@@ -805,7 +889,6 @@
             }
         }
 
-        // --- データ取得（最重要） ---
         async function fetchSheetData() {
             if (!GAS_API_URL || GAS_API_URL.indexOf("script.google.com") === -1) {
                 console.error("GAS URLが設定されていません");
@@ -815,24 +898,19 @@
                 const res = await fetch(GAS_API_URL);
                 const data = await res.json();
                 
-                // ★Config読み込み（APIキーやSNS設定を反映）
                 if (data.config) {
                     const conf = {};
                     data.config.forEach(row => { conf[row.key] = row.value; });
-                    
-                    // スプシから設定を上書き
                     if(conf.youtube_api_key) YOUTUBE_API_KEY = conf.youtube_api_key;
                     if(conf.radio_theme_main) document.getElementById('radioThemeDisplay').innerText = conf.radio_theme_main;
                     if(conf.radio_theme_sub) document.getElementById('radioThemeNote').innerText = conf.radio_theme_sub;
                     
-                    // グループ設定を更新
-                    GROUP_CONFIG.name = "あおはる⭐︎フレンズ"; // 固定またはスプシから
+                    GROUP_CONFIG.name = "あおはる⭐︎フレンズ";
                     if(conf.group_logo_img) GROUP_CONFIG.img = conf.group_logo_img;
                     if(conf.group_youtube_id) GROUP_CONFIG.youtubeChannelId = conf.group_youtube_id;
                     if(conf.group_twitter_url) GROUP_CONFIG.twitterUrl = conf.group_twitter_url;
                 }
 
-                // ★メンバーデータをスプシから反映（これで個人の設定もスプシでOK！）
                 if (data.members && data.members.length > 0) {
                     memberData = data.members;
                 }
@@ -840,9 +918,9 @@
                 if (data.news) { newsData = data.news; renderNews(); }
                 if (data.schedule) { scheduleData = data.schedule; renderSchedule(); }
                 if (data.videos) { videoData = data.videos; renderVideos(); }
-                if (data.live) { manualLiveData = data.live; } // checkLiveStatusで使う
+                if (data.live) { manualLiveData = data.live; } 
                 if (data.member_videos) { memberVideoData = data.member_videos; renderMemberVideos(); }
-                if (data.radio_diaries) { radioBlogData = data.radio_diaries; } // renderRadioDiaryで使う
+                if (data.radio_diaries) { radioBlogData = data.radio_diaries; } 
                 
                 if (data.goods) {
                     goodsData = data.goods;
@@ -856,9 +934,7 @@
             } catch (e) { console.error("Data Error:", e); }
         }
 
-        // --- 描画・機能関数 ---
         function renderStaticParts() { 
-            // SNSリンク更新
             const twLink = document.getElementById('groupTwitterLink'); 
             const ytLink = document.getElementById('groupYoutubeLink'); 
             const footerTwLink = document.getElementById('footerTwitterLink'); 
@@ -874,7 +950,6 @@
                 footerYtLink.href = ytUrl; 
             }
             
-            // メンバーリスト更新
             if(memberData.length > 0) {
                 const memberHtml = memberData.map((m, i) => `<div class="member-card-vertical" onclick="openMemberDetail(${i})" style="--member-color: ${m.color}; --member-bg: url('${m.bgImg}');"><div class="member-img-wrapper"><img src="${m.img}" class="member-img-tachie"></div><a href="javascript:void(0)" class="member-link-overlay"></a></div>`).join(''); 
                 document.getElementById('topMemberList').innerHTML = memberHtml; 
@@ -882,9 +957,141 @@
             }
         }
 
-        // --- 以下の関数群は変更なし（そのまま動作します） ---
-        
-        // 隠しコマンド
+        // ★★★ 【完全版】LIVE埋め込みロジック (キャッシュ機能付き) ★★★
+        async function checkLiveStatus() {
+            const noaSection = document.getElementById('nowOnAirSection');
+            const heroArea = document.getElementById('heroLiveArea');
+            const subGrid = document.getElementById('subLiveGrid');
+            heroArea.innerHTML = '';
+            subGrid.innerHTML = '';
+            
+            // 手動設定のライブがある場合 (スプレッドシートの manualLive)
+            if(manualLiveData && manualLiveData.length > 0) {
+                noaSection.style.display = 'block';
+                const mainLive = manualLiveData[0];
+                renderLivePlayer(heroArea, mainLive.name, mainLive.image || "icon.png", mainLive.url, mainLive.title, true);
+                if(manualLiveData.length > 1) {
+                    for(let i=1; i<manualLiveData.length; i++) {
+                        const sub = manualLiveData[i];
+                        subGrid.innerHTML += createSubLiveCard(sub.name, sub.image, sub.url, sub.title);
+                    }
+                }
+                return; // 手動優先ならここで終了
+            }
+
+            // APIキーがない場合、またはチャンネルIDがない場合は終了
+            if(!YOUTUBE_API_KEY || memberData.length === 0) return;
+
+            // キャッシュチェック (セッションストレージ: 15分間有効)
+            const CACHE_KEY = 'aoharu_live_status';
+            const CACHE_TIME = 15 * 60 * 1000; 
+            const cached = sessionStorage.getItem(CACHE_KEY);
+            let liveItems = [];
+
+            if (cached) {
+                const parsed = JSON.parse(cached);
+                if (Date.now() - parsed.timestamp < CACHE_TIME) {
+                    console.log("Using Cached Live Status");
+                    liveItems = parsed.items;
+                }
+            }
+
+            // キャッシュがない場合、APIで取得
+            if (liveItems.length === 0) {
+                console.log("Fetching YouTube API...");
+                let targets = [...memberData];
+                if(GROUP_CONFIG.youtubeChannelId) targets.push({ name: GROUP_CONFIG.name, img: GROUP_CONFIG.img, youtubeId: GROUP_CONFIG.youtubeChannelId });
+                
+                // 1人ずつチェック (API節約のため search ではなく videos.listを使いたいが、配信中か不明なので search を使う)
+                // ※本来はGAS側で一括取得してHTMLに渡すのがベストですが、HTML単体で完結させるためここで実行します。
+                for (const target of targets) {
+                    if (target.youtubeId) {
+                        try {
+                            // "live" のみを検索 (APIコスト: 100/回)
+                            // 注意: 頻繁なリロードは割り当て制限にかかります。必ずキャッシュを利用してください。
+                            const url = `https://www.googleapis.com/youtube/v3/search?part=snippet&channelId=${target.youtubeId}&eventType=live&type=video&key=${YOUTUBE_API_KEY}`;
+                            const res = await fetch(url);
+                            const json = await res.json();
+                            if (json.items && json.items.length > 0) {
+                                const video = json.items[0];
+                                liveItems.push({
+                                    name: target.name,
+                                    icon: target.img,
+                                    videoId: video.id.videoId,
+                                    title: video.snippet.title,
+                                    status: 'live'
+                                });
+                            } else {
+                                // liveがない場合、upcoming（配信予定）をチェックするか？
+                                // コスト削減のため、今回はliveのみとします。
+                            }
+                        } catch(e) { console.error(e); }
+                    }
+                }
+                // 結果を保存
+                sessionStorage.setItem(CACHE_KEY, JSON.stringify({ timestamp: Date.now(), items: liveItems }));
+            }
+
+            // 描画処理
+            if (liveItems.length > 0) {
+                noaSection.style.display = 'block';
+                // 1つ目をメインに
+                const main = liveItems[0];
+                renderLivePlayer(heroArea, main.name, main.icon, main.videoId, main.title, false); // false = isUrlではなくID
+                
+                // 2つ目以降をサブに
+                if(liveItems.length > 1) {
+                    for(let i=1; i<liveItems.length; i++) {
+                        const sub = liveItems[i];
+                        const link = `https://www.youtube.com/watch?v=${sub.videoId}`;
+                        subGrid.innerHTML += createSubLiveCard(sub.name, sub.icon, link, sub.title);
+                    }
+                }
+            }
+        }
+
+        // 埋め込みプレイヤー生成
+        function renderLivePlayer(container, name, icon, urlOrId, title, isUrl) {
+            let src = "";
+            if(isUrl) {
+                // URLからID抽出を試みる（簡易的）
+                const match = urlOrId.match(/v=([^&]+)/);
+                if(match) src = `https://www.youtube.com/embed/${match[1]}?autoplay=1&mute=1`;
+                else src = urlOrId; // 埋め込み非対応URLかもしれないがそのまま
+            } else {
+                src = `https://www.youtube.com/embed/${urlOrId}?autoplay=1&mute=1`;
+            }
+
+            const html = `
+                <div class="live-hero-wrapper">
+                    <div class="live-iframe-box">
+                        <iframe src="${src}" class="live-iframe" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                    </div>
+                    <div class="live-info-bar">
+                        <img src="${icon}" class="live-info-icon">
+                        <div class="live-info-text">
+                            <div class="live-info-name"><span class="live-status-badge">LIVE</span> ${name}</div>
+                            <div class="live-info-title">${title}</div>
+                        </div>
+                    </div>
+                </div>
+            `;
+            container.innerHTML = html;
+        }
+
+        function createSubLiveCard(name, icon, url, title) {
+            return `
+                <div class="sub-live-card" onclick="window.open('${url}', '_blank')">
+                    <div style="background:#000; height:110px; display:flex; align-items:center; justify-content:center; color:white; font-size:10px;">
+                        <img src="${icon}" style="height:40px; border-radius:50%; margin-right:5px;">
+                        <span>Click to Watch</span>
+                    </div>
+                    <div class="sub-live-title">${title}</div>
+                </div>
+            `;
+        }
+
+        // --- 以下、既存機能 ---
         function initEasterEgg() {
             window.addEventListener('keydown', (e) => {
                 secretInput.push(e.key);
@@ -917,17 +1124,30 @@
             }());
         }
 
-        // おみくじ
+        // ★★★ おみくじ（派手カワ・リニューアル版）★★★
         function initOmikuji() {
             const container = document.querySelector('#top .container');
+            // すでにある場合は作成しない
             if(container && !document.querySelector('.omikuji-area')) {
                 const omikujiArea = document.createElement('div');
                 omikujiArea.className = 'omikuji-area';
-                omikujiArea.innerHTML = `<div class="section-title" style="margin-top:0;"><span class="ja-title">今日の運勢を占う</span></div><button class="omikuji-btn" onclick="drawOmikuji()">おみくじを引く！</button>`;
+                omikujiArea.innerHTML = `
+                    <div class="omi-deco d-1">✨</div>
+                    <div class="omi-deco d-2">💖</div>
+                    <div class="omi-title-ribbon">毎日1回運試し！</div>
+                    <div class="omi-main-text">あおはるおみくじ</div>
+                    <div class="omi-visual-box"><i class="fas fa-box-open"></i></div>
+                    <br>
+                    <button class="omikuji-btn" onclick="drawOmikuji()">おみくじを引く！</button>
+                    <p style="font-size:11px; color:#888; margin-top:15px; font-weight:bold;">※推しメンが出るかも…！？</p>
+                `;
+                
+                // 挿入場所：NOW ON AIRの下
                 const noaSection = document.getElementById('nowOnAirSection');
                 noaSection.parentNode.insertBefore(omikujiArea, noaSection.nextSibling);
             }
         }
+
         function drawOmikuji() {
             if(memberData.length === 0) return;
             const member = memberData[Math.floor(Math.random() * memberData.length)];
@@ -991,7 +1211,6 @@
             });
         }
 
-        // その他機能
         function copyText(text) {
             navigator.clipboard.writeText(text).then(() => {
                 const toast = document.getElementById('copyToast'); toast.style.display = 'block';
@@ -1089,8 +1308,6 @@
         function renderMemberVideos() { const container = document.getElementById('memberVideoList'); if(!memberVideoData.length) { container.innerHTML = "限定動画はまだありません"; return; } const html = memberVideoData.map(v => { const clickAction = isMemberLoggedIn ? `window.open('https://www.youtube.com/watch?v=${v.id}', '_blank')` : `openLoginModal()`; const lockedClass = isMemberLoggedIn ? 'unlocked' : 'mv-blur'; const lockOverlay = isMemberLoggedIn ? '' : `<div class="mv-lock-overlay"><div class="mv-lock-icon"><i class="fas fa-lock"></i></div><div class="mv-lock-text">MEMBER ONLY</div></div>`; return `<div class="member-video-card ${lockedClass}" onclick="${clickAction}">${lockOverlay}<div class="news-thumb-area"><img src="https://img.youtube.com/vi/${v.id}/mqdefault.jpg" class="news-img"></div><div class="news-content"><div class="news-date">${v.date}</div><div class="news-title">${v.title}</div><div class="news-check-btn">${isMemberLoggedIn ? 'PLAY' : 'LOCKED'}</div></div></div>`; }).join(''); container.innerHTML = html; }
         
         function openMemberDetail(index, pushHistory = true) { const m = memberData[index]; const detailContainer = document.getElementById('memberDetail'); const twitchLink = m.twitchId ? `<a href="https://www.twitch.tv/${m.twitchId}" target="_blank" class="p-btn" style="background:#9146FF;color:white;box-shadow:0 5px 15px rgba(145,70,255,0.3);"><i class="fab fa-twitch"></i> Twitch</a>` : ''; const twitterLink = m.twitterId ? `https://x.com/${m.twitterId}` : '#'; const voiceBtn = m.voice ? `<div class="p-btn voice" onclick="playVoice('${m.voice}')"><i class="fas fa-volume-up"></i> VOICE</div>` : ''; detailContainer.innerHTML = `<div class="member-bg-layer" style="background-image: url('${m.img}');"></div><div class="profile-header-bg" style="--m-color: ${m.color}; --m-color-light: ${m.color}20;"><div class="profile-wrapper"><div class="profile-visual"><img src="${m.img}" class="profile-tachie" alt="${m.name}"></div><div class="profile-info"><div class="profile-en-name">${m.enName || 'MEMBER'}</div><div class="profile-jp-name">${m.name}</div><div class="profile-catch">${m.catchphrase || ''}</div><div class="profile-data-list"><div class="p-data-item"><span class="p-label">誕生日</span><span class="p-value">${m.birthday || '-'}</span></div><div class="p-data-item"><span class="p-label">身長</span><span class="p-value">${m.height || '-'}</span></div><div class="p-data-item"><span class="p-label">ファンネーム</span><span class="p-value copy-tag" onclick="copyText('${m.fanName}')">${m.fanName || '-'} <i class="far fa-copy copy-icon"></i></span></div><div class="p-data-item"><span class="p-label">ハッシュタグ</span><span class="p-value copy-tag" style="color:var(--m-color)" onclick="copyText('${m.hashTag}')">${m.hashTag || '-'} <i class="far fa-copy copy-icon"></i></span></div></div><div class="profile-bio">${m.bio || ''}</div><div class="profile-actions">${voiceBtn}<a href="${m.youtubeId ? 'https://www.youtube.com/channel/' + m.youtubeId : '#'}" target="_blank" class="p-btn yt"><i class="fab fa-youtube"></i> YouTube</a>${twitchLink}<a href="${twitterLink}" target="_blank" class="p-btn x"><i class="fab fa-x-twitter"></i> X</a></div><div style="text-align:right;"><span class="back-link" onclick="showPage('member')">◀ MEMBER LIST</span></div></div></div></div>`; if(pushHistory) history.pushState(null, null, '#member_' + index); showPage('memberDetail', m.name, false); }
-        async function checkLiveStatus() { const noaSection = document.getElementById('nowOnAirSection'); const noaGrid = document.getElementById('nowOnAirGrid'); noaGrid.innerHTML = ''; noaSection.style.display = 'none'; let hasLiveStream = false; const allTargets = [...memberData]; if (GROUP_CONFIG.youtubeChannelId) { allTargets.push({ name: GROUP_CONFIG.name, img: GROUP_CONFIG.img, youtubeId: GROUP_CONFIG.youtubeChannelId }); } if (YOUTUBE_API_KEY && YOUTUBE_API_KEY !== "") { for (const target of allTargets) { if (target.youtubeId && target.youtubeId.includes("UC")) { try { const url = `https://www.googleapis.com/youtube/v3/search?part=snippet&channelId=${target.youtubeId}&eventType=live&type=video&key=${YOUTUBE_API_KEY}`; const response = await fetch(url); const data = await response.json(); if (data.items && data.items.length > 0) { const video = data.items[0]; const card = createNowOnAirCard(target.name, target.img, `https://www.youtube.com/watch?v=${video.id.videoId}`, video.snippet.title, video.snippet.thumbnails.high.url); noaGrid.appendChild(card); hasLiveStream = true; } } catch (e) { console.error("YouTube Error", e); } } } } if (manualLiveData && manualLiveData.length > 0) { manualLiveData.forEach(live => { const member = memberData.find(m => m.name === live.name); const icon = live.image || (member ? member.img : "icon.png"); const thumb = "https://placehold.co/600x338/9146FF/ffffff?text=NOW+ON+AIR"; const card = createNowOnAirCard(live.name, icon, live.url, live.title || "配信中！", thumb); noaGrid.appendChild(card); hasLiveStream = true; }); } if (hasLiveStream) noaSection.style.display = 'block'; }
-        function createNowOnAirCard(name, icon, url, title, thumbUrl) { const card = document.createElement('a'); card.href = url; card.target = "_blank"; card.className = "noa-card"; card.innerHTML = `<div class="noa-thumb-wrapper"><img src="${thumbUrl}" class="noa-thumb"><span class="noa-badge">LIVE</span><div class="noa-icon-wrapper"><img src="${icon}" class="noa-icon"></div></div><div class="noa-info"><div class="noa-member-name">${name}</div><div class="noa-stream-title">${title}</div></div>`; return card; }
         function scrollContent(elementId, direction) { const container = document.getElementById(elementId); const scrollAmount = container.clientWidth / 2; if (direction === 'left') container.scrollBy({ left: -scrollAmount, behavior: 'smooth' }); else container.scrollBy({ left: scrollAmount, behavior: 'smooth' }); }
         function openNewsModal(index) { const data = newsData[index]; document.getElementById('modalDate').innerText = data.date; const tagEl = document.getElementById('modalTag'); tagEl.innerText = data.tag; tagEl.style.background = getTagColor(data.tag); document.getElementById('modalTitle').innerText = data.title; document.getElementById('modalBody').innerText = data.detail || data.title; document.getElementById('newsModal').classList.add('open'); }
         function closeNewsModal() { document.getElementById('newsModal').classList.remove('open'); }
@@ -1104,7 +1321,6 @@
         function toggleMenu() { document.getElementById('sideMenu').classList.toggle('open'); document.getElementById('overlay').classList.toggle('open'); }
         function showPage(pageId, detailName = null, pushHistory = true) { document.querySelectorAll('.page').forEach(p => p.classList.remove('active')); document.getElementById(pageId).classList.add('active'); if(document.getElementById('sideMenu').classList.contains('open')) { toggleMenu(); } if(pushHistory) history.pushState(null, null, '#' + pageId); updateBreadcrumbs(pageId, detailName); window.scrollTo(0,0); }
         function initCardMaker() { const today = new Date(); const dStr = `${today.getFullYear()}.${(today.getMonth()+1).toString().padStart(2,'0')}.${today.getDate().toString().padStart(2,'0')}`; const cardDateEl = document.getElementById('cardDate'); if(cardDateEl) cardDateEl.innerText = 'DATE: ' + dStr; const cardNoEl = document.getElementById('cardNo'); if(cardNoEl) cardNoEl.innerText = dStr.replace(/\./g,'') + '-' + (Math.floor(Math.random()*9000)+1000); const btnContainer = document.getElementById('oshiButtons'); if(btnContainer) { btnContainer.innerHTML = ''; memberData.forEach((m, i) => { const btn = document.createElement('div'); btn.className = 'oshi-btn'; btn.style.backgroundImage = `url('${m.img}')`; btn.onclick = () => selectOshi(i); btnContainer.appendChild(btn); }); if(memberData.length > 0) selectOshi(0); } }
-        // ★ここを書き換え！（スプシの位置情報を読み取るように変更）
         function selectOshi(index) { 
             currentOshiIndex = index; 
             const m = memberData[index]; 
@@ -1114,8 +1330,6 @@
             if(card) { 
                 card.style.setProperty('--card-color', m.color); 
                 
-                // ▼ スプシの設定があれば使い、なければ「デフォルト値」を使う
-                // card_bottom 等はスプシの列名と一致させています
                 const bottom = m.card_bottom || "-20px";
                 const right = m.card_right || "-50px";
                 const width = m.card_width || "280px";
