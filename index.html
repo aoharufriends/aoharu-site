@@ -348,6 +348,19 @@
             100% { transform: translateY(-150px) scale(1.5) rotate(20deg); opacity: 0; }
         }
 
+        /* ★お問い合わせフォーム（新規追加）★ */
+        .contact-section {
+            max-width: 800px; margin: 60px auto; background: #fff; border-radius: 20px; padding: 30px;
+            border: 4px solid #eee; box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+            /* かわいい水玉背景 */
+            background-image: radial-gradient(#e0f7ff 20%, transparent 20%);
+            background-size: 20px 20px;
+        }
+        .contact-title { text-align: center; font-size: 24px; font-weight: bold; color: var(--primary); margin-bottom: 20px; letter-spacing: 2px; font-family: 'Poppins', sans-serif; }
+        .contact-form { background: white; padding: 20px; border-radius: 15px; border: 2px solid #eee; }
+        .contact-btn { width: 100%; background: linear-gradient(135deg, var(--primary), #89CFF0); color: white; padding: 12px; border: none; border-radius: 30px; font-weight: bold; cursor: pointer; margin-top: 10px; box-shadow: 0 4px 10px rgba(39, 198, 245, 0.3); transition: transform 0.2s; }
+        .contact-btn:hover { transform: translateY(-2px); }
+
         /* フッター */
         .sns-container { text-align: center; margin-bottom: 30px; }
         .sns-links { display: flex; justify-content: center; gap: 20px; margin-top: 20px; }
@@ -504,6 +517,31 @@
                     <a href="#" id="groupYoutubeLink" target="_blank" class="sns-btn youtube"><img src="icon_youtube.png" alt="YouTube" class="sns-logo-img"></a>
                 </div>
             </div>
+
+            <div class="contact-section">
+                <div class="contact-title"><i class="fas fa-envelope"></i> CONTACT</div>
+                <div class="contact-form">
+                    <label class="form-label">お名前</label>
+                    <input type="text" class="form-input" id="contactName" placeholder="あおはる 太郎">
+                    
+                    <label class="form-label">メールアドレス</label>
+                    <input type="email" class="form-input" id="contactEmail" placeholder="example@aoharu.com">
+                    
+                    <label class="form-label">お問い合わせ種別</label>
+                    <select class="form-select" id="contactType">
+                        <option value="ご意見・ご感想">ご意見・ご感想</option>
+                        <option value="お仕事の依頼">お仕事の依頼</option>
+                        <option value="不具合報告">不具合報告</option>
+                        <option value="その他">その他</option>
+                    </select>
+
+                    <label class="form-label">メッセージ</label>
+                    <textarea class="form-textarea" id="contactMsg" rows="5" placeholder="お問い合わせ内容を入力してください"></textarea>
+
+                    <button class="contact-btn" onclick="sendContact()">送信する</button>
+                </div>
+            </div>
+
         </div>
     </div>
 
@@ -613,8 +651,8 @@
         </div>
         <div class="container">
             <div class="radio-theme-box">
-                <div class="radio-theme-text" id="radioThemeDisplay">次回のテーマ：「最近あった恥ずかしい話」</div>
-                <div style="text-align:center; font-size:12px; margin-top:5px; color:#ccc;">※採用された方にはステッカープレゼント！？</div>
+                <div class="radio-theme-text" id="radioThemeDisplay">読み込み中...</div>
+                <div style="text-align:center; font-size:12px; margin-top:5px; color:#ccc;" id="radioThemeNote"></div>
             </div>
 
             <div class="letter-form">
@@ -707,8 +745,8 @@
     <script>
         // ★重要：ご自身のURLに書き換えてください
         const GAS_API_URL = "https://script.google.com/macros/s/AKfycbwpMkLuZlQdCPWf4A3cOJQaL8SNy_VEKRaiOUuCyttdDIFAqWhc1io2L0N-qtISCet57g/exec";
-        const YOUTUBE_API_KEY = "ここにAPIキーを貼り付け";
-        const GROUP_CONFIG = { name: "公式チャンネル", img: "logo.png", youtubeChannelId: "UC_Group_Channel_ID", twitterUrl: "https://twitter.com/Group_Account" };
+        const YOUTUBE_API_KEY = "AIzaSyBe7J6PfElIONlj3kzF8sTJBEEEmyBK-YY";
+        const GROUP_CONFIG = { name: "あおはる⭐︎フレンズ", img: "logo.png", youtubeChannelId: "UCMzbUvN567vufH6KZt5m7YQ", twitterUrl: "https://x.com/AO_FURE" };
         
         // ★メンバーデータ（ファイル名を間違えないように注意！）
         const memberData = [
@@ -761,11 +799,10 @@
         let secretInput = [];
         let logoTapCount = 0;
 
-        // ★読み込み順序修正：リロード時にページを維持する
         window.onload = function() { 
             // 1. まず現在のページを判定して表示
             handleLocation(); 
-            // 2. その後に中身を描画（エラーがあってもページ遷移は守られる）
+            // 2. その後に中身を描画
             try {
                 renderStaticParts(); 
                 checkLiveStatus(); 
@@ -794,6 +831,38 @@
                 }
             } else {
                 showPage('top', null, false);
+            }
+        }
+
+        // --- ★お問い合わせ送信機能（新規） ---
+        async function sendContact() {
+            const name = document.getElementById('contactName').value;
+            const email = document.getElementById('contactEmail').value;
+            const type = document.getElementById('contactType').value;
+            const msg = document.getElementById('contactMsg').value;
+
+            if(!name || !email || !msg) { alert('すべての項目を入力してください'); return; }
+            if (!GAS_API_URL || GAS_API_URL.indexOf("script.google.com") === -1) { alert("GAS URL未設定"); return; }
+
+            const btn = document.querySelector('.contact-btn');
+            btn.disabled = true;
+            btn.innerText = "送信中...";
+
+            try {
+                const url = `${GAS_API_URL}?action=submit_contact&name=${encodeURIComponent(name)}&email=${encodeURIComponent(email)}&type=${encodeURIComponent(type)}&message=${encodeURIComponent(msg)}`;
+                const res = await fetch(url);
+                const json = await res.json();
+                if (json.status === 'success') {
+                    alert('お問い合わせありがとうございます！\n送信が完了しました。');
+                    document.getElementById('contactMsg').value = "";
+                } else {
+                    alert('送信に失敗しました。');
+                }
+            } catch(e) {
+                alert('通信エラーが発生しました');
+            } finally {
+                btn.disabled = false;
+                btn.innerText = "送信する";
             }
         }
 
@@ -1077,12 +1146,21 @@
             }).join('');
         }
 
-        // --- データ取得（★GOODS対応） ---
+        // --- データ取得（★GOODS & Config対応） ---
         async function fetchSheetData() {
             if (!GAS_API_URL || GAS_API_URL.indexOf("script.google.com") === -1) return;
             try {
                 const res = await fetch(GAS_API_URL);
                 const data = await res.json();
+                
+                // Config読み込み（ラジオテーマ）
+                if (data.config) {
+                    const conf = {};
+                    data.config.forEach(row => { conf[row.key] = row.value; });
+                    if(conf.radio_theme_main) document.getElementById('radioThemeDisplay').innerText = conf.radio_theme_main;
+                    if(conf.radio_theme_sub) document.getElementById('radioThemeNote').innerText = conf.radio_theme_sub;
+                }
+
                 if (data.news) { newsData = data.news; renderNews(); }
                 if (data.schedule) { scheduleData = data.schedule; renderSchedule(); }
                 if (data.videos) { videoData = data.videos; renderVideos(); }
@@ -1092,7 +1170,6 @@
                     radioBlogData = data.radio_diaries; 
                     renderRadioDiary(); 
                 }
-                // ★追加：グッズデータ読み込み＆再描画
                 if (data.goods) {
                     goodsData = data.goods;
                     document.getElementById('goodsList').innerHTML = goodsData.map((g, i) => `
@@ -1119,7 +1196,7 @@
             document.getElementById('topMemberList').innerHTML = memberHtml; 
             document.getElementById('memberGrid').innerHTML = memberHtml; 
             
-            // Goods初期レンダリング
+            // Goods初期レンダリング（データ取得前）
             document.getElementById('goodsList').innerHTML = goodsData.map((g, i) => ` 
                 <div class="goods-item" onclick="openGoodsModal(${i})"> 
                     <img src="${g.img}" class="goods-img"> 
