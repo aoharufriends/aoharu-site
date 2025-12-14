@@ -23,6 +23,8 @@
     <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
 
+    <script src="config.js"></script>
+
     <style>
         /* ベーススタイル */
         :root { --primary: #27C6F5; --text-main: #444444; --text-sub: #888888; --bg-color: #ffffff; --light-bg: #f4f8fa; }
@@ -743,51 +745,13 @@
     </footer>
 
     <script>
-        // ★重要：ご自身のURLに書き換えてください
-        const GAS_API_URL = "https://script.google.com/macros/s/AKfycbwpMkLuZlQdCPWf4A3cOJQaL8SNy_VEKRaiOUuCyttdDIFAqWhc1io2L0N-qtISCet57g/exec";
-        const YOUTUBE_API_KEY = "AIzaSyBe7J6PfElIONlj3kzF8sTJBEEEmyBK-YY";
-        const GROUP_CONFIG = { name: "あおはる⭐︎フレンズ", img: "logo.png", youtubeChannelId: "UCMzbUvN567vufH6KZt5m7YQ", twitterUrl: "https://x.com/AO_FURE" };
+        // 設定変数の初期化（config.jsが読み込まれていない場合のフォールバック）
+        if (typeof GAS_API_URL === 'undefined') var GAS_API_URL = "";
+        if (typeof YOUTUBE_API_KEY === 'undefined') var YOUTUBE_API_KEY = "";
+        if (typeof GROUP_CONFIG === 'undefined') var GROUP_CONFIG = {};
+        if (typeof memberData === 'undefined') var memberData = [];
+        if (typeof goodsData === 'undefined') var goodsData = [];
         
-        // ★メンバーデータ（ファイル名を間違えないように注意！）
-        const memberData = [
-            { 
-                name: "たく兄ちゃん", enName: "TAKU-NIICHAN", catchphrase: "小悪魔の笑顔の錬金術師", color: "#87D322", img: "taku.png", bgImg: "member_haikei.jpg", 
-                voice: "voice_taku.mp3",
-                youtubeId: "UCL_3vT0HazjtqyNn-2Nu45A", twitchId: "taku_nichan2022", twitterId: "TAKU_nichan", birthday: "10月11日", height: "170cm", fanName: "#ホムンクルス", hashTag: "#たくすけっち", bio: "小悪魔の笑顔の錬金術師\n世にも珍しい『笑顔』を錬成する錬金術師\nキミの魂と**、たっぷり頂戴ね？",
-                cardLayout: { bottom: "-400px", right: "-110px", width: "350px" }
-            },
-            { 
-                name: "兎神結愛", enName: "TOGAMI YUA", catchphrase: "クールな頭脳派ゲーマー", color: "#9B59B6", img: "taku2.png", bgImg: "member_haikei2.jpg", 
-                voice: "voice_blue.mp3",
-                youtubeId: "UCyyyyyyyyyyyyyyyyy", twitchId: "", birthday: "7月7日", height: "160cm", fanName: "ブルー隊", hashTag: "#青フレ", bio: "沈着冷静、でも実は熱いハートの持ち主。",
-                cardLayout: { bottom: "-50px", right: "-50px", width: "280px" }
-            },
-            { 
-                name: "鬼神イヨ", enName: "ONIGAMI IYO", catchphrase: "みんなのアイドル", color: "#FF69B4", img: "taku3.png", bgImg: "member_haikei3.jpg", 
-                voice: "voice_pink.mp3",
-                youtubeId: "UCzzzzzzzzzzzzzzzzz", twitchId: "", birthday: "3月3日", height: "155cm", fanName: "ピーチーズ", hashTag: "#桃色通信", bio: "歌うことが大好き！",
-                cardLayout: { bottom: "-20px", right: "-60px", width: "290px" }
-            },
-            { 
-                name: "緋羽アオ", enName: "AKABANE AO", catchphrase: "元気100倍！", color: "#FF9800", img: "taku4.png", bgImg: "member_haikei4.jpg", 
-                voice: "voice_yellow.mp3",
-                youtubeId: "UCwwwwwwwwwwwwwwwww", twitchId: "", birthday: "8月8日", height: "165cm", fanName: "きいろ組", hashTag: "#イエロー参上", bio: "とにかく明るい元気印。",
-                cardLayout: { bottom: "0px", right: "-40px", width: "270px" }
-            }
-        ];
-        
-        let goodsData = [{ name: "1st Tシャツ", price: "¥3,500", img: "https://placehold.co/300x300?text=T-shirt", link: "#", detail: "高品質なTシャツです。" }, { name: "アクリルスタンド", price: "¥1,500", img: "https://placehold.co/300x300?text=Acsta", link: "#", detail: "卓上に飾れるサイズです。" }];
-
-        const fortuneTypes = ["大吉", "中吉", "小吉", "吉", "末吉"];
-        const luckyItems = ["ゲーミングPC", "エナジードリンク", "マイク", "配信機材", "推し活グッズ", "唐揚げ", "ラーメン", "猫", "ヘッドホン", "サイリウム"];
-        const fortuneComments = [
-            "今日は最高の配信ができそう！",
-            "ラッキーアイテムを持って待機してね！",
-            "推しの配信を見ると運気アップ！",
-            "今日はゆっくりアーカイブを見よう。",
-            "SNSで推しを布教するといいことあるかも！"
-        ];
-
         let newsData = [], scheduleData = [], videoData = [], manualLiveData = [], memberVideoData = [];
         let radioBlogData = []; 
         let isMemberLoggedIn = false;
@@ -795,14 +759,14 @@
         let totalLikes = 0;
         let sessionLikes = 0;
         let likeSyncTimer = null;
-        const secretCode = ['ArrowUp', 'ArrowUp', 'ArrowDown', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'ArrowLeft', 'ArrowRight', 'b', 'a'];
         let secretInput = [];
         let logoTapCount = 0;
 
+        // ★読み込み順序修正：リロード時にページを維持する
         window.onload = function() { 
             // 1. まず現在のページを判定して表示
             handleLocation(); 
-            // 2. その後に中身を描画
+            // 2. その後に中身を描画（エラーがあってもページ遷移は守られる）
             try {
                 renderStaticParts(); 
                 checkLiveStatus(); 
@@ -834,40 +798,9 @@
             }
         }
 
-        // --- ★お問い合わせ送信機能（新規） ---
-        async function sendContact() {
-            const name = document.getElementById('contactName').value;
-            const email = document.getElementById('contactEmail').value;
-            const type = document.getElementById('contactType').value;
-            const msg = document.getElementById('contactMsg').value;
-
-            if(!name || !email || !msg) { alert('すべての項目を入力してください'); return; }
-            if (!GAS_API_URL || GAS_API_URL.indexOf("script.google.com") === -1) { alert("GAS URL未設定"); return; }
-
-            const btn = document.querySelector('.contact-btn');
-            btn.disabled = true;
-            btn.innerText = "送信中...";
-
-            try {
-                const url = `${GAS_API_URL}?action=submit_contact&name=${encodeURIComponent(name)}&email=${encodeURIComponent(email)}&type=${encodeURIComponent(type)}&message=${encodeURIComponent(msg)}`;
-                const res = await fetch(url);
-                const json = await res.json();
-                if (json.status === 'success') {
-                    alert('お問い合わせありがとうございます！\n送信が完了しました。');
-                    document.getElementById('contactMsg').value = "";
-                } else {
-                    alert('送信に失敗しました。');
-                }
-            } catch(e) {
-                alert('通信エラーが発生しました');
-            } finally {
-                btn.disabled = false;
-                btn.innerText = "送信する";
-            }
-        }
-
         // --- ★隠しコマンド（イースターエッグ）機能 ---
         function initEasterEgg() {
+            if(typeof secretCode === 'undefined') return;
             window.addEventListener('keydown', (e) => {
                 secretInput.push(e.key);
                 if (secretInput.length > secretCode.length) secretInput.shift();
@@ -899,8 +832,10 @@
             var duration = 5 * 1000;
             var end = Date.now() + duration;
             (function frame() {
-                confetti({ particleCount: 2, angle: 60, spread: 55, origin: { x: 0 }, colors: ['#ff0000', '#00ff00', '#0000ff'] });
-                confetti({ particleCount: 2, angle: 120, spread: 55, origin: { x: 1 }, colors: ['#ff0000', '#00ff00', '#0000ff'] });
+                if(typeof confetti === 'function'){
+                    confetti({ particleCount: 2, angle: 60, spread: 55, origin: { x: 0 }, colors: ['#ff0000', '#00ff00', '#0000ff'] });
+                    confetti({ particleCount: 2, angle: 120, spread: 55, origin: { x: 1 }, colors: ['#ff0000', '#00ff00', '#0000ff'] });
+                }
                 if (Date.now() < end) {
                     requestAnimationFrame(frame);
                 } else {
@@ -938,6 +873,8 @@
         }
 
         function drawOmikuji() {
+            if(typeof fortuneTypes === 'undefined' || memberData.length === 0) return;
+            
             const member = memberData[Math.floor(Math.random() * memberData.length)];
             const fortune = fortuneTypes[Math.floor(Math.random() * fortuneTypes.length)];
             const item = luckyItems[Math.floor(Math.random() * luckyItems.length)];
@@ -960,7 +897,7 @@
                     box.classList.remove('pre-burst');
                     slip.classList.add('coming-out');
                     animModal.classList.add('burst');
-                    spawnConfetti(particlesContainer);
+                    if(typeof spawnConfetti === 'function') spawnConfetti(particlesContainer);
                     setTimeout(() => {
                         animModal.classList.remove('open');
                         animModal.classList.remove('burst');
@@ -1123,6 +1060,38 @@
             }
         }
 
+        // --- お問い合わせ送信機能 ---
+        async function sendContact() {
+            const name = document.getElementById('contactName').value;
+            const email = document.getElementById('contactEmail').value;
+            const type = document.getElementById('contactType').value;
+            const msg = document.getElementById('contactMsg').value;
+
+            if(!name || !email || !msg) { alert('すべての項目を入力してください'); return; }
+            if (!GAS_API_URL || GAS_API_URL.indexOf("script.google.com") === -1) { alert("GAS URL未設定"); return; }
+
+            const btn = document.querySelector('.contact-btn');
+            btn.disabled = true;
+            btn.innerText = "送信中...";
+
+            try {
+                const url = `${GAS_API_URL}?action=submit_contact&name=${encodeURIComponent(name)}&email=${encodeURIComponent(email)}&type=${encodeURIComponent(type)}&message=${encodeURIComponent(msg)}`;
+                const res = await fetch(url);
+                const json = await res.json();
+                if (json.status === 'success') {
+                    alert('お問い合わせありがとうございます！\n送信が完了しました。');
+                    document.getElementById('contactMsg').value = "";
+                } else {
+                    alert('送信に失敗しました。');
+                }
+            } catch(e) {
+                alert('通信エラーが発生しました');
+            } finally {
+                btn.disabled = false;
+                btn.innerText = "送信する";
+            }
+        }
+
         // --- ラジオ日記描画 ---
         function renderRadioDiary() {
             const container = document.getElementById('radioDiaryList');
@@ -1196,7 +1165,7 @@
             document.getElementById('topMemberList').innerHTML = memberHtml; 
             document.getElementById('memberGrid').innerHTML = memberHtml; 
             
-            // Goods初期レンダリング（データ取得前）
+            // Goods初期レンダリング
             document.getElementById('goodsList').innerHTML = goodsData.map((g, i) => ` 
                 <div class="goods-item" onclick="openGoodsModal(${i})"> 
                     <img src="${g.img}" class="goods-img"> 
