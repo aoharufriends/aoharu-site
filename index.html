@@ -31,6 +31,25 @@
         .page.active { display: block !important; }
         @keyframes fadeInPage { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
+        /* ★ローディング画面★ */
+        #loadingScreen {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: #e0f7ff; z-index: 9999;
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+            transition: opacity 0.5s, visibility 0.5s;
+        }
+        #loadingScreen.loaded { opacity: 0; visibility: hidden; pointer-events: none; }
+        .loading-logo {
+            width: 120px; height: auto; margin-bottom: 20px;
+            animation: bounce-logo 1s infinite;
+        }
+        .loading-text {
+            font-family: 'Poppins', sans-serif; font-weight: bold; color: var(--primary);
+            font-size: 18px; letter-spacing: 2px; animation: blink 1.5s infinite;
+        }
+        @keyframes bounce-logo { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-15px); } }
+        @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
+
         /* ヘッダー */
         header { position: fixed; top: 0; left: 0; width: 100%; height: 70px; background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(5px); display: flex; align-items: center; justify-content: space-between; box-shadow: 0 2px 10px rgba(0,0,0,0.05); z-index: 1000; }
         .logo-img { height: 40px; width: auto; margin-left: 20px; object-fit: contain; cursor: pointer; transition: transform 0.1s; }
@@ -49,12 +68,6 @@
         .menu-close { position: absolute; top: 20px; right: 20px; font-size: 30px; color: #ccc; cursor: pointer; }
         .overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.3); z-index: 1500; opacity: 0; visibility: hidden; transition: 0.3s; } .overlay.open { opacity: 1; visibility: visible; }
 
-        /* 配信バー */
-        .live-container { position: fixed; top: 120px; right: 20px; z-index: 999; display: flex; flex-direction: column; gap: 10px; align-items: flex-end; pointer-events: none; }
-        .live-bar { pointer-events: auto; background: #ff4757; color: white; padding: 8px 20px 8px 10px; border-radius: 50px; font-weight: bold; cursor: pointer; box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2); animation: bounce-in 0.5s ease-out, pulse-live 2s infinite; display: flex; align-items: center; width: fit-content; }
-        .live-bar.twitch { background: #9146FF; } .live-bar-content { display: flex; align-items: center; justify-content: center; gap: 10px; font-size: 13px; } .live-icon-img { width: 30px; height: 30px; border-radius: 50%; border: 2px solid white; object-fit: cover; background-color: white; } .live-badge { background: white; color: red; padding: 2px 6px; border-radius: 4px; font-size: 10px; font-weight: 900; } .twitch .live-badge { color: #9146FF; }
-        @keyframes bounce-in { 0% { transform: scale(0.8) translateX(20px); opacity: 0; } 100% { transform: scale(1) translateX(0); opacity: 1; } } @keyframes pulse-live { 0% { transform: scale(1); } 50% { transform: scale(1.03); } 100% { transform: scale(1); } }
-
         /* 共通コンポーネント */
         .hero-section { width: 100%; background-color: #e0f7ff; position: relative; margin-bottom: 40px; padding: 0; } .hero-section::after { content: ""; position: absolute; bottom: 0; left: 0; width: 100%; height: 30px; background: white; clip-path: polygon(0 100%, 100% 0, 100% 100%); } .hero-logo-img { width: 100%; max-width: 1300px; height: auto; display: block; margin: 0 auto; filter: drop-shadow(0 5px 15px rgba(39, 198, 245, 0.3)); }
         .container { padding: 0 20px 40px; max-width: 1000px; margin: 0 auto; }
@@ -65,36 +78,29 @@
         /* ★★★ おみくじエリア（派手カワ・リニューアル版） ★★★ */
         .omikuji-area { 
             text-align: center; margin-bottom: 60px; 
-            background: linear-gradient(135deg, #fff5f8 0%, #f0faff 100%); /* ふんわりグラデ */
+            background: linear-gradient(135deg, #fff5f8 0%, #f0faff 100%);
             padding: 30px 20px; border-radius: 25px; 
             box-shadow: 0 10px 30px rgba(0,0,0,0.05); 
-            border: 4px solid white; outline: 4px dashed #ff9a9e; /* 二重線でポップに */
+            border: 4px solid white; outline: 4px dashed #ff9a9e;
             position: relative; overflow: hidden;
             max-width: 600px; margin-left: auto; margin-right: auto;
         }
-        /* 背景の水玉模様 */
         .omikuji-area::before {
             content: ""; position: absolute; inset: 0; opacity: 0.1;
             background-image: radial-gradient(#ff9a9e 20%, transparent 20%), radial-gradient(#27C6F5 20%, transparent 20%);
             background-size: 30px 30px; background-position: 0 0, 15px 15px;
             pointer-events: none;
         }
-        
-        /* 飾りアイコン（浮遊する星など） */
         .omi-deco { position: absolute; font-size: 24px; animation: float-deco 3s ease-in-out infinite; z-index: 1; }
         .d-1 { top: 10px; left: 10px; color: #FFD700; animation-delay: 0s; }
         .d-2 { bottom: 10px; right: 10px; color: #27C6F5; animation-delay: 1.5s; font-size: 30px; }
         @keyframes float-deco { 0%, 100% { transform: translateY(0) rotate(0deg); } 50% { transform: translateY(-10px) rotate(20deg); } }
-
-        /* メインビジュアル */
         .omi-visual-box {
             font-size: 60px; color: #ff4757; margin: 10px 0 20px;
             text-shadow: 0 5px 0 rgba(0,0,0,0.1);
             animation: omi-bounce 2s infinite; display: inline-block;
         }
         @keyframes omi-bounce { 0%, 20%, 50%, 80%, 100% { transform: translateY(0); } 40% { transform: translateY(-20px); } 60% { transform: translateY(-10px); } }
-
-        /* タイトル装飾 */
         .omi-title-ribbon {
             background: #ff4757; color: white; display: inline-block;
             padding: 5px 20px; border-radius: 20px; font-weight: bold; font-size: 14px;
@@ -107,8 +113,6 @@
             background: linear-gradient(to right, #ff4757, #ff9a9e);
             -webkit-background-clip: text; -webkit-text-fill-color: transparent;
         }
-
-        /* おみくじボタン（超豪華版） */
         .omikuji-btn { 
             background: linear-gradient(to bottom, #FFD700, #FFA500); 
             color: #fff; font-weight: 900; padding: 18px 50px; 
@@ -126,6 +130,32 @@
             background: #27C6F5; color: white; font-size: 12px; padding: 5px 10px;
             border-radius: 50%; transform: rotate(20deg); border: 2px solid white;
             box-shadow: 0 2px 5px rgba(0,0,0,0.2); animation: pulse-red 1s infinite;
+        }
+
+        /* ★スマホ用調整（おみくじをコンパクトに）★ */
+        @media (max-width: 768px) {
+            .omikuji-area {
+                padding: 20px 10px; /* パディングを減らす */
+                margin-bottom: 40px;
+            }
+            .omi-main-text {
+                font-size: 22px; /* 文字サイズを小さく */
+                margin-bottom: 15px;
+            }
+            .omi-visual-box {
+                font-size: 40px; /* アイコンを小さく */
+                margin: 5px 0 15px;
+            }
+            .omikuji-btn {
+                padding: 12px 30px; /* ボタンを小さく */
+                font-size: 16px;
+            }
+            .omikuji-btn::after {
+                font-size: 10px; /* バッジも小さく */
+                padding: 3px 6px;
+                top: -10px;
+                right: -10px;
+            }
         }
         
         /* 派手カワおみくじアニメーション */
@@ -468,6 +498,11 @@
     </style>
 </head>
 <body>
+    <div id="loadingScreen">
+        <img src="logo.png" class="loading-logo" alt="Loading...">
+        <div class="loading-text">LOADING...</div>
+    </div>
+
     <header>
         <img src="logo.png" alt="AOHARU FRIENDS" class="logo-img" onclick="showPage('top')" id="headerLogo">
         <div class="header-right">
@@ -871,6 +906,13 @@
                 fetchLikes(); 
                 initOmikuji(); 
                 initEasterEgg(); 
+                
+                // ★ローディング終了処理★
+                const loader = document.getElementById('loadingScreen');
+                if(loader) {
+                    loader.classList.add('loaded');
+                    setTimeout(() => loader.remove(), 500); // 完全に消す
+                }
             });
         };
 
