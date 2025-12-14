@@ -12,7 +12,7 @@
     <meta property="og:type" content="website">
     <meta property="og:url" content="https://aoharu-site.vercel.app/">
     <meta property="og:image" content="https://aoharu-site.vercel.app/ogp.png">
-    <meta property="og:description" content="2026年デビュー！4人組VTuberグループ「あおはる⭐︎フレンズ」の公式サイトです。おみくじや限定コンテンツ公開中！">
+    <meta property="og:description" content="2026年デビュー！4人組VTuberグループ「あおはる⭐︎フレンズ」の公式サイトです。">
     <meta property="og:site_name" content="あおはる⭐︎フレンズ Official">
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:site" content="@aoharu_official">
@@ -107,7 +107,7 @@
         #omikujiAnimModal.flash-effect::after { content: ""; position: absolute; inset: 0; background: white; z-index: 100; animation: flash-anim 0.5s ease-out forwards; pointer-events: none; }
         @keyframes flash-anim { 0% { opacity: 1; } 100% { opacity: 0; } }
 
-        /* おみくじ結果 & ボタン */
+        /* おみくじ結果表示 & ボタン */
         .omi-rank { font-size: 48px; font-weight: 900; color: #ff4757; margin-bottom: 10px; text-shadow: 2px 2px 0 rgba(0,0,0,0.1); font-family: 'M PLUS Rounded 1c', sans-serif; }
         .omi-msg { font-size: 16px; color: #555; margin-bottom: 20px; font-weight: bold; line-height: 1.5; }
         .omi-item { font-size: 14px; color: #fff; background: var(--primary); display: inline-block; padding: 8px 20px; border-radius: 20px; font-weight: bold; box-shadow: 0 5px 10px rgba(39, 198, 245, 0.3); }
@@ -279,7 +279,7 @@
         .tl-title { font-weight: bold; font-size: 15px; margin-bottom: 5px; }
         .tl-tag { font-size: 11px; background: #eee; padding: 2px 8px; border-radius: 4px; color: #666; }
 
-        /* グッズページ */
+        /* グッズページ（★修正：正方形＆モーダル） */
         .goods-hero { background: #f9f9f9; border-radius: 15px; padding: 30px; text-align: center; margin-bottom: 40px; }
         .goods-hero h3 { margin: 0 0 10px 0; color: var(--primary); font-family: 'Poppins', sans-serif; }
         .goods-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 15px; }
@@ -287,17 +287,16 @@
         .goods-item:hover { transform: translateY(-5px); border-color: var(--primary); }
         .goods-name { font-size: 13px; font-weight: bold; height: 2.8em; overflow: hidden; line-height: 1.4; }
         .goods-price { font-family: 'Poppins', sans-serif; color: var(--primary); font-weight: bold; margin-top: 5px; }
+        /* 画像を正方形に強制 */
+        .goods-img { width: 100%; aspect-ratio: 1 / 1; object-fit: cover; border-radius: 8px; margin-bottom: 10px; background-color:#eee; }
         
-        /* ★グッズ画像：正方形＆カバー */
-        .goods-img { width: 100%; aspect-ratio: 1 / 1; object-fit: cover; border-radius: 8px; margin-bottom: 10px; }
-        
-        /* ★グッズモーダル */
+        /* グッズ詳細モーダル */
         #goodsModal .modal-content { text-align: left; padding: 25px; }
-        #goodsModalImg { width: 100%; max-height: 300px; object-fit: contain; border-radius: 8px; margin-bottom: 15px; background: #f9f9f9; }
+        #goodsModalImg { width: 100%; max-height: 300px; object-fit: contain; border-radius: 8px; margin-bottom: 15px; background: #fff; }
         #goodsModalTitle { font-size: 18px; font-weight: bold; margin-bottom: 5px; }
         #goodsModalPrice { font-size: 20px; font-weight: bold; color: var(--primary); font-family: 'Poppins', sans-serif; margin-bottom: 15px; }
         #goodsModalDesc { font-size: 14px; line-height: 1.6; color: #555; margin-bottom: 20px; white-space: pre-wrap; }
-        .buy-btn { display: block; width: 100%; text-align: center; background: var(--primary); color: white; padding: 12px; border-radius: 30px; text-decoration: none; font-weight: bold; transition: 0.2s; }
+        .buy-btn { display: block; width: 100%; text-align: center; background: var(--primary); color: white; padding: 12px; border-radius: 30px; text-decoration: none; font-weight: bold; transition: 0.2s; box-sizing: border-box; }
         .buy-btn:hover { opacity: 0.9; transform: translateY(-2px); }
 
         /* RADIOページ */
@@ -706,10 +705,12 @@
     </footer>
 
     <script>
+        // ★重要：ご自身のURLに書き換えてください
         const GAS_API_URL = "ここにデプロイしたURLを貼り付け";
         const YOUTUBE_API_KEY = "ここにAPIキーを貼り付け";
         const GROUP_CONFIG = { name: "公式チャンネル", img: "logo.png", youtubeChannelId: "UC_Group_Channel_ID", twitterUrl: "https://twitter.com/Group_Account" };
         
+        // ★メンバーデータ（ファイル名を間違えないように注意！）
         const memberData = [
             { 
                 name: "たく兄ちゃん", enName: "TAKU-NIICHAN", catchphrase: "小悪魔の笑顔の錬金術師", color: "#87D322", img: "taku.png", bgImg: "member_haikei.jpg", 
@@ -737,10 +738,8 @@
             }
         ];
         
-        // 商品データ（初期値）※スプシから上書きされます
-        let goodsData = [{ name: "1st Tシャツ", price: "¥3,500", img: "https://placehold.co/300x300?text=T-shirt", link: "#" }];
+        let goodsData = [{ name: "1st Tシャツ", price: "¥3,500", img: "https://placehold.co/300x300?text=T-shirt", link: "#", detail: "高品質なTシャツです。" }, { name: "アクリルスタンド", price: "¥1,500", img: "https://placehold.co/300x300?text=Acsta", link: "#", detail: "卓上に飾れるサイズです。" }];
 
-        // おみくじデータ（全自動生成用）
         const fortuneTypes = ["大吉", "中吉", "小吉", "吉", "末吉"];
         const luckyItems = ["ゲーミングPC", "エナジードリンク", "マイク", "配信機材", "推し活グッズ", "唐揚げ", "ラーメン", "猫", "ヘッドホン", "サイリウム"];
         const fortuneComments = [
@@ -752,30 +751,33 @@
         ];
 
         let newsData = [], scheduleData = [], videoData = [], manualLiveData = [], memberVideoData = [];
-        let radioBlogData = []; // スプシから読み込む用に空にしておく
+        let radioBlogData = []; 
         let isMemberLoggedIn = false;
-        let currentOmikujiResult = null; // おみくじ結果の一時保存用
-
-        // ★いいねカウント用変数
+        let currentOmikujiResult = null; 
         let totalLikes = 0;
         let sessionLikes = 0;
         let likeSyncTimer = null;
-
-        // ★隠しコマンド用
         const secretCode = ['ArrowUp', 'ArrowUp', 'ArrowDown', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'ArrowLeft', 'ArrowRight', 'b', 'a'];
         let secretInput = [];
         let logoTapCount = 0;
 
+        // ★読み込み順序修正：リロード時にページを維持する
         window.onload = function() { 
-            renderStaticParts(); 
-            checkLiveStatus(); 
-            fetchSheetData(); 
-            initCardMaker(); 
-            renderRadioDiary(); // ラジオ日記生成
+            // 1. まず現在のページを判定して表示
             handleLocation(); 
-            fetchLikes(); // ★いいね数を取得
-            initOmikuji(); // ★おみくじボタン設置
-            initEasterEgg(); // ★隠しコマンド
+            // 2. その後に中身を描画（エラーがあってもページ遷移は守られる）
+            try {
+                renderStaticParts(); 
+                checkLiveStatus(); 
+                fetchSheetData(); 
+                initCardMaker(); 
+                renderRadioDiary(); 
+                fetchLikes(); 
+                initOmikuji(); 
+                initEasterEgg(); 
+            } catch(e) {
+                console.error("Init Error:", e);
+            }
         };
 
         window.onpopstate = handleLocation;
@@ -797,7 +799,6 @@
 
         // --- ★隠しコマンド（イースターエッグ）機能 ---
         function initEasterEgg() {
-            // PC: キーボード入力
             window.addEventListener('keydown', (e) => {
                 secretInput.push(e.key);
                 if (secretInput.length > secretCode.length) secretInput.shift();
@@ -805,44 +806,32 @@
                     activateFeverMode();
                 }
             });
-
-            // スマホ: ロゴ連打
             const logo = document.getElementById('headerLogo');
             if(logo) {
                 logo.addEventListener('click', (e) => {
-                    // 通常の遷移を止める
                     e.preventDefault();
                     logoTapCount++;
                     if(logoTapCount === 10) {
                         activateFeverMode();
                         logoTapCount = 0;
                     }
-                    // 3秒経ったらカウントリセット
                     setTimeout(() => logoTapCount = 0, 3000);
                 });
             }
         }
 
         function activateFeverMode() {
-            // 既にフィーバー中なら何もしない
             if(document.body.classList.contains('fever-mode')) return;
-
             document.body.classList.add('fever-mode');
-            
-            // "FEVER TIME!!" の文字を表示
             const text = document.createElement('div');
             text.className = 'fever-text';
             text.innerText = "FEVER TIME!!";
             document.body.appendChild(text);
-
-            // Confetti (紙吹雪) を継続的に発射
             var duration = 5 * 1000;
             var end = Date.now() + duration;
-
             (function frame() {
                 confetti({ particleCount: 2, angle: 60, spread: 55, origin: { x: 0 }, colors: ['#ff0000', '#00ff00', '#0000ff'] });
                 confetti({ particleCount: 2, angle: 120, spread: 55, origin: { x: 1 }, colors: ['#ff0000', '#00ff00', '#0000ff'] });
-
                 if (Date.now() < end) {
                     requestAnimationFrame(frame);
                 } else {
@@ -858,7 +847,6 @@
             navigator.clipboard.writeText(text).then(() => {
                 const toast = document.getElementById('copyToast');
                 toast.style.display = 'block';
-                // アニメーション再開のためにDOMをリセット
                 const newOne = toast.cloneNode(true);
                 toast.parentNode.replaceChild(newOne, toast);
                 setTimeout(() => { newOne.style.display = 'none'; }, 2000);
@@ -1104,10 +1092,9 @@
                     radioBlogData = data.radio_diaries; 
                     renderRadioDiary(); 
                 }
-                // ★追加：グッズデータ読み込み
+                // ★追加：グッズデータ読み込み＆再描画
                 if (data.goods) {
                     goodsData = data.goods;
-                    // グッズリストを再描画
                     document.getElementById('goodsList').innerHTML = goodsData.map((g, i) => `
                         <div class="goods-item" onclick="openGoodsModal(${i})">
                             <img src="${g.img}" class="goods-img">
@@ -1118,7 +1105,30 @@
             } catch (e) { console.error("Data Error:", e); }
         }
 
-        // --- 以下変更なし ---
+        function renderStaticParts() { 
+            const twLink = document.getElementById('groupTwitterLink'); 
+            const ytLink = document.getElementById('groupYoutubeLink'); 
+            if(GROUP_CONFIG.twitterUrl) twLink.href = GROUP_CONFIG.twitterUrl; 
+            if(GROUP_CONFIG.youtubeChannelId) ytLink.href = `https://www.youtube.com/channel/${GROUP_CONFIG.youtubeChannelId}`; 
+            const footerTwLink = document.getElementById('footerTwitterLink'); 
+            const footerYtLink = document.getElementById('footerYoutubeLink'); 
+            if(GROUP_CONFIG.twitterUrl) footerTwLink.href = GROUP_CONFIG.twitterUrl; 
+            if(GROUP_CONFIG.youtubeChannelId) footerYtLink.href = `https://www.youtube.com/channel/${GROUP_CONFIG.youtubeChannelId}`; 
+            
+            const memberHtml = memberData.map((m, i) => `<div class="member-card-vertical" onclick="openMemberDetail(${i})" style="--member-color: ${m.color}; --member-bg: url('${m.bgImg}');"><div class="member-img-wrapper"><img src="${m.img}" class="member-img-tachie"></div><a href="javascript:void(0)" class="member-link-overlay"></a></div>`).join(''); 
+            document.getElementById('topMemberList').innerHTML = memberHtml; 
+            document.getElementById('memberGrid').innerHTML = memberHtml; 
+            
+            // Goods初期レンダリング
+            document.getElementById('goodsList').innerHTML = goodsData.map((g, i) => ` 
+                <div class="goods-item" onclick="openGoodsModal(${i})"> 
+                    <img src="${g.img}" class="goods-img"> 
+                    <div class="goods-name">${g.name}</div> 
+                    <div class="goods-price">${g.price}</div> 
+                </div>`).join(''); 
+        }
+
+        // --- 以下の関数は変更なし ---
         async function registerUser() { const name = document.getElementById('regName').value, email = document.getElementById('regEmail').value, pass = document.getElementById('regPass').value, btn = document.getElementById('regBtn'); if(!name || !email || !pass) { alert("全ての項目を入力してください"); return; } if (!GAS_API_URL || GAS_API_URL.indexOf("script.google.com") === -1) { alert("GAS URL未設定"); return; } btn.innerText = "送信中..."; btn.disabled = true; try { const res = await fetch(`${GAS_API_URL}?action=register&name=${encodeURIComponent(name)}&email=${encodeURIComponent(email)}&pass=${encodeURIComponent(pass)}`); const json = await res.json(); if (json.status === 'success') { alert("登録完了！\n会員ID: " + json.id); closeRegisterModal(); document.getElementById('regName').value = ""; document.getElementById('regEmail').value = ""; document.getElementById('regPass').value = ""; } else { alert("登録エラー: " + json.message); } } catch (e) { alert("通信エラー"); } finally { btn.innerText = "会員登録する"; btn.disabled = false; } }
         async function loginUser() { const email = document.getElementById('loginEmail').value, pass = document.getElementById('loginPass').value, btn = document.getElementById('loginBtn'); if(!email || !pass) { alert("メールアドレスとパスワードを入力してください"); return; } if (!GAS_API_URL || GAS_API_URL.indexOf("script.google.com") === -1) { alert("GAS URL未設定"); return; } btn.innerText = "確認中..."; btn.disabled = true; try { const res = await fetch(`${GAS_API_URL}?action=login&email=${encodeURIComponent(email)}&pass=${encodeURIComponent(pass)}`); const json = await res.json(); if (json.status === 'success') { alert("ログイン成功！ようこそ " + json.name + " さん！"); closeLoginModal(); const headerBtn = document.getElementById('headerLoginBtn'); headerBtn.innerText = `${json.name} 様`; headerBtn.classList.add('logged-in-user'); headerBtn.onclick = null; isMemberLoggedIn = true; renderMemberVideos(); } else { alert("ログイン失敗: " + json.message); } } catch (e) { alert("通信エラー"); } finally { btn.innerText = "ログインする"; btn.disabled = false; } }
         
@@ -1129,15 +1139,7 @@
         function renderMemberVideos() { const container = document.getElementById('memberVideoList'); if(!memberVideoData.length) { container.innerHTML = "限定動画はまだありません"; return; } const html = memberVideoData.map(v => { const clickAction = isMemberLoggedIn ? `window.open('https://www.youtube.com/watch?v=${v.id}', '_blank')` : `openLoginModal()`; const lockedClass = isMemberLoggedIn ? 'unlocked' : 'mv-blur'; const lockOverlay = isMemberLoggedIn ? '' : `<div class="mv-lock-overlay"><div class="mv-lock-icon"><i class="fas fa-lock"></i></div><div class="mv-lock-text">MEMBER ONLY</div></div>`; return `<div class="member-video-card ${lockedClass}" onclick="${clickAction}">${lockOverlay}<div class="news-thumb-area"><img src="https://img.youtube.com/vi/${v.id}/mqdefault.jpg" class="news-img"></div><div class="news-content"><div class="news-date">${v.date}</div><div class="news-title">${v.title}</div><div class="news-check-btn">${isMemberLoggedIn ? 'PLAY' : 'LOCKED'}</div></div></div>`; }).join(''); container.innerHTML = html; }
         
         function playVoice(fileName) { if (!fileName) return; const audio = new Audio(fileName); audio.volume = 0.5; audio.play().catch(e => alert("再生エラー: 音声ファイルが見つかりません")); }
-        
-        // ★初期表示のGOODSレンダリング
-        document.getElementById('goodsList').innerHTML = goodsData.map((g, i) => ` 
-            <div class="goods-item" onclick="openGoodsModal(${i})"> 
-                <img src="${g.img}" class="goods-img"> 
-                <div class="goods-name">${g.name}</div> 
-                <div class="goods-price">${g.price}</div> 
-            </div>`).join(''); 
-
+        function openMemberDetail(index, pushHistory = true) { const m = memberData[index]; const detailContainer = document.getElementById('memberDetail'); const twitchLink = m.twitchId ? `<a href="https://www.twitch.tv/${m.twitchId}" target="_blank" class="p-btn" style="background:#9146FF;color:white;box-shadow:0 5px 15px rgba(145,70,255,0.3);"><i class="fab fa-twitch"></i> Twitch</a>` : ''; const twitterLink = m.twitterId ? `https://x.com/${m.twitterId}` : '#'; const voiceBtn = m.voice ? `<div class="p-btn voice" onclick="playVoice('${m.voice}')"><i class="fas fa-volume-up"></i> VOICE</div>` : ''; detailContainer.innerHTML = `<div class="member-bg-layer" style="background-image: url('${m.img}');"></div><div class="profile-header-bg" style="--m-color: ${m.color}; --m-color-light: ${m.color}20;"><div class="profile-wrapper"><div class="profile-visual"><img src="${m.img}" class="profile-tachie" alt="${m.name}"></div><div class="profile-info"><div class="profile-en-name">${m.enName || 'MEMBER'}</div><div class="profile-jp-name">${m.name}</div><div class="profile-catch">${m.catchphrase || ''}</div><div class="profile-data-list"><div class="p-data-item"><span class="p-label">誕生日</span><span class="p-value">${m.birthday || '-'}</span></div><div class="p-data-item"><span class="p-label">身長</span><span class="p-value">${m.height || '-'}</span></div><div class="p-data-item"><span class="p-label">ファンネーム</span><span class="p-value copy-tag" onclick="copyText('${m.fanName}')">${m.fanName || '-'} <i class="far fa-copy copy-icon"></i></span></div><div class="p-data-item"><span class="p-label">ハッシュタグ</span><span class="p-value copy-tag" style="color:var(--m-color)" onclick="copyText('${m.hashTag}')">${m.hashTag || '-'} <i class="far fa-copy copy-icon"></i></span></div></div><div class="profile-bio">${m.bio || ''}</div><div class="profile-actions">${voiceBtn}<a href="${m.youtubeId ? 'https://www.youtube.com/channel/' + m.youtubeId : '#'}" target="_blank" class="p-btn yt"><i class="fab fa-youtube"></i> YouTube</a>${twitchLink}<a href="${twitterLink}" target="_blank" class="p-btn x"><i class="fab fa-x-twitter"></i> X</a></div><div style="text-align:right;"><span class="back-link" onclick="showPage('member')">◀ MEMBER LIST</span></div></div></div></div>`; if(pushHistory) history.pushState(null, null, '#member_' + index); showPage('memberDetail', m.name, false); }
         async function checkLiveStatus() { const noaSection = document.getElementById('nowOnAirSection'); const noaGrid = document.getElementById('nowOnAirGrid'); noaGrid.innerHTML = ''; noaSection.style.display = 'none'; let hasLiveStream = false; const allTargets = [...memberData]; if (GROUP_CONFIG.youtubeChannelId) { allTargets.push({ name: GROUP_CONFIG.name, img: GROUP_CONFIG.img, youtubeId: GROUP_CONFIG.youtubeChannelId }); } if (YOUTUBE_API_KEY && YOUTUBE_API_KEY !== "ここにAPIキーを貼り付け") { for (const target of allTargets) { if (target.youtubeId && target.youtubeId.includes("UC")) { try { const url = `https://www.googleapis.com/youtube/v3/search?part=snippet&channelId=${target.youtubeId}&eventType=live&type=video&key=${YOUTUBE_API_KEY}`; const response = await fetch(url); const data = await response.json(); if (data.items && data.items.length > 0) { const video = data.items[0]; const card = createNowOnAirCard(target.name, target.img, `https://www.youtube.com/watch?v=${video.id.videoId}`, video.snippet.title, video.snippet.thumbnails.high.url); noaGrid.appendChild(card); hasLiveStream = true; } } catch (e) { console.error("YouTube Error", e); } } } } if (manualLiveData && manualLiveData.length > 0) { manualLiveData.forEach(live => { const member = memberData.find(m => m.name === live.name); const icon = live.image || (member ? member.img : "icon.png"); const thumb = "https://placehold.co/600x338/9146FF/ffffff?text=NOW+ON+AIR"; const card = createNowOnAirCard(live.name, icon, live.url, live.title || "配信中！", thumb); noaGrid.appendChild(card); hasLiveStream = true; }); } if (hasLiveStream) noaSection.style.display = 'block'; }
         function createNowOnAirCard(name, icon, url, title, thumbUrl) { const card = document.createElement('a'); card.href = url; card.target = "_blank"; card.className = "noa-card"; card.innerHTML = `<div class="noa-thumb-wrapper"><img src="${thumbUrl}" class="noa-thumb"><span class="noa-badge">LIVE</span><div class="noa-icon-wrapper"><img src="${icon}" class="noa-icon"></div></div><div class="noa-info"><div class="noa-member-name">${name}</div><div class="noa-stream-title">${title}</div></div>`; return card; }
         function scrollContent(elementId, direction) { const container = document.getElementById(elementId); const scrollAmount = container.clientWidth / 2; if (direction === 'left') container.scrollBy({ left: -scrollAmount, behavior: 'smooth' }); else container.scrollBy({ left: scrollAmount, behavior: 'smooth' }); }
