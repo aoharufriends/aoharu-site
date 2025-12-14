@@ -23,8 +23,6 @@
     <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
 
-    <script src="config.js"></script>
-
     <style>
         /* ベーススタイル */
         :root { --primary: #27C6F5; --text-main: #444444; --text-sub: #888888; --bg-color: #ffffff; --light-bg: #f4f8fa; }
@@ -694,7 +692,7 @@
                 <div id="omiParticles" class="omi-particles"></div>
                 <div class="omi-box-container">
                     <div id="omiSlip" class="omi-slip"></div>
-                    <div id="omiBox" class="omi-box">御神籤</div>
+                    <div id="omiBox" class="omi-box">おみくじ</div>
                 </div>
             </div>
             <p style="color:white; font-weight:bold; margin-top:20px; font-size:20px; text-shadow:0 2px 5px rgba(0,0,0,0.5);">運命を抽選中...</p>
@@ -744,13 +742,26 @@
         <div class="copyright">© 2026 AOHARU FRIENDS All Rights Reserved.</div>
     </footer>
 
-    <script>
-        // 設定変数の初期化（config.jsが読み込まれていない場合のフォールバック）
-        if (typeof GAS_API_URL === 'undefined') var GAS_API_URL = "";
-        if (typeof YOUTUBE_API_KEY === 'undefined') var YOUTUBE_API_KEY = "";
-        if (typeof GROUP_CONFIG === 'undefined') var GROUP_CONFIG = {};
-        if (typeof memberData === 'undefined') var memberData = [];
-        if (typeof goodsData === 'undefined') var goodsData = [];
+<script>
+        // ★★★ ここにGASのURLを貼り付けてください！（これだけは必須です） ★★★
+        const GAS_API_URL = "https://script.google.com/macros/s/AKfycbwpMkLuZlQdCPWf4A3cOJQaL8SNy_VEKRaiOUuCyttdDIFAqWhc1io2L0N-qtISCet57g/exec";
+
+        // ※以下の変数はスプレッドシートから読み込まれるため、空のままでOKです
+        let YOUTUBE_API_KEY = "";
+        let GROUP_CONFIG = {};
+        let memberData = [];
+        let goodsData = [{ name: "Loading...", price: "-", img: "icon.png", link: "#" }]; // 読み込み中の仮表示
+
+        // --- 変数定義 ---
+        const fortuneTypes = ["大吉", "中吉", "小吉", "吉", "末吉"];
+        const luckyItems = ["ゲーミングPC", "エナジードリンク", "マイク", "配信機材", "推し活グッズ", "唐揚げ", "ラーメン", "猫", "ヘッドホン", "サイリウム"];
+        const fortuneComments = [
+            "今日は最高の配信ができそう！",
+            "ラッキーアイテムを持って待機してね！",
+            "推しの配信を見ると運気アップ！",
+            "今日はゆっくりアーカイブを見よう。",
+            "SNSで推しを布教するといいことあるかも！"
+        ];
         
         let newsData = [], scheduleData = [], videoData = [], manualLiveData = [], memberVideoData = [];
         let radioBlogData = []; 
@@ -759,26 +770,23 @@
         let totalLikes = 0;
         let sessionLikes = 0;
         let likeSyncTimer = null;
+        const secretCode = ['ArrowUp', 'ArrowUp', 'ArrowDown', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'ArrowLeft', 'ArrowRight', 'b', 'a'];
         let secretInput = [];
         let logoTapCount = 0;
 
-        // ★読み込み順序修正：リロード時にページを維持する
+        // ★読み込み開始
         window.onload = function() { 
-            // 1. まず現在のページを判定して表示
             handleLocation(); 
-            // 2. その後に中身を描画（エラーがあってもページ遷移は守られる）
-            try {
-                renderStaticParts(); 
-                checkLiveStatus(); 
-                fetchSheetData(); 
-                initCardMaker(); 
-                renderRadioDiary(); 
-                fetchLikes(); 
-                initOmikuji(); 
-                initEasterEgg(); 
-            } catch(e) {
-                console.error("Init Error:", e);
-            }
+            // データを取得してから描画
+            fetchSheetData().then(() => {
+                renderStaticParts(); // メンバー・グッズ描画
+                checkLiveStatus();   // 配信チェック
+                initCardMaker();     // 会員証準備
+                renderRadioDiary();  // 日記描画
+                fetchLikes();        // いいね取得
+                initOmikuji();       // おみくじ準備
+                initEasterEgg();     // 隠しコマンド
+            });
         };
 
         window.onpopstate = handleLocation;
@@ -787,358 +795,55 @@
             const hash = location.hash;
             if (hash.startsWith('#member_')) {
                 const index = parseInt(hash.split('_')[1]);
-                openMemberDetail(index, false); 
+                // データ読み込み後でないと開けないため、少し待つか読み込み完了後に実行される
+                if(memberData.length > 0) openMemberDetail(index, false); 
             } else if (hash) {
                 const id = hash.replace('#', '');
-                if(document.getElementById(id)) {
-                    showPage(id, null, false);
-                }
+                if(document.getElementById(id)) showPage(id, null, false);
             } else {
                 showPage('top', null, false);
             }
         }
 
-        // --- ★隠しコマンド（イースターエッグ）機能 ---
-        function initEasterEgg() {
-            if(typeof secretCode === 'undefined') return;
-            window.addEventListener('keydown', (e) => {
-                secretInput.push(e.key);
-                if (secretInput.length > secretCode.length) secretInput.shift();
-                if (JSON.stringify(secretInput) === JSON.stringify(secretCode)) {
-                    activateFeverMode();
-                }
-            });
-            const logo = document.getElementById('headerLogo');
-            if(logo) {
-                logo.addEventListener('click', (e) => {
-                    e.preventDefault();
-                    logoTapCount++;
-                    if(logoTapCount === 10) {
-                        activateFeverMode();
-                        logoTapCount = 0;
-                    }
-                    setTimeout(() => logoTapCount = 0, 3000);
-                });
-            }
-        }
-
-        function activateFeverMode() {
-            if(document.body.classList.contains('fever-mode')) return;
-            document.body.classList.add('fever-mode');
-            const text = document.createElement('div');
-            text.className = 'fever-text';
-            text.innerText = "FEVER TIME!!";
-            document.body.appendChild(text);
-            var duration = 5 * 1000;
-            var end = Date.now() + duration;
-            (function frame() {
-                if(typeof confetti === 'function'){
-                    confetti({ particleCount: 2, angle: 60, spread: 55, origin: { x: 0 }, colors: ['#ff0000', '#00ff00', '#0000ff'] });
-                    confetti({ particleCount: 2, angle: 120, spread: 55, origin: { x: 1 }, colors: ['#ff0000', '#00ff00', '#0000ff'] });
-                }
-                if (Date.now() < end) {
-                    requestAnimationFrame(frame);
-                } else {
-                    document.body.classList.remove('fever-mode');
-                    text.remove();
-                    alert("祭りは終わった……");
-                }
-            }());
-        }
-
-        // --- ★ワンタップ・コピー機能 ---
-        function copyText(text) {
-            navigator.clipboard.writeText(text).then(() => {
-                const toast = document.getElementById('copyToast');
-                toast.style.display = 'block';
-                const newOne = toast.cloneNode(true);
-                toast.parentNode.replaceChild(newOne, toast);
-                setTimeout(() => { newOne.style.display = 'none'; }, 2000);
-            });
-        }
-
-        // --- ★全自動おみくじ機能 ---
-        function initOmikuji() {
-            const container = document.querySelector('#top .container');
-            if(container) {
-                const omikujiArea = document.createElement('div');
-                omikujiArea.className = 'omikuji-area';
-                omikujiArea.innerHTML = `
-                    <div class="section-title" style="margin-top:0;"><span class="ja-title">今日の運勢を占う</span></div>
-                    <button class="omikuji-btn" onclick="drawOmikuji()">おみくじを引く！</button>
-                `;
-                const noaSection = document.getElementById('nowOnAirSection');
-                noaSection.parentNode.insertBefore(omikujiArea, noaSection.nextSibling);
-            }
-        }
-
-        function drawOmikuji() {
-            if(typeof fortuneTypes === 'undefined' || memberData.length === 0) return;
-            
-            const member = memberData[Math.floor(Math.random() * memberData.length)];
-            const fortune = fortuneTypes[Math.floor(Math.random() * fortuneTypes.length)];
-            const item = luckyItems[Math.floor(Math.random() * luckyItems.length)];
-            const comment = fortuneComments[Math.floor(Math.random() * fortuneComments.length)];
-            currentOmikujiResult = { member, fortune, item, comment };
-
-            const animModal = document.getElementById('omikujiAnimModal');
-            const box = document.getElementById('omiBox');
-            const slip = document.getElementById('omiSlip');
-            const particlesContainer = document.getElementById('omiParticles');
-            
-            particlesContainer.innerHTML = '';
-            animModal.classList.add('open');
-            box.classList.add('shaking');
-
-            setTimeout(() => {
-                box.classList.remove('shaking');
-                box.classList.add('pre-burst');
-                setTimeout(() => {
-                    box.classList.remove('pre-burst');
-                    slip.classList.add('coming-out');
-                    animModal.classList.add('burst');
-                    if(typeof spawnConfetti === 'function') spawnConfetti(particlesContainer);
-                    setTimeout(() => {
-                        animModal.classList.remove('open');
-                        animModal.classList.remove('burst');
-                        slip.classList.remove('coming-out');
-                        showOmikujiResult();
-                    }, 1500);
-                }, 500);
-            }, 2500);
-        }
-
-        function spawnConfetti(container) {
-            const colors = ['#FF512F', '#DD2476', '#FFD700', '#27C6F5', '#ffffff'];
-            const icons = ['fa-star', 'fa-heart', 'fa-music', 'fa-bolt'];
-            for (let i = 0; i < 50; i++) {
-                const el = document.createElement('i');
-                el.className = `fas ${icons[Math.floor(Math.random() * icons.length)]} confetti`;
-                el.style.color = colors[Math.floor(Math.random() * colors.length)];
-                el.style.left = '50%'; el.style.top = '50%';
-                const angle = Math.random() * 360;
-                const dist = 150 + Math.random() * 200;
-                el.style.setProperty('--tx', `${Math.cos(angle * Math.PI / 180) * dist}px`);
-                el.style.setProperty('--ty', `${Math.sin(angle * Math.PI / 180) * dist}px`);
-                el.style.setProperty('--r', `${Math.random() * 720 - 360}deg`);
-                container.appendChild(el);
-            }
-            const shockwave = document.createElement('div');
-            shockwave.className = 'shockwave';
-            container.appendChild(shockwave);
-        }
-
-        function showOmikujiResult() {
-            if(!currentOmikujiResult) return;
-            document.getElementById('omiResultImg').src = currentOmikujiResult.member.img;
-            document.getElementById('omiResultRank').innerText = currentOmikujiResult.fortune;
-            document.getElementById('omiResultMsg').innerText = `${currentOmikujiResult.member.name}「${currentOmikujiResult.comment}」`;
-            document.getElementById('omiResultItem').innerText = currentOmikujiResult.item;
-            document.getElementById('omikujiModal').classList.add('open');
-        }
-
-        function closeOmikujiModal() {
-            document.getElementById('omikujiModal').classList.remove('open');
-        }
-
-        // --- ★シェア＆保存機能 ---
-        function shareOmikuji() {
-            if(!currentOmikujiResult) return;
-            const text = `【あおはるおみくじ】\n今日の運勢は…「${currentOmikujiResult.fortune}」でした！\nラッキーアイテム：${currentOmikujiResult.item}\n${currentOmikujiResult.member.name}「${currentOmikujiResult.comment}」\n#あおはるフレンズ #あおはるおみくじ`;
-            const url = `https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}&url=${encodeURIComponent(location.href)}`;
-            window.open(url, '_blank');
-        }
-
-        function saveOmikuji() {
-            const target = document.getElementById('omiCaptureArea');
-            html2canvas(target, { scale: 3, backgroundColor: null, useCORS: true }).then(canvas => {
-                const link = document.createElement('a');
-                link.download = 'aoharu_omikuji.png';
-                link.href = canvas.toDataURL('image/png');
-                link.click();
-            });
-        }
-
-        // --- ★グッズ詳細モーダル ---
-        function openGoodsModal(index) {
-            const item = goodsData[index];
-            document.getElementById('goodsModalImg').src = item.img;
-            document.getElementById('goodsModalTitle').innerText = item.name;
-            document.getElementById('goodsModalPrice').innerText = item.price;
-            document.getElementById('goodsModalDesc').innerText = item.detail || "最高品質のグッズです！";
-            const linkBtn = document.getElementById('goodsModalLink');
-            linkBtn.href = item.link || "#";
-            document.getElementById('goodsModal').classList.add('open');
-        }
-        function closeGoodsModal() {
-            document.getElementById('goodsModal').classList.remove('open');
-        }
-
-        // --- ★いいね機能（連打対策済み） ---
-        async function fetchLikes() {
-            if (!GAS_API_URL || GAS_API_URL.indexOf("script.google.com") === -1) return;
-            try {
-                const res = await fetch(`${GAS_API_URL}?action=get_likes`);
-                const json = await res.json();
-                totalLikes = json.count || 0;
-                updateLikeDisplay();
-            } catch (e) { console.error(e); }
-        }
-
-        function updateLikeDisplay() {
-            document.getElementById('totalLikeCount').innerText = totalLikes + sessionLikes;
-        }
-
-        function spawnHeart() {
-            const heart = document.createElement('i');
-            heart.className = 'fas fa-heart heart-particle';
-            const colors = ['#ff9a9e', '#ff6b6b', '#feca57', '#48dbfb', '#ff9ff3'];
-            heart.style.color = colors[Math.floor(Math.random() * colors.length)];
-            heart.style.left = (window.innerWidth - 80 + (Math.random() * 40)) + 'px'; 
-            heart.style.bottom = '80px';
-            document.body.appendChild(heart);
-            setTimeout(() => heart.remove(), 1500); 
-
-            sessionLikes++;
-            updateLikeDisplay();
-
-            clearTimeout(likeSyncTimer);
-            likeSyncTimer = setTimeout(syncLikes, 2000);
-        }
-
-        async function syncLikes() {
-            if (sessionLikes === 0) return;
-            const countToSend = sessionLikes;
-            sessionLikes = 0; 
-            
-            totalLikes += countToSend;
-            updateLikeDisplay();
-
-            if (!GAS_API_URL || GAS_API_URL.indexOf("script.google.com") === -1) return;
-
-            try {
-                const res = await fetch(`${GAS_API_URL}?action=add_likes&count=${countToSend}`);
-                const json = await res.json();
-                if (json.total) {
-                    totalLikes = json.total;
-                    updateLikeDisplay();
-                }
-            } catch (e) { console.error("Like Sync Error", e); }
-        }
-
-        // --- お便り送信機能 ---
-        async function submitRadio() {
-            const name = document.getElementById('radioName').value;
-            const corner = document.getElementById('radioCorner').value;
-            const msg = document.getElementById('radioMessage').value;
-            
-            if(!name || !msg) { alert("ラジオネームとメッセージを入力してね！"); return; }
-            if (!GAS_API_URL || GAS_API_URL.indexOf("script.google.com") === -1) { alert("GAS URL未設定"); return; }
-
-            const btn = document.querySelector('.radio-btn');
-            btn.disabled = true;
-            btn.innerText = "送信中...";
-
-            try {
-                const url = `${GAS_API_URL}?action=submit_radio&name=${encodeURIComponent(name)}&corner=${encodeURIComponent(corner)}&message=${encodeURIComponent(msg)}`;
-                const res = await fetch(url);
-                const json = await res.json();
-
-                if (json.status === 'success') {
-                    alert(`送信完了！\nありがとう、${name}さん！\n読まれるのを楽しみにしててね！`);
-                    document.getElementById('radioName').value = "";
-                    document.getElementById('radioMessage').value = "";
-                } else {
-                    alert("送信エラーが発生しました");
-                }
-            } catch (e) {
-                alert("通信エラーが発生しました");
-                console.error(e);
-            } finally {
-                btn.disabled = false;
-                btn.innerText = "送信する";
-            }
-        }
-
-        // --- お問い合わせ送信機能 ---
-        async function sendContact() {
-            const name = document.getElementById('contactName').value;
-            const email = document.getElementById('contactEmail').value;
-            const type = document.getElementById('contactType').value;
-            const msg = document.getElementById('contactMsg').value;
-
-            if(!name || !email || !msg) { alert('すべての項目を入力してください'); return; }
-            if (!GAS_API_URL || GAS_API_URL.indexOf("script.google.com") === -1) { alert("GAS URL未設定"); return; }
-
-            const btn = document.querySelector('.contact-btn');
-            btn.disabled = true;
-            btn.innerText = "送信中...";
-
-            try {
-                const url = `${GAS_API_URL}?action=submit_contact&name=${encodeURIComponent(name)}&email=${encodeURIComponent(email)}&type=${encodeURIComponent(type)}&message=${encodeURIComponent(msg)}`;
-                const res = await fetch(url);
-                const json = await res.json();
-                if (json.status === 'success') {
-                    alert('お問い合わせありがとうございます！\n送信が完了しました。');
-                    document.getElementById('contactMsg').value = "";
-                } else {
-                    alert('送信に失敗しました。');
-                }
-            } catch(e) {
-                alert('通信エラーが発生しました');
-            } finally {
-                btn.disabled = false;
-                btn.innerText = "送信する";
-            }
-        }
-
-        // --- ラジオ日記描画 ---
-        function renderRadioDiary() {
-            const container = document.getElementById('radioDiaryList');
-            if (!radioBlogData || radioBlogData.length === 0) {
-                container.innerHTML = '<p style="text-align:center;color:#888;">まだ日記はありません</p>';
+        // --- データ取得（最重要） ---
+        async function fetchSheetData() {
+            if (!GAS_API_URL || GAS_API_URL.indexOf("script.google.com") === -1) {
+                console.error("GAS URLが設定されていません");
                 return;
             }
-            container.innerHTML = radioBlogData.map(d => {
-                const iconSrc = d.img ? d.img : "icon.png";
-                const voicePlayer = d.voice ? `<div class="diary-voice-player" onclick="playVoice('${d.voice}')"><i class="fas fa-play"></i> 限定ボイスを聴く</div>` : '';
-                return `
-                <div class="diary-card">
-                    <img src="${iconSrc}" class="diary-icon">
-                    <div class="diary-content">
-                        <div class="diary-name">${d.name}</div>
-                        <div class="diary-text">${d.text}</div>
-                        ${voicePlayer}
-                        <div class="diary-date">${d.date}</div>
-                    </div>
-                </div>`;
-            }).join('');
-        }
-
-        // --- データ取得（★GOODS & Config対応） ---
-        async function fetchSheetData() {
-            if (!GAS_API_URL || GAS_API_URL.indexOf("script.google.com") === -1) return;
             try {
                 const res = await fetch(GAS_API_URL);
                 const data = await res.json();
                 
-                // Config読み込み（ラジオテーマ）
+                // ★Config読み込み（APIキーやSNS設定を反映）
                 if (data.config) {
                     const conf = {};
                     data.config.forEach(row => { conf[row.key] = row.value; });
+                    
+                    // スプシから設定を上書き
+                    if(conf.youtube_api_key) YOUTUBE_API_KEY = conf.youtube_api_key;
                     if(conf.radio_theme_main) document.getElementById('radioThemeDisplay').innerText = conf.radio_theme_main;
                     if(conf.radio_theme_sub) document.getElementById('radioThemeNote').innerText = conf.radio_theme_sub;
+                    
+                    // グループ設定を更新
+                    GROUP_CONFIG.name = "あおはる⭐︎フレンズ"; // 固定またはスプシから
+                    if(conf.group_logo_img) GROUP_CONFIG.img = conf.group_logo_img;
+                    if(conf.group_youtube_id) GROUP_CONFIG.youtubeChannelId = conf.group_youtube_id;
+                    if(conf.group_twitter_url) GROUP_CONFIG.twitterUrl = conf.group_twitter_url;
+                }
+
+                // ★メンバーデータをスプシから反映（これで個人の設定もスプシでOK！）
+                if (data.members && data.members.length > 0) {
+                    memberData = data.members;
                 }
 
                 if (data.news) { newsData = data.news; renderNews(); }
                 if (data.schedule) { scheduleData = data.schedule; renderSchedule(); }
                 if (data.videos) { videoData = data.videos; renderVideos(); }
-                if (data.live) { manualLiveData = data.live; checkLiveStatus(); }
+                if (data.live) { manualLiveData = data.live; } // checkLiveStatusで使う
                 if (data.member_videos) { memberVideoData = data.member_videos; renderMemberVideos(); }
-                if (data.radio_diaries) { 
-                    radioBlogData = data.radio_diaries; 
-                    renderRadioDiary(); 
-                }
+                if (data.radio_diaries) { radioBlogData = data.radio_diaries; } // renderRadioDiaryで使う
+                
                 if (data.goods) {
                     goodsData = data.goods;
                     document.getElementById('goodsList').innerHTML = goodsData.map((g, i) => `
@@ -1151,42 +856,240 @@
             } catch (e) { console.error("Data Error:", e); }
         }
 
+        // --- 描画・機能関数 ---
         function renderStaticParts() { 
+            // SNSリンク更新
             const twLink = document.getElementById('groupTwitterLink'); 
             const ytLink = document.getElementById('groupYoutubeLink'); 
-            if(GROUP_CONFIG.twitterUrl) twLink.href = GROUP_CONFIG.twitterUrl; 
-            if(GROUP_CONFIG.youtubeChannelId) ytLink.href = `https://www.youtube.com/channel/${GROUP_CONFIG.youtubeChannelId}`; 
             const footerTwLink = document.getElementById('footerTwitterLink'); 
             const footerYtLink = document.getElementById('footerYoutubeLink'); 
-            if(GROUP_CONFIG.twitterUrl) footerTwLink.href = GROUP_CONFIG.twitterUrl; 
-            if(GROUP_CONFIG.youtubeChannelId) footerYtLink.href = `https://www.youtube.com/channel/${GROUP_CONFIG.youtubeChannelId}`; 
             
-            const memberHtml = memberData.map((m, i) => `<div class="member-card-vertical" onclick="openMemberDetail(${i})" style="--member-color: ${m.color}; --member-bg: url('${m.bgImg}');"><div class="member-img-wrapper"><img src="${m.img}" class="member-img-tachie"></div><a href="javascript:void(0)" class="member-link-overlay"></a></div>`).join(''); 
-            document.getElementById('topMemberList').innerHTML = memberHtml; 
-            document.getElementById('memberGrid').innerHTML = memberHtml; 
+            if(GROUP_CONFIG.twitterUrl) {
+                twLink.href = GROUP_CONFIG.twitterUrl; 
+                footerTwLink.href = GROUP_CONFIG.twitterUrl;
+            }
+            if(GROUP_CONFIG.youtubeChannelId) {
+                const ytUrl = `https://www.youtube.com/channel/${GROUP_CONFIG.youtubeChannelId}`;
+                ytLink.href = ytUrl;
+                footerYtLink.href = ytUrl; 
+            }
             
-            // Goods初期レンダリング
-            document.getElementById('goodsList').innerHTML = goodsData.map((g, i) => ` 
-                <div class="goods-item" onclick="openGoodsModal(${i})"> 
-                    <img src="${g.img}" class="goods-img"> 
-                    <div class="goods-name">${g.name}</div> 
-                    <div class="goods-price">${g.price}</div> 
-                </div>`).join(''); 
+            // メンバーリスト更新
+            if(memberData.length > 0) {
+                const memberHtml = memberData.map((m, i) => `<div class="member-card-vertical" onclick="openMemberDetail(${i})" style="--member-color: ${m.color}; --member-bg: url('${m.bgImg}');"><div class="member-img-wrapper"><img src="${m.img}" class="member-img-tachie"></div><a href="javascript:void(0)" class="member-link-overlay"></a></div>`).join(''); 
+                document.getElementById('topMemberList').innerHTML = memberHtml; 
+                document.getElementById('memberGrid').innerHTML = memberHtml; 
+            }
         }
 
-        // --- 以下の関数は変更なし ---
-        async function registerUser() { const name = document.getElementById('regName').value, email = document.getElementById('regEmail').value, pass = document.getElementById('regPass').value, btn = document.getElementById('regBtn'); if(!name || !email || !pass) { alert("全ての項目を入力してください"); return; } if (!GAS_API_URL || GAS_API_URL.indexOf("script.google.com") === -1) { alert("GAS URL未設定"); return; } btn.innerText = "送信中..."; btn.disabled = true; try { const res = await fetch(`${GAS_API_URL}?action=register&name=${encodeURIComponent(name)}&email=${encodeURIComponent(email)}&pass=${encodeURIComponent(pass)}`); const json = await res.json(); if (json.status === 'success') { alert("登録完了！\n会員ID: " + json.id); closeRegisterModal(); document.getElementById('regName').value = ""; document.getElementById('regEmail').value = ""; document.getElementById('regPass').value = ""; } else { alert("登録エラー: " + json.message); } } catch (e) { alert("通信エラー"); } finally { btn.innerText = "会員登録する"; btn.disabled = false; } }
-        async function loginUser() { const email = document.getElementById('loginEmail').value, pass = document.getElementById('loginPass').value, btn = document.getElementById('loginBtn'); if(!email || !pass) { alert("メールアドレスとパスワードを入力してください"); return; } if (!GAS_API_URL || GAS_API_URL.indexOf("script.google.com") === -1) { alert("GAS URL未設定"); return; } btn.innerText = "確認中..."; btn.disabled = true; try { const res = await fetch(`${GAS_API_URL}?action=login&email=${encodeURIComponent(email)}&pass=${encodeURIComponent(pass)}`); const json = await res.json(); if (json.status === 'success') { alert("ログイン成功！ようこそ " + json.name + " さん！"); closeLoginModal(); const headerBtn = document.getElementById('headerLoginBtn'); headerBtn.innerText = `${json.name} 様`; headerBtn.classList.add('logged-in-user'); headerBtn.onclick = null; isMemberLoggedIn = true; renderMemberVideos(); } else { alert("ログイン失敗: " + json.message); } } catch (e) { alert("通信エラー"); } finally { btn.innerText = "ログインする"; btn.disabled = false; } }
+        // --- 以下の関数群は変更なし（そのまま動作します） ---
         
+        // 隠しコマンド
+        function initEasterEgg() {
+            window.addEventListener('keydown', (e) => {
+                secretInput.push(e.key);
+                if (secretInput.length > secretCode.length) secretInput.shift();
+                if (JSON.stringify(secretInput) === JSON.stringify(secretCode)) activateFeverMode();
+            });
+            const logo = document.getElementById('headerLogo');
+            if(logo) {
+                logo.addEventListener('click', (e) => {
+                    e.preventDefault(); logoTapCount++;
+                    if(logoTapCount === 10) { activateFeverMode(); logoTapCount = 0; }
+                    setTimeout(() => logoTapCount = 0, 3000);
+                });
+            }
+        }
+        function activateFeverMode() {
+            if(document.body.classList.contains('fever-mode')) return;
+            document.body.classList.add('fever-mode');
+            const text = document.createElement('div');
+            text.className = 'fever-text'; text.innerText = "FEVER TIME!!";
+            document.body.appendChild(text);
+            var duration = 5000; var end = Date.now() + duration;
+            (function frame() {
+                if(typeof confetti === 'function'){
+                    confetti({ particleCount: 2, angle: 60, spread: 55, origin: { x: 0 }, colors: ['#ff0000', '#00ff00', '#0000ff'] });
+                    confetti({ particleCount: 2, angle: 120, spread: 55, origin: { x: 1 }, colors: ['#ff0000', '#00ff00', '#0000ff'] });
+                }
+                if (Date.now() < end) requestAnimationFrame(frame);
+                else { document.body.classList.remove('fever-mode'); text.remove(); alert("祭りは終わった……"); }
+            }());
+        }
+
+        // おみくじ
+        function initOmikuji() {
+            const container = document.querySelector('#top .container');
+            if(container && !document.querySelector('.omikuji-area')) {
+                const omikujiArea = document.createElement('div');
+                omikujiArea.className = 'omikuji-area';
+                omikujiArea.innerHTML = `<div class="section-title" style="margin-top:0;"><span class="ja-title">今日の運勢を占う</span></div><button class="omikuji-btn" onclick="drawOmikuji()">おみくじを引く！</button>`;
+                const noaSection = document.getElementById('nowOnAirSection');
+                noaSection.parentNode.insertBefore(omikujiArea, noaSection.nextSibling);
+            }
+        }
+        function drawOmikuji() {
+            if(memberData.length === 0) return;
+            const member = memberData[Math.floor(Math.random() * memberData.length)];
+            const fortune = fortuneTypes[Math.floor(Math.random() * fortuneTypes.length)];
+            const item = luckyItems[Math.floor(Math.random() * luckyItems.length)];
+            const comment = fortuneComments[Math.floor(Math.random() * fortuneComments.length)];
+            currentOmikujiResult = { member, fortune, item, comment };
+            const animModal = document.getElementById('omikujiAnimModal');
+            const box = document.getElementById('omiBox');
+            const slip = document.getElementById('omiSlip');
+            const particlesContainer = document.getElementById('omiParticles');
+            particlesContainer.innerHTML = '';
+            animModal.classList.add('open'); box.classList.add('shaking');
+            setTimeout(() => {
+                box.classList.remove('shaking'); box.classList.add('pre-burst');
+                setTimeout(() => {
+                    box.classList.remove('pre-burst'); slip.classList.add('coming-out'); animModal.classList.add('burst');
+                    if(typeof spawnConfetti === 'function') spawnConfetti(particlesContainer);
+                    setTimeout(() => {
+                        animModal.classList.remove('open'); animModal.classList.remove('burst'); slip.classList.remove('coming-out');
+                        showOmikujiResult();
+                    }, 1500);
+                }, 500);
+            }, 2500);
+        }
+        function spawnConfetti(container) {
+            const colors = ['#FF512F', '#DD2476', '#FFD700', '#27C6F5', '#ffffff'];
+            const icons = ['fa-star', 'fa-heart', 'fa-music', 'fa-bolt'];
+            for (let i = 0; i < 50; i++) {
+                const el = document.createElement('i');
+                el.className = `fas ${icons[Math.floor(Math.random() * icons.length)]} confetti`;
+                el.style.color = colors[Math.floor(Math.random() * colors.length)];
+                el.style.left = '50%'; el.style.top = '50%';
+                const angle = Math.random() * 360; const dist = 150 + Math.random() * 200;
+                el.style.setProperty('--tx', `${Math.cos(angle * Math.PI / 180) * dist}px`);
+                el.style.setProperty('--ty', `${Math.sin(angle * Math.PI / 180) * dist}px`);
+                el.style.setProperty('--r', `${Math.random() * 720 - 360}deg`);
+                container.appendChild(el);
+            }
+            const shockwave = document.createElement('div'); shockwave.className = 'shockwave'; container.appendChild(shockwave);
+        }
+        function showOmikujiResult() {
+            if(!currentOmikujiResult) return;
+            document.getElementById('omiResultImg').src = currentOmikujiResult.member.img;
+            document.getElementById('omiResultRank').innerText = currentOmikujiResult.fortune;
+            document.getElementById('omiResultMsg').innerText = `${currentOmikujiResult.member.name}「${currentOmikujiResult.comment}」`;
+            document.getElementById('omiResultItem').innerText = currentOmikujiResult.item;
+            document.getElementById('omikujiModal').classList.add('open');
+        }
+        function closeOmikujiModal() { document.getElementById('omikujiModal').classList.remove('open'); }
+        function shareOmikuji() {
+            if(!currentOmikujiResult) return;
+            const text = `【あおはるおみくじ】\n今日の運勢は…「${currentOmikujiResult.fortune}」でした！\nラッキーアイテム：${currentOmikujiResult.item}\n${currentOmikujiResult.member.name}「${currentOmikujiResult.comment}」\n#あおはるフレンズ #あおはるおみくじ`;
+            const url = `https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}&url=${encodeURIComponent(location.href)}`;
+            window.open(url, '_blank');
+        }
+        function saveOmikuji() {
+            const target = document.getElementById('omiCaptureArea');
+            html2canvas(target, { scale: 3, backgroundColor: null, useCORS: true }).then(canvas => {
+                const link = document.createElement('a'); link.download = 'aoharu_omikuji.png'; link.href = canvas.toDataURL('image/png'); link.click();
+            });
+        }
+
+        // その他機能
+        function copyText(text) {
+            navigator.clipboard.writeText(text).then(() => {
+                const toast = document.getElementById('copyToast'); toast.style.display = 'block';
+                const newOne = toast.cloneNode(true); toast.parentNode.replaceChild(newOne, toast);
+                setTimeout(() => { newOne.style.display = 'none'; }, 2000);
+            });
+        }
+        function openGoodsModal(index) {
+            const item = goodsData[index];
+            document.getElementById('goodsModalImg').src = item.img;
+            document.getElementById('goodsModalTitle').innerText = item.name;
+            document.getElementById('goodsModalPrice').innerText = item.price;
+            document.getElementById('goodsModalDesc').innerText = item.detail || "最高品質のグッズです！";
+            const linkBtn = document.getElementById('goodsModalLink'); linkBtn.href = item.link || "#";
+            document.getElementById('goodsModal').classList.add('open');
+        }
+        function closeGoodsModal() { document.getElementById('goodsModal').classList.remove('open'); }
+        
+        async function fetchLikes() {
+            if (!GAS_API_URL) return;
+            try {
+                const res = await fetch(`${GAS_API_URL}?action=get_likes`);
+                const json = await res.json();
+                totalLikes = json.count || 0; updateLikeDisplay();
+            } catch (e) { console.error(e); }
+        }
+        function updateLikeDisplay() { document.getElementById('totalLikeCount').innerText = totalLikes + sessionLikes; }
+        function spawnHeart() {
+            const heart = document.createElement('i'); heart.className = 'fas fa-heart heart-particle';
+            const colors = ['#ff9a9e', '#ff6b6b', '#feca57', '#48dbfb', '#ff9ff3'];
+            heart.style.color = colors[Math.floor(Math.random() * colors.length)];
+            heart.style.left = (window.innerWidth - 80 + (Math.random() * 40)) + 'px'; 
+            heart.style.bottom = '80px'; document.body.appendChild(heart);
+            setTimeout(() => heart.remove(), 1500); 
+            sessionLikes++; updateLikeDisplay();
+            clearTimeout(likeSyncTimer); likeSyncTimer = setTimeout(syncLikes, 2000);
+        }
+        async function syncLikes() {
+            if (sessionLikes === 0) return;
+            const countToSend = sessionLikes; sessionLikes = 0; totalLikes += countToSend; updateLikeDisplay();
+            if (!GAS_API_URL) return;
+            try {
+                const res = await fetch(`${GAS_API_URL}?action=add_likes&count=${countToSend}`);
+                const json = await res.json();
+                if (json.total) { totalLikes = json.total; updateLikeDisplay(); }
+            } catch (e) { console.error("Like Sync Error", e); }
+        }
+
+        async function submitRadio() {
+            const name = document.getElementById('radioName').value;
+            const corner = document.getElementById('radioCorner').value;
+            const msg = document.getElementById('radioMessage').value;
+            if(!name || !msg) { alert("ラジオネームとメッセージを入力してね！"); return; }
+            if (!GAS_API_URL) { alert("GAS URL未設定"); return; }
+            const btn = document.querySelector('.radio-btn'); btn.disabled = true; btn.innerText = "送信中...";
+            try {
+                const url = `${GAS_API_URL}?action=submit_radio&name=${encodeURIComponent(name)}&corner=${encodeURIComponent(corner)}&message=${encodeURIComponent(msg)}`;
+                const res = await fetch(url); const json = await res.json();
+                if (json.status === 'success') { alert(`送信完了！\nありがとう、${name}さん！`); document.getElementById('radioName').value = ""; document.getElementById('radioMessage').value = ""; } 
+                else { alert("送信エラーが発生しました"); }
+            } catch (e) { alert("通信エラーが発生しました"); } finally { btn.disabled = false; btn.innerText = "送信する"; }
+        }
+        async function sendContact() {
+            const name = document.getElementById('contactName').value;
+            const email = document.getElementById('contactEmail').value;
+            const type = document.getElementById('contactType').value;
+            const msg = document.getElementById('contactMsg').value;
+            if(!name || !email || !msg) { alert('すべての項目を入力してください'); return; }
+            if (!GAS_API_URL) { alert("GAS URL未設定"); return; }
+            const btn = document.querySelector('.contact-btn'); btn.disabled = true; btn.innerText = "送信中...";
+            try {
+                const url = `${GAS_API_URL}?action=submit_contact&name=${encodeURIComponent(name)}&email=${encodeURIComponent(email)}&type=${encodeURIComponent(type)}&message=${encodeURIComponent(msg)}`;
+                const res = await fetch(url); const json = await res.json();
+                if (json.status === 'success') { alert('お問い合わせありがとうございます！\n送信が完了しました。'); document.getElementById('contactMsg').value = ""; } 
+                else { alert('送信に失敗しました。'); }
+            } catch(e) { alert('通信エラーが発生しました'); } finally { btn.disabled = false; btn.innerText = "送信する"; }
+        }
+
+        function renderRadioDiary() {
+            const container = document.getElementById('radioDiaryList');
+            if (!radioBlogData || radioBlogData.length === 0) { container.innerHTML = '<p style="text-align:center;color:#888;">まだ日記はありません</p>'; return; }
+            container.innerHTML = radioBlogData.map(d => {
+                const iconSrc = d.img ? d.img : "icon.png";
+                const voicePlayer = d.voice ? `<div class="diary-voice-player" onclick="playVoice('${d.voice}')"><i class="fas fa-play"></i> 限定ボイスを聴く</div>` : '';
+                return `<div class="diary-card"><img src="${iconSrc}" class="diary-icon"><div class="diary-content"><div class="diary-name">${d.name}</div><div class="diary-text">${d.text}</div>${voicePlayer}<div class="diary-date">${d.date}</div></div></div>`;
+            }).join('');
+        }
+        
+        async function registerUser() { const name = document.getElementById('regName').value, email = document.getElementById('regEmail').value, pass = document.getElementById('regPass').value, btn = document.getElementById('regBtn'); if(!name || !email || !pass) { alert("全ての項目を入力してください"); return; } if (!GAS_API_URL) { alert("GAS URL未設定"); return; } btn.innerText = "送信中..."; btn.disabled = true; try { const res = await fetch(`${GAS_API_URL}?action=register&name=${encodeURIComponent(name)}&email=${encodeURIComponent(email)}&pass=${encodeURIComponent(pass)}`); const json = await res.json(); if (json.status === 'success') { alert("登録完了！\n会員ID: " + json.id); closeRegisterModal(); document.getElementById('regName').value = ""; document.getElementById('regEmail').value = ""; document.getElementById('regPass').value = ""; } else { alert("登録エラー: " + json.message); } } catch (e) { alert("通信エラー"); } finally { btn.innerText = "会員登録する"; btn.disabled = false; } }
+        async function loginUser() { const email = document.getElementById('loginEmail').value, pass = document.getElementById('loginPass').value, btn = document.getElementById('loginBtn'); if(!email || !pass) { alert("メールアドレスとパスワードを入力してください"); return; } if (!GAS_API_URL) { alert("GAS URL未設定"); return; } btn.innerText = "確認中..."; btn.disabled = true; try { const res = await fetch(`${GAS_API_URL}?action=login&email=${encodeURIComponent(email)}&pass=${encodeURIComponent(pass)}`); const json = await res.json(); if (json.status === 'success') { alert("ログイン成功！ようこそ " + json.name + " さん！"); closeLoginModal(); const headerBtn = document.getElementById('headerLoginBtn'); headerBtn.innerText = `${json.name} 様`; headerBtn.classList.add('logged-in-user'); headerBtn.onclick = null; isMemberLoggedIn = true; renderMemberVideos(); } else { alert("ログイン失敗: " + json.message); } } catch (e) { alert("通信エラー"); } finally { btn.innerText = "ログインする"; btn.disabled = false; } }
         function updateBreadcrumbs(pageId, detailName) { const container = document.getElementById('breadcrumbNav'); let html = '<a href="javascript:void(0)" onclick="showPage(\'top\')" class="bc-item"><i class="fas fa-home bc-icon"></i></a>'; if (pageId === 'top') { container.style.display = 'none'; return; } else { container.style.display = 'flex'; } const sep = '<span class="bc-sep">▶</span>'; if (pageId === 'news') html += sep + '<span class="bc-current">NEWS</span>'; else if (pageId === 'member') html += sep + '<span class="bc-current">MEMBER</span>'; else if (pageId === 'schedule') html += sep + '<span class="bc-current">SCHEDULE</span>'; else if (pageId === 'goods') html += sep + '<span class="bc-current">GOODS</span>'; else if (pageId === 'radio') html += sep + '<span class="bc-current">RADIO</span>'; else if (pageId === 'memberDetail') { html += sep + '<a href="javascript:void(0)" onclick="showPage(\'member\')" class="bc-item">MEMBER</a>'; html += sep + '<span class="bc-current">' + (detailName || 'DETAIL') + '</span>'; } container.innerHTML = html; }
         function renderNews() { const newsHtml = newsData.map((n, i) => { const imgSrc = n.image ? n.image : "https://placehold.co/600x400/eee/333?text=NEWS"; return `<div class="news-card" onclick="openNewsModal(${i})"><div class="news-thumb-area"><span class="news-badge" style="background:${getTagColor(n.tag)}">${n.tag}</span><img src="${imgSrc}" class="news-img"></div><div class="news-content"><div class="news-date">${n.date}</div><div class="news-title">${n.title}</div><div class="news-check-btn">CHECK</div></div></div>`; }).join(''); document.getElementById('topNewsList').innerHTML = newsHtml || "まだニュースはありません"; document.getElementById('fullNewsList').innerHTML = newsHtml || "まだニュースはありません"; }
         function renderSchedule() { const topScheduleHtml = scheduleData.map(s => `<div class="schedule-card"><div class="sch-thumb-box"><div class="sch-date-big">${s.date}</div><div class="sch-time-big">${s.time}</div></div><div class="sch-info"><span class="sch-badge-mini">配信</span><div class="sch-title">${s.content}</div></div></div>`).join(''); document.getElementById('topScheduleList').innerHTML = topScheduleHtml || "予定はありません"; document.getElementById('scheduleList').innerHTML = scheduleData.map(s => ` <div class="timeline-item"> <div class="tl-icon-box"><div class="tl-icon"><i class="fas fa-video"></i></div></div> <div class="tl-content"> <div class="tl-date">${s.date} <span style="font-size:12px;color:#888;">${s.time}</span></div> <div class="tl-title">${s.content}</div> <span class="tl-tag">配信</span> </div> </div>`).join(''); }
         function renderVideos() { const videoHtml = videoData.map(v => `<div class="video-card" onclick="window.open('https://www.youtube.com/watch?v=${v.id}', '_blank')"><div class="video-thumb-box"><img src="https://img.youtube.com/vi/${v.id}/mqdefault.jpg" class="video-thumb"><div class="play-icon">▶</div></div><div class="video-info"><div class="video-title">${v.title}</div><div class="video-date">${v.date}</div></div></div>`).join(''); document.getElementById('topVideoList').innerHTML = videoHtml || "動画はまだありません"; }
         function renderMemberVideos() { const container = document.getElementById('memberVideoList'); if(!memberVideoData.length) { container.innerHTML = "限定動画はまだありません"; return; } const html = memberVideoData.map(v => { const clickAction = isMemberLoggedIn ? `window.open('https://www.youtube.com/watch?v=${v.id}', '_blank')` : `openLoginModal()`; const lockedClass = isMemberLoggedIn ? 'unlocked' : 'mv-blur'; const lockOverlay = isMemberLoggedIn ? '' : `<div class="mv-lock-overlay"><div class="mv-lock-icon"><i class="fas fa-lock"></i></div><div class="mv-lock-text">MEMBER ONLY</div></div>`; return `<div class="member-video-card ${lockedClass}" onclick="${clickAction}">${lockOverlay}<div class="news-thumb-area"><img src="https://img.youtube.com/vi/${v.id}/mqdefault.jpg" class="news-img"></div><div class="news-content"><div class="news-date">${v.date}</div><div class="news-title">${v.title}</div><div class="news-check-btn">${isMemberLoggedIn ? 'PLAY' : 'LOCKED'}</div></div></div>`; }).join(''); container.innerHTML = html; }
         
-        function playVoice(fileName) { if (!fileName) return; const audio = new Audio(fileName); audio.volume = 0.5; audio.play().catch(e => alert("再生エラー: 音声ファイルが見つかりません")); }
         function openMemberDetail(index, pushHistory = true) { const m = memberData[index]; const detailContainer = document.getElementById('memberDetail'); const twitchLink = m.twitchId ? `<a href="https://www.twitch.tv/${m.twitchId}" target="_blank" class="p-btn" style="background:#9146FF;color:white;box-shadow:0 5px 15px rgba(145,70,255,0.3);"><i class="fab fa-twitch"></i> Twitch</a>` : ''; const twitterLink = m.twitterId ? `https://x.com/${m.twitterId}` : '#'; const voiceBtn = m.voice ? `<div class="p-btn voice" onclick="playVoice('${m.voice}')"><i class="fas fa-volume-up"></i> VOICE</div>` : ''; detailContainer.innerHTML = `<div class="member-bg-layer" style="background-image: url('${m.img}');"></div><div class="profile-header-bg" style="--m-color: ${m.color}; --m-color-light: ${m.color}20;"><div class="profile-wrapper"><div class="profile-visual"><img src="${m.img}" class="profile-tachie" alt="${m.name}"></div><div class="profile-info"><div class="profile-en-name">${m.enName || 'MEMBER'}</div><div class="profile-jp-name">${m.name}</div><div class="profile-catch">${m.catchphrase || ''}</div><div class="profile-data-list"><div class="p-data-item"><span class="p-label">誕生日</span><span class="p-value">${m.birthday || '-'}</span></div><div class="p-data-item"><span class="p-label">身長</span><span class="p-value">${m.height || '-'}</span></div><div class="p-data-item"><span class="p-label">ファンネーム</span><span class="p-value copy-tag" onclick="copyText('${m.fanName}')">${m.fanName || '-'} <i class="far fa-copy copy-icon"></i></span></div><div class="p-data-item"><span class="p-label">ハッシュタグ</span><span class="p-value copy-tag" style="color:var(--m-color)" onclick="copyText('${m.hashTag}')">${m.hashTag || '-'} <i class="far fa-copy copy-icon"></i></span></div></div><div class="profile-bio">${m.bio || ''}</div><div class="profile-actions">${voiceBtn}<a href="${m.youtubeId ? 'https://www.youtube.com/channel/' + m.youtubeId : '#'}" target="_blank" class="p-btn yt"><i class="fab fa-youtube"></i> YouTube</a>${twitchLink}<a href="${twitterLink}" target="_blank" class="p-btn x"><i class="fab fa-x-twitter"></i> X</a></div><div style="text-align:right;"><span class="back-link" onclick="showPage('member')">◀ MEMBER LIST</span></div></div></div></div>`; if(pushHistory) history.pushState(null, null, '#member_' + index); showPage('memberDetail', m.name, false); }
-        async function checkLiveStatus() { const noaSection = document.getElementById('nowOnAirSection'); const noaGrid = document.getElementById('nowOnAirGrid'); noaGrid.innerHTML = ''; noaSection.style.display = 'none'; let hasLiveStream = false; const allTargets = [...memberData]; if (GROUP_CONFIG.youtubeChannelId) { allTargets.push({ name: GROUP_CONFIG.name, img: GROUP_CONFIG.img, youtubeId: GROUP_CONFIG.youtubeChannelId }); } if (YOUTUBE_API_KEY && YOUTUBE_API_KEY !== "ここにAPIキーを貼り付け") { for (const target of allTargets) { if (target.youtubeId && target.youtubeId.includes("UC")) { try { const url = `https://www.googleapis.com/youtube/v3/search?part=snippet&channelId=${target.youtubeId}&eventType=live&type=video&key=${YOUTUBE_API_KEY}`; const response = await fetch(url); const data = await response.json(); if (data.items && data.items.length > 0) { const video = data.items[0]; const card = createNowOnAirCard(target.name, target.img, `https://www.youtube.com/watch?v=${video.id.videoId}`, video.snippet.title, video.snippet.thumbnails.high.url); noaGrid.appendChild(card); hasLiveStream = true; } } catch (e) { console.error("YouTube Error", e); } } } } if (manualLiveData && manualLiveData.length > 0) { manualLiveData.forEach(live => { const member = memberData.find(m => m.name === live.name); const icon = live.image || (member ? member.img : "icon.png"); const thumb = "https://placehold.co/600x338/9146FF/ffffff?text=NOW+ON+AIR"; const card = createNowOnAirCard(live.name, icon, live.url, live.title || "配信中！", thumb); noaGrid.appendChild(card); hasLiveStream = true; }); } if (hasLiveStream) noaSection.style.display = 'block'; }
+        async function checkLiveStatus() { const noaSection = document.getElementById('nowOnAirSection'); const noaGrid = document.getElementById('nowOnAirGrid'); noaGrid.innerHTML = ''; noaSection.style.display = 'none'; let hasLiveStream = false; const allTargets = [...memberData]; if (GROUP_CONFIG.youtubeChannelId) { allTargets.push({ name: GROUP_CONFIG.name, img: GROUP_CONFIG.img, youtubeId: GROUP_CONFIG.youtubeChannelId }); } if (YOUTUBE_API_KEY && YOUTUBE_API_KEY !== "") { for (const target of allTargets) { if (target.youtubeId && target.youtubeId.includes("UC")) { try { const url = `https://www.googleapis.com/youtube/v3/search?part=snippet&channelId=${target.youtubeId}&eventType=live&type=video&key=${YOUTUBE_API_KEY}`; const response = await fetch(url); const data = await response.json(); if (data.items && data.items.length > 0) { const video = data.items[0]; const card = createNowOnAirCard(target.name, target.img, `https://www.youtube.com/watch?v=${video.id.videoId}`, video.snippet.title, video.snippet.thumbnails.high.url); noaGrid.appendChild(card); hasLiveStream = true; } } catch (e) { console.error("YouTube Error", e); } } } } if (manualLiveData && manualLiveData.length > 0) { manualLiveData.forEach(live => { const member = memberData.find(m => m.name === live.name); const icon = live.image || (member ? member.img : "icon.png"); const thumb = "https://placehold.co/600x338/9146FF/ffffff?text=NOW+ON+AIR"; const card = createNowOnAirCard(live.name, icon, live.url, live.title || "配信中！", thumb); noaGrid.appendChild(card); hasLiveStream = true; }); } if (hasLiveStream) noaSection.style.display = 'block'; }
         function createNowOnAirCard(name, icon, url, title, thumbUrl) { const card = document.createElement('a'); card.href = url; card.target = "_blank"; card.className = "noa-card"; card.innerHTML = `<div class="noa-thumb-wrapper"><img src="${thumbUrl}" class="noa-thumb"><span class="noa-badge">LIVE</span><div class="noa-icon-wrapper"><img src="${icon}" class="noa-icon"></div></div><div class="noa-info"><div class="noa-member-name">${name}</div><div class="noa-stream-title">${title}</div></div>`; return card; }
         function scrollContent(elementId, direction) { const container = document.getElementById(elementId); const scrollAmount = container.clientWidth / 2; if (direction === 'left') container.scrollBy({ left: -scrollAmount, behavior: 'smooth' }); else container.scrollBy({ left: scrollAmount, behavior: 'smooth' }); }
         function openNewsModal(index) { const data = newsData[index]; document.getElementById('modalDate').innerText = data.date; const tagEl = document.getElementById('modalTag'); tagEl.innerText = data.tag; tagEl.style.background = getTagColor(data.tag); document.getElementById('modalTitle').innerText = data.title; document.getElementById('modalBody').innerText = data.detail || data.title; document.getElementById('newsModal').classList.add('open'); }
@@ -1201,7 +1104,30 @@
         function toggleMenu() { document.getElementById('sideMenu').classList.toggle('open'); document.getElementById('overlay').classList.toggle('open'); }
         function showPage(pageId, detailName = null, pushHistory = true) { document.querySelectorAll('.page').forEach(p => p.classList.remove('active')); document.getElementById(pageId).classList.add('active'); if(document.getElementById('sideMenu').classList.contains('open')) { toggleMenu(); } if(pushHistory) history.pushState(null, null, '#' + pageId); updateBreadcrumbs(pageId, detailName); window.scrollTo(0,0); }
         function initCardMaker() { const today = new Date(); const dStr = `${today.getFullYear()}.${(today.getMonth()+1).toString().padStart(2,'0')}.${today.getDate().toString().padStart(2,'0')}`; const cardDateEl = document.getElementById('cardDate'); if(cardDateEl) cardDateEl.innerText = 'DATE: ' + dStr; const cardNoEl = document.getElementById('cardNo'); if(cardNoEl) cardNoEl.innerText = dStr.replace(/\./g,'') + '-' + (Math.floor(Math.random()*9000)+1000); const btnContainer = document.getElementById('oshiButtons'); if(btnContainer) { btnContainer.innerHTML = ''; memberData.forEach((m, i) => { const btn = document.createElement('div'); btn.className = 'oshi-btn'; btn.style.backgroundImage = `url('${m.img}')`; btn.onclick = () => selectOshi(i); btnContainer.appendChild(btn); }); if(memberData.length > 0) selectOshi(0); } }
-        function selectOshi(index) { currentOshiIndex = index; const m = memberData[index]; document.querySelectorAll('.oshi-btn').forEach((b, i) => b.classList.toggle('selected', i === index)); const card = document.getElementById('digitalCard'); if(card) { card.style.setProperty('--card-color', m.color); const layout = m.cardLayout || { bottom: "-20px", right: "-50px", width: "280px" }; card.style.setProperty('--char-bottom', layout.bottom); card.style.setProperty('--char-right', layout.right); card.style.setProperty('--char-width', layout.width); document.getElementById('cardOshiDisplay').innerText = m.name; document.getElementById('cardCharImg').src = m.img; } }
+        // ★ここを書き換え！（スプシの位置情報を読み取るように変更）
+        function selectOshi(index) { 
+            currentOshiIndex = index; 
+            const m = memberData[index]; 
+            document.querySelectorAll('.oshi-btn').forEach((b, i) => b.classList.toggle('selected', i === index)); 
+            
+            const card = document.getElementById('digitalCard'); 
+            if(card) { 
+                card.style.setProperty('--card-color', m.color); 
+                
+                // ▼ スプシの設定があれば使い、なければ「デフォルト値」を使う
+                // card_bottom 等はスプシの列名と一致させています
+                const bottom = m.card_bottom || "-20px";
+                const right = m.card_right || "-50px";
+                const width = m.card_width || "280px";
+
+                card.style.setProperty('--char-bottom', bottom); 
+                card.style.setProperty('--char-right', right); 
+                card.style.setProperty('--char-width', width); 
+                
+                document.getElementById('cardOshiDisplay').innerText = m.name; 
+                document.getElementById('cardCharImg').src = m.img; 
+            } 
+        }
         function updateCard() { const val = document.getElementById('cardNameInput').value; const display = document.getElementById('cardNameDisplay'); if(display) display.innerText = val ? val : 'GUEST'; }
         function downloadCard() { const card = document.getElementById('digitalCard'); html2canvas(card, { scale: 3, backgroundColor: null, useCORS: true }).then(canvas => { const link = document.createElement('a'); link.download = 'aoharu_card.png'; link.href = canvas.toDataURL('image/png'); link.click(); }); }
     </script>
