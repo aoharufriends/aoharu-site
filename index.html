@@ -512,6 +512,23 @@
         .g-tag { background: white; border: 1px solid #ddd; padding: 5px 15px; border-radius: 20px; font-size: 12px; color: #666; font-family: 'Poppins', sans-serif; font-weight: bold; display: flex; align-items: center; gap: 5px; }
         .g-tag i { color: var(--primary); }
 
+        /* ★ボイスサンプル用スタイル★ */
+        .voice-section { width: 100%; margin-bottom: 30px; opacity: 0; animation: fadeInUp 0.5s 0.6s forwards; }
+        .voice-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 15px; }
+        .voice-card {
+            background: rgba(255,255,255,0.8); border: 2px solid var(--m-color); border-radius: 50px;
+            padding: 10px 20px; display: flex; align-items: center; justify-content: space-between;
+            cursor: pointer; transition: 0.2s; position: relative; overflow: hidden;
+        }
+        .voice-card:hover { transform: translateY(-3px); box-shadow: 0 5px 15px rgba(0,0,0,0.1); background: white; }
+        .voice-card.playing { background: var(--m-color); color: white; }
+        .voice-card.playing .voice-icon { color: white; animation: pulse-voice 1s infinite; }
+        .voice-card.playing .voice-title { color: white; }
+        .voice-icon { font-size: 20px; color: var(--m-color); margin-right: 15px; width: 30px; text-align: center; }
+        .voice-title { font-weight: bold; font-size: 14px; color: #555; flex: 1; }
+        .voice-time { font-size: 12px; font-weight: bold; opacity: 0.6; }
+        @keyframes pulse-voice { 0% { transform: scale(1); } 50% { transform: scale(1.2); } 100% { transform: scale(1); } }
+
     </style>
 </head>
 <body>
@@ -1444,7 +1461,88 @@
         function renderVideos() { const videoHtml = videoData.map(v => `<div class="video-card" onclick="window.open('https://www.youtube.com/watch?v=${v.id}', '_blank')"><div class="video-thumb-box"><img src="https://img.youtube.com/vi/${v.id}/mqdefault.jpg" class="video-thumb"><div class="play-icon">▶</div></div><div class="video-info"><div class="video-title">${v.title}</div><div class="video-date">${v.date}</div></div></div>`).join(''); document.getElementById('topVideoList').innerHTML = videoHtml || "動画はまだありません"; }
         function renderMemberVideos() { const container = document.getElementById('memberVideoList'); if(!memberVideoData.length) { container.innerHTML = "限定動画はまだありません"; return; } const html = memberVideoData.map(v => { const clickAction = isMemberLoggedIn ? `window.open('https://www.youtube.com/watch?v=${v.id}', '_blank')` : `openLoginModal()`; const lockedClass = isMemberLoggedIn ? 'unlocked' : 'mv-blur'; const lockOverlay = isMemberLoggedIn ? '' : `<div class="mv-lock-overlay"><div class="mv-lock-icon"><i class="fas fa-lock"></i></div><div class="mv-lock-text">MEMBER ONLY</div></div>`; return `<div class="member-video-card ${lockedClass}" onclick="${clickAction}">${lockOverlay}<div class="news-thumb-area"><img src="https://img.youtube.com/vi/${v.id}/mqdefault.jpg" class="news-img"></div><div class="news-content"><div class="news-date">${v.date}</div><div class="news-title">${v.title}</div><div class="news-check-btn">${isMemberLoggedIn ? 'PLAY' : 'LOCKED'}</div></div></div>`; }).join(''); container.innerHTML = html; }
         
-        function openMemberDetail(index, pushHistory = true) { const m = memberData[index]; const detailContainer = document.getElementById('memberDetail'); const twitchLink = m.twitchId ? `<a href="https://www.twitch.tv/${m.twitchId}" target="_blank" class="p-btn" style="background:#9146FF;color:white;box-shadow:0 5px 15px rgba(145,70,255,0.3);"><i class="fab fa-twitch"></i> Twitch</a>` : ''; const twitterLink = m.twitterId ? `https://x.com/${m.twitterId}` : '#'; const voiceBtn = m.voice ? `<div class="p-btn voice" onclick="playVoice('${m.voice}')"><i class="fas fa-volume-up"></i> VOICE</div>` : ''; detailContainer.innerHTML = `<div class="member-bg-layer" style="background-image: url('${m.img}');"></div><div class="profile-header-bg" style="--m-color: ${m.color}; --m-color-light: ${m.color}20;"><div class="profile-wrapper"><div class="profile-visual"><img src="${m.img}" class="profile-tachie" alt="${m.name}"></div><div class="profile-info"><div class="profile-en-name">${m.enName || 'MEMBER'}</div><div class="profile-jp-name">${m.name}</div><div class="profile-catch">${m.catchphrase || ''}</div><div class="profile-data-list"><div class="p-data-item"><span class="p-label">誕生日</span><span class="p-value">${m.birthday || '-'}</span></div><div class="p-data-item"><span class="p-label">身長</span><span class="p-value">${m.height || '-'}</span></div><div class="p-data-item"><span class="p-label">ファンネーム</span><span class="p-value copy-tag" onclick="copyText('${m.fanName}')">${m.fanName || '-'} <i class="far fa-copy copy-icon"></i></span></div><div class="p-data-item"><span class="p-label">ハッシュタグ</span><span class="p-value copy-tag" style="color:var(--m-color)" onclick="copyText('${m.hashTag}')">${m.hashTag || '-'} <i class="far fa-copy copy-icon"></i></span></div></div><div class="profile-bio">${m.bio || ''}</div><div class="profile-actions">${voiceBtn}<a href="${m.youtubeId ? 'https://www.youtube.com/channel/' + m.youtubeId : '#'}" target="_blank" class="p-btn yt"><i class="fab fa-youtube"></i> YouTube</a>${twitchLink}<a href="${twitterLink}" target="_blank" class="p-btn x"><i class="fab fa-x-twitter"></i> X</a></div><div style="text-align:right;"><span class="back-link" onclick="showPage('member')">◀ MEMBER LIST</span></div></div></div></div>`; if(pushHistory) history.pushState(null, null, '#member_' + index); showPage('memberDetail', m.name, false); }
+        // ★メンバー詳細表示（ボイス対応版）
+        function openMemberDetail(index, pushHistory = true) {
+            const m = memberData[index];
+            const detailContainer = document.getElementById('memberDetail');
+            
+            // SNSリンク生成
+            const twitchLink = m.twitchId ? `<a href="https://www.twitch.tv/${m.twitchId}" target="_blank" class="p-btn" style="background:#9146FF;color:white;box-shadow:0 5px 15px rgba(145,70,255,0.3);"><i class="fab fa-twitch"></i> Twitch</a>` : '';
+            const twitterLink = m.twitterId ? `https://x.com/${m.twitterId}` : '#';
+            
+            // ★ボイスリスト生成ロジック★
+            // シートの列名が voice1, voice2, voice3 だと仮定
+            // title1, title2, title3 でタイトルも指定可能（なければデフォルト）
+            let voiceHtml = '';
+            const voices = [
+                { url: m.voice1 || m.voice, title: m.title1 || "自己紹介", time: "0:10" }, // voice1がなければ旧voiceを使用
+                { url: m.voice2, title: m.title2 || "ご挨拶", time: "0:05" },
+                { url: m.voice3, title: m.title3 || "システム音", time: "0:03" }
+            ];
+
+            // URLがあるものだけ表示
+            const activeVoices = voices.filter(v => v.url);
+            
+            if (activeVoices.length > 0) {
+                const voiceItems = activeVoices.map((v, i) => `
+                    <div class="voice-card" onclick="playVoice(this, '${v.url}')">
+                        <i class="fas fa-play voice-icon"></i>
+                        <span class="voice-title">${v.title}</span>
+                        <span class="voice-time">PLAY</span>
+                    </div>
+                `).join('');
+                
+                voiceHtml = `
+                    <div class="voice-section">
+                        <div style="font-weight:bold; color:var(--m-color); margin-bottom:10px; border-bottom:2px dashed var(--m-color); padding-bottom:5px; display:inline-block;">
+                            <i class="fas fa-microphone-alt"></i> SAMPLE VOICE
+                        </div>
+                        <div class="voice-grid">${voiceItems}</div>
+                    </div>
+                `;
+            }
+
+            // HTML生成
+            detailContainer.innerHTML = `
+                <div class="member-bg-layer" style="background-image: url('${m.img}');"></div>
+                <div class="profile-header-bg" style="--m-color: ${m.color}; --m-color-light: ${m.color}20;">
+                    <div class="profile-wrapper">
+                        <div class="profile-visual">
+                            <img src="${m.img}" class="profile-tachie" alt="${m.name}">
+                        </div>
+                        <div class="profile-info">
+                            <div class="profile-en-name">${m.enName || 'MEMBER'}</div>
+                            <div class="profile-jp-name">${m.name}</div>
+                            <div class="profile-catch">${m.catchphrase || ''}</div>
+                            
+                            <div class="profile-data-list">
+                                <div class="p-data-item"><span class="p-label">誕生日</span><span class="p-value">${m.birthday || '-'}</span></div>
+                                <div class="p-data-item"><span class="p-label">身長</span><span class="p-value">${m.height || '-'}</span></div>
+                                <div class="p-data-item"><span class="p-label">ファンネーム</span><span class="p-value copy-tag" onclick="copyText('${m.fanName}')">${m.fanName || '-'} <i class="far fa-copy copy-icon"></i></span></div>
+                                <div class="p-data-item"><span class="p-label">ハッシュタグ</span><span class="p-value copy-tag" style="color:var(--m-color)" onclick="copyText('${m.hashTag}')">${m.hashTag || '-'} <i class="far fa-copy copy-icon"></i></span></div>
+                            </div>
+
+                            <div class="profile-bio">${m.bio || ''}</div>
+                            
+                            ${voiceHtml}
+
+                            <div class="profile-actions">
+                                <a href="${m.youtubeId ? 'https://www.youtube.com/channel/' + m.youtubeId : '#'}" target="_blank" class="p-btn yt"><i class="fab fa-youtube"></i> YouTube</a>
+                                ${twitchLink}
+                                <a href="${twitterLink}" target="_blank" class="p-btn x"><i class="fab fa-x-twitter"></i> X</a>
+                            </div>
+                            
+                            <div style="text-align:right;">
+                                <span class="back-link" onclick="showPage('member')">◀ MEMBER LIST</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+            
+            if(pushHistory) history.pushState(null, null, '#member_' + index);
+            showPage('memberDetail', m.name, false);
+        }
         function scrollContent(elementId, direction) { const container = document.getElementById(elementId); const scrollAmount = container.clientWidth / 2; if (direction === 'left') container.scrollBy({ left: -scrollAmount, behavior: 'smooth' }); else container.scrollBy({ left: scrollAmount, behavior: 'smooth' }); }
         function openNewsModal(index) { const data = newsData[index]; document.getElementById('modalDate').innerText = data.date; const tagEl = document.getElementById('modalTag'); tagEl.innerText = data.tag; tagEl.style.background = getTagColor(data.tag); document.getElementById('modalTitle').innerText = data.title; document.getElementById('modalBody').innerText = data.detail || data.title; document.getElementById('newsModal').classList.add('open'); }
         function closeNewsModal() { document.getElementById('newsModal').classList.remove('open'); }
@@ -1481,6 +1579,56 @@
         }
         function updateCard() { const val = document.getElementById('cardNameInput').value; const display = document.getElementById('cardNameDisplay'); if(display) display.innerText = val ? val : 'GUEST'; }
         function downloadCard() { const card = document.getElementById('digitalCard'); html2canvas(card, { scale: 3, backgroundColor: null, useCORS: true }).then(canvas => { const link = document.createElement('a'); link.download = 'aoharu_card.png'; link.href = canvas.toDataURL('image/png'); link.click(); }); }
+
+        // ★ボイス再生機能（同時再生防止機能付き）
+        let currentAudio = null;
+        let currentBtn = null;
+
+        function playVoice(btn, url) {
+            // もし同じボタンを押したら停止
+            if (currentBtn === btn && currentAudio) {
+                currentAudio.pause();
+                resetPlayer();
+                return;
+            }
+
+            // 他の再生中があれば止める
+            if (currentAudio) {
+                currentAudio.pause();
+                resetPlayer();
+            }
+
+            // 新しく再生
+            const audio = new Audio(url);
+            audio.volume = 0.5; // 音量調整
+            
+            // デザイン変更
+            btn.classList.add('playing');
+            btn.querySelector('.voice-icon').className = 'fas fa-stop voice-icon';
+            btn.querySelector('.voice-time').innerText = 'STOP';
+
+            audio.play().catch(e => {
+                console.error("再生エラー", e);
+                alert("音声ファイルが再生できませんでした");
+                resetPlayer();
+            });
+
+            // 再生終了時
+            audio.onended = resetPlayer;
+
+            currentAudio = audio;
+            currentBtn = btn;
+        }
+
+        function resetPlayer() {
+            if (currentBtn) {
+                currentBtn.classList.remove('playing');
+                currentBtn.querySelector('.voice-icon').className = 'fas fa-play voice-icon';
+                currentBtn.querySelector('.voice-time').innerText = 'PLAY';
+            }
+            currentAudio = null;
+            currentBtn = null;
+        }
     </script>
 </body>
 </html>
