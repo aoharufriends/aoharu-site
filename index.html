@@ -495,6 +495,23 @@
         .footer-sns-icon-img { width: 30px; height: 30px; object-fit: contain; filter: brightness(0) invert(1); }
         .copyright { text-align: center; font-size: 12px; margin-top: 50px; opacity: 0.8; font-family: 'Poppins', sans-serif; }
         @media (max-width: 768px) { .footer-container { flex-direction: column; align-items: center; text-align: center; } .footer-right { align-items: center; margin-top: 40px; } .footer-menu li a { justify-content: center; } .footer-logo { height: 150px; } }
+
+        /* ★ガイドラインページ用スタイル (追加) ★ */
+        .guideline-box { background: white; border-radius: 15px; padding: 30px; border: 2px solid #eee; margin-bottom: 30px; box-shadow: 0 5px 15px rgba(0,0,0,0.03); }
+        .g-section { margin-bottom: 40px; }
+        .g-head { font-size: 20px; font-weight: 900; color: var(--primary); margin-bottom: 20px; border-bottom: 2px dashed #ddd; padding-bottom: 10px; display: flex; align-items: center; gap: 10px; font-family: 'M PLUS Rounded 1c', sans-serif; }
+        .g-head i { font-size: 24px; color: #ff9f43; }
+        .g-text { font-size: 14px; line-height: 1.8; color: #555; margin-bottom: 20px; }
+        .g-list { list-style: none; padding: 0; margin: 0; background: #f9f9f9; border-radius: 10px; padding: 20px; }
+        .g-list li { position: relative; padding-left: 25px; margin-bottom: 12px; font-size: 14px; line-height: 1.6; color: #444; font-weight: bold; }
+        .g-list li:last-child { margin-bottom: 0; }
+        .g-list li::before { content: "✔"; color: var(--primary); position: absolute; left: 5px; top: 0; font-weight: 900; font-size: 16px; }
+        .g-list.ng-list { background: #fff5f5; }
+        .g-list.ng-list li::before { content: "✖"; color: #ff4757; }
+        .g-tag-box { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 10px; }
+        .g-tag { background: white; border: 1px solid #ddd; padding: 5px 15px; border-radius: 20px; font-size: 12px; color: #666; font-family: 'Poppins', sans-serif; font-weight: bold; display: flex; align-items: center; gap: 5px; }
+        .g-tag i { color: var(--primary); }
+
     </style>
 </head>
 <body>
@@ -522,7 +539,7 @@
         <a href="javascript:void(0)" class="menu-link" onclick="showPage('schedule')">SCHEDULE</a>
         <a href="javascript:void(0)" class="menu-link" onclick="showPage('goods')">GOODS</a>
         <a href="javascript:void(0)" class="menu-link" onclick="showPage('radio')">RADIO</a>
-        <a href="javascript:void(0)" class="menu-link" onclick="openLoginModal(); toggleMenu();" style="color:var(--primary);">LOGIN</a>
+        <a href="javascript:void(0)" class="menu-link" onclick="showPage('guideline')">GUIDELINE</a> <a href="javascript:void(0)" class="menu-link" onclick="openLoginModal(); toggleMenu();" style="color:var(--primary);">LOGIN</a>
     </div>
     <div id="overlay" class="overlay" onclick="toggleMenu()"></div>
 
@@ -800,6 +817,71 @@
         </div>
     </div>
 
+    <div id="guideline" class="page">
+        <div class="page-header">
+            <div class="page-title-en" style="color:#2ecc71;">GUIDELINE</div>
+            <div class="page-title-jp">二次創作・切り抜きガイドライン</div>
+        </div>
+        <div class="container">
+            <div class="guideline-box">
+                <div class="g-text">
+                    「あおはる⭐︎フレンズ」（以下、当グループ）を応援いただきありがとうございます。<br>
+                    ファンの皆様に安心して推し活を楽しんでいただくため、二次創作や動画の切り抜きに関するガイドラインを制定いたしました。<br>
+                    以下のルールを守って、楽しく活動していただければ幸いです！
+                </div>
+
+                <div class="g-section">
+                    <div class="g-head"><i class="fas fa-palette"></i> 二次創作（イラスト・同人活動）について</div>
+                    <div class="g-text">
+                        メンバーを描いたイラスト（ファンアート）や、同人誌等の制作は歓迎しております！<br>
+                        SNSに投稿する際は、ぜひ専用ハッシュタグをつけて投稿してください。メンバーが活動に使用させていただく場合があります（サムネイル、配信背景など）。
+                    </div>
+                    <ul class="g-list">
+                        <li>非営利目的での個人活動（SNS投稿、Pixiv、無償配布など）は自由です。</li>
+                        <li>同人誌やグッズの頒布については、過度な営利目的でなければOKです。</li>
+                        <li>R-18（成人向け）作品については、専用のハッシュタグを使用し、未成年の目に触れないようゾーニングの配慮をお願いします。</li>
+                        <li>AI生成画像については、「AI生成」であることを明記してください。</li>
+                    </ul>
+                    <div class="g-tag-box">
+                        <div class="g-tag"><i class="fas fa-hashtag"></i> #あおはるArt</div>
+                        <div class="g-tag"><i class="fas fa-hashtag"></i> #あおはるR (R-18)</div>
+                    </div>
+                </div>
+
+                <div class="g-section">
+                    <div class="g-head"><i class="fas fa-video"></i> 切り抜き動画について</div>
+                    <div class="g-text">
+                        YouTube配信の切り抜き動画（クリップ）の制作・投稿は大歓迎です！<br>
+                        面白いシーンや感動的なシーンをぜひ拡散してください。
+                    </div>
+                    <ul class="g-list">
+                        <li>動画の概要欄に、必ず「元動画のURL」と「チャンネルへのリンク」を記載してください。</li>
+                        <li>歌枠（歌ってみた配信）の切り抜きは、楽曲の著作権の関係上、原則禁止とさせていただきます（一部例外あり）。</li>
+                        <li>悪意のある編集（発言の捏造、誤解を招くタイトルなど）は禁止です。</li>
+                        <li>YouTubeショート、TikTokへの投稿も歓迎です！</li>
+                    </ul>
+                    <div class="g-tag-box">
+                        <div class="g-tag"><i class="fas fa-hashtag"></i> #あおはる切り抜き</div>
+                    </div>
+                </div>
+
+                <div class="g-section" style="margin-bottom:0;">
+                    <div class="g-head" style="color:#ff4757;"><i class="fas fa-exclamation-triangle" style="color:#ff4757;"></i> 禁止事項</div>
+                    <ul class="g-list ng-list">
+                        <li>公式のロゴ、メンバーの素材（立ち絵など）をそのままグッズ化・販売する行為</li>
+                        <li>他者を攻撃する目的、政治的・宗教的な主張を含む利用</li>
+                        <li>公式と誤認させるような振る舞い（なりすまし）</li>
+                        <li>その他、公序良俗に反する行為、当グループが不適切と判断する行為</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div style="text-align:center;">
+                <button onclick="showPage('top')" class="more-btn">TOPへ戻る</button>
+            </div>
+        </div>
+    </div>
+
     <div class="floating-heart-btn" onclick="spawnHeart()">
         <i class="fas fa-heart"></i>
         <div class="like-badge" id="totalLikeCount">...</div>
@@ -847,7 +929,7 @@
                     <li><a href="javascript:void(0)" onclick="showPage('schedule')">SCHEDULE<span class="footer-menu-ja">スケジュール</span></a></li>
                     <li><a href="javascript:void(0)" onclick="showPage('goods')">GOODS<span class="footer-menu-ja">グッズ</span></a></li>
                     <li><a href="javascript:void(0)" onclick="showPage('radio')">RADIO<span class="footer-menu-ja">ラジオ</span></a></li>
-                    <li><a href="javascript:void(0)" onclick="openLoginModal()">LOGIN<span class="footer-menu-ja">ログイン</span></a></li>
+                    <li><a href="javascript:void(0)" onclick="showPage('guideline')">GUIDELINE<span class="footer-menu-ja">ガイドライン</span></a></li> <li><a href="javascript:void(0)" onclick="openLoginModal()">LOGIN<span class="footer-menu-ja">ログイン</span></a></li>
                 </ul>
             </div>
             <div class="footer-right">
@@ -1343,7 +1425,20 @@
         
         async function registerUser() { const name = document.getElementById('regName').value, email = document.getElementById('regEmail').value, pass = document.getElementById('regPass').value, btn = document.getElementById('regBtn'); if(!name || !email || !pass) { alert("全ての項目を入力してください"); return; } if (!GAS_API_URL) { alert("GAS URL未設定"); return; } btn.innerText = "送信中..."; btn.disabled = true; try { const res = await fetch(`${GAS_API_URL}?action=register&name=${encodeURIComponent(name)}&email=${encodeURIComponent(email)}&pass=${encodeURIComponent(pass)}`); const json = await res.json(); if (json.status === 'success') { alert("登録完了！\n会員ID: " + json.id); closeRegisterModal(); document.getElementById('regName').value = ""; document.getElementById('regEmail').value = ""; document.getElementById('regPass').value = ""; } else { alert("登録エラー: " + json.message); } } catch (e) { alert("通信エラー"); } finally { btn.innerText = "会員登録する"; btn.disabled = false; } }
         async function loginUser() { const email = document.getElementById('loginEmail').value, pass = document.getElementById('loginPass').value, btn = document.getElementById('loginBtn'); if(!email || !pass) { alert("メールアドレスとパスワードを入力してください"); return; } if (!GAS_API_URL) { alert("GAS URL未設定"); return; } btn.innerText = "確認中..."; btn.disabled = true; try { const res = await fetch(`${GAS_API_URL}?action=login&email=${encodeURIComponent(email)}&pass=${encodeURIComponent(pass)}`); const json = await res.json(); if (json.status === 'success') { alert("ログイン成功！ようこそ " + json.name + " さん！"); closeLoginModal(); const headerBtn = document.getElementById('headerLoginBtn'); headerBtn.innerText = `${json.name} 様`; headerBtn.classList.add('logged-in-user'); headerBtn.onclick = null; isMemberLoggedIn = true; renderMemberVideos(); } else { alert("ログイン失敗: " + json.message); } } catch (e) { alert("通信エラー"); } finally { btn.innerText = "ログインする"; btn.disabled = false; } }
-        function updateBreadcrumbs(pageId, detailName) { const container = document.getElementById('breadcrumbNav'); let html = '<a href="javascript:void(0)" onclick="showPage(\'top\')" class="bc-item"><i class="fas fa-home bc-icon"></i></a>'; if (pageId === 'top') { container.style.display = 'none'; return; } else { container.style.display = 'flex'; } const sep = '<span class="bc-sep">▶</span>'; if (pageId === 'news') html += sep + '<span class="bc-current">NEWS</span>'; else if (pageId === 'member') html += sep + '<span class="bc-current">MEMBER</span>'; else if (pageId === 'schedule') html += sep + '<span class="bc-current">SCHEDULE</span>'; else if (pageId === 'goods') html += sep + '<span class="bc-current">GOODS</span>'; else if (pageId === 'radio') html += sep + '<span class="bc-current">RADIO</span>'; else if (pageId === 'memberDetail') { html += sep + '<a href="javascript:void(0)" onclick="showPage(\'member\')" class="bc-item">MEMBER</a>'; html += sep + '<span class="bc-current">' + (detailName || 'DETAIL') + '</span>'; } container.innerHTML = html; }
+        function updateBreadcrumbs(pageId, detailName) { 
+            const container = document.getElementById('breadcrumbNav'); 
+            let html = '<a href="javascript:void(0)" onclick="showPage(\'top\')" class="bc-item"><i class="fas fa-home bc-icon"></i></a>'; 
+            if (pageId === 'top') { container.style.display = 'none'; return; } else { container.style.display = 'flex'; } 
+            const sep = '<span class="bc-sep">▶</span>'; 
+            if (pageId === 'news') html += sep + '<span class="bc-current">NEWS</span>'; 
+            else if (pageId === 'member') html += sep + '<span class="bc-current">MEMBER</span>'; 
+            else if (pageId === 'schedule') html += sep + '<span class="bc-current">SCHEDULE</span>'; 
+            else if (pageId === 'goods') html += sep + '<span class="bc-current">GOODS</span>'; 
+            else if (pageId === 'radio') html += sep + '<span class="bc-current">RADIO</span>'; 
+            else if (pageId === 'guideline') html += sep + '<span class="bc-current">GUIDELINE</span>'; /* ガイドライン追加 */
+            else if (pageId === 'memberDetail') { html += sep + '<a href="javascript:void(0)" onclick="showPage(\'member\')" class="bc-item">MEMBER</a>'; html += sep + '<span class="bc-current">' + (detailName || 'DETAIL') + '</span>'; } 
+            container.innerHTML = html; 
+        }
         function renderNews() { const newsHtml = newsData.map((n, i) => { const imgSrc = n.image ? n.image : "https://placehold.co/600x400/eee/333?text=NEWS"; return `<div class="news-card" onclick="openNewsModal(${i})"><div class="news-thumb-area"><span class="news-badge" style="background:${getTagColor(n.tag)}">${n.tag}</span><img src="${imgSrc}" class="news-img"></div><div class="news-content"><div class="news-date">${n.date}</div><div class="news-title">${n.title}</div><div class="news-check-btn">CHECK</div></div></div>`; }).join(''); document.getElementById('topNewsList').innerHTML = newsHtml || "まだニュースはありません"; document.getElementById('fullNewsList').innerHTML = newsHtml || "まだニュースはありません"; }
         function renderSchedule() { const topScheduleHtml = scheduleData.map(s => `<div class="schedule-card"><div class="sch-thumb-box"><div class="sch-date-big">${s.date}</div><div class="sch-time-big">${s.time}</div></div><div class="sch-info"><span class="sch-badge-mini">配信</span><div class="sch-title">${s.content}</div></div></div>`).join(''); document.getElementById('topScheduleList').innerHTML = topScheduleHtml || "予定はありません"; document.getElementById('scheduleList').innerHTML = scheduleData.map(s => ` <div class="timeline-item"> <div class="tl-icon-box"><div class="tl-icon"><i class="fas fa-video"></i></div></div> <div class="tl-content"> <div class="tl-date">${s.date} <span style="font-size:12px;color:#888;">${s.time}</span></div> <div class="tl-title">${s.content}</div> <span class="tl-tag">配信</span> </div> </div>`).join(''); }
         function renderVideos() { const videoHtml = videoData.map(v => `<div class="video-card" onclick="window.open('https://www.youtube.com/watch?v=${v.id}', '_blank')"><div class="video-thumb-box"><img src="https://img.youtube.com/vi/${v.id}/mqdefault.jpg" class="video-thumb"><div class="play-icon">▶</div></div><div class="video-info"><div class="video-title">${v.title}</div><div class="video-date">${v.date}</div></div></div>`).join(''); document.getElementById('topVideoList').innerHTML = videoHtml || "動画はまだありません"; }
