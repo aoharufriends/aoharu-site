@@ -993,12 +993,12 @@
         let secretInput = [];
         let logoTapCount = 0;
 
-        // ★読み込み開始
+        // ★読み込み開始（リロード対策済み）
         window.onload = function() { 
-            handleLocation(); 
+            // handleLocation(); ← ここにあったのを削除！
+
             fetchSheetData().then(() => {
                 renderStaticParts(); 
-                // ★チェック: LiveStatusはメンバーデータ読み込み完了後に実行
                 setTimeout(checkLiveStatus, 500);
                 initCardMaker(); 
                 renderRadioDiary(); 
@@ -1006,11 +1006,15 @@
                 initOmikuji(); 
                 initEasterEgg(); 
                 
+                // ★ここに移動しました！
+                // データが全て揃った後に「今どのページ？」を確認して表示します。
+                handleLocation(); 
+                
                 // ★ローディング終了処理★
                 const loader = document.getElementById('loadingScreen');
                 if(loader) {
                     loader.classList.add('loaded');
-                    setTimeout(() => loader.remove(), 500); // 完全に消す
+                    setTimeout(() => loader.remove(), 500); 
                 }
             });
         };
