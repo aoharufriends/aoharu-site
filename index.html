@@ -1446,15 +1446,37 @@
             } catch(e) { alert('通信エラーが発生しました'); } finally { btn.disabled = false; btn.innerText = "送信する"; }
         }
 
-　　　　function renderRadioDiary() {
+        function renderRadioDiary() {
             const container = document.getElementById('radioDiaryList');
             if (!radioBlogData || radioBlogData.length === 0) { container.innerHTML = '<p style="text-align:center;color:#888;">まだ日記はありません</p>'; return; }
             
             container.innerHTML = radioBlogData.map(d => {
-                let iconSrc = "icon.png";
-                let imgPos = "top center"; // デフォルトの位置設定
+                // ★追加：ログインしていなければ「モザイク（鍵）」を表示して終わり
+                if (!isMemberLoggedIn) {
+                    return `
+                        <div class="diary-card" onclick="openLoginModal()" style="cursor:pointer; position:relative; overflow:hidden;">
+                            <div style="filter: blur(6px); opacity: 0.6; pointer-events: none;">
+                                <div class="diary-icon" style="background:#ddd;"></div>
+                                <div class="diary-content">
+                                    <div class="diary-name">SECRET MEMBER</div>
+                                    <div class="diary-text">このコンテンツは会員限定です。<br>ログインすると閲覧できます。</div>
+                                    <div class="diary-date">----.--.--</div>
+                                </div>
+                            </div>
+                            <div style="position:absolute; top:50%; left:50%; transform:translate(-50%,-50%); text-align:center; width:100%; z-index:2;">
+                                <i class="fas fa-lock" style="font-size:24px; color:#555; margin-bottom:5px;"></i>
+                                <div style="font-weight:bold; font-size:12px; color:#555;">MEMBER ONLY</div>
+                            </div>
+                        </div>
+                    `;
+                }
 
-                // ... (中略：画像検索ロジックはそのまま) ...
+                // --- ここから下は「ログイン済み」の場合の表示（さっきと同じ） ---
+                
+                let iconSrc = "icon.png";
+                let imgPos = "top center"; 
+
+                // 1. 名前でメンバーリストから検索
                 if (memberData && memberData.length > 0) {
                     const targetMember = memberData.find(m => m.name === d.name);
                     if (targetMember) {
@@ -1462,6 +1484,7 @@
                         if(targetMember.icon_pos) imgPos = targetMember.icon_pos;
                     }
                 }
+                // 2. 個別画像指定があれば優先
                 if (d.img && d.img !== "") iconSrc = d.img;
 
                 const voicePlayer = d.voice ? 
@@ -1470,7 +1493,6 @@
                         <span class="voice-time">限定ボイス</span>
                     </div>` : '';
 
-                // divタグの背景画像(background-image)にしてズーム対応
                 return `
                     <div class="diary-card">
                         <div class="diary-icon" style="background-image: url('${iconSrc}'); background-position: ${imgPos};"></div>
