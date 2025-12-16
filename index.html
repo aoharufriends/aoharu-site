@@ -424,7 +424,16 @@
         .radio-btn:hover { transform: translateY(-2px); }
         .diary-section { margin-top: 50px; }
         .diary-card { background: white; border-radius: 15px; padding: 15px; margin-bottom: 20px; border: 1px solid #eee; display: flex; gap: 15px; box-shadow: 0 2px 8px rgba(0,0,0,0.03); position: relative; }
-        .diary-icon { width: 50px; height: 50px; border-radius: 50%; object-fit: cover; flex-shrink: 0; border: 2px solid #eee; }
+        /* ★ここを書き換えてください★ */
+.diary-icon {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    object-fit: cover;       /* 枠に合わせてトリミングする設定 */
+    object-position: top center; /* ← ★これを追加！画像を上寄せにして顔を合わせる設定 */
+    flex-shrink: 0;
+    border: 2px solid #eee;
+}
         .diary-content { flex: 1; }
         .diary-name { font-weight: bold; font-size: 13px; margin-bottom: 5px; color: var(--text-sub); }
         .diary-text { font-size: 14px; line-height: 1.6; background: #f9f9f9; padding: 10px; border-radius: 0 10px 10px 10px; display: inline-block; position: relative; }
@@ -1437,9 +1446,31 @@
         function renderRadioDiary() {
             const container = document.getElementById('radioDiaryList');
             if (!radioBlogData || radioBlogData.length === 0) { container.innerHTML = '<p style="text-align:center;color:#888;">まだ日記はありません</p>'; return; }
+            
             container.innerHTML = radioBlogData.map(d => {
-                const iconSrc = d.img ? d.img : "icon.png";
-                const voicePlayer = d.voice ? `<div class="diary-voice-player" onclick="playVoice('${d.voice}')"><i class="fas fa-play"></i> 限定ボイスを聴く</div>` : '';
+                // ★アイコン自動判定ロジック（ここを追加しました！）
+                let iconSrc = "icon.png"; // デフォルト画像
+
+                // 1. 名前でメンバーリストから検索して画像を取得
+                if (memberData && memberData.length > 0) {
+                    const targetMember = memberData.find(m => m.name === d.name);
+                    if (targetMember && targetMember.img) {
+                        iconSrc = targetMember.img;
+                    }
+                }
+
+                // 2. もしこの回だけ個別に画像指定があれば、それを最優先で使う
+                if (d.img && d.img !== "") {
+                    iconSrc = d.img;
+                }
+
+                // ボイス再生ボタン（最新のplayVoice関数に対応させました）
+                const voicePlayer = d.voice ? 
+                    `<div class="diary-voice-player" onclick="playVoice(this, '${d.voice}')">
+                        <i class="fas fa-play voice-icon"></i> 
+                        <span class="voice-time">限定ボイス</span>
+                    </div>` : '';
+
                 return `<div class="diary-card"><img src="${iconSrc}" class="diary-icon"><div class="diary-content"><div class="diary-name">${d.name}</div><div class="diary-text">${d.text}</div>${voicePlayer}<div class="diary-date">${d.date}</div></div></div>`;
             }).join('');
         }
