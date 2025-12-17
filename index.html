@@ -1034,7 +1034,7 @@
 
 <script>
     // ★★★ GASのURL（あなたの最新のURLに書き換えてください！） ★★★
-    const GAS_API_URL = "https://script.google.com/macros/s/AKfycbyhkGgRhEKYmfZ_mH_7utkeNGXDnq7fvN6G70zp7e1PsdXb7CCufhp-MJNkw_qVfGNHYw/exec";
+    const GAS_API_URL = "https://script.google.com/macros/s/AKfycbyU2lbLaTZZbgiTLAoJuWF7v1f0M3MprTRo8QjNWToNS4GKTVdHkdlkyrfveUGTowoCeQ/exec";
 
     let YOUTUBE_API_KEY = ""; 
     let GROUP_CONFIG = {};
@@ -1314,6 +1314,57 @@
     async function openUserProfile(name, event) {
         if(event) event.stopPropagation();
 
+    // ▼▼▼ この関数を追加してください ▼▼▼
+    function openMemberDetail(index) {
+        const m = memberData[index];
+        if(!m) return;
+
+        const detailPage = document.getElementById('memberDetail');
+        
+        // 背景画像の設定（CSS変数などを利用していないようなので直接styleに入れます）
+        // 既存のCSSクラス .profile-header-bg 等を活用したHTMLを生成します
+        let snsBtns = '';
+        if(m.youtubeId) snsBtns += `<a href="https://www.youtube.com/channel/${m.youtubeId}" target="_blank" class="p-btn yt"><i class="fab fa-youtube"></i> Channel</a>`;
+        if(m.twitterId) snsBtns += `<a href="${m.twitterId}" target="_blank" class="p-btn x"><i class="fab fa-x-twitter"></i> @${m.twitterId.split('/').pop()}</a>`;
+
+        const html = `
+            <div class="profile-header-bg" style="background-image: url('${m.bgImg}');">
+                <div class="profile-wrapper">
+                    <div class="profile-visual">
+                        <img src="${m.img}" class="profile-tachie">
+                    </div>
+                    <div class="profile-info">
+                        <div class="profile-en-name">${m.enName || 'MEMBER'}</div>
+                        <div class="profile-jp-name">${m.name}</div>
+                        <div class="profile-catch">${m.catchphrase || ''}</div>
+                        
+                        <div class="profile-data-list">
+                            <div class="p-data-item"><span class="p-label">BIRTHDAY</span><span class="p-value">${m.birthday || '-'}</span></div>
+                            <div class="p-data-item"><span class="p-label">HEIGHT</span><span class="p-value">${m.height || '-'}</span></div>
+                            <div class="p-data-item"><span class="p-label">FAN NAME</span><span class="p-value">${m.fanName || '-'}</span></div>
+                            <div class="p-data-item"><span class="p-label">TAG</span><span class="p-value">#${m.hashTag || ''}</span></div>
+                        </div>
+
+                        <div class="profile-bio">${m.bio || ''}</div>
+
+                        <div class="profile-actions">
+                            ${snsBtns}
+                        </div>
+                        
+                        <div style="text-align:center;">
+                            <div class="back-link" onclick="showPage('member')">◀ メンバー一覧に戻る</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        `;
+
+        detailPage.innerHTML = html;
+        
+        // ページ遷移を実行
+        showPage('memberDetail', m.name);
+    }
+
         // ★★★ この2行が重要！開いている画面を閉じてからプロフィールを開く ★★★
         document.getElementById('graffitiModal').classList.remove('open');
         document.getElementById('userProfileModal').classList.remove('open'); 
@@ -1362,6 +1413,55 @@
 
     function closeUserProfileModal() {
         document.getElementById('userProfileModal').classList.remove('open');
+    }
+
+    function openMemberDetail(index) {
+        const m = memberData[index];
+        if(!m) return;
+
+        const detailPage = document.getElementById('memberDetail');
+        
+        // 背景画像の設定
+        let snsBtns = '';
+        if(m.youtubeId) snsBtns += `<a href="https://www.youtube.com/channel/${m.youtubeId}" target="_blank" class="p-btn yt"><i class="fab fa-youtube"></i> Channel</a>`;
+        if(m.twitterId) snsBtns += `<a href="${m.twitterId}" target="_blank" class="p-btn x"><i class="fab fa-x-twitter"></i> @${m.twitterId.split('/').pop()}</a>`;
+
+        const html = `
+            <div class="profile-header-bg" style="background-image: url('${m.bgImg}');">
+                <div class="profile-wrapper">
+                    <div class="profile-visual">
+                        <img src="${m.img}" class="profile-tachie">
+                    </div>
+                    <div class="profile-info">
+                        <div class="profile-en-name">${m.enName || 'MEMBER'}</div>
+                        <div class="profile-jp-name">${m.name}</div>
+                        <div class="profile-catch">${m.catchphrase || ''}</div>
+                        
+                        <div class="profile-data-list">
+                            <div class="p-data-item"><span class="p-label">BIRTHDAY</span><span class="p-value">${m.birthday || '-'}</span></div>
+                            <div class="p-data-item"><span class="p-label">HEIGHT</span><span class="p-value">${m.height || '-'}</span></div>
+                            <div class="p-data-item"><span class="p-label">FAN NAME</span><span class="p-value">${m.fanName || '-'}</span></div>
+                            <div class="p-data-item"><span class="p-label">TAG</span><span class="p-value">#${m.hashTag || ''}</span></div>
+                        </div>
+
+                        <div class="profile-bio">${m.bio || ''}</div>
+
+                        <div class="profile-actions">
+                            ${snsBtns}
+                        </div>
+                        
+                        <div style="text-align:center;">
+                            <div class="back-link" onclick="showPage('member')">◀ メンバー一覧に戻る</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        `;
+
+        detailPage.innerHTML = html;
+        
+        // ページ遷移を実行
+        showPage('memberDetail', m.name);
     }
 
     // 5. パスワード忘れ
