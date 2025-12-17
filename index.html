@@ -39,14 +39,8 @@
             transition: opacity 0.5s, visibility 0.5s;
         }
         #loadingScreen.loaded { opacity: 0; visibility: hidden; pointer-events: none; }
-        .loading-logo {
-            width: 120px; height: auto; margin-bottom: 20px;
-            animation: bounce-logo 1s infinite;
-        }
-        .loading-text {
-            font-family: 'Poppins', sans-serif; font-weight: bold; color: var(--primary);
-            font-size: 18px; letter-spacing: 2px; animation: blink 1.5s infinite;
-        }
+        .loading-logo { width: 120px; height: auto; margin-bottom: 20px; animation: bounce-logo 1s infinite; }
+        .loading-text { font-family: 'Poppins', sans-serif; font-weight: bold; color: var(--primary); font-size: 18px; letter-spacing: 2px; animation: blink 1.5s infinite; }
         @keyframes bounce-logo { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-15px); } }
         @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
 
@@ -75,121 +69,33 @@
         .section-title { text-align: center; margin-bottom: 30px; margin-top: 40px; } .en-title { font-family: 'Poppins', sans-serif; font-size: 28px; font-weight: bold; color: var(--primary); letter-spacing: 2px; } .ja-title { display: block; font-size: 12px; color: var(--text-sub); margin-top: 5px; font-weight: bold; }
         .more-btn { background: transparent; border: 1px solid #ccc; padding: 10px 30px; border-radius: 30px; cursor: pointer; color: var(--text-main); font-family: 'Poppins', sans-serif; font-size: 14px; margin-top: 20px; transition: all 0.3s ease; outline: none; } .more-btn:hover { background: var(--primary); color: white; border-color: var(--primary); }
 
-        /* ★★★ おみくじエリア（派手カワ・リニューアル版） ★★★ */
-        .omikuji-area { 
-            text-align: center; margin-bottom: 60px; 
-            background: linear-gradient(135deg, #fff5f8 0%, #f0faff 100%);
-            padding: 30px 20px; border-radius: 25px; 
-            box-shadow: 0 10px 30px rgba(0,0,0,0.05); 
-            border: 4px solid white; outline: 4px dashed #ff9a9e;
-            position: relative; overflow: hidden;
-            max-width: 600px; margin-left: auto; margin-right: auto;
-        }
-        .omikuji-area::before {
-            content: ""; position: absolute; inset: 0; opacity: 0.1;
-            background-image: radial-gradient(#ff9a9e 20%, transparent 20%), radial-gradient(#27C6F5 20%, transparent 20%);
-            background-size: 30px 30px; background-position: 0 0, 15px 15px;
-            pointer-events: none;
-        }
+        /* おみくじ */
+        .omikuji-area { text-align: center; margin-bottom: 60px; background: linear-gradient(135deg, #fff5f8 0%, #f0faff 100%); padding: 30px 20px; border-radius: 25px; box-shadow: 0 10px 30px rgba(0,0,0,0.05); border: 4px solid white; outline: 4px dashed #ff9a9e; position: relative; overflow: hidden; max-width: 600px; margin-left: auto; margin-right: auto; }
+        .omikuji-area::before { content: ""; position: absolute; inset: 0; opacity: 0.1; background-image: radial-gradient(#ff9a9e 20%, transparent 20%), radial-gradient(#27C6F5 20%, transparent 20%); background-size: 30px 30px; background-position: 0 0, 15px 15px; pointer-events: none; }
         .omi-deco { position: absolute; font-size: 24px; animation: float-deco 3s ease-in-out infinite; z-index: 1; }
-        .d-1 { top: 10px; left: 10px; color: #FFD700; animation-delay: 0s; }
-        .d-2 { bottom: 10px; right: 10px; color: #27C6F5; animation-delay: 1.5s; font-size: 30px; }
+        .d-1 { top: 10px; left: 10px; color: #FFD700; animation-delay: 0s; } .d-2 { bottom: 10px; right: 10px; color: #27C6F5; animation-delay: 1.5s; font-size: 30px; }
         @keyframes float-deco { 0%, 100% { transform: translateY(0) rotate(0deg); } 50% { transform: translateY(-10px) rotate(20deg); } }
-        .omi-visual-box {
-            font-size: 60px; color: #ff4757; margin: 10px 0 20px;
-            text-shadow: 0 5px 0 rgba(0,0,0,0.1);
-            animation: omi-bounce 2s infinite; display: inline-block;
-        }
+        .omi-visual-box { font-size: 60px; color: #ff4757; margin: 10px 0 20px; text-shadow: 0 5px 0 rgba(0,0,0,0.1); animation: omi-bounce 2s infinite; display: inline-block; }
         @keyframes omi-bounce { 0%, 20%, 50%, 80%, 100% { transform: translateY(0); } 40% { transform: translateY(-20px); } 60% { transform: translateY(-10px); } }
-        .omi-title-ribbon {
-            background: #ff4757; color: white; display: inline-block;
-            padding: 5px 20px; border-radius: 20px; font-weight: bold; font-size: 14px;
-            box-shadow: 0 4px 0 #cc1e2b; margin-bottom: 10px; position: relative; z-index: 2;
-        }
-        .omi-main-text {
-            font-family: 'M PLUS Rounded 1c', sans-serif; font-weight: 900;
-            font-size: 28px; color: #444; margin: 0 0 20px; letter-spacing: 2px;
-            position: relative; z-index: 2;
-            background: linear-gradient(to right, #ff4757, #ff9a9e);
-            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-        }
-        .omikuji-btn { 
-            background: linear-gradient(to bottom, #FFD700, #FFA500); 
-            color: #fff; font-weight: 900; padding: 18px 50px; 
-            border-radius: 50px; border: 4px solid #fff; 
-            font-size: 22px; cursor: pointer; 
-            box-shadow: 0 8px 0 #d35400, 0 15px 20px rgba(0,0,0,0.2); 
-            transition: transform 0.1s, box-shadow 0.1s; 
-            font-family: 'M PLUS Rounded 1c', sans-serif; letter-spacing: 2px;
-            position: relative; z-index: 5; text-shadow: 1px 1px 0 rgba(0,0,0,0.2);
-        }
+        .omi-title-ribbon { background: #ff4757; color: white; display: inline-block; padding: 5px 20px; border-radius: 20px; font-weight: bold; font-size: 14px; box-shadow: 0 4px 0 #cc1e2b; margin-bottom: 10px; position: relative; z-index: 2; }
+        .omi-main-text { font-family: 'M PLUS Rounded 1c', sans-serif; font-weight: 900; font-size: 28px; color: #444; margin: 0 0 20px; letter-spacing: 2px; position: relative; z-index: 2; background: linear-gradient(to right, #ff4757, #ff9a9e); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .omikuji-btn { background: linear-gradient(to bottom, #FFD700, #FFA500); color: #fff; font-weight: 900; padding: 18px 50px; border-radius: 50px; border: 4px solid #fff; font-size: 22px; cursor: pointer; box-shadow: 0 8px 0 #d35400, 0 15px 20px rgba(0,0,0,0.2); transition: transform 0.1s, box-shadow 0.1s; font-family: 'M PLUS Rounded 1c', sans-serif; letter-spacing: 2px; position: relative; z-index: 5; text-shadow: 1px 1px 0 rgba(0,0,0,0.2); }
         .omikuji-btn:hover { transform: translateY(4px); box-shadow: 0 4px 0 #d35400, 0 8px 10px rgba(0,0,0,0.2); }
         .omikuji-btn:active { transform: translateY(8px); box-shadow: 0 0 0 #d35400, inset 0 2px 5px rgba(0,0,0,0.2); }
-        .omikuji-btn::after {
-            content: "FREE!"; position: absolute; top: -15px; right: -20px;
-            background: #27C6F5; color: white; font-size: 12px; padding: 5px 10px;
-            border-radius: 50%; transform: rotate(20deg); border: 2px solid white;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.2); animation: pulse-red 1s infinite;
-        }
-
-        /* ★スマホ用調整（おみくじをコンパクトに）★ */
-        @media (max-width: 768px) {
-            .omikuji-area {
-                padding: 20px 10px; /* パディングを減らす */
-                margin-bottom: 40px;
-            }
-            .omi-main-text {
-                font-size: 22px; /* 文字サイズを小さく */
-                margin-bottom: 15px;
-            }
-            .omi-visual-box {
-                font-size: 40px; /* アイコンを小さく */
-                margin: 5px 0 15px;
-            }
-            .omikuji-btn {
-                padding: 12px 30px; /* ボタンを小さく */
-                font-size: 16px;
-            }
-            .omikuji-btn::after {
-                font-size: 10px; /* バッジも小さく */
-                padding: 3px 6px;
-                top: -10px;
-                right: -10px;
-            }
-        }
+        .omikuji-btn::after { content: "FREE!"; position: absolute; top: -15px; right: -20px; background: #27C6F5; color: white; font-size: 12px; padding: 5px 10px; border-radius: 50%; transform: rotate(20deg); border: 2px solid white; box-shadow: 0 2px 5px rgba(0,0,0,0.2); animation: pulse-red 1s infinite; }
         
-        /* 派手カワおみくじアニメーション */
+        /* おみくじアニメ・結果 */
         .omi-anim-container { position: relative; width: 100%; height: 300px; display: flex; justify-content: center; align-items: center; overflow: hidden; }
         .omi-box-container { position: relative; width: 140px; height: 200px; perspective: 1000px; z-index: 10; }
-        .omi-box {
-            width: 100%; height: 100%; 
-            background: linear-gradient(135deg, #FF512F, #DD2476, #FF512F); background-size: 200% 200%;
-            border: 6px solid #fff; box-shadow: 0 15px 35px rgba(221, 36, 118, 0.6);
-            color: white; font-weight: 900; display: flex; align-items: center; justify-content: center;
-            font-size: 36px; writing-mode: vertical-rl; border-radius: 20px; position: relative; z-index: 5;
-            text-shadow: 3px 3px 0 rgba(0,0,0,0.3); font-family: 'M PLUS Rounded 1c', sans-serif;
-            animation: gradient-shift 3s ease infinite;
-        }
+        .omi-box { width: 100%; height: 100%; background: linear-gradient(135deg, #FF512F, #DD2476, #FF512F); background-size: 200% 200%; border: 6px solid #fff; box-shadow: 0 15px 35px rgba(221, 36, 118, 0.6); color: white; font-weight: 900; display: flex; align-items: center; justify-content: center; font-size: 36px; writing-mode: vertical-rl; border-radius: 20px; position: relative; z-index: 5; text-shadow: 3px 3px 0 rgba(0,0,0,0.3); font-family: 'M PLUS Rounded 1c', sans-serif; animation: gradient-shift 3s ease infinite; }
         @keyframes gradient-shift { 0% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } 100% { background-position: 0% 50%; } }
         .omi-box.shaking { animation: omi-shake-crazy 0.25s infinite cubic-bezier(.36,.07,.19,.97) alternate; }
-        @keyframes omi-shake-crazy {
-            0% { transform: translate(0, 0) rotate(0) scale(1); }
-            25% { transform: translate(-10px, 5px) rotate(-10deg) scale(1.05, 0.95); }
-            50% { transform: translate(0, -5px) rotate(0) scale(0.95, 1.05); }
-            75% { transform: translate(10px, 5px) rotate(10deg) scale(1.05, 0.95); }
-            100% { transform: translate(0, 0) rotate(0) scale(1); }
-        }
+        @keyframes omi-shake-crazy { 0% { transform: translate(0, 0) rotate(0) scale(1); } 25% { transform: translate(-10px, 5px) rotate(-10deg) scale(1.05, 0.95); } 50% { transform: translate(0, -5px) rotate(0) scale(0.95, 1.05); } 75% { transform: translate(10px, 5px) rotate(10deg) scale(1.05, 0.95); } 100% { transform: translate(0, 0) rotate(0) scale(1); } }
         .omi-box.pre-burst { animation: pre-burst-pop 0.5s forwards cubic-bezier(0.68, -0.55, 0.265, 1.55); }
         @keyframes pre-burst-pop { 0% { transform: scale(1); } 50% { transform: scale(0.8) translateY(20px); } 100% { transform: scale(1.3) translateY(-10px); } }
-        .omi-slip {
-            position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
-            width: 24px; height: 120px; background: #fff; border: 4px solid #DD2476;
-            z-index: 2; transition: top 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); border-radius: 8px;
-            box-shadow: 0 0 15px rgba(255, 255, 255, 1);
-        }
+        .omi-slip { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 24px; height: 120px; background: #fff; border: 4px solid #DD2476; z-index: 2; transition: top 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); border-radius: 8px; box-shadow: 0 0 15px rgba(255, 255, 255, 1); }
         .omi-slip.coming-out { top: -70%; }
-        .confetti { position: absolute; pointer-events: none; z-index: 1; opacity: 0; }
-        .confetti i { font-size: 20px; }
+        .confetti { position: absolute; pointer-events: none; z-index: 1; opacity: 0; } .confetti i { font-size: 20px; }
         .burst .confetti { animation: confetti-explosion 1s ease-out forwards; }
         @keyframes confetti-explosion { 0% { opacity: 1; transform: translate(0, 0) scale(0.5) rotate(0deg); } 100% { opacity: 0; transform: translate(var(--tx), var(--ty)) scale(1.5) rotate(var(--r)); } }
         .shockwave { position: absolute; top: 50%; left: 50%; width: 10px; height: 10px; border-radius: 50%; background: rgba(255, 255, 255, 0.8); z-index: 0; opacity: 0; pointer-events: none; }
@@ -198,7 +104,6 @@
         #omikujiAnimModal.flash-effect::after { content: ""; position: absolute; inset: 0; background: white; z-index: 100; animation: flash-anim 0.5s ease-out forwards; pointer-events: none; }
         @keyframes flash-anim { 0% { opacity: 1; } 100% { opacity: 0; } }
 
-        /* おみくじ結果表示 & ボタン */
         .omi-rank { font-size: 48px; font-weight: 900; color: #ff4757; margin-bottom: 10px; text-shadow: 2px 2px 0 rgba(0,0,0,0.1); font-family: 'M PLUS Rounded 1c', sans-serif; }
         .omi-msg { font-size: 16px; color: #555; margin-bottom: 20px; font-weight: bold; line-height: 1.5; }
         .omi-item { font-size: 14px; color: #fff; background: var(--primary); display: inline-block; padding: 8px 20px; border-radius: 20px; font-weight: bold; box-shadow: 0 5px 10px rgba(39, 198, 245, 0.3); }
@@ -212,11 +117,10 @@
         /* スクロールエリア */
         .scroll-wrapper { position: relative; display: flex; align-items: center; } .scroll-grid { display: flex; overflow-x: auto; scroll-snap-type: x mandatory; gap: 15px; padding-bottom: 10px; scrollbar-width: none; flex-grow: 1; margin: 0 10px; } .scroll-grid::-webkit-scrollbar { display: none; } .scroll-btn { width: 30px; height: 30px; border-radius: 50%; background: rgba(255, 255, 255, 0.8); color: var(--primary); border: 1px solid #eee; box-shadow: 0 2px 5px rgba(0,0,0,0.1); display: flex; align-items: center; justify-content: center; font-size: 14px; font-weight: bold; cursor: pointer; z-index: 10; transition: all 0.2s; flex-shrink: 0; } .scroll-btn:hover { background: var(--primary); color: white; box-shadow: 0 4px 8px rgba(39, 198, 245, 0.3); } .scroll-btn.left { margin-right: -15px; } .scroll-btn.right { margin-left: -15px; }
 
-        /* ★★★ NOW ON AIR (Live Embed) ★★★ */
+        /* NOW ON AIR */
         #nowOnAirSection { display: none; margin-bottom: 60px; animation: fadeIn 0.5s ease; width: 100%; }
         .noa-title { text-align: center; font-family: 'Poppins', sans-serif; font-weight: 900; font-size: 32px; color: #ff0000; margin-bottom: 20px; letter-spacing: 2px; text-shadow: 0 2px 10px rgba(255,0,0,0.1); display: flex; align-items: center; justify-content: center; gap: 10px; }
         .noa-title::before, .noa-title::after { content: "●"; font-size: 14px; animation: pulse-red 1s infinite; }
-        
         .live-hero-wrapper { width: 100%; max-width: 900px; margin: 0 auto; background: #000; border-radius: 16px; overflow: hidden; box-shadow: 0 20px 50px rgba(0,0,0,0.2); position: relative; border: 4px solid #ff0000; }
         .live-iframe-box { position: relative; width: 100%; padding-top: 56.25%; /* 16:9 */ }
         .live-iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: none; }
@@ -227,14 +131,11 @@
         .live-status-badge.upcoming { background: #FF9800; }
         .live-info-name { font-weight: bold; font-size: 14px; color: #555; }
         .live-info-title { font-weight: bold; font-size: 16px; color: #333; display: -webkit-box; -webkit-line-clamp: 1; -webkit-box-orient: vertical; overflow: hidden; }
-        
-        /* 複数配信がある場合のサブグリッド */
         .sub-live-grid { display: flex; gap: 10px; overflow-x: auto; padding: 15px 0; max-width: 900px; margin: 0 auto; }
         .sub-live-card { min-width: 200px; background: white; border-radius: 8px; overflow: hidden; box-shadow: 0 4px 10px rgba(0,0,0,0.1); cursor: pointer; transition: 0.2s; border: 2px solid transparent; }
         .sub-live-card:hover { border-color: #ff0000; transform: translateY(-3px); }
         .sub-live-thumb { width: 100%; height: 110px; object-fit: cover; }
         .sub-live-title { font-size: 12px; font-weight: bold; padding: 8px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-
         @keyframes pulse-red { 0% { opacity: 1; } 50% { opacity: 0.3; } 100% { opacity: 1; } }
 
         /* 各種カード */
@@ -253,11 +154,7 @@
 
         /* メンバー詳細 */
         .member-bg-layer { position: fixed; top: 70px; left: 0; width: 50vw; height: calc(100vh - 70px); z-index: -1; background-repeat: no-repeat; background-position: center bottom; background-size: contain; opacity: 0.15; pointer-events: none; padding-bottom: 20px; box-sizing: border-box; }
-        .profile-header-bg { 
-            background: linear-gradient(135deg, var(--m-color-light) 0%, rgba(255,255,255,0.85) 100%);
-            padding-top: 40px; padding-bottom: 60px; position: relative; overflow: hidden; margin-top: 0; 
-            min-height: calc(100vh - 70px); 
-        }
+        .profile-header-bg { background: linear-gradient(135deg, var(--m-color-light) 0%, rgba(255,255,255,0.85) 100%); padding-top: 40px; padding-bottom: 60px; position: relative; overflow: hidden; margin-top: 0; min-height: calc(100vh - 70px); }
         .profile-wrapper { display: flex; flex-direction: column; align-items: center; max-width: 1000px; margin: 0 auto; padding: 0 20px; } @media (min-width: 768px) { .profile-wrapper { flex-direction: row; align-items: flex-start; justify-content: space-between; } }
         .profile-visual { width: 100%; max-width: 400px; position: relative; margin-bottom: 30px; display: flex; justify-content: center; } .profile-tachie { width: 100%; height: auto; filter: drop-shadow(0 10px 20px rgba(0,0,0,0.2)); animation: slideUpTachie 0.8s cubic-bezier(0.2, 0.8, 0.2, 1); } @keyframes slideUpTachie { from { opacity: 0; transform: translateY(50px); } to { opacity: 1; transform: translateY(0); } }
         .profile-info { width: 100%; max-width: 550px; }
@@ -277,76 +174,30 @@
         .copy-tag { cursor: pointer; position: relative; transition: all 0.2s; display: inline-flex; align-items: center; gap: 5px; }
         .copy-tag:hover { transform: scale(1.05); text-decoration: underline; }
         .copy-icon { font-size: 12px; color: #aaa; }
-        #copyToast {
-            position: fixed; bottom: 80px; left: 50%; transform: translateX(-50%);
-            background: rgba(0,0,0,0.8); color: white; padding: 10px 20px; border-radius: 30px;
-            font-size: 14px; font-weight: bold; display: none; z-index: 3000;
-            animation: fadeInOut 2s ease forwards;
-        }
+        #copyToast { position: fixed; bottom: 80px; left: 50%; transform: translateX(-50%); background: rgba(0,0,0,0.8); color: white; padding: 10px 20px; border-radius: 30px; font-size: 14px; font-weight: bold; display: none; z-index: 3000; animation: fadeInOut 2s ease forwards; }
         @keyframes fadeInOut { 0% { opacity:0; transform: translate(-50%, 20px); } 15% { opacity:1; transform: translate(-50%, 0); } 85% { opacity:1; transform: translate(-50%, 0); } 100% { opacity:0; transform: translate(-50%, -20px); } }
 
         /* ★隠しモード（フィーバー）★ */
-        body.fever-mode {
-            animation: rainbow-rush 0.5s infinite linear;
-        }
-        @keyframes rainbow-rush {
-            0% { filter: hue-rotate(0deg); }
-            100% { filter: hue-rotate(360deg); }
-        }
-        body.fever-mode::before {
-            content: ""; position: fixed; inset: 0; z-index: 9998;
-            background: radial-gradient(circle, rgba(255,255,255,0.5) 10%, transparent 20%);
-            background-size: 50px 50px;
-            animation: disco-lights 1s infinite alternate;
-            pointer-events: none;
-        }
+        body.fever-mode { animation: rainbow-rush 0.5s infinite linear; }
+        @keyframes rainbow-rush { 0% { filter: hue-rotate(0deg); } 100% { filter: hue-rotate(360deg); } }
+        body.fever-mode::before { content: ""; position: fixed; inset: 0; z-index: 9998; background: radial-gradient(circle, rgba(255,255,255,0.5) 10%, transparent 20%); background-size: 50px 50px; animation: disco-lights 1s infinite alternate; pointer-events: none; }
         @keyframes disco-lights { from { background-position: 0 0; } to { background-position: 50px 50px; } }
-        .fever-text {
-            position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);
-            font-size: 80px; font-weight: 900; color: white;
-            text-shadow: 0 0 20px #FF00DE, 0 0 40px #FF00DE;
-            z-index: 9999; pointer-events: none;
-            animation: bounce-text 0.5s infinite alternate; font-family: 'Oswald', sans-serif;
-        }
+        .fever-text { position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); font-size: 80px; font-weight: 900; color: white; text-shadow: 0 0 20px #FF00DE, 0 0 40px #FF00DE; z-index: 9999; pointer-events: none; animation: bounce-text 0.5s infinite alternate; font-family: 'Oswald', sans-serif; }
         @keyframes bounce-text { from { transform: translate(-50%, -50%) scale(1); } to { transform: translate(-50%, -50%) scale(1.2); } }
 
-        /* ★★★ 【設定1】推しメン選択ボタンの調整 ★★★ */
+        /* デジタル会員証メーカー */
         .oshi-buttons { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; margin-bottom: 20px; }
-        .oshi-btn { 
-            width: 55px; height: 55px; border-radius: 50%; border: 3px solid transparent; 
-            cursor: pointer; background-size: 200%; background-position: center 10%; 
-            transition: transform 0.2s; 
-        }
+        .oshi-btn { width: 55px; height: 55px; border-radius: 50%; border: 3px solid transparent; cursor: pointer; background-size: 200%; background-position: center 10%; transition: transform 0.2s; }
         .oshi-btn.selected { border-color: #333; transform: scale(1.1); box-shadow: 0 4px 10px rgba(0,0,0,0.2); }
-
-        /* --- ★デジタル会員証メーカー (豪華光る仕様) --- */
         .card-maker-area { margin-top: 60px; padding-top: 40px; border-top: 1px dashed #ddd; }
         .maker-container { background: #fff; border-radius: 20px; padding: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.05); text-align: center; }
         .maker-controls label { display: block; font-size: 12px; font-weight: bold; color: var(--text-sub); margin-bottom: 5px; text-align: left; }
         .maker-controls input { width: 100%; padding: 10px; border: 2px solid #eee; border-radius: 8px; font-size: 16px; margin-bottom: 15px; box-sizing: border-box; font-family: 'M PLUS Rounded 1c', sans-serif; }
         .card-preview-wrapper { display: flex; justify-content: center; margin-bottom: 20px; perspective: 1000px; }
-        
-        .digital-card { 
-            width: 320px; height: 190px; border-radius: 12px; position: relative; overflow: hidden; color: white; text-align: left; font-family: 'Poppins', sans-serif; 
-            background: #000; border: 1px solid rgba(255, 255, 255, 0.3); transition: 0.3s;
-            /* ★豪華な発光エフェクト★ */
-            box-shadow: 0 0 15px var(--card-color), 0 10px 30px rgba(0,0,0,0.5);
-        }
-        .card-bg { 
-            position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 1; opacity: 0.8;
-            /* ラジアルグラデーションで高級感 */
-            background: radial-gradient(circle at 50% 30%, var(--card-color), #000 75%);
-        }
-        .card-shine { 
-            position: absolute; inset: 0; z-index: 2; pointer-events: none; mix-blend-mode: overlay;
-            background: linear-gradient(115deg, transparent 20%, rgba(255,255,255,0.4) 25%, transparent 30%, transparent 70%, rgba(255,255,255,0.2) 75%, transparent 80%);
-        }
-        /* 走査線テクスチャ */
-        .digital-card::after {
-            content: ""; position: absolute; inset: 0; z-index: 3; pointer-events: none;
-            background: repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0,0,0,0.2) 3px);
-        }
-
+        .digital-card { width: 320px; height: 190px; border-radius: 12px; position: relative; overflow: hidden; color: white; text-align: left; font-family: 'Poppins', sans-serif; background: #000; border: 1px solid rgba(255, 255, 255, 0.3); transition: 0.3s; box-shadow: 0 0 15px var(--card-color), 0 10px 30px rgba(0,0,0,0.5); }
+        .card-bg { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 1; opacity: 0.8; background: radial-gradient(circle at 50% 30%, var(--card-color), #000 75%); }
+        .card-shine { position: absolute; inset: 0; z-index: 2; pointer-events: none; mix-blend-mode: overlay; background: linear-gradient(115deg, transparent 20%, rgba(255,255,255,0.4) 25%, transparent 30%, transparent 70%, rgba(255,255,255,0.2) 75%, transparent 80%); }
+        .digital-card::after { content: ""; position: absolute; inset: 0; z-index: 3; pointer-events: none; background: repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0,0,0,0.2) 3px); }
         .card-content { position: relative; z-index: 10; padding: 20px; height: 100%; box-sizing: border-box; display: flex; flex-direction: column; justify-content: space-between; }
         .card-header { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid rgba(255,255,255,0.3); padding-bottom: 5px; }
         .card-logo { font-weight: bold; font-size: 14px; text-shadow: 0 2px 4px rgba(0,0,0,0.3); }
@@ -354,22 +205,10 @@
         .card-value { font-size: 14px; font-weight: bold; text-shadow: 0 2px 4px rgba(0,0,0,0.3); }
         .card-value.number { font-family: monospace; font-size: 12px; }
         .card-value.name { font-size: 18px; font-family: 'M PLUS Rounded 1c', sans-serif; }
-        
-        .card-char-img { 
-            position: absolute; 
-            bottom: var(--char-bottom, -20px); 
-            right: var(--char-right, -50px); 
-            width: var(--char-width, 280px);
-            height: auto; 
-            z-index: 5; 
-            mask-image: linear-gradient(to bottom, black 85%, transparent 100%); 
-            -webkit-mask-image: linear-gradient(to bottom, black 85%, transparent 100%); 
-            filter: drop-shadow(-5px 0 10px rgba(0,0,0,0.3)); 
-            pointer-events: none;
-        }
+        .card-char-img { position: absolute; bottom: var(--char-bottom, -20px); right: var(--char-right, -50px); width: var(--char-width, 280px); height: auto; z-index: 5; mask-image: linear-gradient(to bottom, black 85%, transparent 100%); -webkit-mask-image: linear-gradient(to bottom, black 85%, transparent 100%); filter: drop-shadow(-5px 0 10px rgba(0,0,0,0.3)); pointer-events: none; }
         .download-btn { background: linear-gradient(90deg, #333, #555); color: white; border: none; padding: 12px 40px; border-radius: 30px; font-weight: bold; cursor: pointer; box-shadow: 0 5px 15px rgba(0,0,0,0.2); }
 
-        /* ニュースページ */
+        /* ニュース */
         .news-category-bar { display: flex; justify-content: center; gap: 10px; margin-bottom: 30px; }
         .news-cat-btn { padding: 8px 20px; border-radius: 20px; background: #eee; font-size: 13px; font-weight: bold; cursor: pointer; transition: 0.3s; }
         .news-cat-btn.active, .news-cat-btn:hover { background: var(--primary); color: white; }
@@ -381,7 +220,7 @@
         .news-list { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 20px; padding-bottom: 20px; }
         .news-card { background: white; border-radius: 12px; overflow: hidden; border: 1px solid #eee; cursor: pointer; transition: all 0.3s ease; box-shadow: 0 2px 8px rgba(0,0,0,0.05); display: flex; flex-direction: column; } .news-card:hover { border-color: var(--primary); box-shadow: 0 5px 15px rgba(39, 198, 245, 0.25); transform: translateY(-5px); } .scroll-grid .news-card { flex: 0 0 280px; margin-right: 0; height: 100%; } .news-thumb-area { width: 100%; height: 160px; background-color: #f0f0f0; position: relative; overflow: hidden; } .news-img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.3s; } .news-card:hover .news-img { transform: scale(1.05); } .news-badge { position: absolute; top: 10px; left: 10px; background: var(--primary); color: white; padding: 4px 10px; border-radius: 20px; font-size: 11px; font-weight: bold; z-index: 2; box-shadow: 0 2px 5px rgba(0,0,0,0.2); } .news-content { padding: 15px; flex-grow: 1; display: flex; flex-direction: column; } .news-date { font-size: 12px; color: #888; font-family: 'Poppins', sans-serif; margin-bottom: 5px; } .news-title { font-size: 14px; font-weight: bold; color: #333; line-height: 1.5; margin-bottom: 15px; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; flex-grow: 1; } .news-check-btn { background: #eee; color: #666; text-align: center; padding: 8px; border-radius: 6px; font-weight: bold; font-family: 'Poppins', sans-serif; font-size: 12px; transition: all 0.3s; } .news-card:hover .news-check-btn { background: var(--primary); color: white; }
 
-        /* タイムライン（スケジュール） */
+        /* スケジュール */
         .timeline-container { position: relative; padding: 20px 0; }
         .timeline-container::before { content: ''; position: absolute; top: 0; left: 24px; height: 100%; width: 2px; background: #eee; }
         .timeline-item { display: flex; margin-bottom: 25px; position: relative; }
@@ -392,7 +231,7 @@
         .tl-title { font-weight: bold; font-size: 15px; margin-bottom: 5px; }
         .tl-tag { font-size: 11px; background: #eee; padding: 2px 8px; border-radius: 4px; color: #666; }
 
-        /* グッズページ（★修正：正方形＆モーダル） */
+        /* グッズ */
         .goods-hero { background: #f9f9f9; border-radius: 15px; padding: 30px; text-align: center; margin-bottom: 40px; }
         .goods-hero h3 { margin: 0 0 10px 0; color: var(--primary); font-family: 'Poppins', sans-serif; }
         .goods-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 15px; }
@@ -400,10 +239,8 @@
         .goods-item:hover { transform: translateY(-5px); border-color: var(--primary); }
         .goods-name { font-size: 13px; font-weight: bold; height: 2.8em; overflow: hidden; line-height: 1.4; }
         .goods-price { font-family: 'Poppins', sans-serif; color: var(--primary); font-weight: bold; margin-top: 5px; }
-        /* 画像を正方形に強制 */
         .goods-img { width: 100%; aspect-ratio: 1 / 1; object-fit: cover; border-radius: 8px; margin-bottom: 10px; background-color:#eee; }
         
-        /* グッズ詳細モーダル */
         #goodsModal .modal-content { text-align: left; padding: 25px; }
         #goodsModalImg { width: 100%; max-height: 300px; object-fit: contain; border-radius: 8px; margin-bottom: 15px; background: #fff; }
         #goodsModalTitle { font-size: 18px; font-weight: bold; margin-bottom: 5px; }
@@ -412,7 +249,7 @@
         .buy-btn { display: block; width: 100%; text-align: center; background: var(--primary); color: white; padding: 12px; border-radius: 30px; text-decoration: none; font-weight: bold; transition: 0.2s; box-sizing: border-box; }
         .buy-btn:hover { opacity: 0.9; transform: translateY(-2px); }
 
-        /* RADIOページ */
+        /* ラジオ */
         .radio-theme-box { background: #333; color: white; padding: 20px; border-radius: 10px; border: 4px solid #8B4513; margin-bottom: 30px; position: relative; box-shadow: 0 5px 15px rgba(0,0,0,0.2); }
         .radio-theme-box::before { content: "今週のテーマ"; position: absolute; top: -15px; left: 20px; background: #f1c40f; color: #333; padding: 2px 10px; font-weight: bold; font-size: 12px; border-radius: 4px; transform: rotate(-2deg); box-shadow: 0 2px 5px rgba(0,0,0,0.2); }
         .radio-theme-text { font-size: 18px; font-weight: bold; text-align: center; font-family: 'M PLUS Rounded 1c', sans-serif; letter-spacing: 1px; }
@@ -424,19 +261,7 @@
         .radio-btn:hover { transform: translateY(-2px); }
         .diary-section { margin-top: 50px; }
         .diary-card { background: white; border-radius: 15px; padding: 15px; margin-bottom: 20px; border: 1px solid #eee; display: flex; gap: 15px; box-shadow: 0 2px 8px rgba(0,0,0,0.03); position: relative; }
-        /* ★放課後アイコンサイズ★ */
-.diary-icon {
-    width: 60px;          /* 丸の大きさ */
-    height: 60px;         /* 丸の大きさ */
-    border-radius: 50%;
-    flex-shrink: 0;
-    border: 2px solid #eee;
-    
-    /* 背景画像として表示するための設定 */
-    background-size: 330%; /* ★ここ！100%が標準。150%なら1.5倍ズーム！ */
-    background-position: top center; /* 顔の位置合わせ */
-    background-repeat: no-repeat;
-}
+        .diary-icon { width: 60px; height: 60px; border-radius: 50%; flex-shrink: 0; border: 2px solid #eee; background-size: 330%; background-position: top center; background-repeat: no-repeat; }
         .diary-content { flex: 1; }
         .diary-name { font-weight: bold; font-size: 13px; margin-bottom: 5px; color: var(--text-sub); }
         .diary-text { font-size: 14px; line-height: 1.6; background: #f9f9f9; padding: 10px; border-radius: 0 10px 10px 10px; display: inline-block; position: relative; }
@@ -444,52 +269,22 @@
         .diary-voice-player:hover { background: #ddd; }
         .diary-date { font-size: 10px; color: #aaa; text-align: right; margin-top: 5px; }
 
-        /* 無限いいねボタン */
-        .floating-heart-btn {
-            position: fixed; bottom: 30px; right: 20px; width: 60px; height: 60px;
-            background: linear-gradient(135deg, #ff9a9e 0%, #fecfef 99%, #fecfef 100%);
-            border-radius: 50%; box-shadow: 0 5px 15px rgba(255, 105, 180, 0.4);
-            display: flex; align-items: center; justify-content: center;
-            color: white; font-size: 28px; cursor: pointer; z-index: 999;
-            transition: transform 0.1s; user-select: none;
-        }
+        /* いいねボタン */
+        .floating-heart-btn { position: fixed; bottom: 30px; right: 20px; width: 60px; height: 60px; background: linear-gradient(135deg, #ff9a9e 0%, #fecfef 99%, #fecfef 100%); border-radius: 50%; box-shadow: 0 5px 15px rgba(255, 105, 180, 0.4); display: flex; align-items: center; justify-content: center; color: white; font-size: 28px; cursor: pointer; z-index: 999; transition: transform 0.1s; user-select: none; }
         .floating-heart-btn:active { transform: scale(0.9); }
-        .like-badge {
-            position: absolute; top: -15px; right: -5px;
-            background: #ff4757; color: white;
-            font-size: 10px; font-weight: bold;
-            padding: 3px 8px; border-radius: 10px;
-            border: 2px solid white;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
-            min-width: 20px; text-align: center;
-            transition: transform 0.1s;
-        }
-        .heart-particle {
-            position: fixed; pointer-events: none; animation: floatUp 1.5s ease-out forwards;
-            font-size: 20px; z-index: 1000;
-        }
-        @keyframes floatUp {
-            0% { transform: translateY(0) scale(1); opacity: 1; }
-            100% { transform: translateY(-150px) scale(1.5) rotate(20deg); opacity: 0; }
-        }
+        .like-badge { position: absolute; top: -15px; right: -5px; background: #ff4757; color: white; font-size: 10px; font-weight: bold; padding: 3px 8px; border-radius: 10px; border: 2px solid white; box-shadow: 0 2px 5px rgba(0,0,0,0.2); min-width: 20px; text-align: center; transition: transform 0.1s; }
+        .heart-particle { position: fixed; pointer-events: none; animation: floatUp 1.5s ease-out forwards; font-size: 20px; z-index: 1000; }
+        @keyframes floatUp { 0% { transform: translateY(0) scale(1); opacity: 1; } 100% { transform: translateY(-150px) scale(1.5) rotate(20deg); opacity: 0; } }
 
-        /* ★お問い合わせフォーム（新規追加）★ */
-        .contact-section {
-            max-width: 800px; margin: 60px auto; background: #fff; border-radius: 20px; padding: 30px;
-            border: 4px solid #eee; box-shadow: 0 10px 30px rgba(0,0,0,0.05);
-            /* かわいい水玉背景 */
-            background-image: radial-gradient(#e0f7ff 20%, transparent 20%);
-            background-size: 20px 20px;
-        }
+        /* お問い合わせ */
+        .contact-section { max-width: 800px; margin: 60px auto; background: #fff; border-radius: 20px; padding: 30px; border: 4px solid #eee; box-shadow: 0 10px 30px rgba(0,0,0,0.05); background-image: radial-gradient(#e0f7ff 20%, transparent 20%); background-size: 20px 20px; }
         .contact-title { text-align: center; font-size: 24px; font-weight: bold; color: var(--primary); margin-bottom: 20px; letter-spacing: 2px; font-family: 'Poppins', sans-serif; }
         .contact-form { background: white; padding: 20px; border-radius: 15px; border: 2px solid #eee; }
         .contact-btn { width: 100%; background: linear-gradient(135deg, var(--primary), #89CFF0); color: white; padding: 12px; border: none; border-radius: 30px; font-weight: bold; cursor: pointer; margin-top: 10px; box-shadow: 0 4px 10px rgba(39, 198, 245, 0.3); transition: transform 0.2s; }
         .contact-btn:hover { transform: translateY(-2px); }
 
         /* フッター */
-        .sns-container { text-align: center; margin-bottom: 30px; }
-        .sns-links { display: flex; justify-content: center; gap: 20px; margin-top: 20px; }
-        .sns-btn { width: 50px; height: 50px; background: #111; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-size: 24px; text-decoration: none; transition: transform 0.2s, box-shadow 0.2s; } .sns-btn.youtube { background: #ff0000; } .sns-btn:hover { transform: translateY(-3px); box-shadow: 0 5px 15px rgba(0,0,0,0.2); } .sns-logo-img { width: 30px; height: 30px; object-fit: contain; filter: brightness(0) invert(1); }
+        .sns-container { text-align: center; margin-bottom: 30px; } .sns-links { display: flex; justify-content: center; gap: 20px; margin-top: 20px; } .sns-btn { width: 50px; height: 50px; background: #111; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-size: 24px; text-decoration: none; transition: transform 0.2s, box-shadow 0.2s; } .sns-btn.youtube { background: #ff0000; } .sns-btn:hover { transform: translateY(-3px); box-shadow: 0 5px 15px rgba(0,0,0,0.2); } .sns-logo-img { width: 30px; height: 30px; object-fit: contain; filter: brightness(0) invert(1); }
         .modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); z-index: 2000; display: none; align-items: center; justify-content: center; opacity: 0; transition: opacity 0.3s; } .modal.open { display: flex; opacity: 1; } .modal-content { background: white; width: 90%; max-width: 400px; border-radius: 15px; padding: 30px; box-shadow: 0 10px 30px rgba(0,0,0,0.3); position: relative; transform: translateY(20px); transition: transform 0.3s; text-align: center; } .modal.open .modal-content { transform: translateY(0); } .modal-close-btn { position: absolute; top: 15px; right: 20px; font-size: 28px; color: #aaa; cursor: pointer; } .news-modal-content { max-width: 500px; text-align: left; } .news-modal-content .modal-title { font-size: 18px; font-weight: bold; margin: 15px 0; border-bottom: 2px solid #f0f0f0; padding-bottom: 15px; } .news-modal-content .modal-body { font-size: 15px; line-height: 1.8; color: #444; white-space: pre-wrap; }
         .auth-title { font-size: 20px; font-weight: bold; margin-bottom: 20px; color: var(--text-main); font-family: 'Poppins', sans-serif; } .auth-input { width: 100%; padding: 12px; margin-bottom: 15px; box-sizing: border-box; border: 1px solid #ddd; border-radius: 8px; background: #f9f9f9; font-size: 16px; } .auth-input:focus { border-color: var(--primary); outline: none; background: white; } .auth-btn { width: 100%; padding: 12px; background: var(--primary); color: white; border: none; border-radius: 25px; font-weight: bold; font-size: 16px; cursor: pointer; margin-top: 10px; box-shadow: 0 4px 10px rgba(39, 198, 245, 0.3); } .auth-btn:hover { background: var(--primary-dark); } .auth-link { margin-top: 20px; font-size: 14px; color: #888; } .auth-link a { color: var(--primary); text-decoration: none; font-weight: bold; cursor: pointer; } .auth-link a:hover { text-decoration: underline; } .social-login-area { margin-top: 20px; border-top: 1px solid #eee; padding-top: 20px; } .social-login-label { font-size: 12px; color: #888; margin-bottom: 10px; } .social-login-btn { width: 100%; padding: 10px; border-radius: 25px; font-weight: bold; font-size: 14px; margin-bottom: 10px; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 10px; border: 1px solid #ddd; background: white; transition: background 0.2s; } .social-login-btn:hover { background: #f5f5f5; }
 
@@ -508,7 +303,7 @@
         .copyright { text-align: center; font-size: 12px; margin-top: 50px; opacity: 0.8; font-family: 'Poppins', sans-serif; }
         @media (max-width: 768px) { .footer-container { flex-direction: column; align-items: center; text-align: center; } .footer-right { align-items: center; margin-top: 40px; } .footer-menu li a { justify-content: center; } .footer-logo { height: 150px; } }
 
-        /* ★ガイドラインページ用スタイル (追加) ★ */
+        /* ガイドライン */
         .guideline-box { background: white; border-radius: 15px; padding: 30px; border: 2px solid #eee; margin-bottom: 30px; box-shadow: 0 5px 15px rgba(0,0,0,0.03); }
         .g-section { margin-bottom: 40px; }
         .g-head { font-size: 20px; font-weight: 900; color: var(--primary); margin-bottom: 20px; border-bottom: 2px dashed #ddd; padding-bottom: 10px; display: flex; align-items: center; gap: 10px; font-family: 'M PLUS Rounded 1c', sans-serif; }
@@ -524,14 +319,10 @@
         .g-tag { background: white; border: 1px solid #ddd; padding: 5px 15px; border-radius: 20px; font-size: 12px; color: #666; font-family: 'Poppins', sans-serif; font-weight: bold; display: flex; align-items: center; gap: 5px; }
         .g-tag i { color: var(--primary); }
 
-        /* ★ボイスサンプル用スタイル★ */
+        /* ボイス */
         .voice-section { width: 100%; margin-bottom: 30px; opacity: 0; animation: fadeInUp 0.5s 0.6s forwards; }
         .voice-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 15px; }
-        .voice-card {
-            background: rgba(255,255,255,0.8); border: 2px solid var(--m-color); border-radius: 50px;
-            padding: 10px 20px; display: flex; align-items: center; justify-content: space-between;
-            cursor: pointer; transition: 0.2s; position: relative; overflow: hidden;
-        }
+        .voice-card { background: rgba(255,255,255,0.8); border: 2px solid var(--m-color); border-radius: 50px; padding: 10px 20px; display: flex; align-items: center; justify-content: space-between; cursor: pointer; transition: 0.2s; position: relative; overflow: hidden; }
         .voice-card:hover { transform: translateY(-3px); box-shadow: 0 5px 15px rgba(0,0,0,0.1); background: white; }
         .voice-card.playing { background: var(--m-color); color: white; }
         .voice-card.playing .voice-icon { color: white; animation: pulse-voice 1s infinite; }
@@ -541,133 +332,61 @@
         .voice-time { font-size: 12px; font-weight: bold; opacity: 0.6; }
         @keyframes pulse-voice { 0% { transform: scale(1); } 50% { transform: scale(1.2); } 100% { transform: scale(1); } }
         
-        /* ★★★ 落書き（GRAFFITI）ページ用スタイル ★★★ */
-        .board-container {
-            background: #2b4a3c; /* 黒板色 */
-            border: 10px solid #8B4513; /* 木枠 */
-            border-radius: 10px;
-            /* padding: 20px; ← ★削除（余白をなくす） */
-            padding: 0;       /* ★追加 */
-            box-shadow: 0 10px 20px rgba(0,0,0,0.3);
-            margin-bottom: 30px;
-            position: relative;
-            /* ★追加：黒板の比率を固定（スマホでもPCでも形を維持） */
-            aspect-ratio: 16 / 9; 
-            overflow: hidden; /* 丸角からはみ出さないように */
-        }
-        .board-container::before {
-            content: "DRAWING AREA"; position: absolute; top: -15px; left: 50%; transform: translateX(-50%);
-            background: #f1c40f; color: #333; padding: 2px 15px; font-weight: bold; border-radius: 4px; font-size: 12px;
-            z-index: 20; /* ★追加：枠の上に表示 */
-        }
-        canvas#drawCanvas {
-            background: transparent;
-            cursor: crosshair;
-            display: block;
-            /* margin: 0 auto; ← ★削除 */
-            touch-action: none;
-            background-image: radial-gradient(rgba(255,255,255,0.1) 1px, transparent 1px);
-            background-size: 20px 20px;
-            
-            /* ★追加：親要素いっぱいに広げる */
-            width: 100%;
-            height: 100%;
-        }
-        .paint-tools {
-            display: flex; flex-wrap: wrap; gap: 10px; justify-content: center;
-            /* margin-top: 15px; ← ★削除 */
-            background: rgba(255,255,255,0.1); padding: 10px; border-radius: 8px;
-            
-            /* ★追加：キャンバスの上に浮かせて下に配置 */
-            position: absolute;
-            bottom: 10px;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 90%; /* 横幅調整 */
-            box-sizing: border-box;
-            z-index: 10; /* キャンバスより手前に */
-            pointer-events: auto; /* クリックできるように */
-        }
-        .color-btn {
-            width: 30px; height: 30px; border-radius: 50%; border: 2px solid white; cursor: pointer; transition: transform 0.2s;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.3);
-        }
+        /* 落書き */
+        .board-container { background: #2b4a3c; border: 10px solid #8B4513; border-radius: 10px; padding: 0; box-shadow: 0 10px 20px rgba(0,0,0,0.3); margin-bottom: 30px; position: relative; aspect-ratio: 16 / 9; overflow: hidden; }
+        .board-container::before { content: "DRAWING AREA"; position: absolute; top: -15px; left: 50%; transform: translateX(-50%); background: #f1c40f; color: #333; padding: 2px 15px; font-weight: bold; border-radius: 4px; font-size: 12px; z-index: 20; }
+        canvas#drawCanvas { background: transparent; cursor: crosshair; display: block; touch-action: none; background-image: radial-gradient(rgba(255,255,255,0.1) 1px, transparent 1px); background-size: 20px 20px; width: 100%; height: 100%; }
+        .paint-tools { display: flex; flex-wrap: wrap; gap: 10px; justify-content: center; background: rgba(255,255,255,0.1); padding: 10px; border-radius: 8px; position: absolute; bottom: 10px; left: 50%; transform: translateX(-50%); width: 90%; box-sizing: border-box; z-index: 10; pointer-events: auto; }
+        .color-btn { width: 30px; height: 30px; border-radius: 50%; border: 2px solid white; cursor: pointer; transition: transform 0.2s; box-shadow: 0 2px 5px rgba(0,0,0,0.3); }
         .color-btn:hover, .color-btn.active { transform: scale(1.2); border-color: #f1c40f; }
-        .tool-btn {
-            padding: 5px 15px; border-radius: 20px; background: white; font-size: 12px; font-weight: bold; cursor: pointer; border: none; font-family: 'Poppins', sans-serif;
-        }
+        .tool-btn { padding: 5px 15px; border-radius: 20px; background: white; font-size: 12px; font-weight: bold; cursor: pointer; border: none; font-family: 'Poppins', sans-serif; }
         .tool-btn:hover { background: var(--primary); color: white; }
-        
-        .post-form-area {
-            background: white; padding: 20px; border-radius: 15px; border: 2px solid #eee; margin-top: 20px;
-        }
-        .graffiti-card {
-            flex: 0 0 220px; /* 横幅固定 */
-            background: white; border-radius: 10px; overflow: hidden; box-shadow: 0 5px 10px rgba(0,0,0,0.1);
-            border: 1px solid #eee; display: flex; flex-direction: column;
-        }
+        .post-form-area { background: white; padding: 20px; border-radius: 15px; border: 2px solid #eee; margin-top: 20px; }
+        .graffiti-card { flex: 0 0 220px; background: white; border-radius: 10px; overflow: hidden; box-shadow: 0 5px 10px rgba(0,0,0,0.1); border: 1px solid #eee; display: flex; flex-direction: column; }
         .g-img-box { width: 100%; aspect-ratio: 4/3; background: #eee; border-bottom: 1px dashed #ccc; }
         .g-img { width: 100%; height: 100%; object-fit: contain; background: #2b4a3c; }
         .g-info { padding: 10px; }
         .g-title { font-weight: bold; font-size: 14px; margin-bottom: 5px; color: #333; }
         .g-author { font-size: 12px; color: #888; text-align: right; }
-        /* ★★★ 落書き詳細モーダル＆コメント欄 ★★★ */
+        
         #graffitiModal .modal-content { max-width: 800px; width: 95%; padding: 0; overflow: hidden; display: flex; flex-direction: column; max-height: 90vh; }
         .g-modal-body { display: flex; flex-direction: column; overflow-y: auto; }
         @media (min-width: 768px) { .g-modal-body { flex-direction: row; } }
-        
         .g-modal-img-area { flex: 2; background: #333; display: flex; align-items: center; justify-content: center; padding: 20px; position: relative; }
         .g-modal-img { max-width: 100%; max-height: 500px; object-fit: contain; box-shadow: 0 0 20px rgba(0,0,0,0.5); }
-        .g-modal-like-btn { 
-            position: absolute; bottom: 20px; right: 20px; 
-            background: rgba(255,255,255,0.9); border-radius: 30px; 
-            padding: 8px 20px; font-weight: bold; cursor: pointer; 
-            box-shadow: 0 4px 10px rgba(0,0,0,0.3); transition: transform 0.2s; 
-            color: #ff4757; font-size: 18px;
-        }
+        .g-modal-like-btn { position: absolute; bottom: 20px; right: 20px; background: rgba(255,255,255,0.9); border-radius: 30px; padding: 8px 20px; font-weight: bold; cursor: pointer; box-shadow: 0 4px 10px rgba(0,0,0,0.3); transition: transform 0.2s; color: #ff4757; font-size: 18px; }
         .g-modal-like-btn:active { transform: scale(0.9); }
-
         .g-modal-info-area { flex: 1; background: white; display: flex; flex-direction: column; border-left: 1px solid #eee; }
         .g-modal-header { padding: 20px; border-bottom: 1px solid #eee; }
         .g-modal-title { font-size: 18px; font-weight: 900; margin-bottom: 5px; }
         .g-modal-author { font-size: 12px; color: #888; display: flex; align-items: center; gap: 5px; }
-        
-        /* コメントエリア */
         .g-comment-list { flex: 1; padding: 15px; overflow-y: auto; background: #f9f9f9; min-height: 200px; }
         .g-comment-item { display: flex; gap: 10px; margin-bottom: 15px; align-items: flex-start; }
         .g-cmt-icon { width: 35px; height: 35px; border-radius: 50%; background: #ddd; flex-shrink: 0; object-fit: cover; border: 1px solid #ccc; }
         .g-cmt-body { background: white; padding: 8px 12px; border-radius: 0 12px 12px 12px; box-shadow: 0 2px 5px rgba(0,0,0,0.03); font-size: 13px; position: relative; }
         .g-cmt-name { font-weight: bold; font-size: 11px; color: #888; margin-bottom: 2px; }
-        
-        /* ★メンバーコメント用の特別スタイル★ */
         .g-comment-item.is-member .g-cmt-icon { border: 2px solid #f1c40f; box-shadow: 0 0 10px rgba(241, 196, 15, 0.5); }
         .g-comment-item.is-member .g-cmt-body { background: #fffbf0; border: 1px solid #f1c40f; }
         .g-comment-item.is-member .g-cmt-name { color: #f1c40f; }
         .g-comment-item.is-member .g-cmt-name::after { content: "★OFFICIAL"; background: #f1c40f; color: white; font-size: 9px; padding: 1px 4px; border-radius: 4px; margin-left: 5px; }
-
         .g-comment-form { padding: 15px; border-top: 1px solid #eee; display: flex; gap: 10px; background: white; }
         .g-cmt-input { flex: 1; padding: 10px; border-radius: 20px; border: 1px solid #ddd; font-size: 12px; outline: none; }
         .g-cmt-btn { background: var(--primary); color: white; border: none; width: 35px; height: 35px; border-radius: 50%; cursor: pointer; display: flex; align-items: center; justify-content: center; }
-        /* ★追加：削除ボタン（メンバー専用） */
-        .delete-btn {
-            position: absolute;
-            top: 10px;
-            right: 10px;
-            background: #ff4757;
-            color: white;
-            width: 30px;
-            height: 30px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 14px;
-            cursor: pointer;
-            z-index: 10;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.3);
-            border: 2px solid white;
-        }
+        .delete-btn { position: absolute; top: 10px; right: 10px; background: #ff4757; color: white; width: 30px; height: 30px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 14px; cursor: pointer; z-index: 10; box-shadow: 0 2px 5px rgba(0,0,0,0.3); border: 2px solid white; }
         .delete-btn:hover { transform: scale(1.1); }
+        
+        /* ★マイページ用スタイル */
+        .mypage-header { background: linear-gradient(135deg, var(--primary), #89CFF0); padding: 40px 20px; text-align: center; color: white; border-radius: 0 0 30px 30px; margin-bottom: 30px; }
+        .mypage-icon { width: 100px; height: 100px; border-radius: 50%; border: 4px solid white; background: #eee; object-fit: cover; margin-bottom: 10px; cursor: pointer; }
+        .mypage-name { font-size: 24px; font-weight: 900; margin-bottom: 5px; }
+        .mypage-id { font-size: 12px; opacity: 0.8; font-family: monospace; }
+        .mypage-form { max-width: 600px; margin: 0 auto; padding: 20px; }
+        .edit-label { font-size: 12px; font-weight: bold; color: #888; margin-bottom: 5px; display: block; }
+        .edit-input { width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 8px; margin-bottom: 15px; background: #f9f9f9; box-sizing: border-box; }
+        .edit-textarea { width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 8px; margin-bottom: 15px; background: #f9f9f9; box-sizing: border-box; resize: none; height: 100px; }
+        .save-btn { width: 100%; background: #2ecc71; color: white; padding: 15px; border: none; border-radius: 30px; font-weight: bold; font-size: 16px; cursor: pointer; box-shadow: 0 5px 15px rgba(46, 204, 113, 0.3); transition: transform 0.2s; }
+        .save-btn:hover { transform: translateY(-2px); }
+        .logout-btn { display: block; text-align: center; margin-top: 30px; color: #ff4757; font-weight: bold; cursor: pointer; text-decoration: underline; }
     </style>
 </head>
 <body>
@@ -695,9 +414,9 @@
         <a href="javascript:void(0)" class="menu-link" onclick="showPage('schedule')">SCHEDULE</a>
         <a href="javascript:void(0)" class="menu-link" onclick="showPage('goods')">GOODS</a>
         <a href="javascript:void(0)" class="menu-link" onclick="showPage('radio')">RADIO</a>
-        <a href="javascript:void(0)" class="menu-link" onclick="showPage('guideline')">GUIDELINE</a> <a href="javascript:void(0)" class="menu-link" onclick="showPage('rakugaki')">GRAFFITI</a>
+        <a href="javascript:void(0)" class="menu-link" onclick="showPage('guideline')">GUIDELINE</a> 
         <a href="javascript:void(0)" class="menu-link" onclick="openLoginModal(); toggleMenu();" style="color:var(--primary);">LOGIN</a>
-        
+        <a href="javascript:void(0)" class="menu-link" onclick="showPage('rakugaki')">GRAFFITI</a>
     </div>
     <div id="overlay" class="overlay" onclick="toggleMenu()"></div>
 
@@ -755,6 +474,56 @@
             <div class="auth-link">
                 <a onclick="closeForgotModal(); openLoginModal();">▶ ログインに戻る</a>
             </div>
+        </div>
+    </div>
+
+    <div id="registerModal" class="modal" onclick="closeRegisterModal()">
+        <div class="modal-content" onclick="event.stopPropagation()">
+            <span class="modal-close-btn" onclick="closeRegisterModal()">×</span>
+            <div class="auth-title">REGISTER</div>
+            <p style="font-size:12px; color:#888; margin-bottom:15px;">あおはる⭐︎フレンズの会員になって<br>限定コンテンツを楽しもう！</p>
+            <input type="text" id="regName" class="auth-input" placeholder="ニックネーム">
+            <input type="email" id="regEmail" class="auth-input" placeholder="メールアドレス">
+            <input type="password" id="regPass" class="auth-input" placeholder="パスワード">
+            <button class="auth-btn" id="regBtn" onclick="registerUser()">会員登録する</button>
+            <div class="social-login-area">
+                <div class="social-login-label">または SNSで登録</div>
+                <div class="social-login-btn" onclick="alert('Google登録は準備中です')"><i class="fab fa-google"></i> Googleで登録</div>
+                <div class="social-login-btn" onclick="alert('X登録は準備中です')"><i class="fab fa-x-twitter"></i> Xで登録</div>
+            </div>
+            <div class="auth-link">すでにアカウントをお持ちの方<br><a onclick="switchToLogin()">▶ ログインはこちら</a></div>
+        </div>
+    </div>
+
+    <div id="mypage" class="page">
+        <div class="mypage-header">
+            <img src="icon.png" id="myIconDisplay" class="mypage-icon" onclick="document.getElementById('myIconInput').focus()">
+            <div id="myNameDisplay" class="mypage-name">GUEST</div>
+            <div id="myIdDisplay" class="mypage-id">ID: ----</div>
+        </div>
+
+        <div class="container mypage-form">
+            <div class="section-title" style="margin-top:0;"><span class="ja-title">プロフィール編集</span></div>
+
+            <label class="edit-label">ニックネーム</label>
+            <input type="text" id="myNameInput" class="edit-input">
+
+            <label class="edit-label">アイコン画像URL</label>
+            <input type="text" id="myIconInput" class="edit-input" placeholder="https://... (画像のURLを貼り付け)" oninput="document.getElementById('myIconDisplay').src = this.value || 'icon.png'">
+            <p style="font-size:10px; color:#aaa; margin-top:-10px; margin-bottom:15px;">※画像のアドレス(URL)を貼ってください。</p>
+
+            <label class="edit-label">自己紹介</label>
+            <textarea id="myBioInput" class="edit-textarea" placeholder="よろしくお願いします！"></textarea>
+
+            <label class="edit-label"><i class="fab fa-x-twitter"></i> X (旧Twitter) リンク</label>
+            <input type="text" id="myXInput" class="edit-input" placeholder="https://x.com/username">
+
+            <label class="edit-label"><i class="fab fa-youtube"></i> YouTube / 配信 リンク</label>
+            <input type="text" id="myYtInput" class="edit-input" placeholder="https://youtube.com/@channel">
+
+            <button class="save-btn" onclick="saveProfile()">変更を保存する</button>
+
+            <div class="logout-btn" onclick="logoutUser()">ログアウト</div>
         </div>
     </div>
 
@@ -1223,8 +992,8 @@
     </footer>
 
 <script>
-    // ★★★ GASのURL（あなたの発行したURLに書き換えてください） ★★★
-    const GAS_API_URL = "https://script.google.com/macros/s/AKfycbxTRRWiHWJU16rE7FV9MjUQ_nGh5UQ3-8sjUjxQrdwYjHKX_zcIbbWsrqb7i9rECapmLA/exec";
+    // ★★★ GASのURL（あなたの最新のURLに書き換えてください！） ★★★
+    const GAS_API_URL = "https://script.google.com/macros/s/AKfycbzgyVoCwGlzcZKU0O1CTbEUg9R50EiEI95Id2u-sez9fZCUUJgKTkpfNkjiBWpT1mYYkQ/exec";
 
     let YOUTUBE_API_KEY = ""; 
     let GROUP_CONFIG = {};
@@ -1236,10 +1005,16 @@
     const luckyItems = ["ゲーミングPC", "エナジードリンク", "マイク", "配信機材", "推し活グッズ", "唐揚げ", "ラーメン", "猫", "ヘッドホン", "サイリウム"];
     const fortuneComments = ["今日は最高の配信ができそう！", "ラッキーアイテムを持って待機してね！", "推しの配信を見ると運気アップ！", "今日はゆっくりアーカイブを見よう。", "SNSで推しを布教するといいことあるかも！"];
     let currentOmikujiResult = null; 
+
+    // データ変数
     let newsData = [], scheduleData = [], videoData = [], manualLiveData = [], memberVideoData = [];
     let radioBlogData = []; 
-    let isMemberLoggedIn = false;
-    let isOfficialAdmin = false; // ★追加：メンバー本人かどうかのフラグ
+    
+    // ★★★ ユーザー状態管理変数（重複なし！） ★★★
+    let isMemberLoggedIn = false;   // ログインしているか
+    let isOfficialAdmin = false;    // 管理者（メンバー本人）か
+    let currentUserData = null;     // ログイン中のユーザー情報（マイページ用）
+
     let totalLikes = 0;
     let sessionLikes = 0;
     let likeSyncTimer = null;
@@ -1247,9 +1022,8 @@
     let secretInput = [];
     let logoTapCount = 0;
 
-    // ★★★ 修正ポイント：読み込み処理を安全にする ★★★
+    // 初期化処理
     window.onload = function() { 
-        // データを取得し終わってから画面を表示
         fetchSheetData().finally(() => {
             renderStaticParts(); 
             setTimeout(checkLiveStatus, 500);
@@ -1280,7 +1054,6 @@
             if(memberData.length > 0) openMemberDetail(index, false); 
         } else if (hash) {
             const id = hash.replace('#', '');
-            // ページが存在する場合のみ移動
             if(document.getElementById(id)) {
                 showPage(id, null, false);
             } else {
@@ -1291,6 +1064,62 @@
         }
     }
 
+    // --- ページ切り替え（マイページ対応版） ---
+    function showPage(pageId, detailName = null, pushHistory = true) {
+        document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+        const target = document.getElementById(pageId);
+        
+        if(target) {
+            target.classList.add('active');
+
+            // ★マイページ表示時のデータセット
+            if (pageId === 'mypage' && currentUserData) {
+                // 表示用エリアの更新
+                document.getElementById('myIconDisplay').src = currentUserData.icon || 'icon.png';
+                document.getElementById('myNameDisplay').innerText = currentUserData.name;
+                document.getElementById('myIdDisplay').innerText = 'ID: ' + currentUserData.id;
+                
+                // フォームの入力値セット
+                document.getElementById('myNameInput').value = currentUserData.name;
+                document.getElementById('myIconInput').value = currentUserData.icon;
+                document.getElementById('myBioInput').value = currentUserData.bio;
+                document.getElementById('myXInput').value = currentUserData.x;
+                document.getElementById('myYtInput').value = currentUserData.yt;
+            }
+
+            // 落書きページの初期化
+            if(pageId === 'rakugaki') { 
+                setTimeout(() => {
+                    initCanvas();
+                    checkCanvasLock();    // ロック確認
+                    renderGraffitiList(); // リスト表示確認
+                }, 300); 
+            } 
+        }
+        if(document.getElementById('sideMenu').classList.contains('open')) { toggleMenu(); }
+        if(pushHistory) history.pushState(null, null, '#' + pageId);
+        updateBreadcrumbs(pageId, detailName);
+        window.scrollTo(0,0);
+    }
+
+    function updateBreadcrumbs(pageId, detailName) { 
+        const container = document.getElementById('breadcrumbNav'); 
+        let html = '<a href="javascript:void(0)" onclick="showPage(\'top\')" class="bc-item"><i class="fas fa-home bc-icon"></i></a>'; 
+        if (pageId === 'top') { container.style.display = 'none'; return; } else { container.style.display = 'flex'; } 
+        const sep = '<span class="bc-sep">▶</span>'; 
+        if (pageId === 'news') html += sep + '<span class="bc-current">NEWS</span>'; 
+        else if (pageId === 'member') html += sep + '<span class="bc-current">MEMBER</span>'; 
+        else if (pageId === 'schedule') html += sep + '<span class="bc-current">SCHEDULE</span>'; 
+        else if (pageId === 'goods') html += sep + '<span class="bc-current">GOODS</span>'; 
+        else if (pageId === 'radio') html += sep + '<span class="bc-current">RADIO</span>'; 
+        else if (pageId === 'guideline') html += sep + '<span class="bc-current">GUIDELINE</span>'; 
+        else if (pageId === 'rakugaki') html += sep + '<span class="bc-current">GRAFFITI</span>';
+        else if (pageId === 'mypage') html += sep + '<span class="bc-current">MY PAGE</span>'; // ★追加
+        else if (pageId === 'memberDetail') { html += sep + '<a href="javascript:void(0)" onclick="showPage(\'member\')" class="bc-item">MEMBER</a>'; html += sep + '<span class="bc-current">' + (detailName || 'DETAIL') + '</span>'; } 
+        container.innerHTML = html; 
+    }
+
+    // --- GASデータ取得 ---
     async function fetchSheetData() {
         if (!GAS_API_URL || GAS_API_URL.indexOf("script.google.com") === -1) {
             console.error("GAS URL未設定");
@@ -1332,402 +1161,25 @@
             }
         } catch (e) { 
             console.error("Data Error:", e); 
-            // エラー時でも最低限のお知らせを表示
             document.getElementById('topNewsList').innerHTML = "データの読み込みに失敗しました。";
         }
     }
 
-    // --- 共通・表示関数 ---
-    function showPage(pageId, detailName = null, pushHistory = true) {
-        document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-        const target = document.getElementById(pageId);
-        if(target) {
-            target.classList.add('active');
-            // ★重要：落書きページを開いたときだけ、少し待ってからキャンバスを準備する
-            if(pageId === 'rakugaki') { setTimeout(initCanvas, 300); } 
-        }
-        if(document.getElementById('sideMenu').classList.contains('open')) { toggleMenu(); }
-        if(pushHistory) history.pushState(null, null, '#' + pageId);
-        updateBreadcrumbs(pageId, detailName);
-        window.scrollTo(0,0);
-    }
-
-    function updateBreadcrumbs(pageId, detailName) { 
-        const container = document.getElementById('breadcrumbNav'); 
-        let html = '<a href="javascript:void(0)" onclick="showPage(\'top\')" class="bc-item"><i class="fas fa-home bc-icon"></i></a>'; 
-        if (pageId === 'top') { container.style.display = 'none'; return; } else { container.style.display = 'flex'; } 
-        const sep = '<span class="bc-sep">▶</span>'; 
-        if (pageId === 'news') html += sep + '<span class="bc-current">NEWS</span>'; 
-        else if (pageId === 'member') html += sep + '<span class="bc-current">MEMBER</span>'; 
-        else if (pageId === 'schedule') html += sep + '<span class="bc-current">SCHEDULE</span>'; 
-        else if (pageId === 'goods') html += sep + '<span class="bc-current">GOODS</span>'; 
-        else if (pageId === 'radio') html += sep + '<span class="bc-current">RADIO</span>'; 
-        else if (pageId === 'guideline') html += sep + '<span class="bc-current">GUIDELINE</span>'; 
-        else if (pageId === 'rakugaki') html += sep + '<span class="bc-current">GRAFFITI</span>';
-        else if (pageId === 'memberDetail') { html += sep + '<a href="javascript:void(0)" onclick="showPage(\'member\')" class="bc-item">MEMBER</a>'; html += sep + '<span class="bc-current">' + (detailName || 'DETAIL') + '</span>'; } 
-        container.innerHTML = html; 
-    }
-
-// --- ★★★ 修正ポイント2：キャンバス初期化の安全策 ★★★ ---
-    let canvas, ctx;
-    let isDrawing = false;
-    let currentColor = "#ffffff";
-    let currentLineWidth = 3;
-
-    function initCanvas() {
-        const container = document.querySelector('.board-container');
-        canvas = document.getElementById('drawCanvas');
-        if(!container || !canvas) return;
-
-        // ★修正箇所：コンテナ（黒板）の実際のサイズを取得してセット
-        // これにより、黒板の枠内すべてにお絵かきできるようになります
-        const rect = container.getBoundingClientRect();
-        
-        // キャンバスの描画解像度を表示サイズに合わせる
-        canvas.width = rect.width;
-        canvas.height = rect.height;
-
-        ctx = canvas.getContext('2d');
-        
-        // 線の設定初期化
-        ctx.lineCap = 'round';
-        ctx.lineJoin = 'round';
-        ctx.strokeStyle = currentColor;
-        ctx.lineWidth = currentLineWidth;
-
-        // イベントリスナー設定（変更なし）
-        canvas.onmousedown = startDraw;
-        canvas.onmousemove = drawing;
-        canvas.onmouseup = endDraw;
-        canvas.onmouseout = endDraw;
-        
-        canvas.ontouchstart = (e) => { e.preventDefault(); startDraw(e.touches[0]); };
-        canvas.ontouchmove = (e) => { e.preventDefault(); drawing(e.touches[0]); };
-        canvas.ontouchend = endDraw;
-    }
-    function startDraw(e) {
-        isDrawing = true;
-        ctx.beginPath();
-        const rect = canvas.getBoundingClientRect();
-        const x = (e.clientX || e.pageX) - rect.left;
-        const y = (e.clientY || e.pageY) - rect.top;
-        ctx.moveTo(x, y);
-    }
-    function drawing(e) {
-        if (!isDrawing) return;
-        const rect = canvas.getBoundingClientRect();
-        const x = (e.clientX || e.pageX) - rect.left;
-        const y = (e.clientY || e.pageY) - rect.top;
-        ctx.lineTo(x, y);
-        ctx.stroke();
-    }
-    function endDraw() { isDrawing = false; }
+    // --- 会員システム（登録・ログイン・編集・ログアウト） ---
     
-    function changeColor(btn, color) {
-        currentColor = color;
-        ctx.strokeStyle = color;
-        ctx.lineWidth = 3;
-        ctx.globalCompositeOperation = 'source-over';
-        document.querySelectorAll('.color-btn').forEach(b => b.classList.remove('active'));
-        btn.classList.add('active');
-    }
-    function setEraser() {
-        ctx.lineWidth = 15;
-        ctx.globalCompositeOperation = 'destination-out';
-        document.querySelectorAll('.color-btn').forEach(b => b.classList.remove('active'));
-    }
-    function clearCanvas() {
-        if(confirm('本当に消しますか？')) {
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
-        }
-    }
-    function downloadGraffiti() {
-        const tempCanvas = document.createElement('canvas');
-        tempCanvas.width = canvas.width;
-        tempCanvas.height = canvas.height;
-        const tCtx = tempCanvas.getContext('2d');
-        tCtx.fillStyle = "#2b4a3c";
-        tCtx.fillRect(0, 0, tempCanvas.width, tempCanvas.height);
-        tCtx.drawImage(canvas, 0, 0);
-        const link = document.createElement('a');
-        link.download = 'aoharu_graffiti.png';
-        link.href = tempCanvas.toDataURL('image/png');
-        link.click();
-    }
-    // --- データ管理用配列 ---
-        let graffitiPosts = []; // 投稿データを保存する配列
-        let currentViewingIndex = -1; // 現在見ている投稿のインデックス
-
-        // 投稿機能（配列に追加してリスト再描画）
-        function postGraffiti() {
-            const title = document.getElementById('graffitiTitle').value;
-            const name = document.getElementById('graffitiName').value;
-            
-            if(!title || !name) {
-                alert('タイトルとニックネームを入力してください！');
-                return;
-            }
-
-            // 黒板背景と合成して画像化
-            const tempCanvas = document.createElement('canvas');
-            tempCanvas.width = canvas.width;
-            tempCanvas.height = canvas.height;
-            const tCtx = tempCanvas.getContext('2d');
-            tCtx.fillStyle = "#2b4a3c";
-            tCtx.fillRect(0, 0, tempCanvas.width, tempCanvas.height);
-            tCtx.drawImage(canvas, 0, 0);
-            const dataUrl = tempCanvas.toDataURL('image/png');
-
-            // データオブジェクト作成
-            const newPost = {
-                id: Date.now(), // ユニークID
-                title: title,
-                author: name,
-                image: dataUrl,
-                likes: 0,
-                comments: [] // コメントリスト
-            };
-
-            // 配列の先頭に追加
-            graffitiPosts.unshift(newPost);
-            
-            // 画面更新
-            renderGraffitiList();
-
-            alert('投稿しました！ギャラリーに追加されたよ！');
-            
-           // フォームクリア
-            document.getElementById('graffitiTitle').value = '';
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
-        } // ★★★ ここで postGraffiti を閉じる！ ★★★
-
-        // ★追加：黒板のロック制御（外に出す）
-        function checkCanvasLock() {
-            const overlay = document.getElementById('canvasLockOverlay');
-            if (overlay) {
-                // ログインしていればロック画面を隠す、していなければ表示
-                overlay.style.display = isMemberLoggedIn ? 'none' : 'flex';
-            }
-        }
-        // ギャラリーリスト描画
-    function renderGraffitiList() {
-        const list = document.getElementById('graffitiList');
-        
-        // ★修正1：未ログイン時のブロック
-        if (!isMemberLoggedIn) {
-            list.innerHTML = `
-                <div style="display:flex; flex-direction:column; align-items:center; justify-content:center; width:100%; height:200px; background:#eee; border-radius:10px; color:#555;">
-                    <i class="fas fa-lock" style="font-size:30px; margin-bottom:10px;"></i>
-                    <div style="font-weight:bold;">MEMBER ONLY</div>
-                    <div style="font-size:12px;">みんなの作品を見るには<br>ログインしてください</div>
-                </div>`;
-            return;
-        }
-
-        if(graffitiPosts.length === 0) {
-            list.innerHTML = '<div style="padding:20px; color:#999; width:100%; text-align:center;">まだ投稿はありません。一番乗りしよう！</div>';
-            return;
-        }
-
-        list.innerHTML = graffitiPosts.map((post, index) => {
-            // ★修正2：管理者（メンバー）なら削除ボタンを表示
-            const deleteBtn = isOfficialAdmin 
-                ? `<div class="delete-btn" onclick="deleteGraffiti(event, ${post.id})"><i class="fas fa-trash"></i></div>` 
-                : '';
-
-            return `
-                <div class="graffiti-card" onclick="openGraffitiDetail(${index})" style="position:relative;">
-                    ${deleteBtn}
-                    <div class="g-img-box">
-                        <img src="${post.image}" class="g-img">
-                    </div>
-                    <div class="g-info">
-                        <div class="g-title">${post.title}</div>
-                        <div class="g-author">by ${post.author}</div>
-                        <div style="font-size:10px; color:#ff4757; text-align:right; margin-top:5px;">
-                            <i class="fas fa-heart"></i> ${post.likes} <i class="fas fa-comment" style="margin-left:5px; color:#aaa;"></i> ${post.comments.length}
-                        </div>
-                    </div>
-                </div>
-            `;
-        }).join('');
-    }
-// ★追加：削除機能（メンバー限定）
-    function deleteGraffiti(event, id) {
-        event.stopPropagation(); // 詳細モーダルが開くのを防ぐ
-        
-        if (!isOfficialAdmin) {
-            alert("削除権限がありません！");
-            return;
-        }
-
-        if (confirm("【メンバー限定機能】\n本当にこの投稿を削除しますか？\n（いたずら投稿への対応など）")) {
-            // IDが一致する投稿を除外して配列を更新
-            graffitiPosts = graffitiPosts.filter(post => post.id !== id);
-            renderGraffitiList(); // リスト再描画
-            alert("削除しました！");
-        }
-    }
-        // 詳細モーダルを開く
-        function openGraffitiDetail(index) {
-            currentViewingIndex = index;
-            const post = graffitiPosts[index];
-            
-            document.getElementById('gDetailImg').src = post.image;
-            document.getElementById('gDetailTitle').innerText = post.title;
-            document.getElementById('gDetailAuthor').innerText = post.author;
-            document.getElementById('gDetailLikes').innerText = post.likes;
-            
-            renderComments(); // コメント描画
-            document.getElementById('graffitiModal').classList.add('open');
-        }
-
-        function closeGraffitiModal() {
-            document.getElementById('graffitiModal').classList.remove('open');
-            renderGraffitiList(); // リストのいいね数などを更新するために再描画
-        }
-
-        // いいね機能
-        function toggleGraffitiLike() {
-            if(currentViewingIndex === -1) return;
-            graffitiPosts[currentViewingIndex].likes++;
-            document.getElementById('gDetailLikes').innerText = graffitiPosts[currentViewingIndex].likes;
-            
-            // ハートエフェクト
-            const btn = document.querySelector('.g-modal-like-btn');
-            btn.style.transform = "scale(1.3)";
-            setTimeout(() => btn.style.transform = "scale(1)", 100);
-        }
-
-        // コメント送信
-        function submitGraffitiComment() {
-            if(currentViewingIndex === -1) return;
-            const input = document.getElementById('gCommentInput');
-            const text = input.value;
-            if(!text) return;
-
-            // ★ここで「メンバー」か「ファン」かを判定★
-            let commenterName = "名無し";
-            let commenterIcon = "icon.png"; // デフォルトアイコン
-            let isOfficialMember = false;
-
-            // ログイン済みの場合
-            if(isMemberLoggedIn) {
-                // 現在のログインユーザー名を取得（簡易的にheaderのボタンから取得）
-                const loginBtnText = document.getElementById('headerLoginBtn').innerText;
-                commenterName = loginBtnText.replace(' 様', ''); // "〇〇 様" から名前だけ抽出
-                
-                // ★メンバー判定ロジック★
-                // ログイン名が「メンバーリスト」にある名前と一致するかチェック
-                const matchingMember = memberData.find(m => m.name === commenterName);
-                if(matchingMember) {
-                    isOfficialMember = true;
-                    commenterIcon = matchingMember.img; // メンバーの立ち絵/アイコンを使用
-                } else {
-                    // 一般会員の場合
-                    commenterIcon = "https://placehold.co/100x100/27C6F5/ffffff?text=FAN";
-                }
-            } else {
-                commenterName = "ゲスト";
-                commenterIcon = "https://placehold.co/100x100/cccccc/ffffff?text=GUEST";
-            }
-
-            // コメントデータ追加
-            graffitiPosts[currentViewingIndex].comments.push({
-                name: commenterName,
-                text: text,
-                icon: commenterIcon,
-                isMember: isOfficialMember
-            });
-
-            input.value = "";
-            renderComments();
-        }
-
-        // コメントリスト描画
-        function renderComments() {
-            const list = document.getElementById('gDetailComments');
-            const comments = graffitiPosts[currentViewingIndex].comments;
-            
-            if(comments.length === 0) {
-                list.innerHTML = '<div style="text-align:center; font-size:12px; color:#ccc; margin-top:20px;">コメントはまだありません</div>';
-                return;
-            }
-
-            list.innerHTML = comments.map(c => `
-                <div class="g-comment-item ${c.isMember ? 'is-member' : ''}">
-                    <img src="${c.icon}" class="g-cmt-icon">
-                    <div class="g-cmt-body">
-                        <div class="g-cmt-name">${c.name}</div>
-                        <div>${c.text}</div>
-                    </div>
-                </div>
-            `).join('');
-            
-            // 一番下までスクロール
-            list.scrollTop = list.scrollHeight;
-        }
-
-        // --- 以下、既存の関数 ---
-        // ※initEasterEggなどが続く...
-
-    // --- その他の関数 ---
-    function renderStaticParts() { 
-        const twLink = document.getElementById('groupTwitterLink'); const ytLink = document.getElementById('groupYoutubeLink'); const footerTwLink = document.getElementById('footerTwitterLink'); const footerYtLink = document.getElementById('footerYoutubeLink');
-        if(GROUP_CONFIG.twitterUrl) { twLink.href = GROUP_CONFIG.twitterUrl; footerTwLink.href = GROUP_CONFIG.twitterUrl; }
-        if(GROUP_CONFIG.youtubeChannelId) { const ytUrl = `https://www.youtube.com/channel/${GROUP_CONFIG.youtubeChannelId}`; ytLink.href = ytUrl; footerYtLink.href = ytUrl; }
-        if(memberData.length > 0) { const memberHtml = memberData.map((m, i) => `<div class="member-card-vertical" onclick="openMemberDetail(${i})" style="--member-color: ${m.color}; --member-bg: url('${m.bgImg}');"><div class="member-img-wrapper"><img src="${m.img}" class="member-img-tachie"></div><a href="javascript:void(0)" class="member-link-overlay"></a></div>`).join(''); document.getElementById('topMemberList').innerHTML = memberHtml; document.getElementById('memberGrid').innerHTML = memberHtml; }
-    }
-    function scrollContent(elementId, direction) { const container = document.getElementById(elementId); const scrollAmount = container.clientWidth / 2; if (direction === 'left') container.scrollBy({ left: -scrollAmount, behavior: 'smooth' }); else container.scrollBy({ left: scrollAmount, behavior: 'smooth' }); }
-    function openNewsModal(index) { const data = newsData[index]; document.getElementById('modalDate').innerText = data.date; const tagEl = document.getElementById('modalTag'); tagEl.innerText = data.tag; tagEl.style.background = getTagColor(data.tag); document.getElementById('modalTitle').innerText = data.title; document.getElementById('modalBody').innerText = data.detail || data.title; document.getElementById('newsModal').classList.add('open'); }
-    function closeNewsModal() { document.getElementById('newsModal').classList.remove('open'); }
-    function openLoginModal() { document.getElementById('loginModal').classList.add('open'); }
-    function closeLoginModal() { document.getElementById('loginModal').classList.remove('open'); }
-    function openRegisterModal() { document.getElementById('registerModal').classList.add('open'); }
-    function closeRegisterModal() { document.getElementById('registerModal').classList.remove('open'); }
-    function switchToRegister() { closeLoginModal(); setTimeout(openRegisterModal, 300); }
-    function switchToLogin() { closeRegisterModal(); setTimeout(openLoginModal, 300); }
-    function getTagColor(tag) { if(tag === 'INFO') return '#27C6F5'; if(tag === 'VIDEO') return '#ff4757'; return '#ccc'; }
-    function toggleMenu() { document.getElementById('sideMenu').classList.toggle('open'); document.getElementById('overlay').classList.toggle('open'); }
-    function initCardMaker() { const today = new Date(); const dStr = `${today.getFullYear()}.${(today.getMonth()+1).toString().padStart(2,'0')}.${today.getDate().toString().padStart(2,'0')}`; const cardDateEl = document.getElementById('cardDate'); if(cardDateEl) cardDateEl.innerText = 'DATE: ' + dStr; const cardNoEl = document.getElementById('cardNo'); if(cardNoEl) cardNoEl.innerText = dStr.replace(/\./g,'') + '-' + (Math.floor(Math.random()*9000)+1000); const btnContainer = document.getElementById('oshiButtons'); if(btnContainer) { btnContainer.innerHTML = ''; memberData.forEach((m, i) => { const btn = document.createElement('div'); btn.className = 'oshi-btn'; btn.style.backgroundImage = `url('${m.img}')`; btn.onclick = () => selectOshi(i); btnContainer.appendChild(btn); }); if(memberData.length > 0) selectOshi(0); } }
-    function selectOshi(index) { currentOshiIndex = index; const m = memberData[index]; document.querySelectorAll('.oshi-btn').forEach((b, i) => b.classList.toggle('selected', i === index)); const card = document.getElementById('digitalCard'); if(card) { card.style.setProperty('--card-color', m.color); const bottom = m.card_bottom || "-20px"; const right = m.card_right || "-50px"; const width = m.card_width || "280px"; card.style.setProperty('--char-bottom', bottom); card.style.setProperty('--char-right', right); card.style.setProperty('--char-width', width); document.getElementById('cardOshiDisplay').innerText = m.name; document.getElementById('cardCharImg').src = m.img; } }
-    function updateCard() { const val = document.getElementById('cardNameInput').value; const display = document.getElementById('cardNameDisplay'); if(display) display.innerText = val ? val : 'GUEST'; }
-    function downloadCard() { const card = document.getElementById('digitalCard'); html2canvas(card, { scale: 3, backgroundColor: null, useCORS: true }).then(canvas => { const link = document.createElement('a'); link.download = 'aoharu_card.png'; link.href = canvas.toDataURL('image/png'); link.click(); }); }
-    
-    // メンバー詳細
-    function openMemberDetail(index, pushHistory = true) { const m = memberData[index]; const detailContainer = document.getElementById('memberDetail'); const twitchLink = m.twitchId ? `<a href="https://www.twitch.tv/${m.twitchId}" target="_blank" class="p-btn" style="background:#9146FF;color:white;box-shadow:0 5px 15px rgba(145,70,255,0.3);"><i class="fab fa-twitch"></i> Twitch</a>` : ''; const twitterLink = m.twitterId ? `https://x.com/${m.twitterId}` : '#'; let voiceHtml = ''; const voices = [ { url: m.voice1 || m.voice, title: m.title1 || "自己紹介", time: "0:10" }, { url: m.voice2, title: m.title2 || "ご挨拶", time: "0:05" }, { url: m.voice3, title: m.title3 || "システム音", time: "0:03" } ]; const activeVoices = voices.filter(v => v.url); if (activeVoices.length > 0) { const voiceItems = activeVoices.map((v, i) => ` <div class="voice-card" onclick="playVoice(this, '${v.url}')"> <i class="fas fa-play voice-icon"></i> <span class="voice-title">${v.title}</span> <span class="voice-time">PLAY</span> </div> `).join(''); voiceHtml = ` <div class="voice-section"> <div style="font-weight:bold; color:var(--m-color); margin-bottom:10px; border-bottom:2px dashed var(--m-color); padding-bottom:5px; display:inline-block;"> <i class="fas fa-microphone-alt"></i> SAMPLE VOICE </div> <div class="voice-grid">${voiceItems}</div> </div> `; } detailContainer.innerHTML = ` <div class="member-bg-layer" style="background-image: url('${m.img}');"></div> <div class="profile-header-bg" style="--m-color: ${m.color}; --m-color-light: ${m.color}20;"> <div class="profile-wrapper"> <div class="profile-visual"> <img src="${m.img}" class="profile-tachie" alt="${m.name}"> </div> <div class="profile-info"> <div class="profile-en-name">${m.enName || 'MEMBER'}</div> <div class="profile-jp-name">${m.name}</div> <div class="profile-catch">${m.catchphrase || ''}</div> <div class="profile-data-list"> <div class="p-data-item"><span class="p-label">誕生日</span><span class="p-value">${m.birthday || '-'}</span></div> <div class="p-data-item"><span class="p-label">身長</span><span class="p-value">${m.height || '-'}</span></div> <div class="p-data-item"><span class="p-label">ファンネーム</span><span class="p-value copy-tag" onclick="copyText('${m.fanName}')">${m.fanName || '-'} <i class="far fa-copy copy-icon"></i></span></div> <div class="p-data-item"><span class="p-label">ファンアートタグ</span><span class="p-value copy-tag" style="color:var(--m-color)" onclick="copyText('${m.hashTag}')">${m.hashTag || '-'} <i class="far fa-copy copy-icon"></i></span></div> </div> <div class="profile-bio">${m.bio || ''}</div> ${voiceHtml} <div class="profile-actions"> <a href="${m.youtubeId ? 'https://www.youtube.com/channel/' + m.youtubeId : '#'}" target="_blank" class="p-btn yt"><i class="fab fa-youtube"></i> YouTube</a> ${twitchLink} <a href="${twitterLink}" target="_blank" class="p-btn x"><i class="fab fa-x-twitter"></i> X</a> </div> <div style="text-align:right;"> <span class="back-link" onclick="showPage('member')">◀ MEMBER LIST</span> </div> </div> </div> </div> `; if(pushHistory) history.pushState(null, null, '#member_' + index); showPage('memberDetail', m.name, false); }
-    function copyText(text) { navigator.clipboard.writeText(text).then(() => { const toast = document.getElementById('copyToast'); toast.style.display = 'block'; const newOne = toast.cloneNode(true); toast.parentNode.replaceChild(newOne, toast); setTimeout(() => { newOne.style.display = 'none'; }, 2000); }); }
-
-    // フォーム・いいね・ログイン等
-    async function fetchLikes() { if (!GAS_API_URL) return; try { const res = await fetch(`${GAS_API_URL}?action=get_likes`); const json = await res.json(); totalLikes = json.count || 0; updateLikeDisplay(); } catch (e) { console.error(e); } }
-    function updateLikeDisplay() { document.getElementById('totalLikeCount').innerText = totalLikes + sessionLikes; }
-    function spawnHeart() { const heart = document.createElement('i'); heart.className = 'fas fa-heart heart-particle'; const colors = ['#ff9a9e', '#ff6b6b', '#feca57', '#48dbfb', '#ff9ff3']; heart.style.color = colors[Math.floor(Math.random() * colors.length)]; heart.style.left = (window.innerWidth - 80 + (Math.random() * 40)) + 'px'; heart.style.bottom = '80px'; document.body.appendChild(heart); setTimeout(() => heart.remove(), 1500); sessionLikes++; updateLikeDisplay(); clearTimeout(likeSyncTimer); likeSyncTimer = setTimeout(syncLikes, 2000); }
-    async function syncLikes() { if (sessionLikes === 0) return; const countToSend = sessionLikes; sessionLikes = 0; totalLikes += countToSend; updateLikeDisplay(); if (!GAS_API_URL) return; try { const res = await fetch(`${GAS_API_URL}?action=add_likes&count=${countToSend}`); const json = await res.json(); if (json.total) { totalLikes = json.total; updateLikeDisplay(); } } catch (e) { console.error("Like Sync Error", e); } }
-    async function submitRadio() { const name = document.getElementById('radioName').value; const corner = document.getElementById('radioCorner').value; const msg = document.getElementById('radioMessage').value; if(!name || !msg) { alert("ラジオネームとメッセージを入力してね！"); return; } if (!GAS_API_URL) { alert("GAS URL未設定"); return; } const btn = document.querySelector('.radio-btn'); btn.disabled = true; btn.innerText = "送信中..."; try { const url = `${GAS_API_URL}?action=submit_radio&name=${encodeURIComponent(name)}&corner=${encodeURIComponent(corner)}&message=${encodeURIComponent(msg)}`; const res = await fetch(url); const json = await res.json(); if (json.status === 'success') { alert(`送信完了！\nありがとう、${name}さん！`); document.getElementById('radioName').value = ""; document.getElementById('radioMessage').value = ""; } else { alert("送信エラーが発生しました"); } } catch (e) { alert("通信エラーが発生しました"); } finally { btn.disabled = false; btn.innerText = "送信する"; } }
-    async function sendContact() { const name = document.getElementById('contactName').value; const email = document.getElementById('contactEmail').value; const type = document.getElementById('contactType').value; const msg = document.getElementById('contactMsg').value; if(!name || !email || !msg) { alert('すべての項目を入力してください'); return; } if (!GAS_API_URL) { alert("GAS URL未設定"); return; } const btn = document.querySelector('.contact-btn'); btn.disabled = true; btn.innerText = "送信中..."; try { const url = `${GAS_API_URL}?action=submit_contact&name=${encodeURIComponent(name)}&email=${encodeURIComponent(email)}&type=${encodeURIComponent(type)}&message=${encodeURIComponent(msg)}`; const res = await fetch(url); const json = await res.json(); if (json.status === 'success') { alert('お問い合わせありがとうございます！\n送信が完了しました。'); document.getElementById('contactMsg').value = ""; } else { alert('送信に失敗しました。'); } } catch(e) { alert('通信エラーが発生しました'); } finally { btn.disabled = false; btn.innerText = "送信する"; } }
-async function registerUser() {
+    // 1. 会員登録
+    async function registerUser() {
         const name = document.getElementById('regName').value;
         const email = document.getElementById('regEmail').value;
         const pass = document.getElementById('regPass').value;
         const btn = document.getElementById('regBtn');
 
-        // 1. 未入力チェック
-        if(!name || !email || !pass) {
-            alert("全ての項目を入力してください");
-            return;
-        }
+        if(!name || !email || !pass) { alert("全ての項目を入力してください"); return; }
 
-        // ★★★ 追加：パスワード文字数制限（4文字未満は禁止） ★★★
-        if(pass.length < 4) {
-            alert("パスワードは4文字以上で設定してください");
-            return;
-        }
-        // ★★★ ここまで ★★★
+        // パスワード4文字以上チェック
+        if(pass.length < 4) { alert("パスワードは4文字以上で設定してください"); return; }
 
-        if (!GAS_API_URL) {
-            alert("GAS URL未設定");
-            return;
-        }
+        if (!GAS_API_URL) { alert("GAS URL未設定"); return; }
         
         btn.innerText = "送信中...";
         btn.disabled = true;
@@ -1751,55 +1203,53 @@ async function registerUser() {
             btn.disabled = false;
         }
     }
+
+    // 2. ログイン処理（プロフ情報取得対応）
     async function loginUser() {
         const email = document.getElementById('loginEmail').value;
         const pass = document.getElementById('loginPass').value;
         const btn = document.getElementById('loginBtn');
 
-        // 入力チェック
-        if(!email || !pass) {
-            alert("メールアドレスとパスワードを入力してください");
-            return;
-        }
-        if (!GAS_API_URL) {
-            alert("GAS URL未設定");
-            return;
-        }
+        if(!email || !pass) { alert("メールアドレスとパスワードを入力してください"); return; }
+        if (!GAS_API_URL) { alert("GAS URL未設定"); return; }
 
-        // ボタンを送信中にする
         btn.innerText = "確認中...";
         btn.disabled = true;
 
         try {
-            // サーバーと通信
             const res = await fetch(`${GAS_API_URL}?action=login&email=${encodeURIComponent(email)}&pass=${encodeURIComponent(pass)}`);
             const json = await res.json();
 
             if (json.status === 'success') {
-                // --- ★ ログイン成功時の処理 ★ ---
                 alert("ログイン成功！ようこそ " + json.name + " さん！");
                 closeLoginModal();
 
-                // ヘッダーのボタン表示を変える
+                // ★ユーザーデータを保存
+                currentUserData = {
+                    id: json.id,
+                    name: json.name,
+                    icon: json.icon,
+                    bio: json.bio,
+                    x: json.x,
+                    yt: json.yt
+                };
+
+                // ヘッダー更新（クリックでマイページへ）
                 const headerBtn = document.getElementById('headerLoginBtn');
-                headerBtn.innerText = `${json.name} 様`;
+                headerBtn.innerText = `${json.name}`;
                 headerBtn.classList.add('logged-in-user');
-                headerBtn.onclick = null;
+                headerBtn.onclick = () => showPage('mypage');
                 
-                // ログイン状態にする
                 isMemberLoggedIn = true;
 
-                // ★★★【ここが追加機能】メンバー本人（管理者）かどうかの判定 ★★★
-                // ログインした名前が、登録されているメンバーデータにあるか探す
+                // 管理者チェック
                 const matchedMember = memberData.find(m => m.name === json.name);
-                if (matchedMember) {
-                    isOfficialAdmin = true; // 一致したら「削除権限」を与える
-                }
+                if (matchedMember) { isOfficialAdmin = true; }
 
-                // ★★★【ここが追加機能】画面の更新 ★★★
-                renderMemberVideos(); // 限定動画の鍵を外す
-                renderGraffitiList(); // 落書きギャラリーの鍵を外す（＆削除ボタン表示）
-                checkCanvasLock();    // 黒板の鍵を外す
+                // 画面更新
+                renderMemberVideos(); 
+                renderGraffitiList(); 
+                checkCanvasLock(); 
 
             } else {
                 alert("ログイン失敗: " + json.message);
@@ -1808,68 +1258,355 @@ async function registerUser() {
             alert("通信エラー");
             console.error(e);
         } finally {
-            // ボタンを元に戻す
             btn.innerText = "ログインする";
             btn.disabled = false;
         }
     }
-    // ★追加：パスワード忘れモーダルの開閉
-    function openForgotModal() {
-        closeLoginModal();
-        document.getElementById('forgotModal').classList.add('open');
-    }
-    function closeForgotModal() {
-        document.getElementById('forgotModal').classList.remove('open');
-    }
 
-    // ★追加：パスワード再送リクエスト送信
-    async function sendForgotRequest() {
-        const email = document.getElementById('forgotEmail').value;
-        const btn = document.getElementById('forgotBtn');
+    // 3. プロフィール保存
+    async function saveProfile() {
+        if (!currentUserData) return;
 
-        if (!email) {
-            alert("メールアドレスを入力してください");
-            return;
-        }
+        const name = document.getElementById('myNameInput').value;
+        const icon = document.getElementById('myIconInput').value;
+        const bio = document.getElementById('myBioInput').value;
+        const x = document.getElementById('myXInput').value;
+        const yt = document.getElementById('myYtInput').value;
+
+        if (!name) { alert("ニックネームは必須です"); return; }
         if (!GAS_API_URL) { alert("GAS URL未設定"); return; }
 
-        btn.innerText = "送信中...";
+        const btn = document.querySelector('.save-btn');
+        btn.innerText = "保存中...";
         btn.disabled = true;
 
         try {
-            // GASに問い合わせ（action=forgot_pass）
-            const res = await fetch(`${GAS_API_URL}?action=forgot_pass&email=${encodeURIComponent(email)}`);
+            const url = `${GAS_API_URL}?action=update_profile`
+                      + `&id=${encodeURIComponent(currentUserData.id)}`
+                      + `&name=${encodeURIComponent(name)}`
+                      + `&icon=${encodeURIComponent(icon)}`
+                      + `&bio=${encodeURIComponent(bio)}`
+                      + `&x=${encodeURIComponent(x)}`
+                      + `&yt=${encodeURIComponent(yt)}`;
+
+            const res = await fetch(url);
             const json = await res.json();
 
             if (json.status === 'success') {
-                alert("メールを送信しました！\n受信ボックス（または迷惑メールフォルダ）を確認してください。");
-                closeForgotModal();
-                openLoginModal();
+                alert("プロフィールを更新しました！");
+                // 手元のデータを更新
+                currentUserData.name = name;
+                currentUserData.icon = icon;
+                currentUserData.bio = bio;
+                currentUserData.x = x;
+                currentUserData.yt = yt;
+                
+                // ヘッダー名更新
+                document.getElementById('headerLoginBtn').innerText = name;
+                // マイページ表示更新
+                document.getElementById('myIconDisplay').src = icon || 'icon.png';
+                document.getElementById('myNameDisplay').innerText = name;
             } else {
                 alert("エラー: " + json.message);
             }
         } catch (e) {
             alert("通信エラーが発生しました");
         } finally {
-            btn.innerText = "送信する";
+            btn.innerText = "変更を保存する";
             btn.disabled = false;
         }
     }
 
-    function renderNews() { const newsHtml = newsData.map((n, i) => { const imgSrc = n.image ? n.image : "https://placehold.co/600x400/eee/333?text=NEWS"; return `<div class="news-card" onclick="openNewsModal(${i})"><div class="news-thumb-area"><span class="news-badge" style="background:${getTagColor(n.tag)}">${n.tag}</span><img src="${imgSrc}" class="news-img"></div><div class="news-content"><div class="news-date">${n.date}</div><div class="news-title">${n.title}</div><div class="news-check-btn">CHECK</div></div></div>`; }).join(''); document.getElementById('topNewsList').innerHTML = newsHtml || "まだニュースはありません"; document.getElementById('fullNewsList').innerHTML = newsHtml || "まだニュースはありません"; }
-    function renderSchedule() { const topScheduleHtml = scheduleData.map(s => `<div class="schedule-card"><div class="sch-thumb-box"><div class="sch-date-big">${s.date}</div><div class="sch-time-big">${s.time}</div></div><div class="sch-info"><span class="sch-badge-mini">配信</span><div class="sch-title">${s.content}</div></div></div>`).join(''); document.getElementById('topScheduleList').innerHTML = topScheduleHtml || "予定はありません"; document.getElementById('scheduleList').innerHTML = scheduleData.map(s => ` <div class="timeline-item"> <div class="tl-icon-box"><div class="tl-icon"><i class="fas fa-video"></i></div></div> <div class="tl-content"> <div class="tl-date">${s.date} <span style="font-size:12px;color:#888;">${s.time}</span></div> <div class="tl-title">${s.content}</div> <span class="tl-tag">配信</span> </div> </div>`).join(''); }
-    function renderVideos() { const videoHtml = videoData.map(v => `<div class="video-card" onclick="window.open('https://www.youtube.com/watch?v=${v.id}', '_blank')"><div class="video-thumb-box"><img src="https://img.youtube.com/vi/${v.id}/mqdefault.jpg" class="video-thumb"><div class="play-icon">▶</div></div><div class="video-info"><div class="video-title">${v.title}</div><div class="video-date">${v.date}</div></div></div>`).join(''); document.getElementById('topVideoList').innerHTML = videoHtml || "動画はまだありません"; }
-    function renderMemberVideos() { const container = document.getElementById('memberVideoList'); if(!memberVideoData.length) { container.innerHTML = "限定動画はまだありません"; return; } const html = memberVideoData.map(v => { const clickAction = isMemberLoggedIn ? `window.open('https://www.youtube.com/watch?v=${v.id}', '_blank')` : `openLoginModal()`; const lockedClass = isMemberLoggedIn ? 'unlocked' : 'mv-blur'; const lockOverlay = isMemberLoggedIn ? '' : `<div class="mv-lock-overlay"><div class="mv-lock-icon"><i class="fas fa-lock"></i></div><div class="mv-lock-text">MEMBER ONLY</div></div>`; return `<div class="member-video-card ${lockedClass}" onclick="${clickAction}">${lockOverlay}<div class="news-thumb-area"><img src="https://img.youtube.com/vi/${v.id}/mqdefault.jpg" class="news-img"></div><div class="news-content"><div class="news-date">${v.date}</div><div class="news-title">${v.title}</div><div class="news-check-btn">${isMemberLoggedIn ? 'PLAY' : 'LOCKED'}</div></div></div>`; }).join(''); container.innerHTML = html; }
-    function renderRadioDiary() { const container = document.getElementById('radioDiaryList'); if (!radioBlogData || radioBlogData.length === 0) { container.innerHTML = '<p style="text-align:center;color:#888;">まだ日記はありません</p>'; return; } container.innerHTML = radioBlogData.map(d => { if (!isMemberLoggedIn) { return ` <div class="diary-card" onclick="openLoginModal()" style="cursor:pointer; position:relative; overflow:hidden;"> <div style="filter: blur(6px); opacity: 0.6; pointer-events: none;"> <div class="diary-icon" style="background:#ddd;"></div> <div class="diary-content"> <div class="diary-name">SECRET MEMBER</div> <div class="diary-text">このコンテンツは会員限定です。<br>ログインすると閲覧できます。</div> <div class="diary-date">----.--.--</div> </div> </div> <div style="position:absolute; top:50%; left:50%; transform:translate(-50%,-50%); text-align:center; width:100%; z-index:2;"> <i class="fas fa-lock" style="font-size:24px; color:#555; margin-bottom:5px;"></i> <div style="font-weight:bold; font-size:12px; color:#555;">MEMBER ONLY</div> </div> </div> `; } let iconSrc = "icon.png"; let imgPos = "top center"; if (memberData && memberData.length > 0) { const targetMember = memberData.find(m => m.name === d.name); if (targetMember) { if(targetMember.img) iconSrc = targetMember.img; if(targetMember.icon_pos) imgPos = targetMember.icon_pos; } } if (d.img && d.img !== "") iconSrc = d.img; const voicePlayer = d.voice ? `<div class="diary-voice-player" onclick="playVoice(this, '${d.voice}')"> <i class="fas fa-play voice-icon"></i> <span class="voice-time">限定ボイス</span> </div>` : ''; return ` <div class="diary-card"> <div class="diary-icon" style="background-image: url('${iconSrc}'); background-position: ${imgPos};"></div> <div class="diary-content"> <div class="diary-name">${d.name}</div> <div class="diary-text">${d.text}</div> ${voicePlayer} <div class="diary-date">${d.date}</div> </div> </div> `; }).join(''); }
+    // 4. ログアウト
+    function logoutUser() {
+        if(confirm("ログアウトしますか？")) {
+            location.reload(); 
+        }
+    }
+
+    // 5. パスワード忘れ
+    function openForgotModal() { closeLoginModal(); document.getElementById('forgotModal').classList.add('open'); }
+    function closeForgotModal() { document.getElementById('forgotModal').classList.remove('open'); }
+    async function sendForgotRequest() {
+        const email = document.getElementById('forgotEmail').value;
+        const btn = document.getElementById('forgotBtn');
+        if (!email) { alert("メールアドレスを入力してください"); return; }
+        if (!GAS_API_URL) { alert("GAS URL未設定"); return; }
+        btn.innerText = "送信中..."; btn.disabled = true;
+        try {
+            const res = await fetch(`${GAS_API_URL}?action=forgot_pass&email=${encodeURIComponent(email)}`);
+            const json = await res.json();
+            if (json.status === 'success') {
+                alert("メールを送信しました！\n受信ボックス（または迷惑メールフォルダ）を確認してください。");
+                closeForgotModal(); openLoginModal();
+            } else {
+                alert("エラー: " + json.message);
+            }
+        } catch (e) { alert("通信エラーが発生しました"); } finally { btn.innerText = "送信する"; btn.disabled = false; }
+    }
+
+    // --- 落書き（GRAFFITI）関連 ---
+    let canvas, ctx;
+    let isDrawing = false;
+    let currentColor = "#ffffff";
+    let currentLineWidth = 3;
+    let graffitiPosts = []; 
+    let currentViewingIndex = -1;
+
+    function initCanvas() {
+        const container = document.querySelector('.board-container');
+        canvas = document.getElementById('drawCanvas');
+        if(!container || !canvas) return;
+
+        const rect = container.getBoundingClientRect();
+        canvas.width = rect.width;
+        canvas.height = rect.height;
+        ctx = canvas.getContext('2d');
+        ctx.lineCap = 'round';
+        ctx.lineJoin = 'round';
+        ctx.strokeStyle = currentColor;
+        ctx.lineWidth = currentLineWidth;
+
+        canvas.onmousedown = startDraw;
+        canvas.onmousemove = drawing;
+        canvas.onmouseup = endDraw;
+        canvas.onmouseout = endDraw;
+        canvas.ontouchstart = (e) => { e.preventDefault(); startDraw(e.touches[0]); };
+        canvas.ontouchmove = (e) => { e.preventDefault(); drawing(e.touches[0]); };
+        canvas.ontouchend = endDraw;
+    }
+    function startDraw(e) { isDrawing = true; ctx.beginPath(); const rect = canvas.getBoundingClientRect(); ctx.moveTo((e.clientX||e.pageX)-rect.left, (e.clientY||e.pageY)-rect.top); }
+    function drawing(e) { if (!isDrawing) return; const rect = canvas.getBoundingClientRect(); ctx.lineTo((e.clientX||e.pageX)-rect.left, (e.clientY||e.pageY)-rect.top); ctx.stroke(); }
+    function endDraw() { isDrawing = false; }
+    function changeColor(btn, color) { currentColor = color; ctx.strokeStyle = color; ctx.lineWidth = 3; ctx.globalCompositeOperation = 'source-over'; document.querySelectorAll('.color-btn').forEach(b => b.classList.remove('active')); btn.classList.add('active'); }
+    function setEraser() { ctx.lineWidth = 15; ctx.globalCompositeOperation = 'destination-out'; document.querySelectorAll('.color-btn').forEach(b => b.classList.remove('active')); }
+    function clearCanvas() { if(confirm('本当に消しますか？')) { ctx.clearRect(0, 0, canvas.width, canvas.height); } }
+    
+    function downloadGraffiti() {
+        const tempCanvas = document.createElement('canvas'); tempCanvas.width = canvas.width; tempCanvas.height = canvas.height;
+        const tCtx = tempCanvas.getContext('2d'); tCtx.fillStyle = "#2b4a3c"; tCtx.fillRect(0, 0, tempCanvas.width, tempCanvas.height); tCtx.drawImage(canvas, 0, 0);
+        const link = document.createElement('a'); link.download = 'aoharu_graffiti.png'; link.href = tempCanvas.toDataURL('image/png'); link.click();
+    }
+
+    function checkCanvasLock() {
+        const overlay = document.getElementById('canvasLockOverlay');
+        if (overlay) overlay.style.display = isMemberLoggedIn ? 'none' : 'flex';
+    }
+
+    function postGraffiti() {
+        const title = document.getElementById('graffitiTitle').value;
+        const name = document.getElementById('graffitiName').value;
+        if(!title || !name) { alert('タイトルとニックネームを入力してください！'); return; }
+        
+        const tempCanvas = document.createElement('canvas'); tempCanvas.width = canvas.width; tempCanvas.height = canvas.height;
+        const tCtx = tempCanvas.getContext('2d'); tCtx.fillStyle = "#2b4a3c"; tCtx.fillRect(0, 0, tempCanvas.width, tempCanvas.height); tCtx.drawImage(canvas, 0, 0);
+        
+        const newPost = {
+            id: Date.now(), title: title, author: name, image: tempCanvas.toDataURL('image/png'), likes: 0, comments: []
+        };
+        graffitiPosts.unshift(newPost);
+        renderGraffitiList();
+        alert('投稿しました！');
+        document.getElementById('graffitiTitle').value = '';
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+    }
+
+    function renderGraffitiList() {
+        const list = document.getElementById('graffitiList');
+        if (!isMemberLoggedIn) {
+            list.innerHTML = `<div style="display:flex; flex-direction:column; align-items:center; justify-content:center; width:100%; height:200px; background:#eee; border-radius:10px; color:#555;"><i class="fas fa-lock" style="font-size:30px; margin-bottom:10px;"></i><div style="font-weight:bold;">MEMBER ONLY</div><div style="font-size:12px;">みんなの作品を見るには<br>ログインしてください</div></div>`;
+            return;
+        }
+        if(graffitiPosts.length === 0) { list.innerHTML = '<div style="padding:20px; color:#999; width:100%; text-align:center;">まだ投稿はありません。一番乗りしよう！</div>'; return; }
+        list.innerHTML = graffitiPosts.map((post, index) => {
+            const deleteBtn = isOfficialAdmin ? `<div class="delete-btn" onclick="deleteGraffiti(event, ${post.id})"><i class="fas fa-trash"></i></div>` : '';
+            return `<div class="graffiti-card" onclick="openGraffitiDetail(${index})" style="position:relative;">${deleteBtn}<div class="g-img-box"><img src="${post.image}" class="g-img"></div><div class="g-info"><div class="g-title">${post.title}</div><div class="g-author">by ${post.author}</div><div style="font-size:10px; color:#ff4757; text-align:right; margin-top:5px;"><i class="fas fa-heart"></i> ${post.likes} <i class="fas fa-comment" style="margin-left:5px; color:#aaa;"></i> ${post.comments.length}</div></div></div>`;
+        }).join('');
+    }
+
+    function deleteGraffiti(event, id) {
+        event.stopPropagation();
+        if (!isOfficialAdmin) { alert("削除権限がありません！"); return; }
+        if (confirm("本当に削除しますか？")) {
+            graffitiPosts = graffitiPosts.filter(post => post.id !== id);
+            renderGraffitiList();
+            alert("削除しました！");
+        }
+    }
+
+    function openGraffitiDetail(index) {
+        currentViewingIndex = index; const post = graffitiPosts[index];
+        document.getElementById('gDetailImg').src = post.image;
+        document.getElementById('gDetailTitle').innerText = post.title;
+        document.getElementById('gDetailAuthor').innerText = post.author;
+        document.getElementById('gDetailLikes').innerText = post.likes;
+        renderComments();
+        document.getElementById('graffitiModal').classList.add('open');
+    }
+    function closeGraffitiModal() { document.getElementById('graffitiModal').classList.remove('open'); renderGraffitiList(); }
+    function toggleGraffitiLike() {
+        if(currentViewingIndex === -1) return;
+        graffitiPosts[currentViewingIndex].likes++;
+        document.getElementById('gDetailLikes').innerText = graffitiPosts[currentViewingIndex].likes;
+        const btn = document.querySelector('.g-modal-like-btn'); btn.style.transform = "scale(1.3)"; setTimeout(() => btn.style.transform = "scale(1)", 100);
+    }
+    function submitGraffitiComment() {
+        if(currentViewingIndex === -1) return;
+        const input = document.getElementById('gCommentInput'); const text = input.value; if(!text) return;
+        
+        let commenterName = "名無し", commenterIcon = "icon.png", isOfficial = false;
+        if(isMemberLoggedIn && currentUserData) {
+            commenterName = currentUserData.name;
+            // 管理者の場合のみ、専用アイコン等を使えるように判定
+            const matchingMember = memberData.find(m => m.name === commenterName);
+            if(matchingMember) { isOfficial = true; commenterIcon = matchingMember.img; }
+            else if(currentUserData.icon) { commenterIcon = currentUserData.icon; }
+        }
+        
+        graffitiPosts[currentViewingIndex].comments.push({ name: commenterName, text: text, icon: commenterIcon, isMember: isOfficial });
+        input.value = ""; renderComments();
+    }
+    function renderComments() {
+        const list = document.getElementById('gDetailComments'); const comments = graffitiPosts[currentViewingIndex].comments;
+        if(comments.length === 0) { list.innerHTML = '<div style="text-align:center; font-size:12px; color:#ccc; margin-top:20px;">コメントはまだありません</div>'; return; }
+        list.innerHTML = comments.map(c => `<div class="g-comment-item ${c.isMember ? 'is-member' : ''}"><img src="${c.icon}" class="g-cmt-icon"><div class="g-cmt-body"><div class="g-cmt-name">${c.name}</div><div>${c.text}</div></div></div>`).join('');
+        list.scrollTop = list.scrollHeight;
+    }
+// --- ★★★ ここから追加：表示用関数（これが抜けていました！） ★★★ ---
+
+    function renderNews() { 
+        const newsHtml = newsData.map((n, i) => { 
+            const imgSrc = n.image ? n.image : "https://placehold.co/600x400/eee/333?text=NEWS"; 
+            return `<div class="news-card" onclick="openNewsModal(${i})"><div class="news-thumb-area"><span class="news-badge" style="background:${getTagColor(n.tag)}">${n.tag}</span><img src="${imgSrc}" class="news-img"></div><div class="news-content"><div class="news-date">${n.date}</div><div class="news-title">${n.title}</div><div class="news-check-btn">CHECK</div></div></div>`; 
+        }).join(''); 
+        const topList = document.getElementById('topNewsList');
+        const fullList = document.getElementById('fullNewsList');
+        if(topList) topList.innerHTML = newsHtml || "まだニュースはありません"; 
+        if(fullList) fullList.innerHTML = newsHtml || "まだニュースはありません"; 
+    }
+
+    function renderSchedule() { 
+        const topScheduleHtml = scheduleData.map(s => `<div class="schedule-card"><div class="sch-thumb-box"><div class="sch-date-big">${s.date}</div><div class="sch-time-big">${s.time}</div></div><div class="sch-info"><span class="sch-badge-mini">配信</span><div class="sch-title">${s.content}</div></div></div>`).join(''); 
+        const tlHtml = scheduleData.map(s => ` <div class="timeline-item"> <div class="tl-icon-box"><div class="tl-icon"><i class="fas fa-video"></i></div></div> <div class="tl-content"> <div class="tl-date">${s.date} <span style="font-size:12px;color:#888;">${s.time}</span></div> <div class="tl-title">${s.content}</div> <span class="tl-tag">配信</span> </div> </div>`).join('');
+        
+        const topList = document.getElementById('topScheduleList');
+        const schList = document.getElementById('scheduleList');
+        if(topList) topList.innerHTML = topScheduleHtml || "予定はありません"; 
+        if(schList) schList.innerHTML = tlHtml;
+    }
+
+    function renderVideos() { 
+        const videoHtml = videoData.map(v => `<div class="video-card" onclick="window.open('https://www.youtube.com/watch?v=${v.id}', '_blank')"><div class="video-thumb-box"><img src="https://img.youtube.com/vi/${v.id}/mqdefault.jpg" class="video-thumb"><div class="play-icon">▶</div></div><div class="video-info"><div class="video-title">${v.title}</div><div class="video-date">${v.date}</div></div></div>`).join(''); 
+        const list = document.getElementById('topVideoList');
+        if(list) list.innerHTML = videoHtml || "動画はまだありません"; 
+    }
+
+    function renderMemberVideos() { 
+        const container = document.getElementById('memberVideoList'); 
+        if(!memberVideoData.length) { container.innerHTML = "限定動画はまだありません"; return; } 
+        const html = memberVideoData.map(v => { 
+            const clickAction = isMemberLoggedIn ? `window.open('https://www.youtube.com/watch?v=${v.id}', '_blank')` : `openLoginModal()`; 
+            const lockedClass = isMemberLoggedIn ? 'unlocked' : 'mv-blur'; 
+            const lockOverlay = isMemberLoggedIn ? '' : `<div class="mv-lock-overlay"><div class="mv-lock-icon"><i class="fas fa-lock"></i></div><div class="mv-lock-text">MEMBER ONLY</div></div>`; 
+            return `<div class="member-video-card ${lockedClass}" onclick="${clickAction}">${lockOverlay}<div class="news-thumb-area"><img src="https://img.youtube.com/vi/${v.id}/mqdefault.jpg" class="news-img"></div><div class="news-content"><div class="news-date">${v.date}</div><div class="news-title">${v.title}</div><div class="news-check-btn">${isMemberLoggedIn ? 'PLAY' : 'LOCKED'}</div></div></div>`; 
+        }).join(''); 
+        container.innerHTML = html; 
+    }
+
+    function renderRadioDiary() { 
+        const container = document.getElementById('radioDiaryList'); 
+        if (!radioBlogData || radioBlogData.length === 0) { container.innerHTML = '<p style="text-align:center;color:#888;">まだ日記はありません</p>'; return; } 
+        container.innerHTML = radioBlogData.map(d => { 
+            if (!isMemberLoggedIn) { 
+                return ` <div class="diary-card" onclick="openLoginModal()" style="cursor:pointer; position:relative; overflow:hidden;"> <div style="filter: blur(6px); opacity: 0.6; pointer-events: none;"> <div class="diary-icon" style="background:#ddd;"></div> <div class="diary-content"> <div class="diary-name">SECRET MEMBER</div> <div class="diary-text">このコンテンツは会員限定です。<br>ログインすると閲覧できます。</div> <div class="diary-date">----.--.--</div> </div> </div> <div style="position:absolute; top:50%; left:50%; transform:translate(-50%,-50%); text-align:center; width:100%; z-index:2;"> <i class="fas fa-lock" style="font-size:24px; color:#555; margin-bottom:5px;"></i> <div style="font-weight:bold; font-size:12px; color:#555;">MEMBER ONLY</div> </div> </div> `; 
+            } 
+            let iconSrc = "icon.png"; let imgPos = "top center"; 
+            if (memberData && memberData.length > 0) { 
+                const targetMember = memberData.find(m => m.name === d.name); 
+                if (targetMember) { 
+                    if(targetMember.img) iconSrc = targetMember.img; 
+                    // if(targetMember.icon_pos) imgPos = targetMember.icon_pos; 
+                } 
+            } 
+            if (d.img && d.img !== "") iconSrc = d.img; 
+            const voicePlayer = d.voice ? `<div class="diary-voice-player" onclick="playVoice(this, '${d.voice}')"> <i class="fas fa-play voice-icon"></i> <span class="voice-time">限定ボイス</span> </div>` : ''; 
+            return ` <div class="diary-card"> <div class="diary-icon" style="background-image: url('${iconSrc}'); background-position: ${imgPos};"></div> <div class="diary-content"> <div class="diary-name">${d.name}</div> <div class="diary-text">${d.text}</div> ${voicePlayer} <div class="diary-date">${d.date}</div> </div> </div> `; 
+        }).join(''); 
+    }
 
     // ボイス再生
     let currentAudio = null;
     let currentBtn = null;
-    function playVoice(btn, url) { if (currentBtn === btn && currentAudio) { currentAudio.pause(); resetPlayer(); return; } if (currentAudio) { currentAudio.pause(); resetPlayer(); } const audio = new Audio(url); audio.volume = 0.5; btn.classList.add('playing'); btn.querySelector('.voice-icon').className = 'fas fa-stop voice-icon'; btn.querySelector('.voice-time').innerText = 'STOP'; audio.play().catch(e => { console.error("再生エラー", e); alert("音声ファイルが再生できませんでした"); resetPlayer(); }); audio.onended = resetPlayer; currentAudio = audio; currentBtn = btn; }
-    function resetPlayer() { if (currentBtn) { currentBtn.classList.remove('playing'); currentBtn.querySelector('.voice-icon').className = 'fas fa-play voice-icon'; currentBtn.querySelector('.voice-time').innerText = 'PLAY'; } currentAudio = null; currentBtn = null; }
+    function playVoice(btn, url) { 
+        if (currentBtn === btn && currentAudio) { currentAudio.pause(); resetPlayer(); return; } 
+        if (currentAudio) { currentAudio.pause(); resetPlayer(); } 
+        const audio = new Audio(url); 
+        audio.volume = 0.5; 
+        btn.classList.add('playing'); 
+        const icon = btn.querySelector('.voice-icon');
+        const label = btn.querySelector('.voice-time');
+        if(icon) icon.className = 'fas fa-stop voice-icon'; 
+        if(label) label.innerText = 'STOP'; 
+        
+        audio.play().catch(e => { console.error("再生エラー", e); alert("音声ファイルが再生できませんでした"); resetPlayer(); }); 
+        audio.onended = resetPlayer; 
+        currentAudio = audio; 
+        currentBtn = btn; 
+    }
+    function resetPlayer() { 
+        if (currentBtn) { 
+            currentBtn.classList.remove('playing'); 
+            const icon = currentBtn.querySelector('.voice-icon');
+            const label = currentBtn.querySelector('.voice-time');
+            if(icon) icon.className = 'fas fa-play voice-icon'; 
+            if(label) label.innerText = 'PLAY'; 
+        } 
+        currentAudio = null; 
+        currentBtn = null; 
+    }
 
-    // その他の機能
-    function checkLiveStatus() { /* 省略（前のままでOKですが、必要ならここに記述） */ }
+    function checkLiveStatus() {
+        // 必要に応じてライブ状況取得処理を記述
+    }
+
+    // --- その他（静的パーツ、おみくじ等） ---
+    function renderStaticParts() { 
+        const twLink = document.getElementById('groupTwitterLink'); const ytLink = document.getElementById('groupYoutubeLink'); const footerTwLink = document.getElementById('footerTwitterLink'); const footerYtLink = document.getElementById('footerYoutubeLink');
+        if(GROUP_CONFIG.twitterUrl) { twLink.href = GROUP_CONFIG.twitterUrl; footerTwLink.href = GROUP_CONFIG.twitterUrl; }
+        if(GROUP_CONFIG.youtubeChannelId) { const ytUrl = `https://www.youtube.com/channel/${GROUP_CONFIG.youtubeChannelId}`; ytLink.href = ytUrl; footerYtLink.href = ytUrl; }
+        if(memberData.length > 0) { const memberHtml = memberData.map((m, i) => `<div class="member-card-vertical" onclick="openMemberDetail(${i})" style="--member-color: ${m.color}; --member-bg: url('${m.bgImg}');"><div class="member-img-wrapper"><img src="${m.img}" class="member-img-tachie"></div><a href="javascript:void(0)" class="member-link-overlay"></a></div>`).join(''); document.getElementById('topMemberList').innerHTML = memberHtml; document.getElementById('memberGrid').innerHTML = memberHtml; }
+    }
+    
+    // 他の機能（省略せず記載）
+    function openNewsModal(index) { const data = newsData[index]; document.getElementById('modalDate').innerText = data.date; const tagEl = document.getElementById('modalTag'); tagEl.innerText = data.tag; tagEl.style.background = getTagColor(data.tag); document.getElementById('modalTitle').innerText = data.title; document.getElementById('modalBody').innerText = data.detail || data.title; document.getElementById('newsModal').classList.add('open'); }
+    function closeNewsModal() { document.getElementById('newsModal').classList.remove('open'); }
+    function openLoginModal() { document.getElementById('loginModal').classList.add('open'); }
+    function closeLoginModal() { document.getElementById('loginModal').classList.remove('open'); }
+    function openRegisterModal() { document.getElementById('registerModal').classList.add('open'); }
+    function closeRegisterModal() { document.getElementById('registerModal').classList.remove('open'); }
+    function switchToRegister() { closeLoginModal(); setTimeout(openRegisterModal, 300); }
+    function switchToLogin() { closeRegisterModal(); setTimeout(openLoginModal, 300); }
+    function getTagColor(tag) { if(tag === 'INFO') return '#27C6F5'; if(tag === 'VIDEO') return '#ff4757'; return '#ccc'; }
+    function toggleMenu() { document.getElementById('sideMenu').classList.toggle('open'); document.getElementById('overlay').classList.toggle('open'); }
+    function initCardMaker() { const today = new Date(); const dStr = `${today.getFullYear()}.${(today.getMonth()+1).toString().padStart(2,'0')}.${today.getDate().toString().padStart(2,'0')}`; const cardDateEl = document.getElementById('cardDate'); if(cardDateEl) cardDateEl.innerText = 'DATE: ' + dStr; const cardNoEl = document.getElementById('cardNo'); if(cardNoEl) cardNoEl.innerText = dStr.replace(/\./g,'') + '-' + (Math.floor(Math.random()*9000)+1000); const btnContainer = document.getElementById('oshiButtons'); if(btnContainer) { btnContainer.innerHTML = ''; memberData.forEach((m, i) => { const btn = document.createElement('div'); btn.className = 'oshi-btn'; btn.style.backgroundImage = `url('${m.img}')`; btn.onclick = () => selectOshi(i); btnContainer.appendChild(btn); }); if(memberData.length > 0) selectOshi(0); } }
+    function selectOshi(index) { const m = memberData[index]; document.querySelectorAll('.oshi-btn').forEach((b, i) => b.classList.toggle('selected', i === index)); const card = document.getElementById('digitalCard'); if(card) { card.style.setProperty('--card-color', m.color); const bottom = m.card_bottom || "-20px"; const right = m.card_right || "-50px"; const width = m.card_width || "280px"; card.style.setProperty('--char-bottom', bottom); card.style.setProperty('--char-right', right); card.style.setProperty('--char-width', width); document.getElementById('cardOshiDisplay').innerText = m.name; document.getElementById('cardCharImg').src = m.img; } }
+    function updateCard() { const val = document.getElementById('cardNameInput').value; const display = document.getElementById('cardNameDisplay'); if(display) display.innerText = val ? val : 'GUEST'; }
+    function downloadCard() { const card = document.getElementById('digitalCard'); html2canvas(card, { scale: 3, backgroundColor: null, useCORS: true }).then(canvas => { const link = document.createElement('a'); link.download = 'aoharu_card.png'; link.href = canvas.toDataURL('image/png'); link.click(); }); }
+    
+    function openMemberDetail(index, pushHistory = true) { const m = memberData[index]; const detailContainer = document.getElementById('memberDetail'); const twitchLink = m.twitchId ? `<a href="https://www.twitch.tv/${m.twitchId}" target="_blank" class="p-btn" style="background:#9146FF;color:white;box-shadow:0 5px 15px rgba(145,70,255,0.3);"><i class="fab fa-twitch"></i> Twitch</a>` : ''; const twitterLink = m.twitterId ? `https://x.com/${m.twitterId}` : '#'; let voiceHtml = ''; const voices = [ { url: m.voice1 || m.voice, title: m.title1 || "自己紹介", time: "0:10" }, { url: m.voice2, title: m.title2 || "ご挨拶", time: "0:05" }, { url: m.voice3, title: m.title3 || "システム音", time: "0:03" } ]; const activeVoices = voices.filter(v => v.url); if (activeVoices.length > 0) { const voiceItems = activeVoices.map((v, i) => ` <div class="voice-card" onclick="playVoice(this, '${v.url}')"> <i class="fas fa-play voice-icon"></i> <span class="voice-title">${v.title}</span> <span class="voice-time">PLAY</span> </div> `).join(''); voiceHtml = ` <div class="voice-section"> <div style="font-weight:bold; color:var(--m-color); margin-bottom:10px; border-bottom:2px dashed var(--m-color); padding-bottom:5px; display:inline-block;"> <i class="fas fa-microphone-alt"></i> SAMPLE VOICE </div> <div class="voice-grid">${voiceItems}</div> </div> `; } detailContainer.innerHTML = ` <div class="member-bg-layer" style="background-image: url('${m.img}');"></div> <div class="profile-header-bg" style="--m-color: ${m.color}; --m-color-light: ${m.color}20;"> <div class="profile-wrapper"> <div class="profile-visual"> <img src="${m.img}" class="profile-tachie" alt="${m.name}"> </div> <div class="profile-info"> <div class="profile-en-name">${m.enName || 'MEMBER'}</div> <div class="profile-jp-name">${m.name}</div> <div class="profile-catch">${m.catchphrase || ''}</div> <div class="profile-data-list"> <div class="p-data-item"><span class="p-label">誕生日</span><span class="p-value">${m.birthday || '-'}</span></div> <div class="p-data-item"><span class="p-label">身長</span><span class="p-value">${m.height || '-'}</span></div> <div class="p-data-item"><span class="p-label">ファンネーム</span><span class="p-value copy-tag" onclick="copyText('${m.fanName}')">${m.fanName || '-'} <i class="far fa-copy copy-icon"></i></span></div> <div class="p-data-item"><span class="p-label">ファンアートタグ</span><span class="p-value copy-tag" style="color:var(--m-color)" onclick="copyText('${m.hashTag}')">${m.hashTag || '-'} <i class="far fa-copy copy-icon"></i></span></div> </div> <div class="profile-bio">${m.bio || ''}</div> ${voiceHtml} <div class="profile-actions"> <a href="${m.youtubeId ? 'https://www.youtube.com/channel/' + m.youtubeId : '#'}" target="_blank" class="p-btn yt"><i class="fab fa-youtube"></i> YouTube</a> ${twitchLink} <a href="${twitterLink}" target="_blank" class="p-btn x"><i class="fab fa-x-twitter"></i> X</a> </div> <div style="text-align:right;"> <span class="back-link" onclick="showPage('member')">◀ MEMBER LIST</span> </div> </div> </div> </div> `; if(pushHistory) history.pushState(null, null, '#member_' + index); showPage('memberDetail', m.name, false); }
+    function copyText(text) { navigator.clipboard.writeText(text).then(() => { const toast = document.getElementById('copyToast'); toast.style.display = 'block'; const newOne = toast.cloneNode(true); toast.parentNode.replaceChild(newOne, toast); setTimeout(() => { newOne.style.display = 'none'; }, 2000); }); }
+    async function fetchLikes() { if (!GAS_API_URL) return; try { const res = await fetch(`${GAS_API_URL}?action=get_likes`); const json = await res.json(); totalLikes = json.count || 0; updateLikeDisplay(); } catch (e) { console.error(e); } }
+    function updateLikeDisplay() { document.getElementById('totalLikeCount').innerText = totalLikes + sessionLikes; }
+    function spawnHeart() { const heart = document.createElement('i'); heart.className = 'fas fa-heart heart-particle'; const colors = ['#ff9a9e', '#ff6b6b', '#feca57', '#48dbfb', '#ff9ff3']; heart.style.color = colors[Math.floor(Math.random() * colors.length)]; heart.style.left = (window.innerWidth - 80 + (Math.random() * 40)) + 'px'; heart.style.bottom = '80px'; document.body.appendChild(heart); setTimeout(() => heart.remove(), 1500); sessionLikes++; updateLikeDisplay(); clearTimeout(likeSyncTimer); likeSyncTimer = setTimeout(syncLikes, 2000); }
+    async function syncLikes() { if (sessionLikes === 0) return; const countToSend = sessionLikes; sessionLikes = 0; totalLikes += countToSend; updateLikeDisplay(); if (!GAS_API_URL) return; try { const res = await fetch(`${GAS_API_URL}?action=add_likes&count=${countToSend}`); const json = await res.json(); if (json.total) { totalLikes = json.total; updateLikeDisplay(); } } catch (e) { console.error("Like Sync Error", e); } }
+    async function submitRadio() { const name = document.getElementById('radioName').value; const corner = document.getElementById('radioCorner').value; const msg = document.getElementById('radioMessage').value; if(!name || !msg) { alert("ラジオネームとメッセージを入力してね！"); return; } if (!GAS_API_URL) { alert("GAS URL未設定"); return; } const btn = document.querySelector('.radio-btn'); btn.disabled = true; btn.innerText = "送信中..."; try { const url = `${GAS_API_URL}?action=submit_radio&name=${encodeURIComponent(name)}&corner=${encodeURIComponent(corner)}&message=${encodeURIComponent(msg)}`; const res = await fetch(url); const json = await res.json(); if (json.status === 'success') { alert(`送信完了！\nありがとう、${name}さん！`); document.getElementById('radioName').value = ""; document.getElementById('radioMessage').value = ""; } else { alert("送信エラーが発生しました"); } } catch (e) { alert("通信エラーが発生しました"); } finally { btn.disabled = false; btn.innerText = "送信する"; } }
+    async function sendContact() { const name = document.getElementById('contactName').value; const email = document.getElementById('contactEmail').value; const type = document.getElementById('contactType').value; const msg = document.getElementById('contactMsg').value; if(!name || !email || !msg) { alert('すべての項目を入力してください'); return; } if (!GAS_API_URL) { alert("GAS URL未設定"); return; } const btn = document.querySelector('.contact-btn'); btn.disabled = true; btn.innerText = "送信中..."; try { const url = `${GAS_API_URL}?action=submit_contact&name=${encodeURIComponent(name)}&email=${encodeURIComponent(email)}&type=${encodeURIComponent(type)}&message=${encodeURIComponent(msg)}`; const res = await fetch(url); const json = await res.json(); if (json.status === 'success') { alert('お問い合わせありがとうございます！\n送信が完了しました。'); document.getElementById('contactMsg').value = ""; } else { alert('送信に失敗しました。'); } } catch(e) { alert('通信エラーが発生しました'); } finally { btn.disabled = false; btn.innerText = "送信する"; } }
+    
+    // goods
+    function openGoodsModal(index) { const g = goodsData[index]; document.getElementById('goodsModalImg').src = g.img; document.getElementById('goodsModalTitle').innerText = g.name; document.getElementById('goodsModalPrice').innerText = g.price; document.getElementById('goodsModalDesc').innerText = g.detail || "詳細情報はありません。"; document.getElementById('goodsModalLink').href = g.link || "#"; document.getElementById('goodsModal').classList.add('open'); }
+    function closeGoodsModal() { document.getElementById('goodsModal').classList.remove('open'); }
+    
+    // Omikuji
     function initOmikuji() { const container = document.querySelector('#top .container'); if(container && !document.querySelector('.omikuji-area')) { const omikujiArea = document.createElement('div'); omikujiArea.className = 'omikuji-area'; omikujiArea.innerHTML = ` <div class="omi-deco d-1">✨</div> <div class="omi-deco d-2">💖</div> <div class="omi-title-ribbon">毎日1回運試し！</div> <div class="omi-main-text">あおはるおみくじ</div> <div class="omi-visual-box"><i class="fas fa-box-open"></i></div> <br> <button class="omikuji-btn" onclick="drawOmikuji()">おみくじを引く！</button> <p style="font-size:11px; color:#888; margin-top:15px; font-weight:bold;">※推しメンが出るかも…！？</p> `; const noaSection = document.getElementById('nowOnAirSection'); noaSection.parentNode.insertBefore(omikujiArea, noaSection.nextSibling); } }
     function drawOmikuji() { if(memberData.length === 0) return; const member = memberData[Math.floor(Math.random() * memberData.length)]; const fortune = fortuneTypes[Math.floor(Math.random() * fortuneTypes.length)]; const item = luckyItems[Math.floor(Math.random() * luckyItems.length)]; const comment = fortuneComments[Math.floor(Math.random() * fortuneComments.length)]; currentOmikujiResult = { member, fortune, item, comment }; const animModal = document.getElementById('omikujiAnimModal'); const box = document.getElementById('omiBox'); const slip = document.getElementById('omiSlip'); const particlesContainer = document.getElementById('omiParticles'); particlesContainer.innerHTML = ''; animModal.classList.add('open'); box.classList.add('shaking'); setTimeout(() => { box.classList.remove('shaking'); box.classList.add('pre-burst'); setTimeout(() => { box.classList.remove('pre-burst'); slip.classList.add('coming-out'); animModal.classList.add('burst'); if(typeof spawnConfetti === 'function') spawnConfetti(particlesContainer); setTimeout(() => { animModal.classList.remove('open'); animModal.classList.remove('burst'); slip.classList.remove('coming-out'); showOmikujiResult(); }, 1500); }, 500); }, 2500); }
     function spawnConfetti(container) { const colors = ['#FF512F', '#DD2476', '#FFD700', '#27C6F5', '#ffffff']; const icons = ['fa-star', 'fa-heart', 'fa-music', 'fa-bolt']; for (let i = 0; i < 50; i++) { const el = document.createElement('i'); el.className = `fas ${icons[Math.floor(Math.random() * icons.length)]} confetti`; el.style.color = colors[Math.floor(Math.random() * colors.length)]; el.style.left = '50%'; el.style.top = '50%'; const angle = Math.random() * 360; const dist = 150 + Math.random() * 200; el.style.setProperty('--tx', `${Math.cos(angle * Math.PI / 180) * dist}px`); el.style.setProperty('--ty', `${Math.sin(angle * Math.PI / 180) * dist}px`); el.style.setProperty('--r', `${Math.random() * 720 - 360}deg`); container.appendChild(el); } const shockwave = document.createElement('div'); shockwave.className = 'shockwave'; container.appendChild(shockwave); }
@@ -1877,6 +1614,7 @@ async function registerUser() {
     function closeOmikujiModal() { document.getElementById('omikujiModal').classList.remove('open'); }
     function shareOmikuji() { if(!currentOmikujiResult) return; const text = `【あおはるおみくじ】\n今日の運勢は…「${currentOmikujiResult.fortune}」でした！\nラッキーアイテム：${currentOmikujiResult.item}\n${currentOmikujiResult.member.name}「${currentOmikujiResult.comment}」\n#あおはるフレンズ #あおはるおみくじ`; const url = `https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}&url=${encodeURIComponent(location.href)}`; window.open(url, '_blank'); }
     function saveOmikuji() { const target = document.getElementById('omiCaptureArea'); html2canvas(target, { scale: 3, backgroundColor: null, useCORS: true }).then(canvas => { const link = document.createElement('a'); link.download = 'aoharu_omikuji.png'; link.href = canvas.toDataURL('image/png'); link.click(); }); }
+    function checkLiveStatus() { /* 省略 */ }
     function initEasterEgg() { window.addEventListener('keydown', (e) => { secretInput.push(e.key); if (secretInput.length > secretCode.length) secretInput.shift(); if (JSON.stringify(secretInput) === JSON.stringify(secretCode)) activateFeverMode(); }); const logo = document.getElementById('headerLogo'); if(logo) { logo.addEventListener('click', (e) => { e.preventDefault(); logoTapCount++; if(logoTapCount === 10) { activateFeverMode(); logoTapCount = 0; } setTimeout(() => logoTapCount = 0, 3000); }); } }
     function activateFeverMode() { if(document.body.classList.contains('fever-mode')) return; document.body.classList.add('fever-mode'); const text = document.createElement('div'); text.className = 'fever-text'; text.innerText = "FEVER TIME!!"; document.body.appendChild(text); var duration = 5000; var end = Date.now() + duration; (function frame() { if(typeof confetti === 'function'){ confetti({ particleCount: 2, angle: 60, spread: 55, origin: { x: 0 }, colors: ['#ff0000', '#00ff00', '#0000ff'] }); confetti({ particleCount: 2, angle: 120, spread: 55, origin: { x: 1 }, colors: ['#ff0000', '#00ff00', '#0000ff'] }); } if (Date.now() < end) requestAnimationFrame(frame); else { document.body.classList.remove('fever-mode'); text.remove(); alert("祭りは終わった……"); } }()); }
 </script>
