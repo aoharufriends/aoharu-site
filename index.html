@@ -1367,57 +1367,6 @@ const headerBtn = document.getElementById('headerLoginBtn');
     async function openUserProfile(name, event) {
         if(event) event.stopPropagation();
 
-    // ▼▼▼ この関数を追加してください ▼▼▼
-    function openMemberDetail(index) {
-        const m = memberData[index];
-        if(!m) return;
-
-        const detailPage = document.getElementById('memberDetail');
-        
-        // 背景画像の設定（CSS変数などを利用していないようなので直接styleに入れます）
-        // 既存のCSSクラス .profile-header-bg 等を活用したHTMLを生成します
-        let snsBtns = '';
-        if(m.youtubeId) snsBtns += `<a href="https://www.youtube.com/channel/${m.youtubeId}" target="_blank" class="p-btn yt"><i class="fab fa-youtube"></i> Channel</a>`;
-        if(m.twitterId) snsBtns += `<a href="${m.twitterId}" target="_blank" class="p-btn x"><i class="fab fa-x-twitter"></i> @${m.twitterId.split('/').pop()}</a>`;
-
-        const html = `
-            <div class="profile-header-bg" style="background-image: url('${m.bgImg}');">
-                <div class="profile-wrapper">
-                    <div class="profile-visual">
-                        <img src="${m.img}" class="profile-tachie">
-                    </div>
-                    <div class="profile-info">
-                        <div class="profile-en-name">${m.enName || 'MEMBER'}</div>
-                        <div class="profile-jp-name">${m.name}</div>
-                        <div class="profile-catch">${m.catchphrase || ''}</div>
-                        
-                        <div class="profile-data-list">
-                            <div class="p-data-item"><span class="p-label">BIRTHDAY</span><span class="p-value">${m.birthday || '-'}</span></div>
-                            <div class="p-data-item"><span class="p-label">HEIGHT</span><span class="p-value">${m.height || '-'}</span></div>
-                            <div class="p-data-item"><span class="p-label">FAN NAME</span><span class="p-value">${m.fanName || '-'}</span></div>
-                            <div class="p-data-item"><span class="p-label">TAG</span><span class="p-value">#${m.hashTag || ''}</span></div>
-                        </div>
-
-                        <div class="profile-bio">${m.bio || ''}</div>
-
-                        <div class="profile-actions">
-                            ${snsBtns}
-                        </div>
-                        
-                        <div style="text-align:center;">
-                            <div class="back-link" onclick="showPage('member')">◀ メンバー一覧に戻る</div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        `;
-
-        detailPage.innerHTML = html;
-        
-        // ページ遷移を実行
-        showPage('memberDetail', m.name);
-    }
-
         // ★★★ この2行が重要！開いている画面を閉じてからプロフィールを開く ★★★
         document.getElementById('graffitiModal').classList.remove('open');
         document.getElementById('userProfileModal').classList.remove('open'); 
@@ -1466,35 +1415,43 @@ const headerBtn = document.getElementById('headerLoginBtn');
 
     function closeUserProfileModal() {
         document.getElementById('userProfileModal').classList.remove('open');
-    }
-
+    }   
     function openMemberDetail(index) {
         const m = memberData[index];
         if(!m) return;
 
         const detailPage = document.getElementById('memberDetail');
         
-        // 背景画像の設定
+        // SNSボタンの生成
         let snsBtns = '';
         if(m.youtubeId) snsBtns += `<a href="https://www.youtube.com/channel/${m.youtubeId}" target="_blank" class="p-btn yt"><i class="fab fa-youtube"></i> Channel</a>`;
         if(m.twitterId) snsBtns += `<a href="${m.twitterId}" target="_blank" class="p-btn x"><i class="fab fa-x-twitter"></i> @${m.twitterId.split('/').pop()}</a>`;
 
+        // ★背景の修正ポイント：グラデーションと画像を重ねる設定に変更！
+        // linear-gradient で色を乗せ、url() で画像を後ろに表示します
+        const bgStyle = `
+            background-image: linear-gradient(135deg, ${m.color}cc 0%, rgba(255,255,255,0.9) 100%), url('${m.img}');
+            background-size: cover;
+            background-position: center top;
+            background-blend-mode: normal;
+        `;
+
         const html = `
-            <div class="profile-header-bg" style="background-image: url('${m.bgImg}');">
+            <div class="profile-header-bg" style="${bgStyle}">
                 <div class="profile-wrapper">
                     <div class="profile-visual">
                         <img src="${m.img}" class="profile-tachie">
                     </div>
                     <div class="profile-info">
-                        <div class="profile-en-name">${m.enName || 'MEMBER'}</div>
+                        <div class="profile-en-name" style="color:${m.color}">${m.enName || 'MEMBER'}</div>
                         <div class="profile-jp-name">${m.name}</div>
-                        <div class="profile-catch">${m.catchphrase || ''}</div>
+                        <div class="profile-catch" style="border-color:${m.color}">${m.catchphrase || ''}</div>
                         
                         <div class="profile-data-list">
-                            <div class="p-data-item"><span class="p-label">BIRTHDAY</span><span class="p-value">${m.birthday || '-'}</span></div>
-                            <div class="p-data-item"><span class="p-label">HEIGHT</span><span class="p-value">${m.height || '-'}</span></div>
-                            <div class="p-data-item"><span class="p-label">FAN NAME</span><span class="p-value">${m.fanName || '-'}</span></div>
-                            <div class="p-data-item"><span class="p-label">TAG</span><span class="p-value">#${m.hashTag || ''}</span></div>
+                            <div class="p-data-item" style="border-bottom-color:${m.color}"><span class="p-label">BIRTHDAY</span><span class="p-value">${m.birthday || '-'}</span></div>
+                            <div class="p-data-item" style="border-bottom-color:${m.color}"><span class="p-label">HEIGHT</span><span class="p-value">${m.height || '-'}</span></div>
+                            <div class="p-data-item" style="border-bottom-color:${m.color}"><span class="p-label">FAN NAME</span><span class="p-value">${m.fanName || '-'}</span></div>
+                            <div class="p-data-item" style="border-bottom-color:${m.color}"><span class="p-label">TAG</span><span class="p-value">#${m.hashTag || ''}</span></div>
                         </div>
 
                         <div class="profile-bio">${m.bio || ''}</div>
@@ -1512,11 +1469,9 @@ const headerBtn = document.getElementById('headerLoginBtn');
         `;
 
         detailPage.innerHTML = html;
-        
-        // ページ遷移を実行
         showPage('memberDetail', m.name);
     }
-
+    
     // 5. パスワード忘れ
     function openForgotModal() { closeLoginModal(); document.getElementById('forgotModal').classList.add('open'); }
     function closeForgotModal() { document.getElementById('forgotModal').classList.remove('open'); }
