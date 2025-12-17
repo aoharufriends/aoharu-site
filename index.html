@@ -648,6 +648,26 @@
         .g-comment-form { padding: 15px; border-top: 1px solid #eee; display: flex; gap: 10px; background: white; }
         .g-cmt-input { flex: 1; padding: 10px; border-radius: 20px; border: 1px solid #ddd; font-size: 12px; outline: none; }
         .g-cmt-btn { background: var(--primary); color: white; border: none; width: 35px; height: 35px; border-radius: 50%; cursor: pointer; display: flex; align-items: center; justify-content: center; }
+        /* ★追加：削除ボタン（メンバー専用） */
+        .delete-btn {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: #ff4757;
+            color: white;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            cursor: pointer;
+            z-index: 10;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.3);
+            border: 2px solid white;
+        }
+        .delete-btn:hover { transform: scale(1.1); }
     </style>
 </head>
 <body>
@@ -1019,7 +1039,7 @@
         </div>
     </div>
 
-    <div id="rakugaki" class="page">
+<div id="rakugaki" class="page">
         <div class="page-header">
             <div class="page-title-en" style="color:#f1c40f;">GRAFFITI</div>
             <div class="page-title-jp">みんなの黒板落書き</div>
@@ -1039,6 +1059,22 @@
                     <button class="tool-btn" onclick="setEraser()"><i class="fas fa-eraser"></i> 消しゴム</button>
                     <button class="tool-btn" onclick="clearCanvas()"><i class="fas fa-trash"></i> 全消去</button>
                 </div>
+
+                <div id="canvasLockOverlay" style="display:flex; flex-direction:column; align-items:center; justify-content:center; position:absolute; inset:0; background:rgba(0,0,0,0.6); z-index:50; color:white; border-radius:10px;">
+                    <i class="fas fa-lock" style="font-size:40px; margin-bottom:10px;"></i>
+                    <div style="font-weight:bold; font-size:16px;">MEMBER ONLY</div>
+                    <p style="font-size:12px; margin:10px 0;">お絵描き機能は会員限定です</p>
+                    <button class="contact-btn" style="width:auto; padding:8px 20px;" onclick="openLoginModal()">ログインする</button>
+                </div>
+            </div>
+
+            <div style="background:#fff3cd; color:#856404; padding:15px; border-radius:10px; font-size:12px; font-weight:bold; margin-bottom:20px; border:1px solid #ffeeba;">
+                <i class="fas fa-exclamation-triangle"></i> 落書き投稿に関するご注意
+                <ul style="margin:5px 0 0 15px; padding:0;">
+                    <li>公序良俗に反するイラスト、他人を不快にさせる表現は禁止です。</li>
+                    <li>不適切な投稿は、運営（あおはる⭐︎フレンズ）の判断で削除する場合があります。</li>
+                    <li>みんなで楽しく使えるようにご協力お願いします！</li>
+                </ul>
             </div>
 
             <div class="post-form-area">
@@ -1058,13 +1094,12 @@
             <div class="scroll-wrapper">
                 <button class="scroll-btn left" onclick="scrollContent('graffitiList', 'left')">◀</button>
                 <div class="scroll-grid" id="graffitiList">
-                    <div style="padding:20px; color:#999; width:100%; text-align:center;">まだ投稿はありません。一番乗りしよう！</div>
+                    <div style="padding:20px; color:#999; width:100%; text-align:center;">読み込み中...</div>
                 </div>
                 <button class="scroll-btn right" onclick="scrollContent('graffitiList', 'right')">▶</button>
             </div>
         </div>
-    </div>
-    
+    </div>    
     <div class="floating-heart-btn" onclick="spawnHeart()">
         <i class="fas fa-heart"></i>
         <div class="like-badge" id="totalLikeCount">...</div>
@@ -1203,6 +1238,7 @@
     let newsData = [], scheduleData = [], videoData = [], manualLiveData = [], memberVideoData = [];
     let radioBlogData = []; 
     let isMemberLoggedIn = false;
+    let isOfficialAdmin = false; // ★追加：メンバー本人かどうかのフラグ
     let totalLikes = 0;
     let sessionLikes = 0;
     let likeSyncTimer = null;
@@ -1459,21 +1495,48 @@
 
             alert('投稿しました！ギャラリーに追加されたよ！');
             
-            // フォームクリア
+           // フォームクリア
             document.getElementById('graffitiTitle').value = '';
             ctx.clearRect(0, 0, canvas.width, canvas.height);
+        } // ★★★ ここで postGraffiti を閉じる！ ★★★
+
+        // ★追加：黒板のロック制御（外に出す）
+        function checkCanvasLock() {
+            const overlay = document.getElementById('canvasLockOverlay');
+            if (overlay) {
+                // ログインしていればロック画面を隠す、していなければ表示
+                overlay.style.display = isMemberLoggedIn ? 'none' : 'flex';
+            }
+        }
+        // ギャラリーリスト描画
+    function renderGraffitiList() {
+        const list = document.getElementById('graffitiList');
+        
+        // ★修正1：未ログイン時のブロック
+        if (!isMemberLoggedIn) {
+            list.innerHTML = `
+                <div style="display:flex; flex-direction:column; align-items:center; justify-content:center; width:100%; height:200px; background:#eee; border-radius:10px; color:#555;">
+                    <i class="fas fa-lock" style="font-size:30px; margin-bottom:10px;"></i>
+                    <div style="font-weight:bold;">MEMBER ONLY</div>
+                    <div style="font-size:12px;">みんなの作品を見るには<br>ログインしてください</div>
+                </div>`;
+            return;
         }
 
-        // ギャラリーリスト描画
-        function renderGraffitiList() {
-            const list = document.getElementById('graffitiList');
-            if(graffitiPosts.length === 0) {
-                list.innerHTML = '<div style="padding:20px; color:#999; width:100%; text-align:center;">まだ投稿はありません。一番乗りしよう！</div>';
-                return;
-            }
+        if(graffitiPosts.length === 0) {
+            list.innerHTML = '<div style="padding:20px; color:#999; width:100%; text-align:center;">まだ投稿はありません。一番乗りしよう！</div>';
+            return;
+        }
 
-            list.innerHTML = graffitiPosts.map((post, index) => `
-                <div class="graffiti-card" onclick="openGraffitiDetail(${index})">
+        list.innerHTML = graffitiPosts.map((post, index) => {
+            // ★修正2：管理者（メンバー）なら削除ボタンを表示
+            const deleteBtn = isOfficialAdmin 
+                ? `<div class="delete-btn" onclick="deleteGraffiti(event, ${post.id})"><i class="fas fa-trash"></i></div>` 
+                : '';
+
+            return `
+                <div class="graffiti-card" onclick="openGraffitiDetail(${index})" style="position:relative;">
+                    ${deleteBtn}
                     <div class="g-img-box">
                         <img src="${post.image}" class="g-img">
                     </div>
@@ -1485,9 +1548,25 @@
                         </div>
                     </div>
                 </div>
-            `).join('');
+            `;
+        }).join('');
+    }
+// ★追加：削除機能（メンバー限定）
+    function deleteGraffiti(event, id) {
+        event.stopPropagation(); // 詳細モーダルが開くのを防ぐ
+        
+        if (!isOfficialAdmin) {
+            alert("削除権限がありません！");
+            return;
         }
 
+        if (confirm("【メンバー限定機能】\n本当にこの投稿を削除しますか？\n（いたずら投稿への対応など）")) {
+            // IDが一致する投稿を除外して配列を更新
+            graffitiPosts = graffitiPosts.filter(post => post.id !== id);
+            renderGraffitiList(); // リスト再描画
+            alert("削除しました！");
+        }
+    }
         // 詳細モーダルを開く
         function openGraffitiDetail(index) {
             currentViewingIndex = index;
@@ -1626,7 +1705,68 @@
     async function submitRadio() { const name = document.getElementById('radioName').value; const corner = document.getElementById('radioCorner').value; const msg = document.getElementById('radioMessage').value; if(!name || !msg) { alert("ラジオネームとメッセージを入力してね！"); return; } if (!GAS_API_URL) { alert("GAS URL未設定"); return; } const btn = document.querySelector('.radio-btn'); btn.disabled = true; btn.innerText = "送信中..."; try { const url = `${GAS_API_URL}?action=submit_radio&name=${encodeURIComponent(name)}&corner=${encodeURIComponent(corner)}&message=${encodeURIComponent(msg)}`; const res = await fetch(url); const json = await res.json(); if (json.status === 'success') { alert(`送信完了！\nありがとう、${name}さん！`); document.getElementById('radioName').value = ""; document.getElementById('radioMessage').value = ""; } else { alert("送信エラーが発生しました"); } } catch (e) { alert("通信エラーが発生しました"); } finally { btn.disabled = false; btn.innerText = "送信する"; } }
     async function sendContact() { const name = document.getElementById('contactName').value; const email = document.getElementById('contactEmail').value; const type = document.getElementById('contactType').value; const msg = document.getElementById('contactMsg').value; if(!name || !email || !msg) { alert('すべての項目を入力してください'); return; } if (!GAS_API_URL) { alert("GAS URL未設定"); return; } const btn = document.querySelector('.contact-btn'); btn.disabled = true; btn.innerText = "送信中..."; try { const url = `${GAS_API_URL}?action=submit_contact&name=${encodeURIComponent(name)}&email=${encodeURIComponent(email)}&type=${encodeURIComponent(type)}&message=${encodeURIComponent(msg)}`; const res = await fetch(url); const json = await res.json(); if (json.status === 'success') { alert('お問い合わせありがとうございます！\n送信が完了しました。'); document.getElementById('contactMsg').value = ""; } else { alert('送信に失敗しました。'); } } catch(e) { alert('通信エラーが発生しました'); } finally { btn.disabled = false; btn.innerText = "送信する"; } }
     async function registerUser() { const name = document.getElementById('regName').value, email = document.getElementById('regEmail').value, pass = document.getElementById('regPass').value, btn = document.getElementById('regBtn'); if(!name || !email || !pass) { alert("全ての項目を入力してください"); return; } if (!GAS_API_URL) { alert("GAS URL未設定"); return; } btn.innerText = "送信中..."; btn.disabled = true; try { const res = await fetch(`${GAS_API_URL}?action=register&name=${encodeURIComponent(name)}&email=${encodeURIComponent(email)}&pass=${encodeURIComponent(pass)}`); const json = await res.json(); if (json.status === 'success') { alert("登録完了！\n会員ID: " + json.id); closeRegisterModal(); document.getElementById('regName').value = ""; document.getElementById('regEmail').value = ""; document.getElementById('regPass').value = ""; } else { alert("登録エラー: " + json.message); } } catch (e) { alert("通信エラー"); } finally { btn.innerText = "会員登録する"; btn.disabled = false; } }
-    async function loginUser() { const email = document.getElementById('loginEmail').value, pass = document.getElementById('loginPass').value, btn = document.getElementById('loginBtn'); if(!email || !pass) { alert("メールアドレスとパスワードを入力してください"); return; } if (!GAS_API_URL) { alert("GAS URL未設定"); return; } btn.innerText = "確認中..."; btn.disabled = true; try { const res = await fetch(`${GAS_API_URL}?action=login&email=${encodeURIComponent(email)}&pass=${encodeURIComponent(pass)}`); const json = await res.json(); if (json.status === 'success') { alert("ログイン成功！ようこそ " + json.name + " さん！"); closeLoginModal(); const headerBtn = document.getElementById('headerLoginBtn'); headerBtn.innerText = `${json.name} 様`; headerBtn.classList.add('logged-in-user'); headerBtn.onclick = null; isMemberLoggedIn = true; renderMemberVideos(); } else { alert("ログイン失敗: " + json.message); } } catch (e) { alert("通信エラー"); } finally { btn.innerText = "ログインする"; btn.disabled = false; } }
+    async function loginUser() {
+        const email = document.getElementById('loginEmail').value;
+        const pass = document.getElementById('loginPass').value;
+        const btn = document.getElementById('loginBtn');
+
+        // 入力チェック
+        if(!email || !pass) {
+            alert("メールアドレスとパスワードを入力してください");
+            return;
+        }
+        if (!GAS_API_URL) {
+            alert("GAS URL未設定");
+            return;
+        }
+
+        // ボタンを送信中にする
+        btn.innerText = "確認中...";
+        btn.disabled = true;
+
+        try {
+            // サーバーと通信
+            const res = await fetch(`${GAS_API_URL}?action=login&email=${encodeURIComponent(email)}&pass=${encodeURIComponent(pass)}`);
+            const json = await res.json();
+
+            if (json.status === 'success') {
+                // --- ★ ログイン成功時の処理 ★ ---
+                alert("ログイン成功！ようこそ " + json.name + " さん！");
+                closeLoginModal();
+
+                // ヘッダーのボタン表示を変える
+                const headerBtn = document.getElementById('headerLoginBtn');
+                headerBtn.innerText = `${json.name} 様`;
+                headerBtn.classList.add('logged-in-user');
+                headerBtn.onclick = null;
+                
+                // ログイン状態にする
+                isMemberLoggedIn = true;
+
+                // ★★★【ここが追加機能】メンバー本人（管理者）かどうかの判定 ★★★
+                // ログインした名前が、登録されているメンバーデータにあるか探す
+                const matchedMember = memberData.find(m => m.name === json.name);
+                if (matchedMember) {
+                    isOfficialAdmin = true; // 一致したら「削除権限」を与える
+                }
+
+                // ★★★【ここが追加機能】画面の更新 ★★★
+                renderMemberVideos(); // 限定動画の鍵を外す
+                renderGraffitiList(); // 落書きギャラリーの鍵を外す（＆削除ボタン表示）
+                checkCanvasLock();    // 黒板の鍵を外す
+
+            } else {
+                alert("ログイン失敗: " + json.message);
+            }
+        } catch (e) {
+            alert("通信エラー");
+            console.error(e);
+        } finally {
+            // ボタンを元に戻す
+            btn.innerText = "ログインする";
+            btn.disabled = false;
+        }
+    }
 
     function renderNews() { const newsHtml = newsData.map((n, i) => { const imgSrc = n.image ? n.image : "https://placehold.co/600x400/eee/333?text=NEWS"; return `<div class="news-card" onclick="openNewsModal(${i})"><div class="news-thumb-area"><span class="news-badge" style="background:${getTagColor(n.tag)}">${n.tag}</span><img src="${imgSrc}" class="news-img"></div><div class="news-content"><div class="news-date">${n.date}</div><div class="news-title">${n.title}</div><div class="news-check-btn">CHECK</div></div></div>`; }).join(''); document.getElementById('topNewsList').innerHTML = newsHtml || "まだニュースはありません"; document.getElementById('fullNewsList').innerHTML = newsHtml || "まだニュースはありません"; }
     function renderSchedule() { const topScheduleHtml = scheduleData.map(s => `<div class="schedule-card"><div class="sch-thumb-box"><div class="sch-date-big">${s.date}</div><div class="sch-time-big">${s.time}</div></div><div class="sch-info"><span class="sch-badge-mini">配信</span><div class="sch-title">${s.content}</div></div></div>`).join(''); document.getElementById('topScheduleList').innerHTML = topScheduleHtml || "予定はありません"; document.getElementById('scheduleList').innerHTML = scheduleData.map(s => ` <div class="timeline-item"> <div class="tl-icon-box"><div class="tl-icon"><i class="fas fa-video"></i></div></div> <div class="tl-content"> <div class="tl-date">${s.date} <span style="font-size:12px;color:#888;">${s.time}</span></div> <div class="tl-title">${s.content}</div> <span class="tl-tag">配信</span> </div> </div>`).join(''); }
