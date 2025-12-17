@@ -362,7 +362,19 @@
         .g-modal-author { font-size: 12px; color: #888; display: flex; align-items: center; gap: 5px; }
         .g-comment-list { flex: 1; padding: 15px; overflow-y: auto; background: #f9f9f9; min-height: 200px; }
         .g-comment-item { display: flex; gap: 10px; margin-bottom: 15px; align-items: flex-start; }
-        .g-cmt-icon { width: 35px; height: 35px; border-radius: 50%; background: #ddd; flex-shrink: 0; object-fit: cover; border: 1px solid #ccc; }
+        /* 修正後 */
+.g-cmt-icon {
+    width: 35px;
+    height: 35px;
+    border-radius: 50%;
+    background: #ddd;
+    flex-shrink: 0;
+    object-fit: cover;
+    /* ↓↓↓ この1行を追加してください！ ↓↓↓ */
+    object-position: top center; 
+    /* ↑↑↑ 画像の上の方を基準に表示する設定 ↑↑↑ */
+    border: 1px solid #ccc;
+}
         .g-cmt-body { background: white; padding: 8px 12px; border-radius: 0 12px 12px 12px; box-shadow: 0 2px 5px rgba(0,0,0,0.03); font-size: 13px; position: relative; }
         .g-cmt-name { font-weight: bold; font-size: 11px; color: #888; margin-bottom: 2px; }
         .g-comment-item.is-member .g-cmt-icon { border: 2px solid #f1c40f; box-shadow: 0 0 10px rgba(241, 196, 15, 0.5); }
