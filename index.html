@@ -590,7 +590,43 @@
         .g-info { padding: 10px; }
         .g-title { font-weight: bold; font-size: 14px; margin-bottom: 5px; color: #333; }
         .g-author { font-size: 12px; color: #888; text-align: right; }
+        /* ★★★ 落書き詳細モーダル＆コメント欄 ★★★ */
+        #graffitiModal .modal-content { max-width: 800px; width: 95%; padding: 0; overflow: hidden; display: flex; flex-direction: column; max-height: 90vh; }
+        .g-modal-body { display: flex; flex-direction: column; overflow-y: auto; }
+        @media (min-width: 768px) { .g-modal-body { flex-direction: row; } }
+        
+        .g-modal-img-area { flex: 2; background: #333; display: flex; align-items: center; justify-content: center; padding: 20px; position: relative; }
+        .g-modal-img { max-width: 100%; max-height: 500px; object-fit: contain; box-shadow: 0 0 20px rgba(0,0,0,0.5); }
+        .g-modal-like-btn { 
+            position: absolute; bottom: 20px; right: 20px; 
+            background: rgba(255,255,255,0.9); border-radius: 30px; 
+            padding: 8px 20px; font-weight: bold; cursor: pointer; 
+            box-shadow: 0 4px 10px rgba(0,0,0,0.3); transition: transform 0.2s; 
+            color: #ff4757; font-size: 18px;
+        }
+        .g-modal-like-btn:active { transform: scale(0.9); }
 
+        .g-modal-info-area { flex: 1; background: white; display: flex; flex-direction: column; border-left: 1px solid #eee; }
+        .g-modal-header { padding: 20px; border-bottom: 1px solid #eee; }
+        .g-modal-title { font-size: 18px; font-weight: 900; margin-bottom: 5px; }
+        .g-modal-author { font-size: 12px; color: #888; display: flex; align-items: center; gap: 5px; }
+        
+        /* コメントエリア */
+        .g-comment-list { flex: 1; padding: 15px; overflow-y: auto; background: #f9f9f9; min-height: 200px; }
+        .g-comment-item { display: flex; gap: 10px; margin-bottom: 15px; align-items: flex-start; }
+        .g-cmt-icon { width: 35px; height: 35px; border-radius: 50%; background: #ddd; flex-shrink: 0; object-fit: cover; border: 1px solid #ccc; }
+        .g-cmt-body { background: white; padding: 8px 12px; border-radius: 0 12px 12px 12px; box-shadow: 0 2px 5px rgba(0,0,0,0.03); font-size: 13px; position: relative; }
+        .g-cmt-name { font-weight: bold; font-size: 11px; color: #888; margin-bottom: 2px; }
+        
+        /* ★メンバーコメント用の特別スタイル★ */
+        .g-comment-item.is-member .g-cmt-icon { border: 2px solid #f1c40f; box-shadow: 0 0 10px rgba(241, 196, 15, 0.5); }
+        .g-comment-item.is-member .g-cmt-body { background: #fffbf0; border: 1px solid #f1c40f; }
+        .g-comment-item.is-member .g-cmt-name { color: #f1c40f; }
+        .g-comment-item.is-member .g-cmt-name::after { content: "★OFFICIAL"; background: #f1c40f; color: white; font-size: 9px; padding: 1px 4px; border-radius: 4px; margin-left: 5px; }
+
+        .g-comment-form { padding: 15px; border-top: 1px solid #eee; display: flex; gap: 10px; background: white; }
+        .g-cmt-input { flex: 1; padding: 10px; border-radius: 20px; border: 1px solid #ddd; font-size: 12px; outline: none; }
+        .g-cmt-btn { background: var(--primary); color: white; border: none; width: 35px; height: 35px; border-radius: 50%; cursor: pointer; display: flex; align-items: center; justify-content: center; }
     </style>
 </head>
 <body>
@@ -1042,6 +1078,33 @@
                 <button class="sns-share-btn" onclick="shareOmikuji()"><i class="fab fa-x-twitter"></i> ポストする</button>
                 <button class="save-img-btn" onclick="saveOmikuji()"><i class="fas fa-camera"></i> 保存する</button>
             </div>
+            <div id="graffitiModal" class="modal" onclick="closeGraffitiModal()">
+                    <div class="modal-content" onclick="event.stopPropagation()">
+                        <span class="modal-close-btn" onclick="closeGraffitiModal()" style="z-index: 10; color: white; text-shadow: 0 0 5px black;">×</span>
+                        <div class="g-modal-body">
+                            <div class="g-modal-img-area">
+                                <img id="gDetailImg" src="" class="g-modal-img">
+                                <div class="g-modal-like-btn" onclick="toggleGraffitiLike()">
+                                    <i class="fas fa-heart"></i> <span id="gDetailLikes">0</span>
+                                </div>
+                            </div>
+                            <div class="g-modal-info-area">
+                                <div class="g-modal-header">
+                                    <div id="gDetailTitle" class="g-modal-title">タイトル</div>
+                                    <div class="g-modal-author">
+                                        <i class="fas fa-user-circle"></i> <span id="gDetailAuthor">作者名</span>
+                                    </div>
+                                </div>
+                                <div id="gDetailComments" class="g-comment-list">
+                                    </div>
+                                <div class="g-comment-form">
+                                    <input type="text" id="gCommentInput" class="g-cmt-input" placeholder="コメントを入力...">
+                                    <button class="g-cmt-btn" onclick="submitGraffitiComment()"><i class="fas fa-paper-plane"></i></button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
         </div>
     </div>
 
@@ -1307,26 +1370,179 @@
         link.href = tempCanvas.toDataURL('image/png');
         link.click();
     }
-    function postGraffiti() {
-        const title = document.getElementById('graffitiTitle').value;
-        const name = document.getElementById('graffitiName').value;
-        if(!title || !name) { alert('タイトルとニックネームを入力してください！'); return; }
-        const tempCanvas = document.createElement('canvas');
-        tempCanvas.width = canvas.width;
-        tempCanvas.height = canvas.height;
-        const tCtx = tempCanvas.getContext('2d');
-        tCtx.fillStyle = "#2b4a3c";
-        tCtx.fillRect(0, 0, tempCanvas.width, tempCanvas.height);
-        tCtx.drawImage(canvas, 0, 0);
-        const dataUrl = tempCanvas.toDataURL('image/png');
-        const cardHtml = `<div class="graffiti-card"><div class="g-img-box"><img src="${dataUrl}" class="g-img"></div><div class="g-info"><div class="g-title">${title}</div><div class="g-author">by ${name}</div></div></div>`;
-        const list = document.getElementById('graffitiList');
-        if(list.innerText.includes('まだ投稿はありません')) { list.innerHTML = ''; }
-        list.insertAdjacentHTML('afterbegin', cardHtml);
-        alert('投稿しました！ギャラリーに追加されたよ！');
-        document.getElementById('graffitiTitle').value = '';
-        ctx.clearRect(0, 0, canvas.width, canvas.height);
-    }
+    // --- データ管理用配列 ---
+        let graffitiPosts = []; // 投稿データを保存する配列
+        let currentViewingIndex = -1; // 現在見ている投稿のインデックス
+
+        // 投稿機能（配列に追加してリスト再描画）
+        function postGraffiti() {
+            const title = document.getElementById('graffitiTitle').value;
+            const name = document.getElementById('graffitiName').value;
+            
+            if(!title || !name) {
+                alert('タイトルとニックネームを入力してください！');
+                return;
+            }
+
+            // 黒板背景と合成して画像化
+            const tempCanvas = document.createElement('canvas');
+            tempCanvas.width = canvas.width;
+            tempCanvas.height = canvas.height;
+            const tCtx = tempCanvas.getContext('2d');
+            tCtx.fillStyle = "#2b4a3c";
+            tCtx.fillRect(0, 0, tempCanvas.width, tempCanvas.height);
+            tCtx.drawImage(canvas, 0, 0);
+            const dataUrl = tempCanvas.toDataURL('image/png');
+
+            // データオブジェクト作成
+            const newPost = {
+                id: Date.now(), // ユニークID
+                title: title,
+                author: name,
+                image: dataUrl,
+                likes: 0,
+                comments: [] // コメントリスト
+            };
+
+            // 配列の先頭に追加
+            graffitiPosts.unshift(newPost);
+            
+            // 画面更新
+            renderGraffitiList();
+
+            alert('投稿しました！ギャラリーに追加されたよ！');
+            
+            // フォームクリア
+            document.getElementById('graffitiTitle').value = '';
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+        }
+
+        // ギャラリーリスト描画
+        function renderGraffitiList() {
+            const list = document.getElementById('graffitiList');
+            if(graffitiPosts.length === 0) {
+                list.innerHTML = '<div style="padding:20px; color:#999; width:100%; text-align:center;">まだ投稿はありません。一番乗りしよう！</div>';
+                return;
+            }
+
+            list.innerHTML = graffitiPosts.map((post, index) => `
+                <div class="graffiti-card" onclick="openGraffitiDetail(${index})">
+                    <div class="g-img-box">
+                        <img src="${post.image}" class="g-img">
+                    </div>
+                    <div class="g-info">
+                        <div class="g-title">${post.title}</div>
+                        <div class="g-author">by ${post.author}</div>
+                        <div style="font-size:10px; color:#ff4757; text-align:right; margin-top:5px;">
+                            <i class="fas fa-heart"></i> ${post.likes} <i class="fas fa-comment" style="margin-left:5px; color:#aaa;"></i> ${post.comments.length}
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // 詳細モーダルを開く
+        function openGraffitiDetail(index) {
+            currentViewingIndex = index;
+            const post = graffitiPosts[index];
+            
+            document.getElementById('gDetailImg').src = post.image;
+            document.getElementById('gDetailTitle').innerText = post.title;
+            document.getElementById('gDetailAuthor').innerText = post.author;
+            document.getElementById('gDetailLikes').innerText = post.likes;
+            
+            renderComments(); // コメント描画
+            document.getElementById('graffitiModal').classList.add('open');
+        }
+
+        function closeGraffitiModal() {
+            document.getElementById('graffitiModal').classList.remove('open');
+            renderGraffitiList(); // リストのいいね数などを更新するために再描画
+        }
+
+        // いいね機能
+        function toggleGraffitiLike() {
+            if(currentViewingIndex === -1) return;
+            graffitiPosts[currentViewingIndex].likes++;
+            document.getElementById('gDetailLikes').innerText = graffitiPosts[currentViewingIndex].likes;
+            
+            // ハートエフェクト
+            const btn = document.querySelector('.g-modal-like-btn');
+            btn.style.transform = "scale(1.3)";
+            setTimeout(() => btn.style.transform = "scale(1)", 100);
+        }
+
+        // コメント送信
+        function submitGraffitiComment() {
+            if(currentViewingIndex === -1) return;
+            const input = document.getElementById('gCommentInput');
+            const text = input.value;
+            if(!text) return;
+
+            // ★ここで「メンバー」か「ファン」かを判定★
+            let commenterName = "名無し";
+            let commenterIcon = "icon.png"; // デフォルトアイコン
+            let isOfficialMember = false;
+
+            // ログイン済みの場合
+            if(isMemberLoggedIn) {
+                // 現在のログインユーザー名を取得（簡易的にheaderのボタンから取得）
+                const loginBtnText = document.getElementById('headerLoginBtn').innerText;
+                commenterName = loginBtnText.replace(' 様', ''); // "〇〇 様" から名前だけ抽出
+                
+                // ★メンバー判定ロジック★
+                // ログイン名が「メンバーリスト」にある名前と一致するかチェック
+                const matchingMember = memberData.find(m => m.name === commenterName);
+                if(matchingMember) {
+                    isOfficialMember = true;
+                    commenterIcon = matchingMember.img; // メンバーの立ち絵/アイコンを使用
+                } else {
+                    // 一般会員の場合
+                    commenterIcon = "https://placehold.co/100x100/27C6F5/ffffff?text=FAN";
+                }
+            } else {
+                commenterName = "ゲスト";
+                commenterIcon = "https://placehold.co/100x100/cccccc/ffffff?text=GUEST";
+            }
+
+            // コメントデータ追加
+            graffitiPosts[currentViewingIndex].comments.push({
+                name: commenterName,
+                text: text,
+                icon: commenterIcon,
+                isMember: isOfficialMember
+            });
+
+            input.value = "";
+            renderComments();
+        }
+
+        // コメントリスト描画
+        function renderComments() {
+            const list = document.getElementById('gDetailComments');
+            const comments = graffitiPosts[currentViewingIndex].comments;
+            
+            if(comments.length === 0) {
+                list.innerHTML = '<div style="text-align:center; font-size:12px; color:#ccc; margin-top:20px;">コメントはまだありません</div>';
+                return;
+            }
+
+            list.innerHTML = comments.map(c => `
+                <div class="g-comment-item ${c.isMember ? 'is-member' : ''}">
+                    <img src="${c.icon}" class="g-cmt-icon">
+                    <div class="g-cmt-body">
+                        <div class="g-cmt-name">${c.name}</div>
+                        <div>${c.text}</div>
+                    </div>
+                </div>
+            `).join('');
+            
+            // 一番下までスクロール
+            list.scrollTop = list.scrollHeight;
+        }
+
+        // --- 以下、既存の関数 ---
+        // ※initEasterEggなどが続く...
 
     // --- その他の関数 ---
     function renderStaticParts() { 
