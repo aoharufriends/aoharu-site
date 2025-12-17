@@ -1310,9 +1310,14 @@
         if(confirm("ログアウトしますか？")) { location.reload(); }
     }
 
-    // ★追加：他人のプロフィールを開く（ここが空っぽだったので修正しました！）
+    // ★修正版：ユーザープロフィールを開く（モーダルを閉じる処理を追加！）
     async function openUserProfile(name, event) {
         if(event) event.stopPropagation();
+
+        // ★★★ この2行が重要！開いている画面を閉じてからプロフィールを開く ★★★
+        document.getElementById('graffitiModal').classList.remove('open');
+        document.getElementById('userProfileModal').classList.remove('open'); 
+        // ★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★
 
         // 公式メンバーの場合
         const officialMember = memberData.find(m => m.name === name);
@@ -1439,15 +1444,26 @@
         if (confirm("本当に削除しますか？")) { graffitiPosts = graffitiPosts.filter(post => post.id !== id); renderGraffitiList(); alert("削除しました！"); }
     }
 
+    // ★修正版：落書き詳細を開く（タイトル横の名前クリック対応！）
     function openGraffitiDetail(index) {
         currentViewingIndex = index; const post = graffitiPosts[index];
         document.getElementById('gDetailImg').src = post.image;
         document.getElementById('gDetailTitle').innerText = post.title;
-        document.getElementById('gDetailAuthor').innerText = post.author;
+
+        // ★★★ ここも修正！名前クリックでプロフィールへ ★★★
+        const authorEl = document.getElementById('gDetailAuthor');
+        authorEl.innerText = post.author;
+        const authorContainer = authorEl.parentElement;
+        authorContainer.onclick = function(e) { openUserProfile(post.author, e); };
+        authorContainer.style.cursor = "pointer";
+        authorContainer.style.textDecoration = "underline";
+        // ★★★★★★★★★★★★★★★★★★★★★★★★★
+
         document.getElementById('gDetailLikes').innerText = post.likes;
         renderComments();
         document.getElementById('graffitiModal').classList.add('open');
     }
+
     function closeGraffitiModal() { document.getElementById('graffitiModal').classList.remove('open'); renderGraffitiList(); }
     function toggleGraffitiLike() {
         if(currentViewingIndex === -1) return;
