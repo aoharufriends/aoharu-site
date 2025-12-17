@@ -537,6 +537,35 @@
 
             <div class="logout-btn" onclick="logoutUser()">ログアウト</div>
         </div>
+    </div> 
+
+    <div id="userProfileModal" class="modal" onclick="closeUserProfileModal()">
+        <div class="modal-content" onclick="event.stopPropagation()" style="max-width:350px; padding:0; overflow:hidden; border-radius:20px;">
+            <div style="background: linear-gradient(135deg, var(--primary), #89CFF0); padding: 30px 20px 50px; text-align: center; position:relative;">
+                <span class="modal-close-btn" onclick="closeUserProfileModal()" style="color:white; text-shadow:0 0 5px rgba(0,0,0,0.3);">×</span>
+                <div style="font-family:'Oswald',sans-serif; color:rgba(255,255,255,0.3); font-size:40px; position:absolute; top:10px; left:0; width:100%; pointer-events:none;">PROFILE</div>
+            </div>
+            
+            <div style="margin-top:-40px; text-align:center; padding:0 20px 20px;">
+                <img id="upIcon" src="icon.png" style="width:80px; height:80px; border-radius:50%; border:4px solid white; background:white; object-fit:cover; box-shadow:0 5px 15px rgba(0,0,0,0.1);">
+                <div id="upName" style="font-size:20px; font-weight:900; margin-top:5px; color:#333;">Name</div>
+                <span id="upBadge" style="display:none; background:#f1c40f; color:white; font-size:10px; padding:2px 8px; border-radius:10px; font-weight:bold;">OFFICIAL</span>
+            </div>
+
+            <div style="padding:0 25px 30px; text-align:left;">
+                <div style="font-size:12px; font-weight:bold; color:#888; margin-bottom:5px;">BIO</div>
+                <div id="upBio" style="font-size:14px; line-height:1.6; color:#555; background:#f9f9f9; padding:10px; border-radius:10px; min-height:50px; white-space: pre-wrap;">...</div>
+                
+                <div style="margin-top:20px; display:flex; flex-direction:column; gap:10px;">
+                    <a id="upLinkX" href="#" target="_blank" style="display:none; align-items:center; gap:10px; background:#000; color:white; padding:10px; border-radius:30px; text-decoration:none; font-weight:bold; font-size:12px; justify-content:center;">
+                        <i class="fab fa-x-twitter"></i> X (Twitter)
+                    </a>
+                    <a id="upLinkYt" href="#" target="_blank" style="display:none; align-items:center; gap:10px; background:#ff0000; color:white; padding:10px; border-radius:30px; text-decoration:none; font-weight:bold; font-size:12px; justify-content:center;">
+                        <i class="fab fa-youtube"></i> YouTube / 配信
+                    </a>
+                </div>
+            </div>
+        </div>
     </div>
 
     <div id="top" class="page active">
@@ -1005,7 +1034,7 @@
 
 <script>
     // ★★★ GASのURL（あなたの最新のURLに書き換えてください！） ★★★
-    const GAS_API_URL = "https://script.google.com/macros/s/AKfycbzgyVoCwGlzcZKU0O1CTbEUg9R50EiEI95Id2u-sez9fZCUUJgKTkpfNkjiBWpT1mYYkQ/exec";
+    const GAS_API_URL = "https://script.google.com/macros/s/AKfycbyhkGgRhEKYmfZ_mH_7utkeNGXDnq7fvN6G70zp7e1PsdXb7CCufhp-MJNkw_qVfGNHYw/exec";
 
     let YOUTUBE_API_KEY = ""; 
     let GROUP_CONFIG = {};
@@ -1022,10 +1051,10 @@
     let newsData = [], scheduleData = [], videoData = [], manualLiveData = [], memberVideoData = [];
     let radioBlogData = []; 
     
-    // ★★★ ユーザー状態管理変数（重複なし！） ★★★
-    let isMemberLoggedIn = false;   // ログインしているか
-    let isOfficialAdmin = false;    // 管理者（メンバー本人）か
-    let currentUserData = null;     // ログイン中のユーザー情報（マイページ用）
+    // ★★★ ユーザー状態管理変数 ★★★
+    let isMemberLoggedIn = false;
+    let isOfficialAdmin = false;
+    let currentUserData = null;
 
     let totalLikes = 0;
     let sessionLikes = 0;
@@ -1044,11 +1073,8 @@
             fetchLikes(); 
             initOmikuji(); 
             initEasterEgg(); 
-            
-            // ページ切り替え実行
             handleLocation(); 
             
-            // ローディング画面を消す
             const loader = document.getElementById('loadingScreen');
             if(loader) {
                 loader.classList.add('loaded');
@@ -1076,7 +1102,6 @@
         }
     }
 
-    // --- ページ切り替え（マイページ対応版） ---
     function showPage(pageId, detailName = null, pushHistory = true) {
         document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
         const target = document.getElementById(pageId);
@@ -1086,12 +1111,10 @@
 
             // ★マイページ表示時のデータセット
             if (pageId === 'mypage' && currentUserData) {
-                // 表示用エリアの更新
                 document.getElementById('myIconDisplay').src = currentUserData.icon || 'icon.png';
                 document.getElementById('myNameDisplay').innerText = currentUserData.name;
                 document.getElementById('myIdDisplay').innerText = 'ID: ' + currentUserData.id;
                 
-                // フォームの入力値セット
                 document.getElementById('myNameInput').value = currentUserData.name;
                 document.getElementById('myIconInput').value = currentUserData.icon;
                 document.getElementById('myBioInput').value = currentUserData.bio;
@@ -1103,8 +1126,8 @@
             if(pageId === 'rakugaki') { 
                 setTimeout(() => {
                     initCanvas();
-                    checkCanvasLock();    // ロック確認
-                    renderGraffitiList(); // リスト表示確認
+                    checkCanvasLock();    
+                    renderGraffitiList(); 
                 }, 300); 
             } 
         }
@@ -1126,7 +1149,7 @@
         else if (pageId === 'radio') html += sep + '<span class="bc-current">RADIO</span>'; 
         else if (pageId === 'guideline') html += sep + '<span class="bc-current">GUIDELINE</span>'; 
         else if (pageId === 'rakugaki') html += sep + '<span class="bc-current">GRAFFITI</span>';
-        else if (pageId === 'mypage') html += sep + '<span class="bc-current">MY PAGE</span>'; // ★追加
+        else if (pageId === 'mypage') html += sep + '<span class="bc-current">MY PAGE</span>'; 
         else if (pageId === 'memberDetail') { html += sep + '<a href="javascript:void(0)" onclick="showPage(\'member\')" class="bc-item">MEMBER</a>'; html += sep + '<span class="bc-current">' + (detailName || 'DETAIL') + '</span>'; } 
         container.innerHTML = html; 
     }
@@ -1177,7 +1200,7 @@
         }
     }
 
-    // --- 会員システム（登録・ログイン・編集・ログアウト） ---
+    // --- 会員システム ---
     
     // 1. 会員登録
     async function registerUser() {
@@ -1187,14 +1210,10 @@
         const btn = document.getElementById('regBtn');
 
         if(!name || !email || !pass) { alert("全ての項目を入力してください"); return; }
-
-        // パスワード4文字以上チェック
         if(pass.length < 4) { alert("パスワードは4文字以上で設定してください"); return; }
-
         if (!GAS_API_URL) { alert("GAS URL未設定"); return; }
         
-        btn.innerText = "送信中...";
-        btn.disabled = true;
+        btn.innerText = "送信中..."; btn.disabled = true;
 
         try {
             const res = await fetch(`${GAS_API_URL}?action=register&name=${encodeURIComponent(name)}&email=${encodeURIComponent(email)}&pass=${encodeURIComponent(pass)}`);
@@ -1208,15 +1227,10 @@
             } else {
                 alert("登録エラー: " + json.message);
             }
-        } catch (e) {
-            alert("通信エラー");
-        } finally {
-            btn.innerText = "会員登録する";
-            btn.disabled = false;
-        }
+        } catch (e) { alert("通信エラー"); } finally { btn.innerText = "会員登録する"; btn.disabled = false; }
     }
 
-    // 2. ログイン処理（プロフ情報取得対応）
+    // 2. ログイン
     async function loginUser() {
         const email = document.getElementById('loginEmail').value;
         const pass = document.getElementById('loginPass').value;
@@ -1225,8 +1239,7 @@
         if(!email || !pass) { alert("メールアドレスとパスワードを入力してください"); return; }
         if (!GAS_API_URL) { alert("GAS URL未設定"); return; }
 
-        btn.innerText = "確認中...";
-        btn.disabled = true;
+        btn.innerText = "確認中..."; btn.disabled = true;
 
         try {
             const res = await fetch(`${GAS_API_URL}?action=login&email=${encodeURIComponent(email)}&pass=${encodeURIComponent(pass)}`);
@@ -1236,49 +1249,29 @@
                 alert("ログイン成功！ようこそ " + json.name + " さん！");
                 closeLoginModal();
 
-                // ★ユーザーデータを保存
                 currentUserData = {
-                    id: json.id,
-                    name: json.name,
-                    icon: json.icon,
-                    bio: json.bio,
-                    x: json.x,
-                    yt: json.yt
+                    id: json.id, name: json.name, icon: json.icon, bio: json.bio, x: json.x, yt: json.yt
                 };
 
-                // ヘッダー更新（クリックでマイページへ）
                 const headerBtn = document.getElementById('headerLoginBtn');
                 headerBtn.innerText = `${json.name}`;
                 headerBtn.classList.add('logged-in-user');
                 headerBtn.onclick = () => showPage('mypage');
                 
                 isMemberLoggedIn = true;
-
-                // 管理者チェック
                 const matchedMember = memberData.find(m => m.name === json.name);
                 if (matchedMember) { isOfficialAdmin = true; }
 
-                // 画面更新
-                renderMemberVideos(); 
-                renderGraffitiList(); 
-                checkCanvasLock(); 
-
+                renderMemberVideos(); renderGraffitiList(); checkCanvasLock(); 
             } else {
                 alert("ログイン失敗: " + json.message);
             }
-        } catch (e) {
-            alert("通信エラー");
-            console.error(e);
-        } finally {
-            btn.innerText = "ログインする";
-            btn.disabled = false;
-        }
+        } catch (e) { alert("通信エラー"); } finally { btn.innerText = "ログインする"; btn.disabled = false; }
     }
 
     // 3. プロフィール保存
     async function saveProfile() {
         if (!currentUserData) return;
-
         const name = document.getElementById('myNameInput').value;
         const icon = document.getElementById('myIconInput').value;
         const bio = document.getElementById('myBioInput').value;
@@ -1289,8 +1282,7 @@
         if (!GAS_API_URL) { alert("GAS URL未設定"); return; }
 
         const btn = document.querySelector('.save-btn');
-        btn.innerText = "保存中...";
-        btn.disabled = true;
+        btn.innerText = "保存中..."; btn.disabled = true;
 
         try {
             const url = `${GAS_API_URL}?action=update_profile`
@@ -1300,40 +1292,71 @@
                       + `&bio=${encodeURIComponent(bio)}`
                       + `&x=${encodeURIComponent(x)}`
                       + `&yt=${encodeURIComponent(yt)}`;
-
             const res = await fetch(url);
             const json = await res.json();
 
             if (json.status === 'success') {
                 alert("プロフィールを更新しました！");
-                // 手元のデータを更新
-                currentUserData.name = name;
-                currentUserData.icon = icon;
-                currentUserData.bio = bio;
-                currentUserData.x = x;
-                currentUserData.yt = yt;
-                
-                // ヘッダー名更新
+                currentUserData.name = name; currentUserData.icon = icon; currentUserData.bio = bio; currentUserData.x = x; currentUserData.yt = yt;
                 document.getElementById('headerLoginBtn').innerText = name;
-                // マイページ表示更新
                 document.getElementById('myIconDisplay').src = icon || 'icon.png';
                 document.getElementById('myNameDisplay').innerText = name;
-            } else {
-                alert("エラー: " + json.message);
-            }
-        } catch (e) {
-            alert("通信エラーが発生しました");
-        } finally {
-            btn.innerText = "変更を保存する";
-            btn.disabled = false;
-        }
+            } else { alert("エラー: " + json.message); }
+        } catch (e) { alert("通信エラーが発生しました"); } finally { btn.innerText = "変更を保存する"; btn.disabled = false; }
     }
 
     // 4. ログアウト
     function logoutUser() {
-        if(confirm("ログアウトしますか？")) {
-            location.reload(); 
+        if(confirm("ログアウトしますか？")) { location.reload(); }
+    }
+
+    // ★追加：他人のプロフィールを開く（ここが空っぽだったので修正しました！）
+    async function openUserProfile(name, event) {
+        if(event) event.stopPropagation();
+
+        // 公式メンバーの場合
+        const officialMember = memberData.find(m => m.name === name);
+        if (officialMember) {
+            const index = memberData.indexOf(officialMember);
+            openMemberDetail(index);
+            return;
         }
+
+        // 一般ユーザーの場合
+        document.getElementById('upName').innerText = "Loading...";
+        document.getElementById('upBio').innerText = "データを取得中...";
+        document.getElementById('upIcon').src = "icon.png";
+        document.getElementById('upBadge').style.display = "none";
+        document.getElementById('upLinkX').style.display = "none";
+        document.getElementById('upLinkYt').style.display = "none";
+        document.getElementById('userProfileModal').classList.add('open');
+
+        if (!GAS_API_URL) return;
+
+        try {
+            const res = await fetch(`${GAS_API_URL}?action=get_user_profile&name=${encodeURIComponent(name)}`);
+            const json = await res.json();
+
+            if (json.status === 'success') {
+                document.getElementById('upName').innerText = json.name;
+                document.getElementById('upIcon').src = json.icon || "icon.png";
+                document.getElementById('upBio').innerText = json.bio || "自己紹介はまだありません。";
+                
+                const xBtn = document.getElementById('upLinkX');
+                if (json.x) { xBtn.href = json.x; xBtn.style.display = "flex"; }
+                
+                const ytBtn = document.getElementById('upLinkYt');
+                if (json.yt) { ytBtn.href = json.yt; ytBtn.style.display = "flex"; }
+            } else {
+                document.getElementById('upBio').innerText = "ユーザー情報が見つかりませんでした。";
+            }
+        } catch (e) {
+            document.getElementById('upBio').innerText = "通信エラーが発生しました。";
+        }
+    }
+
+    function closeUserProfileModal() {
+        document.getElementById('userProfileModal').classList.remove('open');
     }
 
     // 5. パスワード忘れ
@@ -1351,38 +1374,21 @@
             if (json.status === 'success') {
                 alert("メールを送信しました！\n受信ボックス（または迷惑メールフォルダ）を確認してください。");
                 closeForgotModal(); openLoginModal();
-            } else {
-                alert("エラー: " + json.message);
-            }
+            } else { alert("エラー: " + json.message); }
         } catch (e) { alert("通信エラーが発生しました"); } finally { btn.innerText = "送信する"; btn.disabled = false; }
     }
 
-    // --- 落書き（GRAFFITI）関連 ---
-    let canvas, ctx;
-    let isDrawing = false;
-    let currentColor = "#ffffff";
-    let currentLineWidth = 3;
-    let graffitiPosts = []; 
-    let currentViewingIndex = -1;
+    // --- 落書き機能 ---
+    let canvas, ctx, isDrawing = false, currentColor = "#ffffff", currentLineWidth = 3, graffitiPosts = [], currentViewingIndex = -1;
 
     function initCanvas() {
         const container = document.querySelector('.board-container');
         canvas = document.getElementById('drawCanvas');
         if(!container || !canvas) return;
-
         const rect = container.getBoundingClientRect();
-        canvas.width = rect.width;
-        canvas.height = rect.height;
-        ctx = canvas.getContext('2d');
-        ctx.lineCap = 'round';
-        ctx.lineJoin = 'round';
-        ctx.strokeStyle = currentColor;
-        ctx.lineWidth = currentLineWidth;
-
-        canvas.onmousedown = startDraw;
-        canvas.onmousemove = drawing;
-        canvas.onmouseup = endDraw;
-        canvas.onmouseout = endDraw;
+        canvas.width = rect.width; canvas.height = rect.height;
+        ctx = canvas.getContext('2d'); ctx.lineCap = 'round'; ctx.lineJoin = 'round'; ctx.strokeStyle = currentColor; ctx.lineWidth = currentLineWidth;
+        canvas.onmousedown = startDraw; canvas.onmousemove = drawing; canvas.onmouseup = endDraw; canvas.onmouseout = endDraw;
         canvas.ontouchstart = (e) => { e.preventDefault(); startDraw(e.touches[0]); };
         canvas.ontouchmove = (e) => { e.preventDefault(); drawing(e.touches[0]); };
         canvas.ontouchend = endDraw;
@@ -1399,28 +1405,18 @@
         const tCtx = tempCanvas.getContext('2d'); tCtx.fillStyle = "#2b4a3c"; tCtx.fillRect(0, 0, tempCanvas.width, tempCanvas.height); tCtx.drawImage(canvas, 0, 0);
         const link = document.createElement('a'); link.download = 'aoharu_graffiti.png'; link.href = tempCanvas.toDataURL('image/png'); link.click();
     }
-
-    function checkCanvasLock() {
-        const overlay = document.getElementById('canvasLockOverlay');
-        if (overlay) overlay.style.display = isMemberLoggedIn ? 'none' : 'flex';
-    }
+    function checkCanvasLock() { const overlay = document.getElementById('canvasLockOverlay'); if (overlay) overlay.style.display = isMemberLoggedIn ? 'none' : 'flex'; }
 
     function postGraffiti() {
         const title = document.getElementById('graffitiTitle').value;
         const name = document.getElementById('graffitiName').value;
         if(!title || !name) { alert('タイトルとニックネームを入力してください！'); return; }
-        
         const tempCanvas = document.createElement('canvas'); tempCanvas.width = canvas.width; tempCanvas.height = canvas.height;
         const tCtx = tempCanvas.getContext('2d'); tCtx.fillStyle = "#2b4a3c"; tCtx.fillRect(0, 0, tempCanvas.width, tempCanvas.height); tCtx.drawImage(canvas, 0, 0);
-        
-        const newPost = {
-            id: Date.now(), title: title, author: name, image: tempCanvas.toDataURL('image/png'), likes: 0, comments: []
-        };
+        const newPost = { id: Date.now(), title: title, author: name, image: tempCanvas.toDataURL('image/png'), likes: 0, comments: [] };
         graffitiPosts.unshift(newPost);
-        renderGraffitiList();
-        alert('投稿しました！');
-        document.getElementById('graffitiTitle').value = '';
-        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        renderGraffitiList(); alert('投稿しました！');
+        document.getElementById('graffitiTitle').value = ''; ctx.clearRect(0, 0, canvas.width, canvas.height);
     }
 
     function renderGraffitiList() {
@@ -1430,20 +1426,17 @@
             return;
         }
         if(graffitiPosts.length === 0) { list.innerHTML = '<div style="padding:20px; color:#999; width:100%; text-align:center;">まだ投稿はありません。一番乗りしよう！</div>'; return; }
+        
         list.innerHTML = graffitiPosts.map((post, index) => {
             const deleteBtn = isOfficialAdmin ? `<div class="delete-btn" onclick="deleteGraffiti(event, ${post.id})"><i class="fas fa-trash"></i></div>` : '';
-            return `<div class="graffiti-card" onclick="openGraffitiDetail(${index})" style="position:relative;">${deleteBtn}<div class="g-img-box"><img src="${post.image}" class="g-img"></div><div class="g-info"><div class="g-title">${post.title}</div><div class="g-author">by ${post.author}</div><div style="font-size:10px; color:#ff4757; text-align:right; margin-top:5px;"><i class="fas fa-heart"></i> ${post.likes} <i class="fas fa-comment" style="margin-left:5px; color:#aaa;"></i> ${post.comments.length}</div></div></div>`;
+            return `<div class="graffiti-card" onclick="openGraffitiDetail(${index})" style="position:relative;">${deleteBtn}<div class="g-img-box"><img src="${post.image}" class="g-img"></div><div class="g-info"><div class="g-title">${post.title}</div><div class="g-author" onclick="openUserProfile('${post.author}', event)" style="cursor:pointer; text-decoration:underline;">by ${post.author}</div><div style="font-size:10px; color:#ff4757; text-align:right; margin-top:5px;"><i class="fas fa-heart"></i> ${post.likes} <i class="fas fa-comment" style="margin-left:5px; color:#aaa;"></i> ${post.comments.length}</div></div></div>`;
         }).join('');
     }
 
     function deleteGraffiti(event, id) {
         event.stopPropagation();
         if (!isOfficialAdmin) { alert("削除権限がありません！"); return; }
-        if (confirm("本当に削除しますか？")) {
-            graffitiPosts = graffitiPosts.filter(post => post.id !== id);
-            renderGraffitiList();
-            alert("削除しました！");
-        }
+        if (confirm("本当に削除しますか？")) { graffitiPosts = graffitiPosts.filter(post => post.id !== id); renderGraffitiList(); alert("削除しました！"); }
     }
 
     function openGraffitiDetail(index) {
@@ -1465,27 +1458,24 @@
     function submitGraffitiComment() {
         if(currentViewingIndex === -1) return;
         const input = document.getElementById('gCommentInput'); const text = input.value; if(!text) return;
-        
         let commenterName = "名無し", commenterIcon = "icon.png", isOfficial = false;
         if(isMemberLoggedIn && currentUserData) {
             commenterName = currentUserData.name;
-            // 管理者の場合のみ、専用アイコン等を使えるように判定
             const matchingMember = memberData.find(m => m.name === commenterName);
             if(matchingMember) { isOfficial = true; commenterIcon = matchingMember.img; }
             else if(currentUserData.icon) { commenterIcon = currentUserData.icon; }
         }
-        
         graffitiPosts[currentViewingIndex].comments.push({ name: commenterName, text: text, icon: commenterIcon, isMember: isOfficial });
         input.value = ""; renderComments();
     }
     function renderComments() {
         const list = document.getElementById('gDetailComments'); const comments = graffitiPosts[currentViewingIndex].comments;
         if(comments.length === 0) { list.innerHTML = '<div style="text-align:center; font-size:12px; color:#ccc; margin-top:20px;">コメントはまだありません</div>'; return; }
-        list.innerHTML = comments.map(c => `<div class="g-comment-item ${c.isMember ? 'is-member' : ''}"><img src="${c.icon}" class="g-cmt-icon"><div class="g-cmt-body"><div class="g-cmt-name">${c.name}</div><div>${c.text}</div></div></div>`).join('');
+        list.innerHTML = comments.map(c => `<div class="g-comment-item ${c.isMember ? 'is-member' : ''}"><img src="${c.icon}" class="g-cmt-icon" onclick="openUserProfile('${c.name}', event)" style="cursor:pointer;"><div class="g-cmt-body"><div class="g-cmt-name" onclick="openUserProfile('${c.name}', event)" style="cursor:pointer; text-decoration:underline;">${c.name}</div><div>${c.text}</div></div></div>`).join('');
         list.scrollTop = list.scrollHeight;
     }
-// --- ★★★ ここから追加：表示用関数（これが抜けていました！） ★★★ ---
 
+    // --- 表示関数 ---
     function renderNews() { 
         const newsHtml = newsData.map((n, i) => { 
             const imgSrc = n.image ? n.image : "https://placehold.co/600x400/eee/333?text=NEWS"; 
@@ -1496,23 +1486,19 @@
         if(topList) topList.innerHTML = newsHtml || "まだニュースはありません"; 
         if(fullList) fullList.innerHTML = newsHtml || "まだニュースはありません"; 
     }
-
     function renderSchedule() { 
         const topScheduleHtml = scheduleData.map(s => `<div class="schedule-card"><div class="sch-thumb-box"><div class="sch-date-big">${s.date}</div><div class="sch-time-big">${s.time}</div></div><div class="sch-info"><span class="sch-badge-mini">配信</span><div class="sch-title">${s.content}</div></div></div>`).join(''); 
         const tlHtml = scheduleData.map(s => ` <div class="timeline-item"> <div class="tl-icon-box"><div class="tl-icon"><i class="fas fa-video"></i></div></div> <div class="tl-content"> <div class="tl-date">${s.date} <span style="font-size:12px;color:#888;">${s.time}</span></div> <div class="tl-title">${s.content}</div> <span class="tl-tag">配信</span> </div> </div>`).join('');
-        
         const topList = document.getElementById('topScheduleList');
         const schList = document.getElementById('scheduleList');
         if(topList) topList.innerHTML = topScheduleHtml || "予定はありません"; 
         if(schList) schList.innerHTML = tlHtml;
     }
-
     function renderVideos() { 
         const videoHtml = videoData.map(v => `<div class="video-card" onclick="window.open('https://www.youtube.com/watch?v=${v.id}', '_blank')"><div class="video-thumb-box"><img src="https://img.youtube.com/vi/${v.id}/mqdefault.jpg" class="video-thumb"><div class="play-icon">▶</div></div><div class="video-info"><div class="video-title">${v.title}</div><div class="video-date">${v.date}</div></div></div>`).join(''); 
         const list = document.getElementById('topVideoList');
         if(list) list.innerHTML = videoHtml || "動画はまだありません"; 
     }
-
     function renderMemberVideos() { 
         const container = document.getElementById('memberVideoList'); 
         if(!memberVideoData.length) { container.innerHTML = "限定動画はまだありません"; return; } 
@@ -1524,7 +1510,6 @@
         }).join(''); 
         container.innerHTML = html; 
     }
-
     function renderRadioDiary() { 
         const container = document.getElementById('radioDiaryList'); 
         if (!radioBlogData || radioBlogData.length === 0) { container.innerHTML = '<p style="text-align:center;color:#888;">まだ日記はありません</p>'; return; } 
@@ -1533,63 +1518,35 @@
                 return ` <div class="diary-card" onclick="openLoginModal()" style="cursor:pointer; position:relative; overflow:hidden;"> <div style="filter: blur(6px); opacity: 0.6; pointer-events: none;"> <div class="diary-icon" style="background:#ddd;"></div> <div class="diary-content"> <div class="diary-name">SECRET MEMBER</div> <div class="diary-text">このコンテンツは会員限定です。<br>ログインすると閲覧できます。</div> <div class="diary-date">----.--.--</div> </div> </div> <div style="position:absolute; top:50%; left:50%; transform:translate(-50%,-50%); text-align:center; width:100%; z-index:2;"> <i class="fas fa-lock" style="font-size:24px; color:#555; margin-bottom:5px;"></i> <div style="font-weight:bold; font-size:12px; color:#555;">MEMBER ONLY</div> </div> </div> `; 
             } 
             let iconSrc = "icon.png"; let imgPos = "top center"; 
-            if (memberData && memberData.length > 0) { 
-                const targetMember = memberData.find(m => m.name === d.name); 
-                if (targetMember) { 
-                    if(targetMember.img) iconSrc = targetMember.img; 
-                    // if(targetMember.icon_pos) imgPos = targetMember.icon_pos; 
-                } 
-            } 
+            if (memberData && memberData.length > 0) { const targetMember = memberData.find(m => m.name === d.name); if (targetMember) { if(targetMember.img) iconSrc = targetMember.img; } } 
             if (d.img && d.img !== "") iconSrc = d.img; 
             const voicePlayer = d.voice ? `<div class="diary-voice-player" onclick="playVoice(this, '${d.voice}')"> <i class="fas fa-play voice-icon"></i> <span class="voice-time">限定ボイス</span> </div>` : ''; 
             return ` <div class="diary-card"> <div class="diary-icon" style="background-image: url('${iconSrc}'); background-position: ${imgPos};"></div> <div class="diary-content"> <div class="diary-name">${d.name}</div> <div class="diary-text">${d.text}</div> ${voicePlayer} <div class="diary-date">${d.date}</div> </div> </div> `; 
         }).join(''); 
     }
 
-    // ボイス再生
-    let currentAudio = null;
-    let currentBtn = null;
+    let currentAudio = null; let currentBtn = null;
     function playVoice(btn, url) { 
         if (currentBtn === btn && currentAudio) { currentAudio.pause(); resetPlayer(); return; } 
         if (currentAudio) { currentAudio.pause(); resetPlayer(); } 
-        const audio = new Audio(url); 
-        audio.volume = 0.5; 
-        btn.classList.add('playing'); 
-        const icon = btn.querySelector('.voice-icon');
-        const label = btn.querySelector('.voice-time');
-        if(icon) icon.className = 'fas fa-stop voice-icon'; 
-        if(label) label.innerText = 'STOP'; 
-        
+        const audio = new Audio(url); audio.volume = 0.5; btn.classList.add('playing'); 
+        const icon = btn.querySelector('.voice-icon'); const label = btn.querySelector('.voice-time');
+        if(icon) icon.className = 'fas fa-stop voice-icon'; if(label) label.innerText = 'STOP'; 
         audio.play().catch(e => { console.error("再生エラー", e); alert("音声ファイルが再生できませんでした"); resetPlayer(); }); 
-        audio.onended = resetPlayer; 
-        currentAudio = audio; 
-        currentBtn = btn; 
+        audio.onended = resetPlayer; currentAudio = audio; currentBtn = btn; 
     }
     function resetPlayer() { 
-        if (currentBtn) { 
-            currentBtn.classList.remove('playing'); 
-            const icon = currentBtn.querySelector('.voice-icon');
-            const label = currentBtn.querySelector('.voice-time');
-            if(icon) icon.className = 'fas fa-play voice-icon'; 
-            if(label) label.innerText = 'PLAY'; 
-        } 
-        currentAudio = null; 
-        currentBtn = null; 
+        if (currentBtn) { currentBtn.classList.remove('playing'); const icon = currentBtn.querySelector('.voice-icon'); const label = currentBtn.querySelector('.voice-time'); if(icon) icon.className = 'fas fa-play voice-icon'; if(label) label.innerText = 'PLAY'; } 
+        currentAudio = null; currentBtn = null; 
     }
 
-    function checkLiveStatus() {
-        // 必要に応じてライブ状況取得処理を記述
-    }
-
-    // --- その他（静的パーツ、おみくじ等） ---
+    // --- その他 ---
     function renderStaticParts() { 
         const twLink = document.getElementById('groupTwitterLink'); const ytLink = document.getElementById('groupYoutubeLink'); const footerTwLink = document.getElementById('footerTwitterLink'); const footerYtLink = document.getElementById('footerYoutubeLink');
         if(GROUP_CONFIG.twitterUrl) { twLink.href = GROUP_CONFIG.twitterUrl; footerTwLink.href = GROUP_CONFIG.twitterUrl; }
         if(GROUP_CONFIG.youtubeChannelId) { const ytUrl = `https://www.youtube.com/channel/${GROUP_CONFIG.youtubeChannelId}`; ytLink.href = ytUrl; footerYtLink.href = ytUrl; }
         if(memberData.length > 0) { const memberHtml = memberData.map((m, i) => `<div class="member-card-vertical" onclick="openMemberDetail(${i})" style="--member-color: ${m.color}; --member-bg: url('${m.bgImg}');"><div class="member-img-wrapper"><img src="${m.img}" class="member-img-tachie"></div><a href="javascript:void(0)" class="member-link-overlay"></a></div>`).join(''); document.getElementById('topMemberList').innerHTML = memberHtml; document.getElementById('memberGrid').innerHTML = memberHtml; }
     }
-    
-    // 他の機能（省略せず記載）
     function openNewsModal(index) { const data = newsData[index]; document.getElementById('modalDate').innerText = data.date; const tagEl = document.getElementById('modalTag'); tagEl.innerText = data.tag; tagEl.style.background = getTagColor(data.tag); document.getElementById('modalTitle').innerText = data.title; document.getElementById('modalBody').innerText = data.detail || data.title; document.getElementById('newsModal').classList.add('open'); }
     function closeNewsModal() { document.getElementById('newsModal').classList.remove('open'); }
     function openLoginModal() { document.getElementById('loginModal').classList.add('open'); }
@@ -1604,21 +1561,9 @@
     function selectOshi(index) { const m = memberData[index]; document.querySelectorAll('.oshi-btn').forEach((b, i) => b.classList.toggle('selected', i === index)); const card = document.getElementById('digitalCard'); if(card) { card.style.setProperty('--card-color', m.color); const bottom = m.card_bottom || "-20px"; const right = m.card_right || "-50px"; const width = m.card_width || "280px"; card.style.setProperty('--char-bottom', bottom); card.style.setProperty('--char-right', right); card.style.setProperty('--char-width', width); document.getElementById('cardOshiDisplay').innerText = m.name; document.getElementById('cardCharImg').src = m.img; } }
     function updateCard() { const val = document.getElementById('cardNameInput').value; const display = document.getElementById('cardNameDisplay'); if(display) display.innerText = val ? val : 'GUEST'; }
     function downloadCard() { const card = document.getElementById('digitalCard'); html2canvas(card, { scale: 3, backgroundColor: null, useCORS: true }).then(canvas => { const link = document.createElement('a'); link.download = 'aoharu_card.png'; link.href = canvas.toDataURL('image/png'); link.click(); }); }
-    
-    function openMemberDetail(index, pushHistory = true) { const m = memberData[index]; const detailContainer = document.getElementById('memberDetail'); const twitchLink = m.twitchId ? `<a href="https://www.twitch.tv/${m.twitchId}" target="_blank" class="p-btn" style="background:#9146FF;color:white;box-shadow:0 5px 15px rgba(145,70,255,0.3);"><i class="fab fa-twitch"></i> Twitch</a>` : ''; const twitterLink = m.twitterId ? `https://x.com/${m.twitterId}` : '#'; let voiceHtml = ''; const voices = [ { url: m.voice1 || m.voice, title: m.title1 || "自己紹介", time: "0:10" }, { url: m.voice2, title: m.title2 || "ご挨拶", time: "0:05" }, { url: m.voice3, title: m.title3 || "システム音", time: "0:03" } ]; const activeVoices = voices.filter(v => v.url); if (activeVoices.length > 0) { const voiceItems = activeVoices.map((v, i) => ` <div class="voice-card" onclick="playVoice(this, '${v.url}')"> <i class="fas fa-play voice-icon"></i> <span class="voice-title">${v.title}</span> <span class="voice-time">PLAY</span> </div> `).join(''); voiceHtml = ` <div class="voice-section"> <div style="font-weight:bold; color:var(--m-color); margin-bottom:10px; border-bottom:2px dashed var(--m-color); padding-bottom:5px; display:inline-block;"> <i class="fas fa-microphone-alt"></i> SAMPLE VOICE </div> <div class="voice-grid">${voiceItems}</div> </div> `; } detailContainer.innerHTML = ` <div class="member-bg-layer" style="background-image: url('${m.img}');"></div> <div class="profile-header-bg" style="--m-color: ${m.color}; --m-color-light: ${m.color}20;"> <div class="profile-wrapper"> <div class="profile-visual"> <img src="${m.img}" class="profile-tachie" alt="${m.name}"> </div> <div class="profile-info"> <div class="profile-en-name">${m.enName || 'MEMBER'}</div> <div class="profile-jp-name">${m.name}</div> <div class="profile-catch">${m.catchphrase || ''}</div> <div class="profile-data-list"> <div class="p-data-item"><span class="p-label">誕生日</span><span class="p-value">${m.birthday || '-'}</span></div> <div class="p-data-item"><span class="p-label">身長</span><span class="p-value">${m.height || '-'}</span></div> <div class="p-data-item"><span class="p-label">ファンネーム</span><span class="p-value copy-tag" onclick="copyText('${m.fanName}')">${m.fanName || '-'} <i class="far fa-copy copy-icon"></i></span></div> <div class="p-data-item"><span class="p-label">ファンアートタグ</span><span class="p-value copy-tag" style="color:var(--m-color)" onclick="copyText('${m.hashTag}')">${m.hashTag || '-'} <i class="far fa-copy copy-icon"></i></span></div> </div> <div class="profile-bio">${m.bio || ''}</div> ${voiceHtml} <div class="profile-actions"> <a href="${m.youtubeId ? 'https://www.youtube.com/channel/' + m.youtubeId : '#'}" target="_blank" class="p-btn yt"><i class="fab fa-youtube"></i> YouTube</a> ${twitchLink} <a href="${twitterLink}" target="_blank" class="p-btn x"><i class="fab fa-x-twitter"></i> X</a> </div> <div style="text-align:right;"> <span class="back-link" onclick="showPage('member')">◀ MEMBER LIST</span> </div> </div> </div> </div> `; if(pushHistory) history.pushState(null, null, '#member_' + index); showPage('memberDetail', m.name, false); }
-    function copyText(text) { navigator.clipboard.writeText(text).then(() => { const toast = document.getElementById('copyToast'); toast.style.display = 'block'; const newOne = toast.cloneNode(true); toast.parentNode.replaceChild(newOne, toast); setTimeout(() => { newOne.style.display = 'none'; }, 2000); }); }
-    async function fetchLikes() { if (!GAS_API_URL) return; try { const res = await fetch(`${GAS_API_URL}?action=get_likes`); const json = await res.json(); totalLikes = json.count || 0; updateLikeDisplay(); } catch (e) { console.error(e); } }
-    function updateLikeDisplay() { document.getElementById('totalLikeCount').innerText = totalLikes + sessionLikes; }
-    function spawnHeart() { const heart = document.createElement('i'); heart.className = 'fas fa-heart heart-particle'; const colors = ['#ff9a9e', '#ff6b6b', '#feca57', '#48dbfb', '#ff9ff3']; heart.style.color = colors[Math.floor(Math.random() * colors.length)]; heart.style.left = (window.innerWidth - 80 + (Math.random() * 40)) + 'px'; heart.style.bottom = '80px'; document.body.appendChild(heart); setTimeout(() => heart.remove(), 1500); sessionLikes++; updateLikeDisplay(); clearTimeout(likeSyncTimer); likeSyncTimer = setTimeout(syncLikes, 2000); }
-    async function syncLikes() { if (sessionLikes === 0) return; const countToSend = sessionLikes; sessionLikes = 0; totalLikes += countToSend; updateLikeDisplay(); if (!GAS_API_URL) return; try { const res = await fetch(`${GAS_API_URL}?action=add_likes&count=${countToSend}`); const json = await res.json(); if (json.total) { totalLikes = json.total; updateLikeDisplay(); } } catch (e) { console.error("Like Sync Error", e); } }
-    async function submitRadio() { const name = document.getElementById('radioName').value; const corner = document.getElementById('radioCorner').value; const msg = document.getElementById('radioMessage').value; if(!name || !msg) { alert("ラジオネームとメッセージを入力してね！"); return; } if (!GAS_API_URL) { alert("GAS URL未設定"); return; } const btn = document.querySelector('.radio-btn'); btn.disabled = true; btn.innerText = "送信中..."; try { const url = `${GAS_API_URL}?action=submit_radio&name=${encodeURIComponent(name)}&corner=${encodeURIComponent(corner)}&message=${encodeURIComponent(msg)}`; const res = await fetch(url); const json = await res.json(); if (json.status === 'success') { alert(`送信完了！\nありがとう、${name}さん！`); document.getElementById('radioName').value = ""; document.getElementById('radioMessage').value = ""; } else { alert("送信エラーが発生しました"); } } catch (e) { alert("通信エラーが発生しました"); } finally { btn.disabled = false; btn.innerText = "送信する"; } }
-    async function sendContact() { const name = document.getElementById('contactName').value; const email = document.getElementById('contactEmail').value; const type = document.getElementById('contactType').value; const msg = document.getElementById('contactMsg').value; if(!name || !email || !msg) { alert('すべての項目を入力してください'); return; } if (!GAS_API_URL) { alert("GAS URL未設定"); return; } const btn = document.querySelector('.contact-btn'); btn.disabled = true; btn.innerText = "送信中..."; try { const url = `${GAS_API_URL}?action=submit_contact&name=${encodeURIComponent(name)}&email=${encodeURIComponent(email)}&type=${encodeURIComponent(type)}&message=${encodeURIComponent(msg)}`; const res = await fetch(url); const json = await res.json(); if (json.status === 'success') { alert('お問い合わせありがとうございます！\n送信が完了しました。'); document.getElementById('contactMsg').value = ""; } else { alert('送信に失敗しました。'); } } catch(e) { alert('通信エラーが発生しました'); } finally { btn.disabled = false; btn.innerText = "送信する"; } }
-    
-    // goods
     function openGoodsModal(index) { const g = goodsData[index]; document.getElementById('goodsModalImg').src = g.img; document.getElementById('goodsModalTitle').innerText = g.name; document.getElementById('goodsModalPrice').innerText = g.price; document.getElementById('goodsModalDesc').innerText = g.detail || "詳細情報はありません。"; document.getElementById('goodsModalLink').href = g.link || "#"; document.getElementById('goodsModal').classList.add('open'); }
     function closeGoodsModal() { document.getElementById('goodsModal').classList.remove('open'); }
     
-    // Omikuji
     function initOmikuji() { const container = document.querySelector('#top .container'); if(container && !document.querySelector('.omikuji-area')) { const omikujiArea = document.createElement('div'); omikujiArea.className = 'omikuji-area'; omikujiArea.innerHTML = ` <div class="omi-deco d-1">✨</div> <div class="omi-deco d-2">💖</div> <div class="omi-title-ribbon">毎日1回運試し！</div> <div class="omi-main-text">あおはるおみくじ</div> <div class="omi-visual-box"><i class="fas fa-box-open"></i></div> <br> <button class="omikuji-btn" onclick="drawOmikuji()">おみくじを引く！</button> <p style="font-size:11px; color:#888; margin-top:15px; font-weight:bold;">※推しメンが出るかも…！？</p> `; const noaSection = document.getElementById('nowOnAirSection'); noaSection.parentNode.insertBefore(omikujiArea, noaSection.nextSibling); } }
     function drawOmikuji() { if(memberData.length === 0) return; const member = memberData[Math.floor(Math.random() * memberData.length)]; const fortune = fortuneTypes[Math.floor(Math.random() * fortuneTypes.length)]; const item = luckyItems[Math.floor(Math.random() * luckyItems.length)]; const comment = fortuneComments[Math.floor(Math.random() * fortuneComments.length)]; currentOmikujiResult = { member, fortune, item, comment }; const animModal = document.getElementById('omikujiAnimModal'); const box = document.getElementById('omiBox'); const slip = document.getElementById('omiSlip'); const particlesContainer = document.getElementById('omiParticles'); particlesContainer.innerHTML = ''; animModal.classList.add('open'); box.classList.add('shaking'); setTimeout(() => { box.classList.remove('shaking'); box.classList.add('pre-burst'); setTimeout(() => { box.classList.remove('pre-burst'); slip.classList.add('coming-out'); animModal.classList.add('burst'); if(typeof spawnConfetti === 'function') spawnConfetti(particlesContainer); setTimeout(() => { animModal.classList.remove('open'); animModal.classList.remove('burst'); slip.classList.remove('coming-out'); showOmikujiResult(); }, 1500); }, 500); }, 2500); }
     function spawnConfetti(container) { const colors = ['#FF512F', '#DD2476', '#FFD700', '#27C6F5', '#ffffff']; const icons = ['fa-star', 'fa-heart', 'fa-music', 'fa-bolt']; for (let i = 0; i < 50; i++) { const el = document.createElement('i'); el.className = `fas ${icons[Math.floor(Math.random() * icons.length)]} confetti`; el.style.color = colors[Math.floor(Math.random() * colors.length)]; el.style.left = '50%'; el.style.top = '50%'; const angle = Math.random() * 360; const dist = 150 + Math.random() * 200; el.style.setProperty('--tx', `${Math.cos(angle * Math.PI / 180) * dist}px`); el.style.setProperty('--ty', `${Math.sin(angle * Math.PI / 180) * dist}px`); el.style.setProperty('--r', `${Math.random() * 720 - 360}deg`); container.appendChild(el); } const shockwave = document.createElement('div'); shockwave.className = 'shockwave'; container.appendChild(shockwave); }
@@ -1626,6 +1571,12 @@
     function closeOmikujiModal() { document.getElementById('omikujiModal').classList.remove('open'); }
     function shareOmikuji() { if(!currentOmikujiResult) return; const text = `【あおはるおみくじ】\n今日の運勢は…「${currentOmikujiResult.fortune}」でした！\nラッキーアイテム：${currentOmikujiResult.item}\n${currentOmikujiResult.member.name}「${currentOmikujiResult.comment}」\n#あおはるフレンズ #あおはるおみくじ`; const url = `https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}&url=${encodeURIComponent(location.href)}`; window.open(url, '_blank'); }
     function saveOmikuji() { const target = document.getElementById('omiCaptureArea'); html2canvas(target, { scale: 3, backgroundColor: null, useCORS: true }).then(canvas => { const link = document.createElement('a'); link.download = 'aoharu_omikuji.png'; link.href = canvas.toDataURL('image/png'); link.click(); }); }
+    async function fetchLikes() { if (!GAS_API_URL) return; try { const res = await fetch(`${GAS_API_URL}?action=get_likes`); const json = await res.json(); totalLikes = json.count || 0; updateLikeDisplay(); } catch (e) { console.error(e); } }
+    function updateLikeDisplay() { document.getElementById('totalLikeCount').innerText = totalLikes + sessionLikes; }
+    function spawnHeart() { const heart = document.createElement('i'); heart.className = 'fas fa-heart heart-particle'; const colors = ['#ff9a9e', '#ff6b6b', '#feca57', '#48dbfb', '#ff9ff3']; heart.style.color = colors[Math.floor(Math.random() * colors.length)]; heart.style.left = (window.innerWidth - 80 + (Math.random() * 40)) + 'px'; heart.style.bottom = '80px'; document.body.appendChild(heart); setTimeout(() => heart.remove(), 1500); sessionLikes++; updateLikeDisplay(); clearTimeout(likeSyncTimer); likeSyncTimer = setTimeout(syncLikes, 2000); }
+    async function syncLikes() { if (sessionLikes === 0) return; const countToSend = sessionLikes; sessionLikes = 0; totalLikes += countToSend; updateLikeDisplay(); if (!GAS_API_URL) return; try { const res = await fetch(`${GAS_API_URL}?action=add_likes&count=${countToSend}`); const json = await res.json(); if (json.total) { totalLikes = json.total; updateLikeDisplay(); } } catch (e) { console.error("Like Sync Error", e); } }
+    async function submitRadio() { const name = document.getElementById('radioName').value; const corner = document.getElementById('radioCorner').value; const msg = document.getElementById('radioMessage').value; if(!name || !msg) { alert("ラジオネームとメッセージを入力してね！"); return; } if (!GAS_API_URL) { alert("GAS URL未設定"); return; } const btn = document.querySelector('.radio-btn'); btn.disabled = true; btn.innerText = "送信中..."; try { const url = `${GAS_API_URL}?action=submit_radio&name=${encodeURIComponent(name)}&corner=${encodeURIComponent(corner)}&message=${encodeURIComponent(msg)}`; const res = await fetch(url); const json = await res.json(); if (json.status === 'success') { alert(`送信完了！\nありがとう、${name}さん！`); document.getElementById('radioName').value = ""; document.getElementById('radioMessage').value = ""; } else { alert("送信エラーが発生しました"); } } catch (e) { alert("通信エラーが発生しました"); } finally { btn.disabled = false; btn.innerText = "送信する"; } }
+    async function sendContact() { const name = document.getElementById('contactName').value; const email = document.getElementById('contactEmail').value; const type = document.getElementById('contactType').value; const msg = document.getElementById('contactMsg').value; if(!name || !email || !msg) { alert('すべての項目を入力してください'); return; } if (!GAS_API_URL) { alert("GAS URL未設定"); return; } const btn = document.querySelector('.contact-btn'); btn.disabled = true; btn.innerText = "送信中..."; try { const url = `${GAS_API_URL}?action=submit_contact&name=${encodeURIComponent(name)}&email=${encodeURIComponent(email)}&type=${encodeURIComponent(type)}&message=${encodeURIComponent(msg)}`; const res = await fetch(url); const json = await res.json(); if (json.status === 'success') { alert('お問い合わせありがとうございます！\n送信が完了しました。'); document.getElementById('contactMsg').value = ""; } else { alert('送信に失敗しました。'); } } catch(e) { alert('通信エラーが発生しました'); } finally { btn.disabled = false; btn.innerText = "送信する"; } }
     function checkLiveStatus() { /* 省略 */ }
     function initEasterEgg() { window.addEventListener('keydown', (e) => { secretInput.push(e.key); if (secretInput.length > secretCode.length) secretInput.shift(); if (JSON.stringify(secretInput) === JSON.stringify(secretCode)) activateFeverMode(); }); const logo = document.getElementById('headerLogo'); if(logo) { logo.addEventListener('click', (e) => { e.preventDefault(); logoTapCount++; if(logoTapCount === 10) { activateFeverMode(); logoTapCount = 0; } setTimeout(() => logoTapCount = 0, 3000); }); } }
     function activateFeverMode() { if(document.body.classList.contains('fever-mode')) return; document.body.classList.add('fever-mode'); const text = document.createElement('div'); text.className = 'fever-text'; text.innerText = "FEVER TIME!!"; document.body.appendChild(text); var duration = 5000; var end = Date.now() + duration; (function frame() { if(typeof confetti === 'function'){ confetti({ particleCount: 2, angle: 60, spread: 55, origin: { x: 0 }, colors: ['#ff0000', '#00ff00', '#0000ff'] }); confetti({ particleCount: 2, angle: 120, spread: 55, origin: { x: 1 }, colors: ['#ff0000', '#00ff00', '#0000ff'] }); } if (Date.now() < end) requestAnimationFrame(frame); else { document.body.classList.remove('fever-mode'); text.remove(); alert("祭りは終わった……"); } }()); }
