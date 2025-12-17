@@ -546,26 +546,47 @@
             background: #2b4a3c; /* 黒板色 */
             border: 10px solid #8B4513; /* 木枠 */
             border-radius: 10px;
-            padding: 20px;
+            /* padding: 20px; ← ★削除（余白をなくす） */
+            padding: 0;       /* ★追加 */
             box-shadow: 0 10px 20px rgba(0,0,0,0.3);
             margin-bottom: 30px;
             position: relative;
+            /* ★追加：黒板の比率を固定（スマホでもPCでも形を維持） */
+            aspect-ratio: 16 / 9; 
+            overflow: hidden; /* 丸角からはみ出さないように */
         }
         .board-container::before {
             content: "DRAWING AREA"; position: absolute; top: -15px; left: 50%; transform: translateX(-50%);
             background: #f1c40f; color: #333; padding: 2px 15px; font-weight: bold; border-radius: 4px; font-size: 12px;
+            z-index: 20; /* ★追加：枠の上に表示 */
         }
         canvas#drawCanvas {
             background: transparent;
             cursor: crosshair;
             display: block;
-            margin: 0 auto;
-            touch-action: none; /* スマホで描くときにスクロールしないように */
+            /* margin: 0 auto; ← ★削除 */
+            touch-action: none;
             background-image: radial-gradient(rgba(255,255,255,0.1) 1px, transparent 1px);
             background-size: 20px 20px;
+            
+            /* ★追加：親要素いっぱいに広げる */
+            width: 100%;
+            height: 100%;
         }
         .paint-tools {
-            display: flex; flex-wrap: wrap; gap: 10px; justify-content: center; margin-top: 15px; background: rgba(255,255,255,0.1); padding: 10px; border-radius: 8px;
+            display: flex; flex-wrap: wrap; gap: 10px; justify-content: center;
+            /* margin-top: 15px; ← ★削除 */
+            background: rgba(255,255,255,0.1); padding: 10px; border-radius: 8px;
+            
+            /* ★追加：キャンバスの上に浮かせて下に配置 */
+            position: absolute;
+            bottom: 10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 90%; /* 横幅調整 */
+            box-sizing: border-box;
+            z-index: 10; /* キャンバスより手前に */
+            pointer-events: auto; /* クリックできるように */
         }
         .color-btn {
             width: 30px; height: 30px; border-radius: 50%; border: 2px solid white; cursor: pointer; transition: transform 0.2s;
@@ -1074,10 +1095,40 @@
                 <div style="margin-top:15px;">ラッキーアイテム：<span id="omiResultItem" class="omi-item"></span></div>
             </div>
 
-            <div class="omi-action-btns">
+<div class="omi-action-btns">
                 <button class="sns-share-btn" onclick="shareOmikuji()"><i class="fab fa-x-twitter"></i> ポストする</button>
                 <button class="save-img-btn" onclick="saveOmikuji()"><i class="fas fa-camera"></i> 保存する</button>
             </div>
+            
+        </div> </div> <div id="graffitiModal" class="modal" onclick="closeGraffitiModal()">
+        <div class="modal-content" onclick="event.stopPropagation()">
+            <span class="modal-close-btn" onclick="closeGraffitiModal()" style="z-index: 10; color: white; text-shadow: 0 0 5px black;">×</span>
+            
+            <div class="g-modal-body">
+                <div class="g-modal-img-area">
+                    <img id="gDetailImg" src="" class="g-modal-img">
+                    <div class="g-modal-like-btn" onclick="toggleGraffitiLike()">
+                        <i class="fas fa-heart"></i> <span id="gDetailLikes">0</span>
+                    </div>
+                </div>
+                
+                <div class="g-modal-info-area">
+                    <div class="g-modal-header">
+                        <div id="gDetailTitle" class="g-modal-title">タイトル</div>
+                        <div class="g-modal-author">
+                            <i class="fas fa-user-circle"></i> <span id="gDetailAuthor">作者名</span>
+                        </div>
+                    </div>
+                    <div id="gDetailComments" class="g-comment-list">
+                        </div>
+                    <div class="g-comment-form">
+                        <input type="text" id="gCommentInput" class="g-cmt-input" placeholder="コメントを入力...">
+                        <button class="g-cmt-btn" onclick="submitGraffitiComment()"><i class="fas fa-paper-plane"></i></button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
             <div id="graffitiModal" class="modal" onclick="closeGraffitiModal()">
                     <div class="modal-content" onclick="event.stopPropagation()">
                         <span class="modal-close-btn" onclick="closeGraffitiModal()" style="z-index: 10; color: white; text-shadow: 0 0 5px black;">×</span>
@@ -1280,7 +1331,7 @@
         container.innerHTML = html; 
     }
 
-    // --- ★★★ 修正ポイント2：キャンバス初期化の安全策 ★★★ ---
+// --- ★★★ 修正ポイント2：キャンバス初期化の安全策 ★★★ ---
     let canvas, ctx;
     let isDrawing = false;
     let currentColor = "#ffffff";
@@ -1289,23 +1340,25 @@
     function initCanvas() {
         const container = document.querySelector('.board-container');
         canvas = document.getElementById('drawCanvas');
-        if(!container || !canvas) return; // 要素がない場合は終了
+        if(!container || !canvas) return;
 
-        // サイズ計算（エラー防止：幅が正しく取れない場合はデフォルト値を使う）
-        let w = container.clientWidth - 40;
-        if (w <= 0) w = 600; // 安全策
+        // ★修正箇所：コンテナ（黒板）の実際のサイズを取得してセット
+        // これにより、黒板の枠内すべてにお絵かきできるようになります
+        const rect = container.getBoundingClientRect();
         
-        if(window.innerWidth < 650) {
-            canvas.width = w;
-            canvas.height = w * 0.6;
-        } else {
-            canvas.width = 600; // PCサイズ固定
-            canvas.height = 400;
-        }
+        // キャンバスの描画解像度を表示サイズに合わせる
+        canvas.width = rect.width;
+        canvas.height = rect.height;
 
         ctx = canvas.getContext('2d');
         
-        // イベントリスナー設定（重複登録防止）
+        // 線の設定初期化
+        ctx.lineCap = 'round';
+        ctx.lineJoin = 'round';
+        ctx.strokeStyle = currentColor;
+        ctx.lineWidth = currentLineWidth;
+
+        // イベントリスナー設定（変更なし）
         canvas.onmousedown = startDraw;
         canvas.onmousemove = drawing;
         canvas.onmouseup = endDraw;
@@ -1314,13 +1367,7 @@
         canvas.ontouchstart = (e) => { e.preventDefault(); startDraw(e.touches[0]); };
         canvas.ontouchmove = (e) => { e.preventDefault(); drawing(e.touches[0]); };
         canvas.ontouchend = endDraw;
-        
-        ctx.lineCap = 'round';
-        ctx.lineJoin = 'round';
-        ctx.strokeStyle = currentColor;
-        ctx.lineWidth = currentLineWidth;
     }
-
     function startDraw(e) {
         isDrawing = true;
         ctx.beginPath();
