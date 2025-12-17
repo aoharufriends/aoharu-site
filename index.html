@@ -1652,15 +1652,31 @@ function postGraffiti() {
     }
 
     function closeGraffitiModal() { document.getElementById('graffitiModal').classList.remove('open'); renderGraffitiList(); }
-    function toggleGraffitiLike() {
+function toggleGraffitiLike() {
         if(currentViewingIndex === -1) return;
+        
+        // いいねを増やす
         graffitiPosts[currentViewingIndex].likes++;
+        
+        // 画面の数字を更新
         document.getElementById('gDetailLikes').innerText = graffitiPosts[currentViewingIndex].likes;
-        const btn = document.querySelector('.g-modal-like-btn'); btn.style.transform = "scale(1.3)"; setTimeout(() => btn.style.transform = "scale(1)", 100);
+        
+        // ★★★ 【追加】 ここで保存しないとリロードで消えます！ ★★★
+        localStorage.setItem('aoharu_graffiti', JSON.stringify(graffitiPosts));
+
+        // アニメーション
+        const btn = document.querySelector('.g-modal-like-btn'); 
+        btn.style.transform = "scale(1.3)"; 
+        setTimeout(() => btn.style.transform = "scale(1)", 100);
     }
-    function submitGraffitiComment() {
+function submitGraffitiComment() {
         if(currentViewingIndex === -1) return;
-        const input = document.getElementById('gCommentInput'); const text = input.value; if(!text) return;
+        
+        const input = document.getElementById('gCommentInput'); 
+        const text = input.value; 
+        if(!text) return;
+        
+        // ユーザー情報の判定
         let commenterName = "名無し", commenterIcon = "icon.png", isOfficial = false;
         if(isMemberLoggedIn && currentUserData) {
             commenterName = currentUserData.name;
@@ -1668,8 +1684,20 @@ function postGraffiti() {
             if(matchingMember) { isOfficial = true; commenterIcon = matchingMember.img; }
             else if(currentUserData.icon) { commenterIcon = currentUserData.icon; }
         }
-        graffitiPosts[currentViewingIndex].comments.push({ name: commenterName, text: text, icon: commenterIcon, isMember: isOfficial });
-        input.value = ""; renderComments();
+        
+        // コメントデータをリストに追加
+        graffitiPosts[currentViewingIndex].comments.push({ 
+            name: commenterName, 
+            text: text, 
+            icon: commenterIcon, 
+            isMember: isOfficial 
+        });
+        
+        // ★★★ 【追加】 ここで保存しないとリロードで消えます！ ★★★
+        localStorage.setItem('aoharu_graffiti', JSON.stringify(graffitiPosts));
+
+        input.value = ""; 
+        renderComments();
     }
     function renderComments() {
         const list = document.getElementById('gDetailComments'); const comments = graffitiPosts[currentViewingIndex].comments;
