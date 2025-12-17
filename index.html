@@ -388,7 +388,22 @@
         .delete-btn:hover { transform: scale(1.1); }
         
         /* ★マイページ用スタイル */
-        .mypage-header { background: linear-gradient(135deg, var(--primary), #89CFF0); padding: 40px 20px; text-align: center; color: white; border-radius: 0 0 30px 30px; margin-bottom: 30px; }
+.mypage-header { 
+    /* ↓↓↓ ここを書き換え ↓↓↓ */
+    background-image: url('mypage_bg.png'); /* 画像のファイル名を指定 */
+    background-size: cover;                 /* 枠いっぱいに画像を表示 */
+    background-position: center;            /* 画像の真ん中を表示 */
+    /* ↑↑↑ ここまで ↑↑↑ */
+
+    padding: 40px 20px; 
+    text-align: center; 
+    color: white; 
+    border-radius: 0 0 30px 30px; 
+    margin-bottom: 30px; 
+    
+    /* 読みやすいように文字に少し影をつけるとお洒落です（お好みで） */
+    text-shadow: 0 2px 5px rgba(0,0,0,0.5);
+}
         .mypage-icon { width: 100px; height: 100px; border-radius: 50%; border: 4px solid white; background: #eee; object-fit: cover; margin-bottom: 10px; cursor: pointer; }
         .mypage-name { font-size: 24px; font-weight: 900; margin-bottom: 5px; }
         .mypage-id { font-size: 12px; opacity: 0.8; font-family: monospace; }
