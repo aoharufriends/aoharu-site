@@ -729,6 +729,10 @@
             <input type="text" id="loginEmail" class="auth-input" placeholder="メールアドレス">
             <input type="password" id="loginPass" class="auth-input" placeholder="パスワード">
             <button class="auth-btn" id="loginBtn" onclick="loginUser()">ログインする</button>
+            
+            <div style="text-align:right; margin-top:10px; font-size:12px;">
+                <a href="javascript:void(0)" onclick="openForgotModal()" style="color:#888;">パスワードを忘れた方はこちら</a>
+            </div>
             <div class="social-login-area">
                 <div class="social-login-label">または SNSでログイン</div>
                 <div class="social-login-btn" onclick="alert('Googleログインは準備中です')"><i class="fab fa-google"></i> Googleでログイン</div>
@@ -738,21 +742,18 @@
         </div>
     </div>
 
-    <div id="registerModal" class="modal" onclick="closeRegisterModal()">
+    <div id="forgotModal" class="modal" onclick="closeForgotModal()">
         <div class="modal-content" onclick="event.stopPropagation()">
-            <span class="modal-close-btn" onclick="closeRegisterModal()">×</span>
-            <div class="auth-title">REGISTER</div>
-            <p style="font-size:12px; color:#888; margin-bottom:15px;">あおはる⭐︎フレンズの会員になって<br>限定コンテンツを楽しもう！</p>
-            <input type="text" id="regName" class="auth-input" placeholder="ニックネーム">
-            <input type="email" id="regEmail" class="auth-input" placeholder="メールアドレス">
-            <input type="password" id="regPass" class="auth-input" placeholder="パスワード">
-            <button class="auth-btn" id="regBtn" onclick="registerUser()">会員登録する</button>
-            <div class="social-login-area">
-                <div class="social-login-label">または SNSで登録</div>
-                <div class="social-login-btn" onclick="alert('Google登録は準備中です')"><i class="fab fa-google"></i> Googleで登録</div>
-                <div class="social-login-btn" onclick="alert('X登録は準備中です')"><i class="fab fa-x-twitter"></i> Xで登録</div>
+            <span class="modal-close-btn" onclick="closeForgotModal()">×</span>
+            <div class="auth-title">PASSWORD RECOVERY</div>
+            <p style="font-size:12px; color:#888; margin-bottom:15px;">登録したメールアドレスを入力してください。<br>パスワードをメールでお知らせします。</p>
+            
+            <input type="email" id="forgotEmail" class="auth-input" placeholder="メールアドレス">
+            <button class="auth-btn" id="forgotBtn" onclick="sendForgotRequest()">送信する</button>
+            
+            <div class="auth-link">
+                <a onclick="closeForgotModal(); openLoginModal();">▶ ログインに戻る</a>
             </div>
-            <div class="auth-link">すでにアカウントをお持ちの方<br><a onclick="switchToLogin()">▶ ログインはこちら</a></div>
         </div>
     </div>
 
@@ -1234,7 +1235,6 @@
     const luckyItems = ["ゲーミングPC", "エナジードリンク", "マイク", "配信機材", "推し活グッズ", "唐揚げ", "ラーメン", "猫", "ヘッドホン", "サイリウム"];
     const fortuneComments = ["今日は最高の配信ができそう！", "ラッキーアイテムを持って待機してね！", "推しの配信を見ると運気アップ！", "今日はゆっくりアーカイブを見よう。", "SNSで推しを布教するといいことあるかも！"];
     let currentOmikujiResult = null; 
-
     let newsData = [], scheduleData = [], videoData = [], manualLiveData = [], memberVideoData = [];
     let radioBlogData = []; 
     let isMemberLoggedIn = false;
@@ -1704,7 +1704,52 @@
     async function syncLikes() { if (sessionLikes === 0) return; const countToSend = sessionLikes; sessionLikes = 0; totalLikes += countToSend; updateLikeDisplay(); if (!GAS_API_URL) return; try { const res = await fetch(`${GAS_API_URL}?action=add_likes&count=${countToSend}`); const json = await res.json(); if (json.total) { totalLikes = json.total; updateLikeDisplay(); } } catch (e) { console.error("Like Sync Error", e); } }
     async function submitRadio() { const name = document.getElementById('radioName').value; const corner = document.getElementById('radioCorner').value; const msg = document.getElementById('radioMessage').value; if(!name || !msg) { alert("ラジオネームとメッセージを入力してね！"); return; } if (!GAS_API_URL) { alert("GAS URL未設定"); return; } const btn = document.querySelector('.radio-btn'); btn.disabled = true; btn.innerText = "送信中..."; try { const url = `${GAS_API_URL}?action=submit_radio&name=${encodeURIComponent(name)}&corner=${encodeURIComponent(corner)}&message=${encodeURIComponent(msg)}`; const res = await fetch(url); const json = await res.json(); if (json.status === 'success') { alert(`送信完了！\nありがとう、${name}さん！`); document.getElementById('radioName').value = ""; document.getElementById('radioMessage').value = ""; } else { alert("送信エラーが発生しました"); } } catch (e) { alert("通信エラーが発生しました"); } finally { btn.disabled = false; btn.innerText = "送信する"; } }
     async function sendContact() { const name = document.getElementById('contactName').value; const email = document.getElementById('contactEmail').value; const type = document.getElementById('contactType').value; const msg = document.getElementById('contactMsg').value; if(!name || !email || !msg) { alert('すべての項目を入力してください'); return; } if (!GAS_API_URL) { alert("GAS URL未設定"); return; } const btn = document.querySelector('.contact-btn'); btn.disabled = true; btn.innerText = "送信中..."; try { const url = `${GAS_API_URL}?action=submit_contact&name=${encodeURIComponent(name)}&email=${encodeURIComponent(email)}&type=${encodeURIComponent(type)}&message=${encodeURIComponent(msg)}`; const res = await fetch(url); const json = await res.json(); if (json.status === 'success') { alert('お問い合わせありがとうございます！\n送信が完了しました。'); document.getElementById('contactMsg').value = ""; } else { alert('送信に失敗しました。'); } } catch(e) { alert('通信エラーが発生しました'); } finally { btn.disabled = false; btn.innerText = "送信する"; } }
-    async function registerUser() { const name = document.getElementById('regName').value, email = document.getElementById('regEmail').value, pass = document.getElementById('regPass').value, btn = document.getElementById('regBtn'); if(!name || !email || !pass) { alert("全ての項目を入力してください"); return; } if (!GAS_API_URL) { alert("GAS URL未設定"); return; } btn.innerText = "送信中..."; btn.disabled = true; try { const res = await fetch(`${GAS_API_URL}?action=register&name=${encodeURIComponent(name)}&email=${encodeURIComponent(email)}&pass=${encodeURIComponent(pass)}`); const json = await res.json(); if (json.status === 'success') { alert("登録完了！\n会員ID: " + json.id); closeRegisterModal(); document.getElementById('regName').value = ""; document.getElementById('regEmail').value = ""; document.getElementById('regPass').value = ""; } else { alert("登録エラー: " + json.message); } } catch (e) { alert("通信エラー"); } finally { btn.innerText = "会員登録する"; btn.disabled = false; } }
+async function registerUser() {
+        const name = document.getElementById('regName').value;
+        const email = document.getElementById('regEmail').value;
+        const pass = document.getElementById('regPass').value;
+        const btn = document.getElementById('regBtn');
+
+        // 1. 未入力チェック
+        if(!name || !email || !pass) {
+            alert("全ての項目を入力してください");
+            return;
+        }
+
+        // ★★★ 追加：パスワード文字数制限（4文字未満は禁止） ★★★
+        if(pass.length < 4) {
+            alert("パスワードは4文字以上で設定してください");
+            return;
+        }
+        // ★★★ ここまで ★★★
+
+        if (!GAS_API_URL) {
+            alert("GAS URL未設定");
+            return;
+        }
+        
+        btn.innerText = "送信中...";
+        btn.disabled = true;
+
+        try {
+            const res = await fetch(`${GAS_API_URL}?action=register&name=${encodeURIComponent(name)}&email=${encodeURIComponent(email)}&pass=${encodeURIComponent(pass)}`);
+            const json = await res.json();
+            if (json.status === 'success') {
+                alert("登録完了！\n会員ID: " + json.id);
+                closeRegisterModal();
+                document.getElementById('regName').value = "";
+                document.getElementById('regEmail').value = "";
+                document.getElementById('regPass').value = "";
+            } else {
+                alert("登録エラー: " + json.message);
+            }
+        } catch (e) {
+            alert("通信エラー");
+        } finally {
+            btn.innerText = "会員登録する";
+            btn.disabled = false;
+        }
+    }
     async function loginUser() {
         const email = document.getElementById('loginEmail').value;
         const pass = document.getElementById('loginPass').value;
@@ -1764,6 +1809,48 @@
         } finally {
             // ボタンを元に戻す
             btn.innerText = "ログインする";
+            btn.disabled = false;
+        }
+    }
+    // ★追加：パスワード忘れモーダルの開閉
+    function openForgotModal() {
+        closeLoginModal();
+        document.getElementById('forgotModal').classList.add('open');
+    }
+    function closeForgotModal() {
+        document.getElementById('forgotModal').classList.remove('open');
+    }
+
+    // ★追加：パスワード再送リクエスト送信
+    async function sendForgotRequest() {
+        const email = document.getElementById('forgotEmail').value;
+        const btn = document.getElementById('forgotBtn');
+
+        if (!email) {
+            alert("メールアドレスを入力してください");
+            return;
+        }
+        if (!GAS_API_URL) { alert("GAS URL未設定"); return; }
+
+        btn.innerText = "送信中...";
+        btn.disabled = true;
+
+        try {
+            // GASに問い合わせ（action=forgot_pass）
+            const res = await fetch(`${GAS_API_URL}?action=forgot_pass&email=${encodeURIComponent(email)}`);
+            const json = await res.json();
+
+            if (json.status === 'success') {
+                alert("メールを送信しました！\n受信ボックス（または迷惑メールフォルダ）を確認してください。");
+                closeForgotModal();
+                openLoginModal();
+            } else {
+                alert("エラー: " + json.message);
+            }
+        } catch (e) {
+            alert("通信エラーが発生しました");
+        } finally {
+            btn.innerText = "送信する";
             btn.disabled = false;
         }
     }
