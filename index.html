@@ -333,6 +333,7 @@
         @keyframes pulse-voice { 0% { transform: scale(1); } 50% { transform: scale(1.2); } 100% { transform: scale(1); } }
         
         /* 落書き */
+/* ↓↓↓ ここを修正（board-containerを書き換え） ↓↓↓ */
 .board-container { 
     background: #2b4a3c; 
     border: 10px solid #8B4513; 
@@ -342,22 +343,52 @@
     margin-bottom: 30px; 
     position: relative; 
     
-    /* ↓↓↓ ここを変更 ↓↓↓ */
+    /* 修正：中央揃えと幅の設定 */
     width: 100%;
-    aspect-ratio: 3 / 4; /* スマホデフォルトは縦長 */
-    /* ↑↑↑ ここまで ↑↑↑ */
+    max-width: 100%; /* はみ出し防止 */
+    margin-left: auto;
+    margin-right: auto;
+    box-sizing: border-box; /* 枠線を含めたサイズ計算にする */
+
+    aspect-ratio: 3 / 4; /* スマホは縦長 */
     
-    overflow: hidden; 
+    /* 修正：overflow:hiddenを削除し、バッジが見えるようにする */
+    /* overflow: hidden;  <-- 削除 */
+    z-index: 1; /* 重なり順を調整 */
 }
 
-/* ↓↓↓ パソコン画面用の設定を追加 ↓↓↓ */
+/* PC用レイアウト */
 @media (min-width: 768px) {
     .board-container {
-        aspect-ratio: 16 / 9; /* PCなど広い画面では横長に戻す */
+        aspect-ratio: 16 / 9; 
     }
 }
-        .board-container::before { content: "DRAWING AREA"; position: absolute; top: -15px; left: 50%; transform: translateX(-50%); background: #f1c40f; color: #333; padding: 2px 15px; font-weight: bold; border-radius: 4px; font-size: 12px; z-index: 20; }
-        canvas#drawCanvas { background: transparent; cursor: crosshair; display: block; touch-action: none; background-image: radial-gradient(rgba(255,255,255,0.1) 1px, transparent 1px); background-size: 20px 20px; width: 100%; height: 100%; }
+
+/* ↓↓↓ バッジ（黄色い表示）の修正 ↓↓↓ */
+.board-container::before { 
+    /* 修正：文字を変更 */
+    content: "あおはる黒板"; 
+    
+    position: absolute; 
+    top: -15px; 
+    left: 50%; 
+    transform: translateX(-50%); 
+    background: #f1c40f; 
+    color: #333; 
+    padding: 4px 20px; /* 少し大きく */
+    font-weight: bold; 
+    border-radius: 4px; 
+    font-size: 14px; 
+    z-index: 20; 
+    box-shadow: 0 2px 5px rgba(0,0,0,0.3);
+    white-space: nowrap; /* 折り返し防止 */
+}
+
+/* ↓↓↓ 追加：キャンバス自体に角丸をつける（overflowを外した代わり） ↓↓↓ */
+canvas#drawCanvas {
+    border-radius: 4px; /* コンテナの内側に合わせる */
+    /* ...既存の設定はそのまま... */
+}
         .paint-tools { display: flex; flex-wrap: wrap; gap: 10px; justify-content: center; background: rgba(255,255,255,0.1); padding: 10px; border-radius: 8px; position: absolute; bottom: 10px; left: 50%; transform: translateX(-50%); width: 90%; box-sizing: border-box; z-index: 10; pointer-events: auto; }
         .color-btn { width: 30px; height: 30px; border-radius: 50%; border: 2px solid white; cursor: pointer; transition: transform 0.2s; box-shadow: 0 2px 5px rgba(0,0,0,0.3); }
         .color-btn:hover, .color-btn.active { transform: scale(1.2); border-color: #f1c40f; }
@@ -1070,7 +1101,7 @@
 
 <script>
     // ★★★ GASのURL（あなたの最新のURLに書き換えてください！） ★★★
-    const GAS_API_URL = "https://script.google.com/macros/s/AKfycbyU2lbLaTZZbgiTLAoJuWF7v1f0M3MprTRo8QjNWToNS4GKTVdHkdlkyrfveUGTowoCeQ/exec";
+    const GAS_API_URL = "https://script.google.com/macros/s/AKfycbxBe6dRR0fLt5dohP8gFPseidlzIA6FDdxpDViojXDc_88t93SLRek2JJLnlAlwJpLGUQ/exec";
 
     let YOUTUBE_API_KEY = ""; 
     let GROUP_CONFIG = {};
@@ -1117,10 +1148,12 @@ window.onload = function() {
         }
     }
 
-    // ★★★ 【追加】 保存された落書きを復元する処理（自分だけに見える） ★★★
-    const savedGraffiti = localStorage.getItem('aoharu_graffiti');
-    if (savedGraffiti) {
-        graffitiPosts = JSON.parse(savedGraffiti);
+        const headerBtn = document.getElementById('headerLoginBtn');
+        if(headerBtn){
+            headerBtn.innerText = currentUserData.name;
+            headerBtn.classList.add('logged-in-user');
+            headerBtn.onclick = () => showPage('mypage');
+        }
     }
 
     // （ここからは元のコードと同じ）
@@ -1261,6 +1294,42 @@ window.onload = function() {
                         <div class="goods-name">${g.name}</div>
                         <div class="goods-price">${g.price}</div>
                     </div>`).join('');
+            }
+
+            if (data.graffiti) {
+                // 1. GASから最新の画像リストを取得
+                let serverPosts = data.graffiti.map(g => ({
+                    id: g.id,
+                    title: g.title,
+                    author: g.author,
+                    image: g.image,
+                    likes: 0,
+                    comments: []
+                }));
+
+                // 2. ブラウザに保存されている「いいね・コメント」を復元して合体させる
+                const localData = localStorage.getItem('aoharu_graffiti');
+                if (localData) {
+                    try {
+                        const localPosts = JSON.parse(localData);
+                        serverPosts = serverPosts.map(sp => {
+                            // 同じIDの投稿をローカルデータから探す
+                            const lp = localPosts.find(l => String(l.id) === String(sp.id));
+                            if (lp) {
+                                // 見つかったら、いいね数とコメントを引き継ぐ
+                                sp.likes = lp.likes || 0;
+                                sp.comments = lp.comments || [];
+                            }
+                            return sp;
+                        });
+                    } catch(e) {
+                        console.error("ローカルデータの読み込みエラー", e);
+                    }
+                }
+                
+                // 3. 合体したデータを適用
+                graffitiPosts = serverPosts;
+                renderGraffitiList();
             }
         } catch (e) { 
             console.error("Data Error:", e); 
@@ -1565,50 +1634,68 @@ const headerBtn = document.getElementById('headerLoginBtn');
     }
     function checkCanvasLock() { const overlay = document.getElementById('canvasLockOverlay'); if (overlay) overlay.style.display = isMemberLoggedIn ? 'none' : 'flex'; }
 
-function postGraffiti() {
-        // 1. 入力値の取得（ここが抜けていた可能性が高いです）
+    // ▼▼▼ 修正版 postGraffiti（GASへ送信して共有する） ▼▼▼
+    async function postGraffiti() { 
         const title = document.getElementById('graffitiTitle').value;
         const name = document.getElementById('graffitiName').value;
 
-        // 2. 入力チェック
         if(!title || !name) { 
             alert('タイトルとニックネームを入力してください！'); 
             return; 
         }
 
-        // 3. 画像データの生成（ここも抜けていた可能性があります）
-        // 黒板の背景色と描いた絵を合成する処理
+        // 画像生成
         const tempCanvas = document.createElement('canvas'); 
         tempCanvas.width = canvas.width; 
         tempCanvas.height = canvas.height;
         const tCtx = tempCanvas.getContext('2d'); 
-        tCtx.fillStyle = "#2b4a3c"; // 黒板の色
+        tCtx.fillStyle = "#2b4a3c"; 
         tCtx.fillRect(0, 0, tempCanvas.width, tempCanvas.height); 
-        tCtx.drawImage(canvas, 0, 0); // 描いた絵を乗せる
-
-        // 4. 投稿データの作成
-        const newPost = { 
-            id: Date.now(), 
-            title: title, 
-            author: name, 
-            image: tempCanvas.toDataURL('image/png'), 
-            likes: 0, 
-            comments: [] 
-        };
-
-        // 5. リストに追加
-        graffitiPosts.unshift(newPost);
+        tCtx.drawImage(canvas, 0, 0); 
         
-        // 6. ★ローカルストレージに保存（今回の追加機能）
-        localStorage.setItem('aoharu_graffiti', JSON.stringify(graffitiPosts));
+        // 画質を少し落としてデータ量を減らす（0.5 = 50%品質）
+        const imageData = tempCanvas.toDataURL('image/jpeg', 0.5);
 
-        // 7. 画面の更新と通知
-        renderGraffitiList(); 
-        alert('投稿しました！');
-        
-        // 8. 入力欄とキャンバスのクリア
-        document.getElementById('graffitiTitle').value = ''; 
-        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        // ボタンを連打できないようにする
+        const btn = document.querySelector('button[onclick="postGraffiti()"]');
+        if(btn) {
+            btn.innerText = "投稿中...";
+            btn.disabled = true;
+        }
+
+        try {
+            // GASへ送信（POST送信）
+            const res = await fetch(GAS_API_URL, {
+                method: 'POST',
+                body: JSON.stringify({
+                    id: Date.now(),
+                    title: title,
+                    author: name,
+                    image: imageData
+                })
+            });
+            
+            const json = await res.json();
+            
+            if(json.status === 'success'){
+                alert('投稿しました！みんなに共有されます。');
+                document.getElementById('graffitiTitle').value = ''; 
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                
+                // ページを再読み込みして、最新の投稿を表示
+                location.reload(); 
+            } else {
+                alert('エラーが発生しました: ' + json.message);
+            }
+        } catch(e) {
+            alert('通信エラー: 画像サイズが大きすぎる可能性があります。');
+            console.error(e);
+        } finally {
+            if(btn) {
+                btn.innerText = "投稿する";
+                btn.disabled = false;
+            }
+        }
     }
 
     function renderGraffitiList() {
