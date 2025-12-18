@@ -1148,12 +1148,10 @@ window.onload = function() {
         }
     }
 
-        const headerBtn = document.getElementById('headerLoginBtn');
-        if(headerBtn){
-            headerBtn.innerText = currentUserData.name;
-            headerBtn.classList.add('logged-in-user');
-            headerBtn.onclick = () => showPage('mypage');
-        }
+    // ★★★ 【追加】 保存された落書きを復元する処理（自分だけに見える） ★★★
+    const savedGraffiti = localStorage.getItem('aoharu_graffiti');
+    if (savedGraffiti) {
+        graffitiPosts = JSON.parse(savedGraffiti);
     }
 
     // （ここからは元のコードと同じ）
