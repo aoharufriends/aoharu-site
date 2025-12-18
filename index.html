@@ -1305,29 +1305,6 @@ window.onload = function() {
                 renderGraffitiList();
             }
 
-                // 2. ブラウザに保存されている「いいね・コメント」を復元して合体させる
-                const localData = localStorage.getItem('aoharu_graffiti');
-                if (localData) {
-                    try {
-                        const localPosts = JSON.parse(localData);
-                        serverPosts = serverPosts.map(sp => {
-                            // 同じIDの投稿をローカルデータから探す
-                            const lp = localPosts.find(l => String(l.id) === String(sp.id));
-                            if (lp) {
-                                // 見つかったら、いいね数とコメントを引き継ぐ
-                                sp.likes = lp.likes || 0;
-                                sp.comments = lp.comments || [];
-                            }
-                            return sp;
-                        });
-                    } catch(e) {
-                        console.error("ローカルデータの読み込みエラー", e);
-                    }
-                }
-                
-                // 3. 合体したデータを適用
-                graffitiPosts = serverPosts;
-                renderGraffitiList();
         } catch (e) { 
             console.error("Data Error:", e); 
             document.getElementById('topNewsList').innerHTML = "データの読み込みに失敗しました。";
