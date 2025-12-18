@@ -1014,35 +1014,7 @@ canvas#drawCanvas {
                 <button class="save-img-btn" onclick="saveOmikuji()"><i class="fas fa-camera"></i> 保存する</button>
             </div>
             
-        </div> </div> <div id="graffitiModal" class="modal" onclick="closeGraffitiModal()">
-        <div class="modal-content" onclick="event.stopPropagation()">
-            <span class="modal-close-btn" onclick="closeGraffitiModal()" style="z-index: 10; color: white; text-shadow: 0 0 5px black;">×</span>
-            
-            <div class="g-modal-body">
-                <div class="g-modal-img-area">
-                    <img id="gDetailImg" src="" class="g-modal-img">
-                    <div class="g-modal-like-btn" onclick="toggleGraffitiLike()">
-                        <i class="fas fa-heart"></i> <span id="gDetailLikes">0</span>
-                    </div>
-                </div>
-                
-                <div class="g-modal-info-area">
-                    <div class="g-modal-header">
-                        <div id="gDetailTitle" class="g-modal-title">タイトル</div>
-                        <div class="g-modal-author">
-                            <i class="fas fa-user-circle"></i> <span id="gDetailAuthor">作者名</span>
-                        </div>
-                    </div>
-                    <div id="gDetailComments" class="g-comment-list">
-                        </div>
-                    <div class="g-comment-form">
-                        <input type="text" id="gCommentInput" class="g-cmt-input" placeholder="コメントを入力...">
-                        <button class="g-cmt-btn" onclick="submitGraffitiComment()"><i class="fas fa-paper-plane"></i></button>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
+        </div> </div> 
             <div id="graffitiModal" class="modal" onclick="closeGraffitiModal()">
                     <div class="modal-content" onclick="event.stopPropagation()">
                         <span class="modal-close-btn" onclick="closeGraffitiModal()" style="z-index: 10; color: white; text-shadow: 0 0 5px black;">×</span>
@@ -1137,16 +1109,7 @@ window.onload = function() {
     if (savedUser) {
         currentUserData = JSON.parse(savedUser);
         isMemberLoggedIn = true;
-        isOfficialAdmin = false; 
-
-        // ヘッダーの表示をログイン状態にする
-        const headerBtn = document.getElementById('headerLoginBtn');
-        if(headerBtn){
-            headerBtn.innerText = currentUserData.name;
-            headerBtn.classList.add('logged-in-user');
-            headerBtn.onclick = () => showPage('mypage');
-        }
-    }
+        isOfficialAdmin = false; // 必要であればここもロジック追加
 
     // ★★★ 【追加】 保存された落書きを復元する処理（自分だけに見える） ★★★
     const savedGraffiti = localStorage.getItem('aoharu_graffiti');
