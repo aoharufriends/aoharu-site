@@ -1476,11 +1476,8 @@ const headerBtn = document.getElementById('headerLoginBtn');
             document.getElementById('upBio').innerText = "通信エラーが発生しました。";
         }
     }
-
-    function closeUserProfileModal() {
-        document.getElementById('userProfileModal').classList.remove('open');
-    }   
-    function openMemberDetail(index) {
+　　// 引数に pushHistory を追加
+    function openMemberDetail(index, pushHistory = true) {
         const m = memberData[index];
         if(!m) return;
 
@@ -1492,7 +1489,7 @@ const headerBtn = document.getElementById('headerLoginBtn');
         if(m.twitterId) snsBtns += `<a href="${m.twitterId}" target="_blank" class="p-btn x"><i class="fab fa-x-twitter"></i> @${m.twitterId.split('/').pop()}</a>`;
         if(m.twitchId) snsBtns += `<a href="https://www.twitch.tv/${m.twitchId}" target="_blank" class="p-btn tw"><i class="fab fa-twitch"></i> Twitch</a>`;
 
-        // ★ボイスリストの生成（ここを追加！）
+        // ボイスリストの生成
         let voiceHtml = '';
         const voices = [
             {url: m.voice1, title: m.title1},
@@ -1500,7 +1497,6 @@ const headerBtn = document.getElementById('headerLoginBtn');
             {url: m.voice3, title: m.title3}
         ];
         
-        // ボイスがある場合のみ表示ブロックを作る
         let hasVoice = false;
         let voiceItems = '';
         voices.forEach((v, i) => {
@@ -1568,8 +1564,22 @@ const headerBtn = document.getElementById('headerLoginBtn');
         `;
 
         detailPage.innerHTML = html;
-        showPage('memberDetail', m.name);
+        
+        // ★修正ポイント：URLを手動で制御する
+        // showPageにはURLを書き換えさせない（第3引数をfalseに）
+        showPage('memberDetail', m.name, false); 
+        
+        // 履歴に追加する場合のみ、正しいURL(#member_数字)を設定する
+        if (pushHistory) {
+            history.pushState(null, null, '#member_' + index);
+        }
+        updateBreadcrumbs('memberDetail', m.name);
     }
+
+    function closeUserProfileModal() {
+        document.getElementById('userProfileModal').classList.remove('open');
+    }   
+
     
     // 5. パスワード忘れ
     function openForgotModal() { closeLoginModal(); document.getElementById('forgotModal').classList.add('open'); }
@@ -1643,66 +1653,6 @@ const headerBtn = document.getElementById('headerLoginBtn');
     }
     function checkCanvasLock() { const overlay = document.getElementById('canvasLockOverlay'); if (overlay) overlay.style.display = isMemberLoggedIn ? 'none' : 'flex'; }
 
-    // ▼▼▼ 修正版 postGraffiti（GASへ送信して共有する） ▼▼▼
-    async function postGraffiti() {
-        const title = document.getElementById('graffitiTitle').value;
-        const name = document.getElementById('graffitiName').value;
-
-        if (!title || !name) {
-            alert('タイトルとニックネームを入力してください！');
-            return;
-        }
-
-        // 画像生成
-        const tempCanvas = document.createElement('canvas');
-        tempCanvas.width = canvas.width;
-        tempCanvas.height = canvas.height;
-        const tCtx = tempCanvas.getContext('2d');
-        tCtx.fillStyle = "#2b4a3c";
-        tCtx.fillRect(0, 0, tempCanvas.width, tempCanvas.height);
-        tCtx.drawImage(canvas, 0, 0);
-        
-        // 画質設定
-        const imageData = tempCanvas.toDataURL('image/jpeg', 0.5);
-
-        const btn = document.querySelector('button[onclick="postGraffiti()"]');
-        if (btn) {
-            btn.innerText = "投稿中...";
-            btn.disabled = true;
-        }
-
-        try {
-            const res = await fetch(GAS_API_URL, {
-                method: 'POST',
-                body: JSON.stringify({
-                    type: 'post',
-                    id: Date.now(),
-                    title: title,
-                    author: name,
-                    image: imageData
-                })
-            });
-            
-            const json = await res.json();
-            
-            if (json.status === 'success') {
-                alert('投稿しました！');
-                document.getElementById('graffitiTitle').value = '';
-                ctx.clearRect(0, 0, canvas.width, canvas.height);
-                location.reload();
-            } else {
-                alert('エラー: ' + json.message);
-            }
-        } catch (e) {
-            alert('通信エラーが発生しました');
-            console.error(e);
-        } finally {
-            if (btn) {
-                btn.innerText = "投稿する";
-                btn.disabled = false;
-            }
-        }
-    }
     function renderGraffitiList() {
         const list = document.getElementById('graffitiList');
         if (!isMemberLoggedIn) {
