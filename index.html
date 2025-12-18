@@ -1073,7 +1073,7 @@ canvas#drawCanvas {
 
 <script>
     // ★★★ GASのURL（あなたの最新のURLに書き換えてください！） ★★★
-    const GAS_API_URL = "https://script.google.com/macros/s/AKfycbzc7b7p9djYAu2-FEFbrx7_w64vscLIx9JA2_wgi1BpnjX0bOsGvED900LJDX37Rgke/exec";
+    const GAS_API_URL = "https://script.google.com/macros/s/AKfycbx0es90eHHJMhjT37d_TfuNbBLWhK47fKjC6YnMGL_dXs6DvP5rFQFP1IMOzNoC7gEH2g/exec";
 
     let YOUTUBE_API_KEY = ""; 
     let GROUP_CONFIG = {};
@@ -1490,9 +1490,42 @@ const headerBtn = document.getElementById('headerLoginBtn');
         let snsBtns = '';
         if(m.youtubeId) snsBtns += `<a href="https://www.youtube.com/channel/${m.youtubeId}" target="_blank" class="p-btn yt"><i class="fab fa-youtube"></i> Channel</a>`;
         if(m.twitterId) snsBtns += `<a href="${m.twitterId}" target="_blank" class="p-btn x"><i class="fab fa-x-twitter"></i> @${m.twitterId.split('/').pop()}</a>`;
+        if(m.twitchId) snsBtns += `<a href="https://www.twitch.tv/${m.twitchId}" target="_blank" class="p-btn tw"><i class="fab fa-twitch"></i> Twitch</a>`;
 
-        // ★背景の修正ポイント：グラデーションと画像を重ねる設定に変更！
-        // linear-gradient で色を乗せ、url() で画像を後ろに表示します
+        // ★ボイスリストの生成（ここを追加！）
+        let voiceHtml = '';
+        const voices = [
+            {url: m.voice1, title: m.title1},
+            {url: m.voice2, title: m.title2},
+            {url: m.voice3, title: m.title3}
+        ];
+        
+        // ボイスがある場合のみ表示ブロックを作る
+        let hasVoice = false;
+        let voiceItems = '';
+        voices.forEach((v, i) => {
+            if(v.url && v.title) {
+                hasVoice = true;
+                voiceItems += `
+                    <div class="voice-card" onclick="playVoice(this, '${v.url}')">
+                        <i class="fas fa-play voice-icon"></i>
+                        <div class="voice-title">${v.title}</div>
+                        <div class="voice-time">VOICE ${i+1}</div>
+                    </div>`;
+            }
+        });
+
+        if (hasVoice) {
+            voiceHtml = `
+                <div class="section-title" style="margin-top:30px; margin-bottom:20px;">
+                    <span class="ja-title">SAMPLE VOICE</span>
+                </div>
+                <div class="voice-grid">
+                    ${voiceItems}
+                </div>
+            `;
+        }
+
         const bgStyle = `
             background-image: linear-gradient(135deg, ${m.color}cc 0%, rgba(255,255,255,0.9) 100%), url('${m.img}');
             background-size: cover;
@@ -1523,6 +1556,8 @@ const headerBtn = document.getElementById('headerLoginBtn');
                         <div class="profile-actions">
                             ${snsBtns}
                         </div>
+
+                        ${voiceHtml}
                         
                         <div style="text-align:center;">
                             <div class="back-link" onclick="showPage('member')">◀ メンバー一覧に戻る</div>
