@@ -936,7 +936,7 @@ canvas#drawCanvas {
                     <div class="color-btn" style="background:#1dd1a1;" onclick="changeColor(this, '#1dd1a1')"></div>
                     
                     <button class="tool-btn" onclick="setEraser()"><i class="fas fa-eraser"></i> 消しゴム</button>
-                    <button class="tool-btn" onclick="clearCanvas()"><i class="fas fa-trash"></i> 全消去</button>
+                    <button class="tool-btn" onclick="clearCanvas()" ontouchend="clearCanvas()"><i class="fas fa-trash"></i> 全消去</button>
                 </div>
 
                 <div id="canvasLockOverlay" style="display:flex; flex-direction:column; align-items:center; justify-content:center; position:absolute; inset:0; background:rgba(0,0,0,0.6); z-index:50; color:white; border-radius:10px;">
@@ -1101,7 +1101,7 @@ canvas#drawCanvas {
 
 <script>
     // ★★★ GASのURL（あなたの最新のURLに書き換えてください！） ★★★
-    const GAS_API_URL = "https://script.google.com/macros/s/AKfycbxBe6dRR0fLt5dohP8gFPseidlzIA6FDdxpDViojXDc_88t93SLRek2JJLnlAlwJpLGUQ/exec";
+    const GAS_API_URL = "https://script.google.com/macros/s/AKfycbxb9tpgp4tDVVclOfiYvAOahbcuiKkhbzzySUxxeVUuIBYZJjEYNkwneBI9gE29Suhbkg/exec";
 
     let YOUTUBE_API_KEY = ""; 
     let GROUP_CONFIG = {};
@@ -1137,7 +1137,7 @@ window.onload = function() {
     if (savedUser) {
         currentUserData = JSON.parse(savedUser);
         isMemberLoggedIn = true;
-        isOfficialAdmin = false; // 必要であればここもロジック追加
+        isOfficialAdmin = false; 
 
         // ヘッダーの表示をログイン状態にする
         const headerBtn = document.getElementById('headerLoginBtn');
@@ -1147,6 +1147,40 @@ window.onload = function() {
             headerBtn.onclick = () => showPage('mypage');
         }
     }
+
+    // ★★★ 【追加】 保存された落書きを復元する処理（自分だけに見える） ★★★
+    const savedGraffiti = localStorage.getItem('aoharu_graffiti');
+    if (savedGraffiti) {
+        graffitiPosts = JSON.parse(savedGraffiti);
+    }
+
+    // （ここからは元のコードと同じ）
+    fetchSheetData().finally(() => {
+        // もし公式メンバーだったら権限を付与するチェック
+        if(currentUserData && memberData.length > 0){
+             const matchedMember = memberData.find(m => m.name === currentUserData.name);
+             if (matchedMember) { isOfficialAdmin = true; }
+        }
+
+        renderStaticParts(); 
+        setTimeout(checkLiveStatus, 500);
+        initCardMaker(); 
+        renderRadioDiary(); 
+        fetchLikes(); 
+        initOmikuji(); 
+        initEasterEgg(); 
+        handleLocation(); 
+        
+        // 落書きリストを再描画（復元したデータを表示）
+        renderGraffitiList(); 
+        
+        const loader = document.getElementById('loadingScreen');
+        if(loader) {
+            loader.classList.add('loaded');
+            setTimeout(() => loader.remove(), 500); 
+        }
+    });
+};
 
     // ★★★ 【追加】 保存された落書きを復元する処理（自分だけに見える） ★★★
     const savedGraffiti = localStorage.getItem('aoharu_graffiti');
@@ -1295,15 +1329,18 @@ window.onload = function() {
             }
 
             if (data.graffiti) {
-                // 1. GASから最新の画像リストを取得
-                let serverPosts = data.graffiti.map(g => ({
+                // GASから取得したデータをそのまま使う
+                graffitiPosts = data.graffiti.map(g => ({
                     id: g.id,
                     title: g.title,
                     author: g.author,
                     image: g.image,
-                    likes: 0,
-                    comments: []
+                    likes: g.likes || 0,
+                    // コメントが文字列で来ているのでJSONに戻す
+                    comments: g.comments ? JSON.parse(g.comments) : [] 
                 }));
+                renderGraffitiList();
+            }
 
                 // 2. ブラウザに保存されている「いいね・コメント」を復元して合体させる
                 const localData = localStorage.getItem('aoharu_graffiti');
@@ -1636,65 +1673,42 @@ const headerBtn = document.getElementById('headerLoginBtn');
     async function postGraffiti() { 
         const title = document.getElementById('graffitiTitle').value;
         const name = document.getElementById('graffitiName').value;
+        if(!title || !name) { alert('タイトルとニックネームを入力してください！'); return; }
 
-        if(!title || !name) { 
-            alert('タイトルとニックネームを入力してください！'); 
-            return; 
-        }
-
-        // 画像生成
         const tempCanvas = document.createElement('canvas'); 
-        tempCanvas.width = canvas.width; 
-        tempCanvas.height = canvas.height;
+        tempCanvas.width = canvas.width; tempCanvas.height = canvas.height;
         const tCtx = tempCanvas.getContext('2d'); 
         tCtx.fillStyle = "#2b4a3c"; 
         tCtx.fillRect(0, 0, tempCanvas.width, tempCanvas.height); 
         tCtx.drawImage(canvas, 0, 0); 
-        
-        // 画質を少し落としてデータ量を減らす（0.5 = 50%品質）
         const imageData = tempCanvas.toDataURL('image/jpeg', 0.5);
 
-        // ボタンを連打できないようにする
         const btn = document.querySelector('button[onclick="postGraffiti()"]');
-        if(btn) {
-            btn.innerText = "投稿中...";
-            btn.disabled = true;
-        }
+        if(btn) { btn.innerText = "投稿中..."; btn.disabled = true; }
 
         try {
-            // GASへ送信（POST送信）
             const res = await fetch(GAS_API_URL, {
                 method: 'POST',
+                // ★修正：typeを追加
                 body: JSON.stringify({
+                    type: 'post', // ←これ重要
                     id: Date.now(),
                     title: title,
                     author: name,
                     image: imageData
                 })
             });
-            
             const json = await res.json();
-            
             if(json.status === 'success'){
-                alert('投稿しました！みんなに共有されます。');
+                alert('投稿しました！');
                 document.getElementById('graffitiTitle').value = ''; 
                 ctx.clearRect(0, 0, canvas.width, canvas.height);
-                
-                // ページを再読み込みして、最新の投稿を表示
                 location.reload(); 
-            } else {
-                alert('エラーが発生しました: ' + json.message);
-            }
-        } catch(e) {
-            alert('通信エラー: 画像サイズが大きすぎる可能性があります。');
-            console.error(e);
-        } finally {
-            if(btn) {
-                btn.innerText = "投稿する";
-                btn.disabled = false;
-            }
-        }
+            } else { alert('エラー: ' + json.message); }
+        } catch(e) { alert('通信エラー'); console.error(e); } 
+        finally { if(btn) { btn.innerText = "投稿する"; btn.disabled = false; } }
     }
+
 
     function renderGraffitiList() {
         const list = document.getElementById('graffitiList');
@@ -1737,26 +1751,34 @@ const headerBtn = document.getElementById('headerLoginBtn');
     }
 
     function closeGraffitiModal() { document.getElementById('graffitiModal').classList.remove('open'); renderGraffitiList(); }
-function toggleGraffitiLike() {
+
+async function toggleGraffitiLike() {
         if(currentViewingIndex === -1) return;
+        const post = graffitiPosts[currentViewingIndex];
         
-        // いいねを増やす
-        graffitiPosts[currentViewingIndex].likes++;
+        // 画面上ですぐ反映（見た目を先に更新）
+        post.likes++;
+        document.getElementById('gDetailLikes').innerText = post.likes;
         
-        // 画面の数字を更新
-        document.getElementById('gDetailLikes').innerText = graffitiPosts[currentViewingIndex].likes;
-        
-        // ★★★ 【追加】 ここで保存しないとリロードで消えます！ ★★★
-        localStorage.setItem('aoharu_graffiti', JSON.stringify(graffitiPosts));
+        // サーバーへ送信（ここが変わった！）
+        try {
+            await fetch(GAS_API_URL, {
+                method: 'POST',
+                body: JSON.stringify({
+                    type: 'like',
+                    id: post.id
+                })
+            });
+        } catch(e) { console.error("Like Error", e); }
 
         // アニメーション
         const btn = document.querySelector('.g-modal-like-btn'); 
         btn.style.transform = "scale(1.3)"; 
         setTimeout(() => btn.style.transform = "scale(1)", 100);
     }
-function submitGraffitiComment() {
+
+    async function submitGraffitiComment() {
         if(currentViewingIndex === -1) return;
-        
         const input = document.getElementById('gCommentInput'); 
         const text = input.value; 
         if(!text) return;
@@ -1770,20 +1792,26 @@ function submitGraffitiComment() {
             else if(currentUserData.icon) { commenterIcon = currentUserData.icon; }
         }
         
-        // コメントデータをリストに追加
-        graffitiPosts[currentViewingIndex].comments.push({ 
-            name: commenterName, 
-            text: text, 
-            icon: commenterIcon, 
-            isMember: isOfficial 
-        });
+        const newComment = { name: commenterName, text: text, icon: commenterIcon, isMember: isOfficial };
         
-        // ★★★ 【追加】 ここで保存しないとリロードで消えます！ ★★★
-        localStorage.setItem('aoharu_graffiti', JSON.stringify(graffitiPosts));
-
-        input.value = ""; 
+        // 画面上ですぐ反映
+        graffitiPosts[currentViewingIndex].comments.push(newComment);
         renderComments();
+        input.value = ""; 
+
+        // サーバーへ送信（ここが変わった！）
+        try {
+            await fetch(GAS_API_URL, {
+                method: 'POST',
+                body: JSON.stringify({
+                    type: 'comment',
+                    id: graffitiPosts[currentViewingIndex].id,
+                    commentData: newComment
+                })
+            });
+        } catch(e) { console.error("Comment Error", e); }
     }
+
     function renderComments() {
         const list = document.getElementById('gDetailComments'); const comments = graffitiPosts[currentViewingIndex].comments;
         if(comments.length === 0) { list.innerHTML = '<div style="text-align:center; font-size:12px; color:#ccc; margin-top:20px;">コメントはまだありません</div>'; return; }
