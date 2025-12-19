@@ -495,8 +495,8 @@ canvas#drawCanvas {
         <a href="javascript:void(0)" class="menu-link" onclick="showPage('goods')">GOODS</a>
         <a href="javascript:void(0)" class="menu-link" onclick="showPage('radio')">RADIO</a>
         <a href="javascript:void(0)" class="menu-link" onclick="showPage('guideline')">GUIDELINE</a> 
-        <a href="javascript:void(0)" class="menu-link" onclick="openLoginModal(); toggleMenu();" style="color:var(--primary);">LOGIN</a>
         <a href="javascript:void(0)" class="menu-link" onclick="showPage('rakugaki')">GRAFFITI</a>
+        <a href="javascript:void(0)" class="menu-link" onclick="openLoginModal(); toggleMenu();" style="color:var(--primary);">LOGIN</a>
     </div>
     <div id="overlay" class="overlay" onclick="toggleMenu()"></div>
 
@@ -533,11 +533,6 @@ canvas#drawCanvas {
             <div style="text-align:right; margin-top:10px; font-size:12px;">
                 <a href="javascript:void(0)" onclick="openForgotModal()" style="color:#888;">パスワードを忘れた方はこちら</a>
             </div>
-            <div class="social-login-area">
-                <div class="social-login-label">または SNSでログイン</div>
-                <div class="social-login-btn" onclick="alert('Googleログインは準備中です')"><i class="fab fa-google"></i> Googleでログイン</div>
-                <div class="social-login-btn" onclick="alert('Xログインは準備中です')"><i class="fab fa-x-twitter"></i> Xでログイン</div>
-            </div>
             <div class="auth-link">はじめての方はこちら<br><a onclick="switchToRegister()">▶ 新規会員登録（無料）</a></div>
         </div>
     </div>
@@ -566,11 +561,6 @@ canvas#drawCanvas {
             <input type="email" id="regEmail" class="auth-input" placeholder="メールアドレス">
             <input type="password" id="regPass" class="auth-input" placeholder="パスワード">
             <button class="auth-btn" id="regBtn" onclick="registerUser()">会員登録する</button>
-            <div class="social-login-area">
-                <div class="social-login-label">または SNSで登録</div>
-                <div class="social-login-btn" onclick="alert('Google登録は準備中です')"><i class="fab fa-google"></i> Googleで登録</div>
-                <div class="social-login-btn" onclick="alert('X登録は準備中です')"><i class="fab fa-x-twitter"></i> Xで登録</div>
-            </div>
             <div class="auth-link">すでにアカウントをお持ちの方<br><a onclick="switchToLogin()">▶ ログインはこちら</a></div>
         </div>
     </div>
@@ -923,7 +913,12 @@ canvas#drawCanvas {
         <div class="page-header">
             <div class="page-title-en" style="color:#f1c40f;">GRAFFITI</div>
             <div class="page-title-jp">みんなの黒板落書き</div>
-        </div>
+            
+            <p style="margin-top: 20px; font-size: 14px; color: #666; line-height: 1.8; font-weight: bold;">
+                推しへの愛をキャンバスに！🎨<br>
+                イラストや応援メッセージを自由に描いて投稿しよう！
+            </p>
+            </div>
         <div class="container">
             <div class="board-container">
                 <canvas id="drawCanvas"></canvas>                
