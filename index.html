@@ -591,14 +591,11 @@ canvas#drawCanvas {
             z-index: 20000; 
             
             /* ↓↓↓ ここが重要！画面中央に配置する魔法の呪文 ↓↓↓ */
-            display: flex; 
             align-items: center; 
             justify-content: center; 
-            /* ↑↑↑ これがないと左上に寄っちゃいます ↑↑↑ */
         }
 
         /* JavaScriptで display:block にされた時も flex に強制する */
-        .note-overlay[style*="display: block"],
         .note-overlay[style*="display: flex"] {
             display: flex !important;
         }
