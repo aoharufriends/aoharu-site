@@ -556,30 +556,84 @@ canvas#drawCanvas {
         /* ▼▼▼ ギミック用スタイル ▼▼▼ */
         .horror-item { position: absolute; cursor: pointer; z-index: 10; transition: transform 0.2s; }
         
-        /* 画像自体の設定（幅を制限してあげる） */
+        /* 画像自体の設定 */
         .horror-item img {
             width: 100%; height: auto; 
-            filter: drop-shadow(0 5px 5px rgba(0,0,0,0.5)); /* 影をつけて落ちてる感を出す */
+            filter: drop-shadow(0 5px 5px rgba(0,0,0,0.5));
         }
         
         .horror-item:hover { transform: scale(1.1); filter: brightness(1.2); }
         
         /* 1. ノートのサイズと角度 */
-        .horror-item.note { width: 80px; transform: rotate(-10deg); } /* ← widthで大きさを調整 */
+        .horror-item.note { width: 80px; transform: rotate(-10deg); }
 
         /* 2. ラジカセのサイズ */
-        .horror-item.radio { width: 100px; } /* ← widthで大きさを調整 */
-        
+        .horror-item.radio { width: 100px; }
         .horror-item.radio.playing { animation: shake-radio 0.1s infinite; }
-        .horror-item.radio.playing { animation: shake-radio 0.1s infinite; color: #ff0000; }
         @keyframes shake-radio { 0% { transform:translate(1px, 1px) rotate(0deg); } 100% { transform:translate(-1px, -2px) rotate(-1deg); } }
 
         /* 4. 血文字 */
         .blood-text { font-family: 'Times New Roman', serif; font-size: 40px; color: #880000; opacity: 0; transition: opacity 3s; text-shadow: 2px 2px 5px #000; font-weight: 900; pointer-events: none; user-select: none; white-space: nowrap; writing-mode: vertical-rl; }
         .horror-item.blood-wall:hover .blood-text { opacity: 1; }
 
-        /* 3. ドッキリ */
+        /* 3. ドッキリ画像 */
         .scream-overlay { display: none; position: fixed; top:0; left:0; width:100%; height:100%; z-index: 12000; background: black; }
+
+        /* ★★★ 修正箇所：ノートの表示デザイン（ここを上書き！） ★★★ */
+        .note-overlay { 
+            display: none; /* 初期状態は非表示 */
+            position: fixed; 
+            top: 0; 
+            left: 0; 
+            width: 100%; 
+            height: 100%; 
+            background: rgba(0,0,0,0.8); 
+            z-index: 20000; 
+            
+            /* ↓↓↓ ここが重要！画面中央に配置する魔法の呪文 ↓↓↓ */
+            display: flex; 
+            align-items: center; 
+            justify-content: center; 
+            /* ↑↑↑ これがないと左上に寄っちゃいます ↑↑↑ */
+        }
+
+        /* JavaScriptで display:block にされた時も flex に強制する */
+        .note-overlay[style*="display: block"],
+        .note-overlay[style*="display: flex"] {
+            display: flex !important;
+        }
+
+        .note-paper { 
+            background: #fdf5e6; /* クリーム色の紙 */
+            padding: 40px; 
+            width: 80%; 
+            max-width: 500px; 
+            min-height: 300px; 
+            
+            /* ↓↓↓ 文字の色とフォント ↓↓↓ */
+            color: #333333 !important; /* 強制的に黒（こげ茶）にする */
+            font-family: 'Times New Roman', serif; 
+            font-weight: bold; 
+            font-size: 18px;
+            line-height: 2; 
+            
+            /* その他の装飾 */
+            border-radius: 2px; 
+            box-shadow: 0 0 20px #000; 
+            position: relative; 
+            text-align: left; 
+        }
+        
+        /* 紙の左側の赤い線（ノートっぽさ） */
+        .note-paper::before { 
+            content:""; 
+            position:absolute; 
+            top:0; 
+            left:30px; 
+            bottom:0; 
+            width:2px; 
+            background:rgba(255,0,0,0.3); 
+        }
     </style>
 </head>
 <body>
