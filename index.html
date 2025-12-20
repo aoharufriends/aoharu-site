@@ -506,7 +506,7 @@ canvas#drawCanvas {
             background-image: url('old_school.jpg'); 
             background-size: cover;
             background-position: center;
-            opacity: 0.5; /* ← 画像が見えやすいように少し明るくしました（お好みで調整OK） */
+            opacity: 1.0; /* ← 画像が見えやすいように少し明るくしました（お好みで調整OK） */
             z-index: 0;
             pointer-events: none;
         }
@@ -2169,27 +2169,43 @@ async function toggleGraffitiLike() {
         document.addEventListener('touchmove', moveFlashlight, {passive: false});
     }
 
-    // 3. 門を開ける処理（ここを外に出しました！）
+    // ★重要：既存の openSecretGate を修正（部屋に入ったら全体を見せる！）
     function openSecretGate() {
         if(!confirm("本当に...入りますか？\n（後戻りはできません）")) return;
 
-        // 門を開くアニメーション開始
         document.getElementById('secretGate').classList.add('open');
-
-        // 懐中電灯をオフにする（明るくなる）
+        
+        // ▼▼▼ ここを変更しました！ ▼▼▼
         const flashlight = document.getElementById('flashlightOverlay');
-        flashlight.classList.remove('active'); // 暗闇解除
-        setTimeout(() => { flashlight.style.display = 'none'; }, 2000); // 完全に消す
+        
+        // activeを消すのではなく、透明度を0にして「見えなく」します
+        flashlight.style.opacity = '0'; 
+        
+        // 2秒後に完全に消去
+        setTimeout(() => { 
+            flashlight.style.display = 'none'; 
+            flashlight.classList.remove('active'); 
+        }, 2000);
+        // ▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲
 
-        // 部屋の中身をふわっと表示
         setTimeout(() => {
             document.getElementById('oldSchoolRoom').style.opacity = '1';
+            // BGM再生
+            if(secretData.bgm_url) {
+                horrorAudio.bgm = new Audio(secretData.bgm_url);
+                
+                // ▼▼▼ ついでにBGM音量も前回の要望通り小さくしておきます ▼▼▼
+                horrorAudio.bgm.volume = 0.1; 
+                
+                horrorAudio.bgm.loop = true;
+                horrorAudio.bgm.play().catch(e => console.log("BGM再生失敗"));
+            }
         }, 1000);
         
-        // 懐中電灯の追従イベントを解除
+        // マウス追従を終了
         document.removeEventListener('mousemove', moveFlashlight);
         document.removeEventListener('touchmove', moveFlashlight);
-    }
+    } 
 
     // 4. 懐中電灯（マウス追従）の処理
     function moveFlashlight(e) {
@@ -2285,23 +2301,25 @@ async function toggleGraffitiLike() {
         } else {
             // 音がない場合はブラウザのビープ音代わりや振動などを入れたいところですが一旦なし
         }
+    }  /* ←★この「閉じカッコ」が抜けていました！これを追加！ */
 
-    // ★重要：既存の openSecretGate を少し修正（BGM再生のため）
-    // （元の openSecretGate の中身を上書きしてください）
+// ★重要：既存の openSecretGate を少し修正（BGM再生のため）
     function openSecretGate() {
         if(!confirm("本当に...入りますか？\n（後戻りはできません）")) return;
 
         document.getElementById('secretGate').classList.add('open');
-        const flashlight = document.getElementById('flashlightOverlay');
-        flashlight.classList.remove('active'); 
-        setTimeout(() => { flashlight.style.display = 'none'; }, 2000);
+        // ... (中略) ...
 
         setTimeout(() => {
             document.getElementById('oldSchoolRoom').style.opacity = '1';
             // BGM再生
             if(secretData.bgm_url) {
                 horrorAudio.bgm = new Audio(secretData.bgm_url);
-                horrorAudio.bgm.volume = 0.3; // 少し小さめ
+                
+                // ▼▼▼ ここを修正！(0.3 -> 0.1) ▼▼▼
+                horrorAudio.bgm.volume = 0.1; 
+                // ▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲
+                
                 horrorAudio.bgm.loop = true;
                 horrorAudio.bgm.play().catch(e => console.log("BGM再生失敗（ユーザ操作が必要かも）"));
             }
