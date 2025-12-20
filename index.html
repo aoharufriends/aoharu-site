@@ -467,6 +467,113 @@ canvas#drawCanvas {
         .save-btn { width: 100%; background: #2ecc71; color: white; padding: 15px; border: none; border-radius: 30px; font-weight: bold; font-size: 16px; cursor: pointer; box-shadow: 0 5px 15px rgba(46, 204, 113, 0.3); transition: transform 0.2s; }
         .save-btn:hover { transform: translateY(-2px); }
         .logout-btn { display: block; text-align: center; margin-top: 30px; color: #ff4757; font-weight: bold; cursor: pointer; text-decoration: underline; }
+
+        /* ▼▼▼ 隠し要素（ホラーモード）のスタイル ▼▼▼ */
+        
+        /* 懐中電灯のオーバーレイ（普段は隠す） */
+        .flashlight-layer {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 9999; /* どの要素よりも手前に */
+            pointer-events: none; /* クリックは通過させる（下の要素を触れるように） */
+            
+            /* 初期状態：真っ暗 */
+            background: rgba(0, 0, 0, 1);
+            opacity: 0;
+            transition: opacity 2s ease; /* ふわっと現れる */
+            display: none;
+        }
+
+        /* 懐中電灯オンの状態（カーソルの周りだけ透明にするグラデーション） */
+        .flashlight-layer.active {
+            display: block;
+            opacity: 1;
+            /* ここが技術の核！マウス位置(var(--x), var(--y))を中心に穴を開ける */
+            background: radial-gradient(
+                circle 150px at var(--cursor-x, 50%) var(--cursor-y, 50%), 
+                transparent 0%, 
+                rgba(0, 0, 0, 0.98) 100%
+            );
+        }
+
+        /* 旧校舎の背景演出 */
+        .secret-bg-img {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            /* ↓↓↓ ここをファイル名に変更！ */
+            background-image: url('old_school.jpg'); 
+            background-size: cover;
+            background-position: center;
+            opacity: 0.5; /* ← 画像が見えやすいように少し明るくしました（お好みで調整OK） */
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        /* ▼▼▼ 秘密の門のデザイン ▼▼▼ */
+        .gate-wrapper {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            z-index: 5000; /* 懐中電灯(9999)の下、部屋の上 */
+            display: flex; justify-content: center; align-items: center;
+            pointer-events: none; /* クリックを下のボタンに通すため */
+        }
+        
+        /* 門（左右のパネル） */
+        .gate-door {
+            position: absolute; top: 0; width: 50%; height: 100%;
+            background: repeating-linear-gradient(45deg, #111, #111 10px, #220000 10px, #220000 20px); /* 錆びた鉄のような柄 */
+            border: 2px solid #000;
+            transition: transform 3s cubic-bezier(0.5, 0, 0, 1); /* ゆっくり開く */
+        }
+        .gate-door.left { left: 0; border-right: 5px solid #000; }
+        .gate-door.right { right: 0; border-left: 5px solid #000; }
+
+        /* 門が開く時のクラス */
+        .gate-wrapper.open .gate-door.left { transform: translateX(-100%); }
+        .gate-wrapper.open .gate-door.right { transform: translateX(100%); }
+
+        /* 真ん中の警告看板とボタン */
+        .gate-content {
+            z-index: 5001; text-align: center; pointer-events: auto; /* ここだけクリック可能 */
+        }
+        .warning-sign {
+            font-size: 40px; color: #ff0000; font-weight: bold; border: 5px solid #ff0000;
+            padding: 20px; background: rgba(0,0,0,0.8); transform: rotate(-5deg);
+            margin-bottom: 50px; text-shadow: 0 0 10px red;
+        }
+        .enter-message {
+            font-size: 24px; color: #fff; cursor: pointer; text-decoration: underline;
+            animation: blink 1s infinite;
+        }
+        /* ▼▼▼ 追加：門が開いたら、看板と文字を消す設定 ▼▼▼ */
+        .gate-wrapper.open .gate-content {
+            opacity: 0;
+            pointer-events: none; /* 消えた後はクリックできないようにする */
+            transition: opacity 1s ease; /* 1秒かけてフワッと消す */
+        }
+
+        /* ▼▼▼ ギミック用スタイル ▼▼▼ */
+        .horror-item { position: absolute; cursor: pointer; z-index: 10; transition: transform 0.2s; color: #333; font-size: 24px; }
+        .horror-item:hover { transform: scale(1.1); filter: drop-shadow(0 0 5px white); }
+        
+        /* 1. ノート */
+        .horror-item.note { color: #5d4037; transform: rotate(-10deg); font-size: 30px; }
+        .note-overlay { display: none; position: fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.8); z-index:11000; align-items:center; justify-content:center; }
+        .note-paper { background: #fdf5e6; padding: 40px; width: 80%; max-width: 400px; min-height: 200px; font-family: 'Times New Roman', serif; color: #333; border-radius: 2px; box-shadow: 0 0 20px #000; font-weight: bold; line-height: 2; position: relative; }
+        .note-paper::before { content:""; position:absolute; top:0; left:20px; bottom:0; width:2px; background:rgba(255,0,0,0.1); }
+
+        /* 2. ラジカセ */
+        .horror-item.radio { color: #555; font-size: 35px; }
+        .horror-item.radio.playing { animation: shake-radio 0.1s infinite; color: #ff0000; }
+        @keyframes shake-radio { 0% { transform:translate(1px, 1px) rotate(0deg); } 100% { transform:translate(-1px, -2px) rotate(-1deg); } }
+
+        /* 4. 血文字 */
+        .blood-text { font-family: 'Times New Roman', serif; font-size: 40px; color: #880000; opacity: 0; transition: opacity 3s; text-shadow: 2px 2px 5px #000; font-weight: 900; pointer-events: none; user-select: none; white-space: nowrap; writing-mode: vertical-rl; }
+        .horror-item.blood-wall:hover .blood-text { opacity: 1; }
+
+        /* 3. ドッキリ */
+        .scream-overlay { display: none; position: fixed; top:0; left:0; width:100%; height:100%; z-index: 12000; background: black; }
     </style>
 </head>
 <body>
@@ -1064,12 +1171,70 @@ canvas#drawCanvas {
                 </div>
             </div>
         </div>
-        <div class="copyright">© 2026 AOHARU FRIENDS All Rights Reserved.</div>
+<div class="copyright" onclick="triggerSecretEvent()" style="cursor:pointer; user-select:none;">
+    © 2026 AOHARU FRIENDS All Rights Reserved.
+</div>
     </footer>
+
+<div id="flashlightOverlay" class="flashlight-layer"></div>
+
+<div id="secretOldSchool" class="page" style="background-color:#050505; min-height:100vh; overflow:hidden;">
+        
+        <div id="secretGate" class="gate-wrapper">
+            <div class="gate-door left"></div>
+            <div class="gate-door right"></div>
+            
+            <div class="gate-content">
+                <div class="warning-sign">
+                    ⚠️ DANGER ⚠️<br>立ち入り禁止
+                </div>
+                <div class="enter-message" onclick="openSecretGate()">
+                    入る...？
+                </div>
+            </div>
+        </div>
+
+        <div id="oldSchoolRoom" class="room-content" style="opacity:0; transition:opacity 2s;">
+            
+            <div class="horror-item note" onclick="openHorrorNote()" style="top: 70%; left: 20%;">
+                <i class="fas fa-book"></i>
+            </div>
+
+            <div class="horror-item radio" onclick="playHorrorRadio()" style="top: 80%; right: 15%;">
+                <i class="fas fa-broadcast-tower"></i>
+            </div>
+
+            <div class="horror-item window" onclick="triggerScream()" style="top: 30%; left: 10%; width: 15%; height: 20%; opacity: 0;">
+                </div>
+
+            <div class="horror-item blood-wall" style="top: 20%; right: 30%;">
+                <span id="bloodTextDisplay" class="blood-text"></span>
+            </div>
+
+            <div class="container" style="padding-top:50px; text-align:center; position:relative; z-index:1; pointer-events:none;">
+                <div style="font-family:'Times New Roman', serif; font-size:40px; color:#550000; letter-spacing:5px; margin-bottom:20px; opacity:0.5;">
+                    OLD SCHOOL
+                </div>
+                <div onclick="exitHorrorMode()" style="pointer-events:auto; display:inline-block; cursor:pointer; border:1px solid #555; padding:5px 15px; color:#555; border-radius:5px; background:rgba(0,0,0,0.5);">
+                    <i class="fas fa-running"></i> 非常口
+                </div>
+            </div>
+            <div class="secret-bg-img"></div>
+
+            <div id="noteModal" class="note-overlay" onclick="this.style.display='none'">
+                <div class="note-paper">
+                    <p id="noteContent">読み込み中...</p>
+                </div>
+            </div>
+
+            <div id="screamOverlay" class="scream-overlay">
+                <img id="screamImg" src="" style="width:100%; height:100%; object-fit:cover;">
+            </div>
+        </div>
 
 <script>
     // ★★★ GASのURL（あなたの最新のURLに書き換えてください！） ★★★
-    const GAS_API_URL = "https://script.google.com/macros/s/AKfycbx0es90eHHJMhjT37d_TfuNbBLWhK47fKjC6YnMGL_dXs6DvP5rFQFP1IMOzNoC7gEH2g/exec";
+    const GAS_API_URL = "https://script.google.com/macros/s/AKfycbyXOrAWYo_TNI647mb4AfwEV6QpUl-29FqsMIym39o5IRZeu--6siBy10lhK-tOKeXCkw/exec";
 
     let YOUTUBE_API_KEY = ""; 
     let GROUP_CONFIG = {};
@@ -1099,47 +1264,14 @@ canvas#drawCanvas {
     let logoTapCount = 0;
 
     // 初期化処理
-window.onload = function() { 
-    // ★★★ 【追加】 保存されたユーザー情報を復元する処理 ★★★
-    const savedUser = localStorage.getItem('aoharu_user');
-    if (savedUser) {
-        currentUserData = JSON.parse(savedUser);
-        isMemberLoggedIn = true;
-        isOfficialAdmin = false; // 必要であればここもロジック追加
-
-    // ★★★ 【追加】 保存された落書きを復元する処理（自分だけに見える） ★★★
-    const savedGraffiti = localStorage.getItem('aoharu_graffiti');
-    if (savedGraffiti) {
-        graffitiPosts = JSON.parse(savedGraffiti);
-    }
-
-    // （ここからは元のコードと同じ）
-    fetchSheetData().finally(() => {
-        // もし公式メンバーだったら権限を付与するチェック
-        if(currentUserData && memberData.length > 0){
-             const matchedMember = memberData.find(m => m.name === currentUserData.name);
-             if (matchedMember) { isOfficialAdmin = true; }
+    window.onload = function() { 
+        // 1. ユーザー情報の復元
+        const savedUser = localStorage.getItem('aoharu_user');
+        if (savedUser) {
+            currentUserData = JSON.parse(savedUser);
+            isMemberLoggedIn = true;
+            isOfficialAdmin = false; 
         }
-
-        renderStaticParts(); 
-        setTimeout(checkLiveStatus, 500);
-        initCardMaker(); 
-        renderRadioDiary(); 
-        fetchLikes(); 
-        initOmikuji(); 
-        initEasterEgg(); 
-        handleLocation(); 
-        
-        // 落書きリストを再描画（復元したデータを表示）
-        renderGraffitiList(); 
-        
-        const loader = document.getElementById('loadingScreen');
-        if(loader) {
-            loader.classList.add('loaded');
-            setTimeout(() => loader.remove(), 500); 
-        }
-    });
-};
 
     // ★★★ 【追加】 保存された落書きを復元する処理（自分だけに見える） ★★★
     const savedGraffiti = localStorage.getItem('aoharu_graffiti');
@@ -1255,6 +1387,7 @@ window.onload = function() {
         try {
             const res = await fetch(GAS_API_URL);
             const data = await res.json();
+            setSecretData(data);
             
             if (data.config) {
                 const conf = {};
@@ -1649,6 +1782,64 @@ const headerBtn = document.getElementById('headerLoginBtn');
     }
     function checkCanvasLock() { const overlay = document.getElementById('canvasLockOverlay'); if (overlay) overlay.style.display = isMemberLoggedIn ? 'none' : 'flex'; }
 
+    // ▼▼▼ 追加：落書き投稿機能 ▼▼▼
+    async function postGraffiti() {
+        const title = document.getElementById('graffitiTitle').value;
+        const name = document.getElementById('graffitiName').value;
+
+        if (!title || !name) {
+            alert('タイトルとニックネームを入力してください！');
+            return;
+        }
+
+        const tempCanvas = document.createElement('canvas');
+        tempCanvas.width = canvas.width;
+        tempCanvas.height = canvas.height;
+        const tCtx = tempCanvas.getContext('2d');
+        tCtx.fillStyle = "#2b4a3c";
+        tCtx.fillRect(0, 0, tempCanvas.width, tempCanvas.height);
+        tCtx.drawImage(canvas, 0, 0);
+        
+        const imageData = tempCanvas.toDataURL('image/jpeg', 0.5);
+
+        const btn = document.querySelector('button[onclick="postGraffiti()"]');
+        if (btn) {
+            btn.innerText = "投稿中...";
+            btn.disabled = true;
+        }
+
+        try {
+            const res = await fetch(GAS_API_URL, {
+                method: 'POST',
+                body: JSON.stringify({
+                    type: 'post',
+                    id: Date.now(),
+                    title: title,
+                    author: name,
+                    image: imageData
+                })
+            });
+            
+            const json = await res.json();
+            
+            if (json.status === 'success') {
+                alert('投稿しました！');
+                document.getElementById('graffitiTitle').value = '';
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                location.reload();
+            } else {
+                alert('エラー: ' + json.message);
+            }
+        } catch (e) {
+            alert('通信エラーが発生しました');
+            console.error(e);
+        } finally {
+            if (btn) {
+                btn.innerText = "投稿する";
+                btn.disabled = false;
+            }
+        }
+    }
     function renderGraffitiList() {
         const list = document.getElementById('graffitiList');
         if (!isMemberLoggedIn) {
@@ -1863,6 +2054,231 @@ async function toggleGraffitiLike() {
     function checkLiveStatus() { /* 省略 */ }
     function initEasterEgg() { window.addEventListener('keydown', (e) => { secretInput.push(e.key); if (secretInput.length > secretCode.length) secretInput.shift(); if (JSON.stringify(secretInput) === JSON.stringify(secretCode)) activateFeverMode(); }); const logo = document.getElementById('headerLogo'); if(logo) { logo.addEventListener('click', (e) => { e.preventDefault(); logoTapCount++; if(logoTapCount === 10) { activateFeverMode(); logoTapCount = 0; } setTimeout(() => logoTapCount = 0, 3000); }); } }
     function activateFeverMode() { if(document.body.classList.contains('fever-mode')) return; document.body.classList.add('fever-mode'); const text = document.createElement('div'); text.className = 'fever-text'; text.innerText = "FEVER TIME!!"; document.body.appendChild(text); var duration = 5000; var end = Date.now() + duration; (function frame() { if(typeof confetti === 'function'){ confetti({ particleCount: 2, angle: 60, spread: 55, origin: { x: 0 }, colors: ['#ff0000', '#00ff00', '#0000ff'] }); confetti({ particleCount: 2, angle: 120, spread: 55, origin: { x: 1 }, colors: ['#ff0000', '#00ff00', '#0000ff'] }); } if (Date.now() < end) requestAnimationFrame(frame); else { document.body.classList.remove('fever-mode'); text.remove(); alert("祭りは終わった……"); } }()); }
+// ▼▼▼ ここから：隠し要素（ホラーモード）の制御プログラム ▼▼▼
+
+    let secretTapCount = 0;
+    let secretTapTimer = null;
+
+    // 1. フッターを連打した時の処理
+    function triggerSecretEvent() {
+        secretTapCount++;
+        
+        // 演出：5回目くらいから画面を一瞬チラつかせる（予兆）
+        if(secretTapCount === 5 || secretTapCount === 6) {
+            document.body.style.opacity = 0.5;
+            setTimeout(() => document.body.style.opacity = 1, 50);
+        }
+
+        // タイマーリセット（2秒間隔があいたら回数を0に戻す）
+        clearTimeout(secretTapTimer);
+        secretTapTimer = setTimeout(() => {
+            secretTapCount = 0;
+        }, 2000);
+
+        // 7回達成！
+        if (secretTapCount >= 7) {
+            secretTapCount = 0;
+            startHorrorMode();
+        }
+    }
+
+    // 2. ホラーモード開始！
+    function startHorrorMode() {
+        // 確認ダイアログ（キャンセル可能にする）
+        if(!confirm("校舎の電気が消えました...\n様子を見に行きますか？")) return;
+
+        // ▼▼▼ 追加：フッターを隠す ▼▼▼
+        document.querySelector('footer').style.display = 'none';
+
+        // 隠しページを表示
+        showPage('secretOldSchool', null, false);
+        window.scrollTo(0,0);
+
+        // ★リセット（門を閉じておく）
+        document.getElementById('secretGate').classList.remove('open');
+        document.getElementById('oldSchoolRoom').style.opacity = '0';
+
+        // 懐中電灯レイヤーをオンにする
+        const flashlight = document.getElementById('flashlightOverlay');
+        flashlight.style.display = 'block';
+        
+        // 少し待ってから真っ暗にする（フェードイン）
+        setTimeout(() => {
+            flashlight.classList.add('active');
+        }, 100);
+
+        // マウスの動きを追跡開始
+        document.addEventListener('mousemove', moveFlashlight);
+        document.addEventListener('touchmove', moveFlashlight, {passive: false});
+    }
+
+    // 3. 門を開ける処理（ここを外に出しました！）
+    function openSecretGate() {
+        if(!confirm("本当に...入りますか？\n（後戻りはできません）")) return;
+
+        // 門を開くアニメーション開始
+        document.getElementById('secretGate').classList.add('open');
+
+        // 懐中電灯をオフにする（明るくなる）
+        const flashlight = document.getElementById('flashlightOverlay');
+        flashlight.classList.remove('active'); // 暗闇解除
+        setTimeout(() => { flashlight.style.display = 'none'; }, 2000); // 完全に消す
+
+        // 部屋の中身をふわっと表示
+        setTimeout(() => {
+            document.getElementById('oldSchoolRoom').style.opacity = '1';
+        }, 1000);
+        
+        // 懐中電灯の追従イベントを解除
+        document.removeEventListener('mousemove', moveFlashlight);
+        document.removeEventListener('touchmove', moveFlashlight);
+    }
+
+    // 4. 懐中電灯（マウス追従）の処理
+    function moveFlashlight(e) {
+        const flashlight = document.getElementById('flashlightOverlay');
+        if (!flashlight.classList.contains('active')) return;
+
+        let x, y;
+        if (e.type === 'touchmove') {
+            x = e.touches[0].clientX;
+            y = e.touches[0].clientY;
+        } else {
+            x = e.clientX;
+            y = e.clientY;
+        }
+
+        // CSS変数にマウスの座標を渡す
+        flashlight.style.setProperty('--cursor-x', x + 'px');
+        flashlight.style.setProperty('--cursor-y', y + 'px');
+    }
+
+    // 5. 現実に戻る処理
+    function exitHorrorMode() {
+        const flashlight = document.getElementById('flashlightOverlay');
+        
+        // 明るくする
+        flashlight.classList.remove('active');
+
+        // ▼▼▼ 追加：フッターを再表示する ▼▼▼
+        document.querySelector('footer').style.display = 'block';
+        
+        // イベントリスナー解除
+        document.removeEventListener('mousemove', moveFlashlight);
+        document.removeEventListener('touchmove', moveFlashlight);
+
+        setTimeout(() => {
+            flashlight.style.display = 'none';
+            showPage('top'); // トップへ戻る
+            alert("...夢だったようだ。");
+        }, 2000);
+    }
+// ▼▼▼ ギミック制御（スプシ連動） ▼▼▼
+    let secretData = {}; // GASから取得したデータが入る
+    let horrorAudio = { bgm: null, radio: null, scream: null };
+
+    // データ取得時にここに入れる（fetchSheetData内の最後に以下を追加が必要）
+    function setSecretData(data) {
+        if(data.secret) {
+            secretData = data.secret;
+            // 初期設定
+            document.getElementById('noteContent').innerHTML = secretData.note_text || "文字が滲んで読めない...";
+            document.getElementById('bloodTextDisplay').innerText = secretData.blood_text || "見てるぞ...";
+            if(secretData.scream_img_url) document.getElementById('screamImg').src = secretData.scream_img_url;
+        }
+    }
+
+    // 1. ノートを開く
+    function openHorrorNote() {
+        document.getElementById('noteModal').style.display = 'flex';
+    }
+
+    // 2. ラジカセ再生
+    function playHorrorRadio() {
+        const btn = document.querySelector('.horror-item.radio');
+        if (horrorAudio.radio && !horrorAudio.radio.paused) {
+            horrorAudio.radio.pause();
+            horrorAudio.radio.currentTime = 0;
+            btn.classList.remove('playing');
+        } else {
+            if(!secretData.radio_voice_url) { alert("...ザーッ...（電池切れのようだ）"); return; }
+            horrorAudio.radio = new Audio(secretData.radio_voice_url);
+            horrorAudio.radio.volume = 1.0;
+            horrorAudio.radio.loop = true;
+            horrorAudio.radio.play();
+            btn.classList.add('playing');
+        }
+    }
+
+    // 3. ドッキリ発動
+    function triggerScream() {
+        // 音再生
+        if(secretData.scream_voice_url) {
+            horrorAudio.scream = new Audio(secretData.scream_voice_url);
+            horrorAudio.scream.volume = 1.0;
+            horrorAudio.scream.play();
+        } else {
+            // 音がない場合はブラウザのビープ音代わりや振動などを入れたいところですが一旦なし
+        }
+
+        // 画像表示
+        const overlay = document.getElementById('screamOverlay');
+        overlay.style.display = 'block';
+
+        // 1.5秒後に消える
+        setTimeout(() => {
+            overlay.style.display = 'none';
+        }, 1500);
+    }
+
+    // ★重要：既存の openSecretGate を少し修正（BGM再生のため）
+    // （元の openSecretGate の中身を上書きしてください）
+    function openSecretGate() {
+        if(!confirm("本当に...入りますか？\n（後戻りはできません）")) return;
+
+        document.getElementById('secretGate').classList.add('open');
+        const flashlight = document.getElementById('flashlightOverlay');
+        flashlight.classList.remove('active'); 
+        setTimeout(() => { flashlight.style.display = 'none'; }, 2000);
+
+        setTimeout(() => {
+            document.getElementById('oldSchoolRoom').style.opacity = '1';
+            // BGM再生
+            if(secretData.bgm_url) {
+                horrorAudio.bgm = new Audio(secretData.bgm_url);
+                horrorAudio.bgm.volume = 0.3; // 少し小さめ
+                horrorAudio.bgm.loop = true;
+                horrorAudio.bgm.play().catch(e => console.log("BGM再生失敗（ユーザ操作が必要かも）"));
+            }
+        }, 1000);
+        
+        document.removeEventListener('mousemove', moveFlashlight);
+        document.removeEventListener('touchmove', moveFlashlight);
+    }
+
+    // ★重要：既存の exitHorrorMode に音の停止処理を追加
+    // （元の exitHorrorMode を書き換えてください）
+    function exitHorrorMode() {
+        // 全ての音を止める
+        if(horrorAudio.bgm) horrorAudio.bgm.pause();
+        if(horrorAudio.radio) horrorAudio.radio.pause();
+        if(horrorAudio.scream) horrorAudio.scream.pause();
+        
+        const flashlight = document.getElementById('flashlightOverlay');
+        flashlight.classList.remove('active');
+        
+        document.removeEventListener('mousemove', moveFlashlight);
+        document.removeEventListener('touchmove', moveFlashlight);
+
+        setTimeout(() => {
+            flashlight.style.display = 'none';
+            showPage('top'); 
+            alert("...夢だったようだ。");
+            // リロードして状態を完全リセットしても良いかも
+            // location.reload(); 
+        }, 2000);
+    }
+    // ▲▲▲ ここまで：隠し要素の制御プログラム ▲▲▲
 </script>
 </body>
 </html>
