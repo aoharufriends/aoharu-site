@@ -680,6 +680,95 @@ canvas#drawCanvas {
             width:2px; 
             background:rgba(255,0,0,0.3); 
         }
+
+/* ▼▼▼ 追加：テレビ風ホラーノイズのスタイル ▼▼▼ */
+
+        /* ノイズ画面の基本設定 */
+        .tv-noise-layer {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 20000; /* どの要素よりも手前に */
+            pointer-events: none; /* クリックを邪魔しない */
+            opacity: 0; /* 普段は隠しておく */
+            /* ↓↓↓ 用意したGIF画像のファイル名！ ↓↓↓ */
+            background-image: url('noise.gif'); 
+            background-size: cover;
+            mix-blend-mode: hard-light; /* 背景と強めに合成して発光感を出す */
+        }
+
+        /* ノイズが表示された時の状態 */
+        .tv-noise-layer.active {
+            opacity: 0.8; /* 少し透けさせて後ろを見せる */
+            /* 画面全体を激しく歪ませるアニメーション */
+            animation: noise-glitch 0.2s infinite linear alternate-reverse;
+        }
+
+        /* 走査線（テレビの横線）のエフェクト */
+        .tv-noise-layer::before {
+            content: "";
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            /* 細かい横縞模様を作る */
+            background: repeating-linear-gradient(
+                to bottom,
+                transparent 0%,
+                rgba(0, 0, 0, 0.3) 50%,
+                transparent 100%
+            );
+            background-size: 100% 3px; /* 線の太さ */
+            pointer-events: none;
+        }
+
+        /* 画面が歪んでチラつくアニメーション */
+        @keyframes noise-glitch {
+            0% {
+                transform: translateX(0) skewX(0deg) scale(1);
+                filter: hue-rotate(0deg) contrast(1.2);
+            }
+            25% {
+                transform: translateX(-5px) skewX(3deg) scale(1.02);
+                filter: hue-rotate(10deg) contrast(1.5); /* 色が少しずれる */
+            }
+            50% {
+                transform: translateX(3px) skewX(-2deg) scale(0.98);
+                opacity: 0.5; /* 一瞬暗くなる */
+            }
+            75% {
+                transform: translateX(-2px) skewX(1deg) scale(1.01);
+                filter: hue-rotate(-10deg) contrast(1.3);
+            }
+            100% {
+                transform: translateX(0) skewX(0deg) scale(1);
+            }
+        }
+
+        /* ▼▼▼ 追加：テレビ風ホラーノイズのスタイル ▼▼▼ */
+        .tv-noise-layer {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            z-index: 20000; pointer-events: none; opacity: 0;
+            background-image: url('noise.gif'); /* ← noise.gifがない場合は background-color: #222; に変更 */
+            background-size: cover;
+            mix-blend-mode: hard-light;
+        }
+        .tv-noise-layer.active {
+            opacity: 0.8;
+            animation: noise-glitch 0.2s infinite linear alternate-reverse;
+        }
+        .tv-noise-layer::before {
+            content: ""; position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            background: repeating-linear-gradient(to bottom, transparent 0%, rgba(0,0,0,0.3) 50%, transparent 100%);
+            background-size: 100% 3px; pointer-events: none;
+        }
+        @keyframes noise-glitch {
+            0% { transform: translateX(0) skewX(0deg) scale(1); filter: hue-rotate(0deg) contrast(1.2); }
+            25% { transform: translateX(-5px) skewX(3deg) scale(1.02); filter: hue-rotate(10deg) contrast(1.5); }
+            50% { transform: translateX(3px) skewX(-2deg) scale(0.98); opacity: 0.5; }
+            75% { transform: translateX(-2px) skewX(1deg) scale(1.01); filter: hue-rotate(-10deg) contrast(1.3); }
+            100% { transform: translateX(0) skewX(0deg) scale(1); }
+        }
     </style>
 </head>
 <body>
@@ -1280,9 +1369,13 @@ canvas#drawCanvas {
 <div class="copyright" onclick="triggerSecretEvent()" style="cursor:pointer; user-select:none;">
     © 2026 AOHARU FRIENDS All Rights Reserved.
 </div>
-    </footer>
+</footer>
 
 <div id="flashlightOverlay" class="flashlight-layer"></div>
+
+
+    <div id="tvNoiseOverlay" class="tv-noise-layer"></div>
+    <div id="secretOldSchool" class="page" style="background-color:#050505; min-height:100vh; overflow:hidden;">
 
 <div id="secretOldSchool" class="page" style="background-color:#050505; min-height:100vh; overflow:hidden;">
         
@@ -2169,17 +2262,22 @@ async function toggleGraffitiLike() {
     let secretTapCount = 0;
     let secretTapTimer = null;
 
-    // 1. フッターを連打した時の処理
+// 1. フッターを連打した時の処理
     function triggerSecretEvent() {
         secretTapCount++;
         
-        // 演出：5回目くらいから画面を一瞬チラつかせる（予兆）
+        // ▼▼▼ ノイズ演出に変更！ ▼▼▼
         if(secretTapCount === 5 || secretTapCount === 6) {
-            document.body.style.opacity = 0.5;
-            setTimeout(() => document.body.style.opacity = 1, 50);
+            const noise = document.getElementById('tvNoiseOverlay');
+            noise.classList.add('active'); // ノイズON
+            
+            setTimeout(() => {
+                noise.classList.remove('active'); // 0.3秒後にOFF
+            }, 300);
         }
+        // ▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲
 
-        // タイマーリセット（2秒間隔があいたら回数を0に戻す）
+        // タイマーリセット
         clearTimeout(secretTapTimer);
         secretTapTimer = setTimeout(() => {
             secretTapCount = 0;
@@ -2345,55 +2443,52 @@ async function toggleGraffitiLike() {
         // 音再生
         if(secretData.scream_voice_url) {
             horrorAudio.scream = new Audio(secretData.scream_voice_url);
-            
-            // ▼▼▼ ここを修正！(1.0 -> 0.4) ▼▼▼
-            horrorAudio.scream.volume = 0.1;
-            // ▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲
-            
+            horrorAudio.scream.volume = 0.4; // 悲鳴の音量
             horrorAudio.scream.play();
-        } else {
-            // 音がない場合はブラウザのビープ音代わりや振動などを入れたいところですが一旦なし
         }
-    }  /* ←★この「閉じカッコ」が抜けていました！これを追加！ */
 
-// ★重要：既存の openSecretGate を少し修正（BGM再生のため）
+        // ▼▼▼ 復活！画像を表示する処理 ▼▼▼
+        const overlay = document.getElementById('screamOverlay');
+        overlay.style.display = 'block';
+
+        // 1.5秒後に消える
+        setTimeout(() => {
+            overlay.style.display = 'none';
+        }, 10000);
+        // ▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲
+    }
+
+    // ★重要：既存の openSecretGate を少し修正（BGM再生のため）
     function openSecretGate() {
         if(!confirm("本当に...入りますか？\n（後戻りはできません）")) return;
 
         document.getElementById('secretGate').classList.add('open');
         
-        // ▼▼▼ ここを修正しました！ ▼▼▼
+        // 懐中電灯をフワッと消す
         const flashlight = document.getElementById('flashlightOverlay');
-        
-        // activeを消すと真っ暗になるので、透明度を0にして「見えなく」します
         flashlight.style.opacity = '0'; 
         
-        // 2秒後に完全に消去
         setTimeout(() => { 
             flashlight.style.display = 'none'; 
             flashlight.classList.remove('active'); 
         }, 2000);
-        // ▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲
 
         setTimeout(() => {
             document.getElementById('oldSchoolRoom').style.opacity = '1';
             // BGM再生
             if(secretData.bgm_url) {
                 horrorAudio.bgm = new Audio(secretData.bgm_url);
-                // BGM音量（小さめ）
-                horrorAudio.bgm.volume = 0.07; 
+                horrorAudio.bgm.volume = 0.1; // BGM音量
                 horrorAudio.bgm.loop = true;
                 horrorAudio.bgm.play().catch(e => console.log("BGM再生失敗"));
             }
         }, 1000);
         
-        // マウス追従を終了
         document.removeEventListener('mousemove', moveFlashlight);
         document.removeEventListener('touchmove', moveFlashlight);
     }
 
     // ★重要：既存の exitHorrorMode に音の停止処理を追加
-    // （元の exitHorrorMode を書き換えてください）
     function exitHorrorMode() {
         // 全ての音を止める
         if(horrorAudio.bgm) horrorAudio.bgm.pause();
@@ -2402,6 +2497,7 @@ async function toggleGraffitiLike() {
         
         const flashlight = document.getElementById('flashlightOverlay');
         flashlight.classList.remove('active');
+        flashlight.style.opacity = '0'; // 念のため透明度もリセット
         
         document.removeEventListener('mousemove', moveFlashlight);
         document.removeEventListener('touchmove', moveFlashlight);
@@ -2410,8 +2506,7 @@ async function toggleGraffitiLike() {
             flashlight.style.display = 'none';
             showPage('top'); 
             alert("...夢だったようだ。");
-            // リロードして状態を完全リセットしても良いかも
-            // location.reload(); 
+            location.reload(); // リセットのためにリロード推奨
         }, 2000);
     }
     // ▲▲▲ ここまで：隠し要素の制御プログラム ▲▲▲
