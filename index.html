@@ -554,17 +554,23 @@ canvas#drawCanvas {
         }
 
         /* ▼▼▼ ギミック用スタイル ▼▼▼ */
-        .horror-item { position: absolute; cursor: pointer; z-index: 10; transition: transform 0.2s; color: #333; font-size: 24px; }
-        .horror-item:hover { transform: scale(1.1); filter: drop-shadow(0 0 5px white); }
+        .horror-item { position: absolute; cursor: pointer; z-index: 10; transition: transform 0.2s; }
         
-        /* 1. ノート */
-        .horror-item.note { color: #5d4037; transform: rotate(-10deg); font-size: 30px; }
-        .note-overlay { display: none; position: fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.8); z-index:11000; align-items:center; justify-content:center; }
-        .note-paper { background: #fdf5e6; padding: 40px; width: 80%; max-width: 400px; min-height: 200px; font-family: 'Times New Roman', serif; color: #333; border-radius: 2px; box-shadow: 0 0 20px #000; font-weight: bold; line-height: 2; position: relative; }
-        .note-paper::before { content:""; position:absolute; top:0; left:20px; bottom:0; width:2px; background:rgba(255,0,0,0.1); }
+        /* 画像自体の設定（幅を制限してあげる） */
+        .horror-item img {
+            width: 100%; height: auto; 
+            filter: drop-shadow(0 5px 5px rgba(0,0,0,0.5)); /* 影をつけて落ちてる感を出す */
+        }
+        
+        .horror-item:hover { transform: scale(1.1); filter: brightness(1.2); }
+        
+        /* 1. ノートのサイズと角度 */
+        .horror-item.note { width: 80px; transform: rotate(-10deg); } /* ← widthで大きさを調整 */
 
-        /* 2. ラジカセ */
-        .horror-item.radio { color: #555; font-size: 35px; }
+        /* 2. ラジカセのサイズ */
+        .horror-item.radio { width: 100px; } /* ← widthで大きさを調整 */
+        
+        .horror-item.radio.playing { animation: shake-radio 0.1s infinite; }
         .horror-item.radio.playing { animation: shake-radio 0.1s infinite; color: #ff0000; }
         @keyframes shake-radio { 0% { transform:translate(1px, 1px) rotate(0deg); } 100% { transform:translate(-1px, -2px) rotate(-1deg); } }
 
@@ -1197,11 +1203,11 @@ canvas#drawCanvas {
         <div id="oldSchoolRoom" class="room-content" style="opacity:0; transition:opacity 2s;">
             
             <div class="horror-item note" onclick="openHorrorNote()" style="top: 70%; left: 20%;">
-                <i class="fas fa-book"></i>
+                <img src="item_note.png" alt="ノート">
             </div>
 
             <div class="horror-item radio" onclick="playHorrorRadio()" style="top: 80%; right: 15%;">
-                <i class="fas fa-broadcast-tower"></i>
+                <img src="item_radio.png" alt="ラジカセ">
             </div>
 
             <div class="horror-item window" onclick="triggerScream()" style="top: 30%; left: 10%; width: 15%; height: 20%; opacity: 0;">
