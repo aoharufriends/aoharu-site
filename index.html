@@ -499,6 +499,55 @@ canvas#drawCanvas {
             );
         }
 
+        /* ▼▼▼ ここから追加：薄暗さと雨のエフェクト ▼▼▼ */
+
+        /* 1. 全体を薄暗くするフィルター */
+        .darkness-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.6); /* 黒色の半透明（0.6で60%の暗さ） */
+            z-index: 1; /* 背景より手前 */
+            pointer-events: none; /* クリックを邪魔しない */
+        }
+
+        /* 2. 雨のアニメーション（共通設定） */
+        .rain-layer {
+            position: fixed;
+            top: -100%; /* 上から降ってくるように見せるため開始位置をずらす */
+            left: 0;
+            width: 100%;
+            height: 200%; /* ループさせるために高さを倍に */
+            z-index: 2; /* 暗さよりさらに手前 */
+            pointer-events: none;
+            /* 雨粒の模様（細い透明～白のグラデーション線） */
+            background-image: linear-gradient(to bottom, rgba(255,255,255,0) 0%, rgba(255,255,255,0.4) 10%, rgba(255,255,255,0) 20%);
+            background-repeat: repeat-x;
+        }
+
+        /* 雨レイヤー1（手前・大きくて速い雨） */
+        .rain-layer.layer1 {
+            background-size: 2px 200px; /* 雨粒の太さと長さ */
+            animation: rain-fall 0.8s linear infinite; /* 0.8秒で落下 */
+            opacity: 0.8;
+        }
+
+        /* 雨レイヤー2（奥・少し小さくて遅い雨） */
+        .rain-layer.layer2 {
+            background-size: 1px 150px; /* 少し細くて短い */
+            background-position: 50% 0; /* 位置を少しずらす */
+            animation: rain-fall 1.2s linear infinite; /* 1.2秒で落下 */
+            opacity: 0.4;
+        }
+
+        /* 落下アニメーションの定義 */
+        @keyframes rain-fall {
+            from { transform: translateY(0); }
+            to { transform: translateY(50%); } /* 画面の高さ半分だけ移動してループ */
+        }
+
         /* 旧校舎の背景演出 */
         .secret-bg-img {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
@@ -1272,11 +1321,15 @@ canvas#drawCanvas {
                 <div style="font-family:'Times New Roman', serif; font-size:40px; color:#550000; letter-spacing:5px; margin-bottom:20px; opacity:0.5;">
                     OLD SCHOOL
                 </div>
-                <div onclick="exitHorrorMode()" style="pointer-events:auto; display:inline-block; cursor:pointer; border:1px solid #555; padding:5px 15px; color:#555; border-radius:5px; background:rgba(0,0,0,0.5);">
-                    <i class="fas fa-running"></i> 非常口
-                </div>
-            </div>
-            <div class="secret-bg-img"></div>
+<div onclick="exitHorrorMode()" style="pointer-events:auto; display:inline-block; cursor:pointer; border:1px solid #555; padding:5px 15px; color:#555; border-radius:5px; background:rgba(0,0,0,0.5);">
+            <i class="fas fa-running"></i> 非常口
+        </div>
+    </div>
+
+    <div class="darkness-overlay"></div>
+    <div class="rain-layer layer1"></div>
+    <div class="rain-layer layer2"></div>
+    <div class="secret-bg-img"></div>
 
             <div id="noteModal" class="note-overlay" onclick="this.style.display='none'">
                 <div class="note-paper">
@@ -2308,23 +2361,33 @@ async function toggleGraffitiLike() {
         if(!confirm("本当に...入りますか？\n（後戻りはできません）")) return;
 
         document.getElementById('secretGate').classList.add('open');
-        // ... (中略) ...
+        
+        // ▼▼▼ ここを修正しました！ ▼▼▼
+        const flashlight = document.getElementById('flashlightOverlay');
+        
+        // activeを消すと真っ暗になるので、透明度を0にして「見えなく」します
+        flashlight.style.opacity = '0'; 
+        
+        // 2秒後に完全に消去
+        setTimeout(() => { 
+            flashlight.style.display = 'none'; 
+            flashlight.classList.remove('active'); 
+        }, 2000);
+        // ▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲
 
         setTimeout(() => {
             document.getElementById('oldSchoolRoom').style.opacity = '1';
             // BGM再生
             if(secretData.bgm_url) {
                 horrorAudio.bgm = new Audio(secretData.bgm_url);
-                
-                // ▼▼▼ ここを修正！(0.3 -> 0.1) ▼▼▼
+                // BGM音量（小さめ）
                 horrorAudio.bgm.volume = 0.1; 
-                // ▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲
-                
                 horrorAudio.bgm.loop = true;
-                horrorAudio.bgm.play().catch(e => console.log("BGM再生失敗（ユーザ操作が必要かも）"));
+                horrorAudio.bgm.play().catch(e => console.log("BGM再生失敗"));
             }
         }, 1000);
         
+        // マウス追従を終了
         document.removeEventListener('mousemove', moveFlashlight);
         document.removeEventListener('touchmove', moveFlashlight);
     }
