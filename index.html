@@ -2250,7 +2250,7 @@ async function toggleGraffitiLike() {
         document.getElementById('noteModal').style.display = 'flex';
     }
 
-    // 2. ラジカセ再生
+// 2. ラジオ再生
     function playHorrorRadio() {
         const btn = document.querySelector('.horror-item.radio');
         if (horrorAudio.radio && !horrorAudio.radio.paused) {
@@ -2260,33 +2260,31 @@ async function toggleGraffitiLike() {
         } else {
             if(!secretData.radio_voice_url) { alert("...ザーッ...（電池切れのようだ）"); return; }
             horrorAudio.radio = new Audio(secretData.radio_voice_url);
-            horrorAudio.radio.volume = 1.0;
+            
+            // ▼▼▼ ここを修正！(1.0 -> 0.3) ▼▼▼
+            horrorAudio.radio.volume = 0.3; 
+            // ▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲
+            
             horrorAudio.radio.loop = true;
             horrorAudio.radio.play();
             btn.classList.add('playing');
         }
     }
 
-    // 3. ドッキリ発動
+// 3. ドッキリ発動
     function triggerScream() {
         // 音再生
         if(secretData.scream_voice_url) {
             horrorAudio.scream = new Audio(secretData.scream_voice_url);
-            horrorAudio.scream.volume = 1.0;
+            
+            // ▼▼▼ ここを修正！(1.0 -> 0.4) ▼▼▼
+            horrorAudio.scream.volume = 0.4;
+            // ▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲
+            
             horrorAudio.scream.play();
         } else {
             // 音がない場合はブラウザのビープ音代わりや振動などを入れたいところですが一旦なし
         }
-
-        // 画像表示
-        const overlay = document.getElementById('screamOverlay');
-        overlay.style.display = 'block';
-
-        // 1.5秒後に消える
-        setTimeout(() => {
-            overlay.style.display = 'none';
-        }, 1500);
-    }
 
     // ★重要：既存の openSecretGate を少し修正（BGM再生のため）
     // （元の openSecretGate の中身を上書きしてください）
