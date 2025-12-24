@@ -686,22 +686,19 @@ canvas#drawCanvas {
             background:rgba(255,0,0,0.3); 
         }
 
-/* ▼▼▼ 追加：テレビ風ホラーノイズのスタイル ▼▼▼ */
+        /* ▼▼▼ 追加：テレビ風ホラーノイズのスタイル ▼▼▼ */
 
         /* ノイズ画面の基本設定 */
         .tv-noise-layer {
             position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            z-index: 20000; /* どの要素よりも手前に */
-            pointer-events: none; /* クリックを邪魔しない */
-            opacity: 0; /* 普段は隠しておく */
-            /* ↓↓↓ 用意したGIF画像のファイル名！ ↓↓↓ */
-            background-image: url('noise.gif'); 
-            background-size: cover;
-            mix-blend-mode: hard-light; /* 背景と強めに合成して発光感を出す */
+            top: 0; left: 0; width: 100%; height: 100%;
+            z-index: 20000;
+            pointer-events: none;
+            opacity: 0;
+            /* 画像を使わず、計算式で「砂嵐」を描画します（エラー回避！） */
+            background-image: repeating-radial-gradient(circle, #000 0 0.0001%, #fff 0 0.0002%);
+            background-size: 100% 100%;
+            mix-blend-mode: exclusion; 
         }
 
         /* ノイズが表示された時の状態 */
@@ -794,6 +791,41 @@ canvas#drawCanvas {
         @keyframes scanline {
             0% { background-position: 0 0; }
             100% { background-position: 0 100%; }
+        }
+        .cursed-input-area {
+            position: absolute; z-index: 100; text-align: center; width: 300px;
+        }
+        .cursed-label {
+            color: #550000; font-family: 'Serif', serif; font-weight: bold; font-size: 14px;
+            margin-bottom: 5px; text-shadow: 0 0 5px #000; opacity: 0.7;
+        }
+        .cursed-input {
+            width: 100%; background: rgba(0, 0, 0, 0.5); border: none;
+            border-bottom: 2px solid #880000; color: #ff0000; font-size: 20px;
+            padding: 10px; font-family: 'Times New Roman', serif; outline: none;
+            text-align: center; transition: 0.3s;
+        }
+        .cursed-input::placeholder { color: #550000; }
+        .cursed-input:focus {
+            background: rgba(50, 0, 0, 0.6); border-bottom: 2px solid #ff0000;
+            box-shadow: 0 0 15px #ff0000;
+        }
+        /* 画面が赤くなる演出 */
+        .red-flash { animation: flash-red 0.2s 3; }
+        @keyframes flash-red {
+            0%, 100% { background-color: transparent; }
+            50% { background-color: rgba(255, 0, 0, 0.3); }
+        }
+        /* ▼▼▼ 追加：入力欄を震わせるアニメーション ▼▼▼ */
+        .shaking {
+            animation: shake-hard 0.1s infinite;
+        }
+        @keyframes shake-hard {
+            0% { transform: translate(0, 0) rotate(0deg); }
+            25% { transform: translate(-5px, 5px) rotate(-5deg); }
+            50% { transform: translate(0, -5px) rotate(0deg); }
+            75% { transform: translate(5px, 5px) rotate(5deg); }
+            100% { transform: translate(0, 0) rotate(0deg); }
         }
     </style>
 </head>
@@ -1432,6 +1464,11 @@ canvas#drawCanvas {
 
             <div class="horror-item blood-wall" style="top: 20%; right: 30%;">
                 <span id="bloodTextDisplay" class="blood-text"></span>
+            </div>
+
+<div class="cursed-input-area" style="top: 50%; left: 50%; transform: translate(-50%, -50%);">
+                <p class="cursed-label">...ナマエヲ カケ...</p>
+                <input type="text" id="cursedInput" class="cursed-input" placeholder="ここに入力..." autocomplete="off">
             </div>
 
             <div class="container" style="padding-top:50px; text-align:center; position:relative; z-index:1; pointer-events:none;">
@@ -2507,6 +2544,98 @@ async function toggleGraffitiLike() {
             alert("...夢だったようだ。");
             location.reload(); // リセットのためにリロード推奨
         }, 2000);
+    }
+
+    // ▼▼▼ 言葉の判定プログラム ▼▼▼
+    const inputField = document.getElementById('cursedInput');
+
+    if(inputField) {
+        inputField.addEventListener('keypress', function (e) {
+            if (e.key === 'Enter') {
+                const text = this.value; // 入力された文字
+                this.value = ''; // 入力欄を空にする
+                handleCursedWord(text); // 判定関数へ
+            }
+        });
+    }
+
+    function handleCursedWord(word) {
+        if (word.includes('あそぼ') || word.includes('遊ぼ')) {
+            // ★「あそぼ」
+            alert("...ケケケ...（どこからか笑い声が聞こえた）");
+        } 
+        else if (word.includes('うしろ') || word.includes('後ろ')) {
+            // ★「うしろ」
+            const noise = document.getElementById('tvNoiseOverlay');
+            if(noise) {
+                noise.classList.add('active');
+                setTimeout(() => noise.classList.remove('active'), 1000);
+            }
+            const label = document.querySelector('.cursed-label');
+            if(label) {
+                label.innerText = "フリカエルナ！！";
+                label.style.color = "red";
+            }
+        }
+        else if (word.includes('助けて') || word.includes('たすけて')) {
+            // ★「助けて」
+            document.body.classList.add('red-flash');
+            setTimeout(() => document.body.classList.remove('red-flash'), 600);
+            
+            const input = document.getElementById('cursedInput');
+            setTimeout(() => {
+                if(input) {
+                    input.value = "ムダダ";
+                    input.style.color = "black";
+                }
+            }, 500);
+        }
+        else if (word.includes('ごめんなさい') || word.includes('ゆるして')) {
+            // ★【拒絶】勝手に文字が書き換わる
+            const input = document.getElementById('cursedInput');
+            if(input) {
+                input.style.color = "#880000"; // 血の色
+                input.value = "ユルサナイユルサナイユルサナイ";
+                // 震えるアニメーション（既存のクラス流用）
+                input.classList.add('shaking');
+                setTimeout(() => input.classList.remove('shaking'), 1000);
+            }
+        }
+        else if (word.includes('みてる') || word.includes('見てる')) {
+            // ★【集合体】画面中に目をばら撒く
+            for(let i=0; i<30; i++) {
+                const eye = document.createElement('div');
+                eye.innerText = "👁️";
+                eye.style.position = "fixed";
+                eye.style.left = Math.random() * 100 + "vw";
+                eye.style.top = Math.random() * 100 + "vh";
+                eye.style.fontSize = (Math.random() * 50 + 20) + "px";
+                eye.style.zIndex = "30000";
+                eye.style.pointerEvents = "none";
+                document.body.appendChild(eye);
+                
+                // 1.5秒後に消す
+                setTimeout(() => eye.remove(), 1500);
+            }
+            alert("...キズイタカ...");
+        }
+        else if (word.includes('おかしい') || word.includes('バグ')) {
+            // ★【平衡感覚異常】画面を傾ける
+            document.body.style.transition = "transform 2s";
+            document.body.style.transform = "rotate(3deg)";
+            alert("...オカシイノハ オマエダ...");
+        }
+        else if (word.includes('あおはる') || word.includes('アオハル') || word.includes('フレンズ')) {
+            // ★【存在否定】グループ名を否定する
+            const input = document.getElementById('cursedInput');
+            if(input) {
+                input.value = ""; // 一旦消す
+                setTimeout(() => {
+                    input.value = "ソンナ ヤツハ イナイ";
+                    input.style.color = "#555"; // 冷たい灰色
+                }, 300);
+            }
+        }
     }
     // ▲▲▲ ここまで：隠し要素の制御プログラム ▲▲▲
 </script>
