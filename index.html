@@ -21,10 +21,9 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
     <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
-
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
 
-    <script src="https://unpkg.com/skinview3d@3.0.0-alpha.1/dist/skinview3d.bundle.js"></script>
+    <script src="https://bs-community.github.io/skinview3d/js/skinview3d.bundle.js"></script>
 
     <style>
         /* ベーススタイル */
@@ -1547,6 +1546,12 @@ canvas#drawCanvas {
             </div>
         </div>
 
+<div id="secretOldSchool" class="page" style="background-color:#050505; min-height:100vh; overflow:hidden;">
+       <div id="screamOverlay" class="scream-overlay">
+           <img id="screamImg" src="" style="width:100%; height:100%; object-fit:cover;">
+       </div>
+</div>
+
 <script>
     // ★★★ GASのURL（あなたの最新のURLに書き換えてください！） ★★★
     const GAS_API_URL = "https://script.google.com/macros/s/AKfycbxrxXvVgdhusrJXhIEjHK_gjYSZRWiPERKanm7zJe38jbEY20pJT-jvFGSByVap08c88Q/exec";
@@ -2372,7 +2377,7 @@ async function toggleGraffitiLike() {
     function checkLiveStatus() { /* 省略 */ }
     function initEasterEgg() { window.addEventListener('keydown', (e) => { secretInput.push(e.key); if (secretInput.length > secretCode.length) secretInput.shift(); if (JSON.stringify(secretInput) === JSON.stringify(secretCode)) activateFeverMode(); }); const logo = document.getElementById('headerLogo'); if(logo) { logo.addEventListener('click', (e) => { e.preventDefault(); logoTapCount++; if(logoTapCount === 10) { activateFeverMode(); logoTapCount = 0; } setTimeout(() => logoTapCount = 0, 3000); }); } }
     function activateFeverMode() { if(document.body.classList.contains('fever-mode')) return; document.body.classList.add('fever-mode'); const text = document.createElement('div'); text.className = 'fever-text'; text.innerText = "FEVER TIME!!"; document.body.appendChild(text); var duration = 5000; var end = Date.now() + duration; (function frame() { if(typeof confetti === 'function'){ confetti({ particleCount: 2, angle: 60, spread: 55, origin: { x: 0 }, colors: ['#ff0000', '#00ff00', '#0000ff'] }); confetti({ particleCount: 2, angle: 120, spread: 55, origin: { x: 1 }, colors: ['#ff0000', '#00ff00', '#0000ff'] }); } if (Date.now() < end) requestAnimationFrame(frame); else { document.body.classList.remove('fever-mode'); text.remove(); alert("祭りは終わった……"); } }()); }
-    // ▼▼▼ スキンビューワー制御プログラム ▼▼▼
+// ▼▼▼ 【追加6】ここに追加！スキンビューワー制御プログラム ▼▼▼
     let skinViewer;
     let skinAnimation;
 
@@ -2381,16 +2386,16 @@ async function toggleGraffitiLike() {
         const canvas = document.getElementById("skin_container");
         if(!canvas) return;
 
-        // ★修正：初期スキンをファイル名だけで指定（あおちゃんの画像にしておく）
+        // ★修正：フォルダなしの「skin_ao.png」を指定
         skinViewer = new skinview3d.SkinViewer({
             canvas: canvas, width: 300, height: 400,
-            skin: "skin_ao.png" 
+            skin: "skin_ao.png"
         });
-
         skinViewer.width = canvas.parentElement.clientWidth;
         skinViewer.height = canvas.parentElement.clientHeight;
         skinViewer.fov = 70; skinViewer.zoom = 0.9;
         skinViewer.autoRotate = true; skinViewer.autoRotateSpeed = 0.5;
+        
         setSkinAnim('walk', document.querySelectorAll('.skin-btn')[1]);
         renderSkinButtons();
     }
@@ -2409,12 +2414,12 @@ async function toggleGraffitiLike() {
         const container = document.getElementById('skinMemberButtons');
         if(!container) return;
         
-        // ★修正：デフォルト画像もファイル名だけで指定
+        // ★修正：初期ボタンも「skin_ao.png」
         let html = `<img src="icon.png" class="skin-member-icon selected" onclick="changeSkin(this, 'skin_ao.png')">`;
         
         if(memberData.length > 0) {
             memberData.forEach(m => {
-                // ★修正：スプシにURLがない場合の予備もファイル名だけで指定
+                // ★修正：予備も「skin_ao.png」
                 const skinUrl = m.skin_url || "skin_ao.png";
                 html += `<img src="${m.img}" class="skin-member-icon" onclick="changeSkin(this, '${skinUrl}')">`;
             });
@@ -2422,12 +2427,6 @@ async function toggleGraffitiLike() {
         container.innerHTML = html;
     }
 
-    function changeSkin(btn, url) {
-        if(!skinViewer) return;
-        skinViewer.loadSkin(url);
-        document.querySelectorAll('.skin-member-icon').forEach(i => i.classList.remove('selected'));
-        btn.classList.add('selected');
-    }
     function changeSkin(btn, url) {
         if(!skinViewer) return;
         skinViewer.loadSkin(url);
