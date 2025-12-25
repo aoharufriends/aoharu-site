@@ -847,17 +847,27 @@ canvas#drawCanvas {
         }
         .skin-btn:hover, .skin-btn.active { background: var(--primary); color: white; }
         .skin-member-select { display: flex; gap: 10px; overflow-x: auto; padding: 10px; margin-bottom: 20px; justify-content: center; }
+/* ▼▼▼ アイコンの設定（書き換え） ▼▼▼ */
 .skin-member-icon {
-    width: 80px;
-    height: 80px;
-    border-radius: 50%;
-    border: 3px solid #eee;
+    width: 60px;              /* アイコン自体の大きさ */
+    height: 60px;
+    border-radius: 50%;       /* 丸くする */
+    border: 3px solid #eee;   /* 枠線 */
     cursor: pointer;
     transition: 0.2s;
-    object-fit: cover;
-    object-position: top; 
+    
+    /* ↓↓↓ ここが魔法のズーム設定！ ↓↓↓ */
+    background-size: 220%;    /* 画像を2.2倍にズーム！（数字を変えれば調節可能） */
+    background-position: top center; /* 上の方（顔）を中心に表示 */
+    background-repeat: no-repeat;
+    background-color: #ffffff; /* 画像がない時の背景色 */
 }
-        .skin-member-icon.selected { border-color: var(--primary); transform: scale(1.1); }
+
+/* 選択された時の動き */
+.skin-member-icon.selected {
+    border-color: var(--primary);
+    transform: scale(1.1);
+}
     </style>
 </head>
 <body>
@@ -2419,18 +2429,24 @@ async function toggleGraffitiLike() {
         else if (type === 'fly') skinAnimation = skinViewer.animation = new skinview3d.FlyingAnimation();
     }
 
+    // ▼▼▼ メンバーボタン生成（ズーム対応版） ▼▼▼
     function renderSkinButtons() {
         const container = document.getElementById('skinMemberButtons');
         if(!container) return;
         
-        // ★修正：初期ボタンも「skin_ao.png」
-        let html = `<img src="icon.png" class="skin-member-icon selected" onclick="changeSkin(this, 'skin_ao.png')">`;
+        // ★デフォルトボタン（アイコン画像を使用）
+        // style="..." の中で画像を背景として設定しています
+        let html = `<div class="skin-member-icon selected" 
+                         style="background-image: url('icon.png');" 
+                         onclick="changeSkin(this, 'skin_ao.png')"></div>`;
         
         if(memberData.length > 0) {
             memberData.forEach(m => {
-                // ★修正：予備も「skin_ao.png」
                 const skinUrl = m.skin_url || "skin_ao.png";
-                html += `<img src="${m.img}" class="skin-member-icon" onclick="changeSkin(this, '${skinUrl}')">`;
+                // ★ここが変更点！ imgタグではなく divタグ にしています
+                html += `<div class="skin-member-icon" 
+                              style="background-image: url('${m.img}');" 
+                              onclick="changeSkin(this, '${skinUrl}')"></div>`;
             });
         }
         container.innerHTML = html;
