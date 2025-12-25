@@ -21,7 +21,6 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
     <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
 
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
 
@@ -834,7 +833,7 @@ canvas#drawCanvas {
         /* ▼▼▼ 【追加2】ここに追加！スキンビューワーのデザイン ▼▼▼ */
         .skin-viewer-container {
             width: 100%; max-width: 400px; height: 400px; margin: 0 auto 20px;
-            background: url('https://raw.githubusercontent.com/bs-community/skinview3d/master/examples/img/panorama.png');
+            background: linear-gradient(to bottom, #87CEEB, #E0F7FA); /* 空色のグラデーション */
             background-size: cover; background-position: center;
             border-radius: 20px; border: 4px solid #fff;
             box-shadow: inset 0 0 20px rgba(0,0,0,0.5), 0 10px 20px rgba(0,0,0,0.2);
@@ -1550,7 +1549,7 @@ canvas#drawCanvas {
 
 <script>
     // ★★★ GASのURL（あなたの最新のURLに書き換えてください！） ★★★
-    const GAS_API_URL = "https://script.google.com/macros/s/AKfycbw_96Ssm_d8Zs8NTCfCAr1Vk0ZNj7h2imH3zKDC9p8DzZ3x8Cx4swYKslHcHEmCu5tVvA/exec";
+    const GAS_API_URL = "https://script.google.com/macros/s/AKfycbxrxXvVgdhusrJXhIEjHK_gjYSZRWiPERKanm7zJe38jbEY20pJT-jvFGSByVap08c88Q/exec";
 
     let YOUTUBE_API_KEY = ""; 
     let GROUP_CONFIG = {};
@@ -2373,7 +2372,7 @@ async function toggleGraffitiLike() {
     function checkLiveStatus() { /* 省略 */ }
     function initEasterEgg() { window.addEventListener('keydown', (e) => { secretInput.push(e.key); if (secretInput.length > secretCode.length) secretInput.shift(); if (JSON.stringify(secretInput) === JSON.stringify(secretCode)) activateFeverMode(); }); const logo = document.getElementById('headerLogo'); if(logo) { logo.addEventListener('click', (e) => { e.preventDefault(); logoTapCount++; if(logoTapCount === 10) { activateFeverMode(); logoTapCount = 0; } setTimeout(() => logoTapCount = 0, 3000); }); } }
     function activateFeverMode() { if(document.body.classList.contains('fever-mode')) return; document.body.classList.add('fever-mode'); const text = document.createElement('div'); text.className = 'fever-text'; text.innerText = "FEVER TIME!!"; document.body.appendChild(text); var duration = 5000; var end = Date.now() + duration; (function frame() { if(typeof confetti === 'function'){ confetti({ particleCount: 2, angle: 60, spread: 55, origin: { x: 0 }, colors: ['#ff0000', '#00ff00', '#0000ff'] }); confetti({ particleCount: 2, angle: 120, spread: 55, origin: { x: 1 }, colors: ['#ff0000', '#00ff00', '#0000ff'] }); } if (Date.now() < end) requestAnimationFrame(frame); else { document.body.classList.remove('fever-mode'); text.remove(); alert("祭りは終わった……"); } }()); }
-    // ▼▼▼ 【追加6】ここに追加！スキンビューワー制御プログラム ▼▼▼
+    // ▼▼▼ スキンビューワー制御プログラム ▼▼▼
     let skinViewer;
     let skinAnimation;
 
@@ -2382,10 +2381,12 @@ async function toggleGraffitiLike() {
         const canvas = document.getElementById("skin_container");
         if(!canvas) return;
 
+        // ★修正：初期スキンをファイル名だけで指定（あおちゃんの画像にしておく）
         skinViewer = new skinview3d.SkinViewer({
             canvas: canvas, width: 300, height: 400,
-            skin: "https://raw.githubusercontent.com/bs-community/skinview3d/master/examples/img/skin.png"
+            skin: "skin_ao.png" 
         });
+
         skinViewer.width = canvas.parentElement.clientWidth;
         skinViewer.height = canvas.parentElement.clientHeight;
         skinViewer.fov = 70; skinViewer.zoom = 0.9;
@@ -2407,16 +2408,26 @@ async function toggleGraffitiLike() {
     function renderSkinButtons() {
         const container = document.getElementById('skinMemberButtons');
         if(!container) return;
-        let html = `<img src="icon.png" class="skin-member-icon selected" onclick="changeSkin(this, 'https://raw.githubusercontent.com/bs-community/skinview3d/master/examples/img/skin.png')">`;
+        
+        // ★修正：デフォルト画像もファイル名だけで指定
+        let html = `<img src="icon.png" class="skin-member-icon selected" onclick="changeSkin(this, 'skin_ao.png')">`;
+        
         if(memberData.length > 0) {
             memberData.forEach(m => {
-                const skinUrl = m.skin_url || "https://raw.githubusercontent.com/bs-community/skinview3d/master/examples/img/skin.png";
+                // ★修正：スプシにURLがない場合の予備もファイル名だけで指定
+                const skinUrl = m.skin_url || "skin_ao.png";
                 html += `<img src="${m.img}" class="skin-member-icon" onclick="changeSkin(this, '${skinUrl}')">`;
             });
         }
         container.innerHTML = html;
     }
 
+    function changeSkin(btn, url) {
+        if(!skinViewer) return;
+        skinViewer.loadSkin(url);
+        document.querySelectorAll('.skin-member-icon').forEach(i => i.classList.remove('selected'));
+        btn.classList.add('selected');
+    }
     function changeSkin(btn, url) {
         if(!skinViewer) return;
         skinViewer.loadSkin(url);
