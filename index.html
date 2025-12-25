@@ -23,6 +23,10 @@
     <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
 
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+
+    <script src="https://unpkg.com/skinview3d@3.0.0-alpha.1/dist/skinview3d.bundle.js"></script>
+
     <style>
         /* ベーススタイル */
         :root { --primary: #27C6F5; --text-main: #444444; --text-sub: #888888; --bg-color: #ffffff; --light-bg: #f4f8fa; }
@@ -827,6 +831,26 @@ canvas#drawCanvas {
             75% { transform: translate(5px, 5px) rotate(5deg); }
             100% { transform: translate(0, 0) rotate(0deg); }
         }
+        /* ▼▼▼ 【追加2】ここに追加！スキンビューワーのデザイン ▼▼▼ */
+        .skin-viewer-container {
+            width: 100%; max-width: 400px; height: 400px; margin: 0 auto 20px;
+            background: url('https://raw.githubusercontent.com/bs-community/skinview3d/master/examples/img/panorama.png');
+            background-size: cover; background-position: center;
+            border-radius: 20px; border: 4px solid #fff;
+            box-shadow: inset 0 0 20px rgba(0,0,0,0.5), 0 10px 20px rgba(0,0,0,0.2);
+            position: relative; overflow: hidden;
+        }
+        canvas#skin_container { width: 100% !important; height: 100% !important; outline: none; }
+        .skin-controls { display: flex; flex-wrap: wrap; gap: 10px; justify-content: center; margin-bottom: 30px; }
+        .skin-btn {
+            background: white; border: 1px solid #ddd; padding: 8px 15px;
+            border-radius: 20px; font-size: 12px; font-weight: bold; cursor: pointer;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1); transition: 0.2s;
+        }
+        .skin-btn:hover, .skin-btn.active { background: var(--primary); color: white; }
+        .skin-member-select { display: flex; gap: 10px; overflow-x: auto; padding: 10px; margin-bottom: 20px; justify-content: center; }
+        .skin-member-icon { width: 50px; height: 50px; border-radius: 50%; border: 3px solid #eee; cursor: pointer; transition: 0.2s; object-fit: cover; }
+        .skin-member-icon.selected { border-color: var(--primary); transform: scale(1.1); }
     </style>
 </head>
 <body>
@@ -856,6 +880,7 @@ canvas#drawCanvas {
         <a href="javascript:void(0)" class="menu-link" onclick="showPage('radio')">RADIO</a>
         <a href="javascript:void(0)" class="menu-link" onclick="showPage('guideline')">GUIDELINE</a> 
         <a href="javascript:void(0)" class="menu-link" onclick="showPage('rakugaki')">GRAFFITI</a>
+        <a href="javascript:void(0)" class="menu-link" onclick="showPage('skinviewer')">SKIN VIEWER</a>
         <a href="javascript:void(0)" class="menu-link" onclick="openLoginModal(); toggleMenu();" style="color:var(--primary);">LOGIN</a>
     </div>
     <div id="overlay" class="overlay" onclick="toggleMenu()"></div>
@@ -1334,6 +1359,32 @@ canvas#drawCanvas {
                 <button class="scroll-btn right" onclick="scrollContent('graffitiList', 'right')">▶</button>
             </div>
         </div>
+    </div>
+</div>    
+    <div id="skinviewer" class="page">
+        <div class="page-header">
+            <div class="page-title-en" style="color:#2ecc71;">SKIN VIEWER</div>
+            <div class="page-title-jp">3Dスキンビューワー</div>
+        </div>
+        <div class="container">
+            <div style="text-align:center; margin-bottom:20px;">
+                <p style="font-size:12px; color:#666;">くるくる回したり、ポーズを変えて観察しよう！</p>
+            </div>
+            <div class="skin-member-select" id="skinMemberButtons"></div>
+            <div class="skin-viewer-container">
+                <canvas id="skin_container"></canvas>
+            </div>
+            <div class="skin-controls">
+                <button class="skin-btn active" onclick="setSkinAnim('idle', this)">立ち</button>
+                <button class="skin-btn" onclick="setSkinAnim('walk', this)">歩き</button>
+                <button class="skin-btn" onclick="setSkinAnim('run', this)">走り</button>
+                <button class="skin-btn" onclick="setSkinAnim('fly', this)">飛行</button>
+                <button class="skin-btn" onclick="skinViewer.autoRotate = !skinViewer.autoRotate;">回転 ON/OFF</button>
+            </div>
+            <div style="text-align:center;">
+                <button onclick="showPage('top')" class="more-btn">TOPへ戻る</button>
+            </div>
+        </div>
     </div>    
     <div class="floating-heart-btn" onclick="spawnHeart()">
         <i class="fas fa-heart"></i>
@@ -1412,8 +1463,9 @@ canvas#drawCanvas {
                     <li><a href="javascript:void(0)" onclick="showPage('goods')">GOODS<span class="footer-menu-ja">グッズ</span></a></li>
                     <li><a href="javascript:void(0)" onclick="showPage('radio')">RADIO<span class="footer-menu-ja">ラジオ</span></a></li>
                     <li><a href="javascript:void(0)" onclick="showPage('guideline')">GUIDELINE<span class="footer-menu-ja">ガイドライン</span></a></li> 
-<li><a href="javascript:void(0)" onclick="showPage('rakugaki')">GRAFFITI<span class="footer-menu-ja">落書き広場</span></a></li>
-<li><a href="javascript:void(0)" onclick="openLoginModal()">LOGIN<span class="footer-menu-ja">ログイン</span></a></li>
+                    <li><a href="javascript:void(0)" onclick="showPage('rakugaki')">GRAFFITI<span class="footer-menu-ja">落書き広場</span></a></li>
+                    <li><a href="javascript:void(0)" onclick="showPage('skinviewer')">SKIN VIEWER<span class="footer-menu-ja">3Dモデル</span></a></li>
+                    <li><a href="javascript:void(0)" onclick="openLoginModal()">LOGIN<span class="footer-menu-ja">ログイン</span></a></li>
                 </ul>
             </div>
             <div class="footer-right">
@@ -1498,7 +1550,7 @@ canvas#drawCanvas {
 
 <script>
     // ★★★ GASのURL（あなたの最新のURLに書き換えてください！） ★★★
-    const GAS_API_URL = "https://script.google.com/macros/s/AKfycbyXOrAWYo_TNI647mb4AfwEV6QpUl-29FqsMIym39o5IRZeu--6siBy10lhK-tOKeXCkw/exec";
+    const GAS_API_URL = "https://script.google.com/macros/s/AKfycbx1lNZcNFJ1pMwmV9sknBNwwORT1eJpKiPn2e0FmhfCex8xuNU6t1jCWtBDIExYDHhD5g/exec";
 
     let YOUTUBE_API_KEY = ""; 
     let GROUP_CONFIG = {};
@@ -1617,6 +1669,9 @@ canvas#drawCanvas {
                     checkCanvasLock();    
                     renderGraffitiList(); 
                 }, 300); 
+            }
+            if(pageId === 'skinviewer') {
+                setTimeout(initSkinViewer, 100);
             } 
         }
         if(document.getElementById('sideMenu').classList.contains('open')) { toggleMenu(); }
@@ -2318,12 +2373,62 @@ async function toggleGraffitiLike() {
     function checkLiveStatus() { /* 省略 */ }
     function initEasterEgg() { window.addEventListener('keydown', (e) => { secretInput.push(e.key); if (secretInput.length > secretCode.length) secretInput.shift(); if (JSON.stringify(secretInput) === JSON.stringify(secretCode)) activateFeverMode(); }); const logo = document.getElementById('headerLogo'); if(logo) { logo.addEventListener('click', (e) => { e.preventDefault(); logoTapCount++; if(logoTapCount === 10) { activateFeverMode(); logoTapCount = 0; } setTimeout(() => logoTapCount = 0, 3000); }); } }
     function activateFeverMode() { if(document.body.classList.contains('fever-mode')) return; document.body.classList.add('fever-mode'); const text = document.createElement('div'); text.className = 'fever-text'; text.innerText = "FEVER TIME!!"; document.body.appendChild(text); var duration = 5000; var end = Date.now() + duration; (function frame() { if(typeof confetti === 'function'){ confetti({ particleCount: 2, angle: 60, spread: 55, origin: { x: 0 }, colors: ['#ff0000', '#00ff00', '#0000ff'] }); confetti({ particleCount: 2, angle: 120, spread: 55, origin: { x: 1 }, colors: ['#ff0000', '#00ff00', '#0000ff'] }); } if (Date.now() < end) requestAnimationFrame(frame); else { document.body.classList.remove('fever-mode'); text.remove(); alert("祭りは終わった……"); } }()); }
-// ▼▼▼ ここから：隠し要素（ホラーモード）の制御プログラム ▼▼▼
+    // ▼▼▼ 【追加6】ここに追加！スキンビューワー制御プログラム ▼▼▼
+    let skinViewer;
+    let skinAnimation;
+
+    function initSkinViewer() {
+        if(skinViewer) return;
+        const canvas = document.getElementById("skin_container");
+        if(!canvas) return;
+
+        skinViewer = new skinview3d.SkinViewer({
+            canvas: canvas, width: 300, height: 400,
+            skin: "https://raw.githubusercontent.com/bs-community/skinview3d/master/examples/img/skin.png"
+        });
+        skinViewer.width = canvas.parentElement.clientWidth;
+        skinViewer.height = canvas.parentElement.clientHeight;
+        skinViewer.fov = 70; skinViewer.zoom = 0.9;
+        skinViewer.autoRotate = true; skinViewer.autoRotateSpeed = 0.5;
+        setSkinAnim('walk', document.querySelectorAll('.skin-btn')[1]);
+        renderSkinButtons();
+    }
+
+    function setSkinAnim(type, btn) {
+        if(skinAnimation) skinAnimation.paused = true;
+        document.querySelectorAll('.skin-controls .skin-btn').forEach(b => b.classList.remove('active'));
+        if(btn) btn.classList.add('active');
+        if (type === 'idle') skinAnimation = skinViewer.animation = new skinview3d.IdleAnimation();
+        else if (type === 'walk') skinAnimation = skinViewer.animation = new skinview3d.WalkingAnimation();
+        else if (type === 'run') skinAnimation = skinViewer.animation = new skinview3d.RunningAnimation();
+        else if (type === 'fly') skinAnimation = skinViewer.animation = new skinview3d.FlyingAnimation();
+    }
+
+    function renderSkinButtons() {
+        const container = document.getElementById('skinMemberButtons');
+        if(!container) return;
+        let html = `<img src="icon.png" class="skin-member-icon selected" onclick="changeSkin(this, 'https://raw.githubusercontent.com/bs-community/skinview3d/master/examples/img/skin.png')">`;
+        if(memberData.length > 0) {
+            memberData.forEach(m => {
+                const skinUrl = m.skin_url || "https://raw.githubusercontent.com/bs-community/skinview3d/master/examples/img/skin.png";
+                html += `<img src="${m.img}" class="skin-member-icon" onclick="changeSkin(this, '${skinUrl}')">`;
+            });
+        }
+        container.innerHTML = html;
+    }
+
+    function changeSkin(btn, url) {
+        if(!skinViewer) return;
+        skinViewer.loadSkin(url);
+        document.querySelectorAll('.skin-member-icon').forEach(i => i.classList.remove('selected'));
+        btn.classList.add('selected');
+    }
+    // ▼▼▼ ここから：隠し要素（ホラーモード）の制御プログラム ▼▼▼
 
     let secretTapCount = 0;
     let secretTapTimer = null;
 
-// 1. フッターを連打した時の処理（ノイズ演出追加版！）
+    // 1. フッターを連打した時の処理（ノイズ演出追加版！）
     function triggerSecretEvent() {
         secretTapCount++;
         
