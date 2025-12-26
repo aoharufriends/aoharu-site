@@ -2610,32 +2610,38 @@ async function toggleGraffitiLike() {
     }
 
 
-    // ▼▼▼ AOHARU STUDIO 制御プログラム（統合・個別操作版） ▼▼▼
+    // ▼▼▼ AOHARU STUDIO 制御プログラム（修正版：保存バグ対策） ▼▼▼
     let studioViewers = [];
-    let selectedActorIndex = -1; // -1は「全員」
+    let selectedActorIndex = -1; 
 
     function initStudio() {
         if(studioViewers.length > 0) return;
 
         const canvasIds = ['skin_member_1', 'skin_member_2', 'skin_user', 'skin_member_3', 'skin_member_4'];
         
-        // ★実際のファイル名に合わせてね！
+        // ファイル名はご自身の環境に合わせてください
         const defaultSkins = ["skin_iyo.png", "skin_taku.png", "skin_ao.png", "skin_yua.png", "skin_ao.png"];
 
         canvasIds.forEach((id, index) => {
             const canvas = document.getElementById(id);
             if(!canvas) return;
             
+            const container = canvas.parentElement;
+            const rect = container.getBoundingClientRect();
+
             const viewer = new skinview3d.SkinViewer({
-                canvas: canvas, width: 300, height: 400,
-                skin: defaultSkins[index]
+                canvas: canvas,
+                width: rect.width,
+                height: rect.height,
+                skin: defaultSkins[index],
+                preserveDrawingBuffer: true // ★★★ ここを追加！これで撮影しても消えません！ ★★★
             });
             
             // 全体調整
-            viewer.fov = 60; 
-            viewer.zoom = 0.9; 
+            viewer.fov = 50;
+            viewer.zoom = 0.85;
             viewer.autoRotate = false;
-            viewer.animation = new skinview3d.WalkingAnimation(); // 最初は歩く
+            viewer.animation = new skinview3d.WalkingAnimation();
 
             studioViewers.push(viewer);
         });
