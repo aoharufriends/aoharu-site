@@ -868,6 +868,41 @@ canvas#drawCanvas {
     border-color: var(--primary);
     transform: scale(1.1);
 }
+       /* ▼▼▼ AOHARU STUDIOのデザイン ▼▼▼ */
+        .studio-stage {
+            position: relative; width: 100%; aspect-ratio: 16 / 9;
+            background: #333; border-radius: 10px; overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3); border: 4px solid #fff;
+        }
+        .studio-bg {
+            position: absolute; inset: 0; background-size: cover; background-position: center;
+            background-color: #87CEEB; transition: 0.3s;
+        }
+        .studio-watermark {
+            position: absolute; bottom: 10px; right: 10px; width: 100px; opacity: 0.8; z-index: 20; pointer-events: none;
+        }
+        .studio-actors {
+            position: absolute; inset: 0; display: flex; align-items: flex-end; justify-content: center;
+            padding-bottom: 20px; z-index: 10;
+        }
+        .actor-box { width: 18%; height: 60%; position: relative; transition: transform 0.2s; }
+        .actor-box.center { width: 24%; height: 75%; z-index: 15; filter: drop-shadow(0 0 10px rgba(255, 255, 255, 0.5)); }
+        .actor-box canvas { width: 100% !important; height: 100% !important; outline:none; }
+        .user-label {
+            position: absolute; bottom: -30px; left: 50%; transform: translateX(-50%);
+            background: #e1b12c; color: white; font-weight: bold; font-size: 10px; padding: 2px 8px; border-radius: 4px;
+        }
+        .studio-controls {
+            background: #2f3640; color: white; padding: 20px; border-radius: 10px; margin-top: 10px;
+            display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px;
+        }
+        .c-label { font-size: 12px; font-weight: bold; color: #aaa; margin-bottom: 8px; border-bottom: 1px solid #444; padding-bottom: 3px; }
+        .c-btn { background: #444; color: white; border: none; padding: 8px 15px; border-radius: 5px; cursor: pointer; font-size: 12px; font-weight: bold; transition: 0.2s; }
+        .c-btn:hover { background: #e1b12c; color: #222; }
+        .c-btn.main { width: 100%; background: #e1b12c; color: #222; }
+        .bg-selector { display: flex; gap: 8px; }
+        .bg-btn { width: 30px; height: 30px; border-radius: 4px; cursor: pointer; border: 2px solid white; background-size: cover; }
+        .bg-btn:hover { transform: scale(1.1); }
     </style>
 </head>
 <body>
@@ -898,6 +933,7 @@ canvas#drawCanvas {
         <a href="javascript:void(0)" class="menu-link" onclick="showPage('guideline')">GUIDELINE</a> 
         <a href="javascript:void(0)" class="menu-link" onclick="showPage('rakugaki')">GRAFFITI</a>
         <a href="javascript:void(0)" class="menu-link" onclick="showPage('skinviewer')">SKIN VIEWER</a>
+        <a href="javascript:void(0)" class="menu-link" onclick="showPage('studio')">STUDIO</a>
         <a href="javascript:void(0)" class="menu-link" onclick="openLoginModal(); toggleMenu();" style="color:var(--primary);">LOGIN</a>
     </div>
     <div id="overlay" class="overlay" onclick="toggleMenu()"></div>
@@ -1402,7 +1438,73 @@ canvas#drawCanvas {
                 <button onclick="showPage('top')" class="more-btn">TOPへ戻る</button>
             </div>
         </div>
-    </div>    
+    </div> 
+<div id="studio" class="page">
+        <div class="page-header">
+            <div class="page-title-en" style="color:#e1b12c;">STUDIO</div>
+            <div class="page-title-jp">あおはるスタジオ</div>
+        </div>
+        
+        <div class="container" style="max-width: 1200px;">
+            <div style="text-align:center; margin-bottom:20px;">
+                <p style="font-size:14px; font-weight:bold; color:#555;">
+                    メンバーとコラボ写真が撮れる！<br>
+                    自分のスキンをアップロードして、真ん中に並ぼう！
+                </p>
+            </div>
+
+            <div id="studioStage" class="studio-stage">
+                <div id="studioBg" class="studio-bg"></div>
+                <img src="logo.png" class="studio-watermark">
+                <div class="studio-actors">
+                    <div class="actor-box"><canvas id="skin_member_1"></canvas></div>
+                    <div class="actor-box"><canvas id="skin_member_2"></canvas></div>
+                    <div class="actor-box center">
+                        <canvas id="skin_user"></canvas>
+                        <div class="user-label">YOU</div>
+                    </div>
+                    <div class="actor-box"><canvas id="skin_member_3"></canvas></div>
+                    <div class="actor-box"><canvas id="skin_member_4"></canvas></div>
+                </div>
+            </div>
+
+            <div class="studio-controls">
+                <div class="control-group">
+                    <div class="c-label"><i class="fas fa-user"></i> YOUR SKIN</div>
+                    <input type="file" id="skinUpload" accept="image/png" onchange="uploadUserSkin(this)" style="display:none;">
+                    <button class="c-btn main" onclick="document.getElementById('skinUpload').click()">スキンを選択</button>
+                </div>
+                <div class="control-group">
+                    <div class="c-label"><i class="fas fa-image"></i> BACKGROUND</div>
+                    <div class="bg-selector">
+                        <div class="bg-btn" onclick="changeStudioBg('#87CEEB')" style="background:#87CEEB;"></div>
+                        <div class="bg-btn" onclick="changeStudioBg('#ff9ff3')" style="background:#ff9ff3;"></div>
+                        <div class="bg-btn" onclick="changeStudioBg('#00ff00')" style="background:#00ff00;">GB</div>
+                        <div class="bg-btn" onclick="changeStudioBg('url(old_school.jpg)')" style="background-image:url(old_school.jpg); background-size:cover;"></div>
+                        <div class="bg-btn" onclick="changeStudioBg('#2f3640')" style="background:#2f3640;"></div>
+                    </div>
+                </div>
+                <div class="control-group">
+                    <div class="c-label"><i class="fas fa-running"></i> POSE</div>
+                    <div style="display:flex; gap:5px; flex-wrap:wrap; justify-content:center;">
+                        <button class="c-btn" onclick="setStudioAnim('idle')">立ち</button>
+                        <button class="c-btn" onclick="setStudioAnim('walk')">歩き</button>
+                        <button class="c-btn" onclick="setStudioAnim('run')">走り</button>
+                        <button class="c-btn" onclick="setStudioAnim('fly')">飛行</button>
+                    </div>
+                </div>
+            </div>
+
+            <div style="text-align:center; margin-top:30px;">
+                <button class="download-btn" onclick="captureStudio()" style="font-size:18px; padding:15px 40px; background:linear-gradient(to right, #e1b12c, #f39c12);">
+                    <i class="fas fa-camera"></i> 撮影して保存！
+                </button>
+            </div>
+            <div style="text-align:center; margin-top:20px;">
+                <button onclick="showPage('top')" class="more-btn">TOPへ戻る</button>
+            </div>
+        </div>
+    </div>   
     <div class="floating-heart-btn" onclick="spawnHeart()">
         <i class="fas fa-heart"></i>
         <div class="like-badge" id="totalLikeCount">...</div>
@@ -1703,6 +1805,9 @@ canvas#drawCanvas {
             }
             if(pageId === 'skinviewer') {
                 setTimeout(initSkinViewer, 100);
+            }
+            if(pageId === 'studio') {
+                setTimeout(initStudio, 100);
             } 
         }
         if(document.getElementById('sideMenu').classList.contains('open')) { toggleMenu(); }
@@ -2407,16 +2512,15 @@ async function toggleGraffitiLike() {
     function checkLiveStatus() { /* 省略 */ }
     function initEasterEgg() { window.addEventListener('keydown', (e) => { secretInput.push(e.key); if (secretInput.length > secretCode.length) secretInput.shift(); if (JSON.stringify(secretInput) === JSON.stringify(secretCode)) activateFeverMode(); }); const logo = document.getElementById('headerLogo'); if(logo) { logo.addEventListener('click', (e) => { e.preventDefault(); logoTapCount++; if(logoTapCount === 10) { activateFeverMode(); logoTapCount = 0; } setTimeout(() => logoTapCount = 0, 3000); }); } }
     function activateFeverMode() { if(document.body.classList.contains('fever-mode')) return; document.body.classList.add('fever-mode'); const text = document.createElement('div'); text.className = 'fever-text'; text.innerText = "FEVER TIME!!"; document.body.appendChild(text); var duration = 5000; var end = Date.now() + duration; (function frame() { if(typeof confetti === 'function'){ confetti({ particleCount: 2, angle: 60, spread: 55, origin: { x: 0 }, colors: ['#ff0000', '#00ff00', '#0000ff'] }); confetti({ particleCount: 2, angle: 120, spread: 55, origin: { x: 1 }, colors: ['#ff0000', '#00ff00', '#0000ff'] }); } if (Date.now() < end) requestAnimationFrame(frame); else { document.body.classList.remove('fever-mode'); text.remove(); alert("祭りは終わった……"); } }()); }
-// ▼▼▼ 【追加6】ここに追加！スキンビューワー制御プログラム ▼▼▼
+    // ▼▼▼ 1. SKIN VIEWER 制御（既存の1人用） ▼▼▼
     let skinViewer;
     let skinAnimation;
 
     function initSkinViewer() {
-        if(skinViewer) return;
+        if(skinViewer) return; // 起動済みなら何もしない
         const canvas = document.getElementById("skin_container");
         if(!canvas) return;
 
-        // ★修正：フォルダなしの「skin_ao.png」を指定
         skinViewer = new skinview3d.SkinViewer({
             canvas: canvas, width: 300, height: 400,
             skin: "skin_ao.png"
@@ -2440,24 +2544,14 @@ async function toggleGraffitiLike() {
         else if (type === 'fly') skinAnimation = skinViewer.animation = new skinview3d.FlyingAnimation();
     }
 
-    // ▼▼▼ メンバーボタン生成（ズーム対応版） ▼▼▼
     function renderSkinButtons() {
         const container = document.getElementById('skinMemberButtons');
         if(!container) return;
-        
-        // ★デフォルトボタン（アイコン画像を使用）
-        // style="..." の中で画像を背景として設定しています
-        let html = `<div class="skin-member-icon selected" 
-                         style="background-image: url('icon.png');" 
-                         onclick="changeSkin(this, 'skin_ao.png')"></div>`;
-        
+        let html = `<div class="skin-member-icon selected" style="background-image: url('icon.png');" onclick="changeSkin(this, 'skin_ao.png')"></div>`;
         if(memberData.length > 0) {
             memberData.forEach(m => {
                 const skinUrl = m.skin_url || "skin_ao.png";
-                // ★ここが変更点！ imgタグではなく divタグ にしています
-                html += `<div class="skin-member-icon" 
-                              style="background-image: url('${m.img}');" 
-                              onclick="changeSkin(this, '${skinUrl}')"></div>`;
+                html += `<div class="skin-member-icon" style="background-image: url('${m.img}');" onclick="changeSkin(this, '${skinUrl}')"></div>`;
             });
         }
         container.innerHTML = html;
@@ -2468,6 +2562,69 @@ async function toggleGraffitiLike() {
         skinViewer.loadSkin(url);
         document.querySelectorAll('.skin-member-icon').forEach(i => i.classList.remove('selected'));
         btn.classList.add('selected');
+    }
+
+
+    // ▼▼▼ 2. AOHARU STUDIO 制御（新規・5人コラボ用） ▼▼▼
+    let studioViewers = [];
+
+    function initStudio() {
+        if(studioViewers.length > 0) return; // 起動済みなら何もしない
+
+        const canvasIds = ['skin_member_1', 'skin_member_2', 'skin_user', 'skin_member_3', 'skin_member_4'];
+        
+        // 左から順に：いよ、たく、YOU、ゆあ、あお（実際のファイル名に合わせてください）
+        const defaultSkins = ["skin_iyo.png", "skin_taku.png", "skin_ao.png", "skin_yua.png", "skin_ao.png"];
+
+        canvasIds.forEach((id, index) => {
+            const canvas = document.getElementById(id);
+            if(!canvas) return;
+            const viewer = new skinview3d.SkinViewer({
+                canvas: canvas, width: 300, height: 400,
+                skin: defaultSkins[index]
+            });
+            viewer.fov = 70; viewer.zoom = 0.8; viewer.autoRotate = false;
+            viewer.animation = new skinview3d.WalkingAnimation();
+            studioViewers.push(viewer);
+        });
+    }
+
+    function setStudioAnim(type) {
+        studioViewers.forEach(v => {
+            if(type === 'idle') v.animation = new skinview3d.IdleAnimation();
+            if(type === 'walk') v.animation = new skinview3d.WalkingAnimation();
+            if(type === 'run') v.animation = new skinview3d.RunningAnimation();
+            if(type === 'fly') v.animation = new skinview3d.FlyingAnimation();
+        });
+    }
+
+    function changeStudioBg(cssValue) {
+        const bg = document.getElementById('studioBg');
+        if(cssValue.includes('url')) {
+            bg.style.backgroundImage = cssValue; bg.style.backgroundColor = 'transparent';
+        } else {
+            bg.style.backgroundImage = 'none'; bg.style.backgroundColor = cssValue;
+        }
+    }
+
+    function uploadUserSkin(input) {
+        if (input.files && input.files[0]) {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                if(studioViewers[2]) studioViewers[2].loadSkin(e.target.result);
+            };
+            reader.readAsDataURL(input.files[0]);
+        }
+    }
+
+    function captureStudio() {
+        const target = document.getElementById('studioStage');
+        html2canvas(target, { scale: 2, useCORS: true, backgroundColor: null }).then(canvas => {
+            const link = document.createElement('a');
+            link.download = 'aoharu_studio.png';
+            link.href = canvas.toDataURL('image/png');
+            link.click();
+        });
     }
     // ▼▼▼ ここから：隠し要素（ホラーモード）の制御プログラム ▼▼▼
 
