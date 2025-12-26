@@ -2147,26 +2147,24 @@ const headerBtn = document.getElementById('headerLoginBtn');
     async function deleteGraffiti(event, id) {
         event.stopPropagation();
         
-        // 1. 権限チェック（公式の人だけ消せる）
+        // 1. 権限チェック
         if (!isOfficialAdmin) { 
             alert("削除権限がありません！"); 
             return; 
         }
 
-        // 2. 確認ダイアログ
-        if (!confirm("本当に削除しますか？\n（この操作は取り消せません）")) {
+        // 2. 確認
+        if (!confirm("本当に削除しますか？\n（スプレッドシートからも完全に消えます）")) {
             return;
         }
 
-        // 3. 削除処理開始
-        // ボタンの見た目を変えたりしても良いですが、ここではシンプルに通信します
-        
+        // 3. サーバー通信して削除
         try {
-            // ★サーバー（GAS）に「削除して！」と命令を送る
+            // ★GASに「削除して！」と命令を送る
             const res = await fetch(GAS_API_URL, {
                 method: 'POST',
                 body: JSON.stringify({
-                    type: 'delete', // 「削除」という命令
+                    type: 'delete', // 削除命令
                     id: id          // 消したい投稿のID
                 })
             });
@@ -2174,7 +2172,7 @@ const headerBtn = document.getElementById('headerLoginBtn');
             const json = await res.json();
 
             if (json.status === 'success') {
-                // 成功したら、画面上のリストからも消して再描画
+                // 成功したら、画面上のリストからも消す
                 graffitiPosts = graffitiPosts.filter(post => post.id !== id);
                 renderGraffitiList();
                 alert("完全に削除しました！");
