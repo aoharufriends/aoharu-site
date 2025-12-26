@@ -1954,12 +1954,31 @@ const headerBtn = document.getElementById('headerLoginBtn');
 
         const detailPage = document.getElementById('memberDetail');
         
-        // SNSボタンの生成
+    // SNSボタンの生成（修正版）
         let snsBtns = '';
-        if(m.youtubeId) snsBtns += `<a href="https://www.youtube.com/channel/${m.youtubeId}" target="_blank" class="p-btn yt"><i class="fab fa-youtube"></i> Channel</a>`;
-        if(m.twitterId) snsBtns += `<a href="${m.twitterId}" target="_blank" class="p-btn x"><i class="fab fa-x-twitter"></i> @${m.twitterId.split('/').pop()}</a>`;
-        if(m.twitchId) snsBtns += `<a href="https://www.twitch.tv/${m.twitchId}" target="_blank" class="p-btn tw"><i class="fab fa-twitch"></i> Twitch</a>`;
+        
+        // YouTube
+        if(m.youtubeId) {
+            // IDだけならURLにする、元からURLならそのまま使う
+            const ytUrl = m.youtubeId.startsWith('http') ? m.youtubeId : `https://www.youtube.com/channel/${m.youtubeId}`;
+            snsBtns += `<a href="${ytUrl}" target="_blank" class="p-btn yt"><i class="fab fa-youtube"></i> Channel</a>`;
+        }
 
+        // Twitter (X) ★ここが重要！
+        if(m.twitterId) {
+            // "http"で始まっていなければ、勝手に "https://twitter.com/" をつける
+            const twUrl = m.twitterId.startsWith('http') ? m.twitterId : `https://twitter.com/${m.twitterId.replace('@', '')}`;
+            // 表示用のID（URLから末尾を取得、またはIDそのまま）
+            const displayId = m.twitterId.startsWith('http') ? m.twitterId.split('/').pop() : m.twitterId;
+            
+            snsBtns += `<a href="${twUrl}" target="_blank" class="p-btn x"><i class="fab fa-x-twitter"></i> @${displayId.replace('@', '')}</a>`;
+        }
+
+        // Twitch
+        if(m.twitchId) {
+            const twiUrl = m.twitchId.startsWith('http') ? m.twitchId : `https://www.twitch.tv/${m.twitchId}`;
+            snsBtns += `<a href="${twiUrl}" target="_blank" class="p-btn tw"><i class="fab fa-twitch"></i> Twitch</a>`;
+        }
         // ボイスリストの生成
         let voiceHtml = '';
         const voices = [
