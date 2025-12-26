@@ -959,6 +959,33 @@ canvas#drawCanvas {
     .c-btn.mob-btn:hover {
         background: #d63031; color: white; border-color: #d63031;
     }
+    /* 自由配置モブ用のスタイル */
+        .free-mob-box {
+            position: absolute;
+            width: 100px; height: 200px; /* 少し小さめに表示 */
+            z-index: 50; /* メンバーより手前に */
+            cursor: grab; /* 掴めるアイコン */
+            transition: transform 0.1s;
+        }
+        .free-mob-box:active {
+            cursor: grabbing;
+            transform: scale(1.1); /* 掴んでいる時は少し大きくなる */
+            z-index: 100; /* 最前面へ */
+        }
+        .free-mob-box canvas {
+            pointer-events: none; /* キャンバス自体はクリック判定を無視 */
+        }
+        /* 削除ボタン（右上） */
+        .mob-delete-btn {
+            position: absolute; top: -10px; right: -10px;
+            width: 20px; height: 20px; background: red; color: white;
+            border-radius: 50%; text-align: center; line-height: 20px;
+            font-size: 12px; font-weight: bold; cursor: pointer;
+            display: none; /* 普段は隠す */
+        }
+        .free-mob-box:hover .mob-delete-btn {
+            display: block; /* ホバー時だけ表示 */
+        }
     </style>
 </head>
 <body>
@@ -1531,16 +1558,20 @@ canvas#drawCanvas {
                     </div>
                 </div>
 
-<div class="control-group">
-    <div class="c-label" style="color:#ff4757;"><i class="fas fa-skull"></i> MOB CHANGE</div>
-    <div class="pose-grid">
-        <button class="c-btn mob-btn" onclick="changeActorSkin('skin_zombie.png')">🧟 ゾンビ</button>
-        <button class="c-btn mob-btn" onclick="changeActorSkin('skin_skeleton.png')">💀 ガイコツ</button>
-        <button class="c-btn mob-btn" onclick="changeActorSkin('skin_villager.png')">👨‍🌾 村人</button>
-        <button class="c-btn mob-btn" onclick="changeActorSkin('skin_creeper.png')">💥 匠</button>
-    </div>
-    <p style="font-size:10px; color:#888; margin-top:5px;">※選択中のキャラが変身します</p>
-</div>
+                <div class="control-group">
+                    <div class="c-label" style="color:#ff4757;"><i class="fas fa-plus-circle"></i> ADD MOB</div>
+                    <div class="pose-grid">
+                        <button class="c-btn mob-btn" onclick="addFreeMob('skin_zombie.png')">🧟 ゾンビ追加</button>
+                        <button class="c-btn mob-btn" onclick="addFreeMob('skin_skeleton.png')">💀 ガイコツ追加</button>
+                        <button class="c-btn mob-btn" onclick="addFreeMob('skin_villager.png')">👨‍🌾 村人追加</button>
+                        <button class="c-btn mob-btn" onclick="addFreeMob('skin_creeper.png')">💥 匠追加</button>
+                    </div>
+                    <p style="font-size:10px; color:#888; margin-top:5px;">
+                        ※ボタンを押すと画面に追加されます。<br>
+                        ※追加されたキャラは<strong>ドラッグで移動</strong>できます。<br>
+                        ※ダブルクリックで削除できます。
+                    </p>
+                </div>
 
                 <div class="control-group">
                     <div class="c-label"><i class="fas fa-image"></i> BACKGROUND</div>
@@ -2750,6 +2781,106 @@ async function toggleGraffitiLike() {
             link.href = canvas.toDataURL('image/png');
             link.click();
         });
+    }
+    // ▼▼▼ 自由配置モブの制御プログラム ▼▼▼
+    let freeMobs = []; // 追加したモブを管理する配列
+
+    function addFreeMob(skinFileName) {
+        const stage = document.getElementById('studioStage');
+        
+        // 1. 入れ物（DIV）を作る
+        const mobBox = document.createElement('div');
+        mobBox.className = 'free-mob-box';
+        // 初期位置（ランダムに少しずらす）
+        mobBox.style.top = (20 + Math.random() * 40) + '%'; 
+        mobBox.style.left = (30 + Math.random() * 40) + '%';
+        
+        // 2. キャンバスを作る
+        const canvas = document.createElement('canvas');
+        mobBox.appendChild(canvas);
+
+        // 3. 削除ボタンを作る
+        const delBtn = document.createElement('div');
+        delBtn.className = 'mob-delete-btn';
+        delBtn.innerText = '×';
+        delBtn.onclick = function() { mobBox.remove(); }; // クリックで消滅
+        mobBox.appendChild(delBtn);
+
+        // 4. ステージに追加
+        stage.appendChild(mobBox);
+
+        // 5. 3Dモデルを描画
+        const viewer = new skinview3d.SkinViewer({
+            canvas: canvas,
+            width: 100, height: 200,
+            skin: skinFileName,
+            preserveDrawingBuffer: true
+        });
+        viewer.fov = 60; 
+        viewer.zoom = 0.9;
+        viewer.animation = new skinview3d.WalkingAnimation();
+        // モブは自動回転させておくとかわいい
+        viewer.autoRotate = true; 
+        viewer.autoRotateSpeed = 0.5;
+
+        // 6. ドラッグ移動の機能を付ける
+        makeDraggable(mobBox);
+    }
+
+    // ドラッグ移動させる関数
+    function makeDraggable(element) {
+        let isDragging = false;
+        let startX, startY, initialLeft, initialTop;
+
+        // マウスを押した時
+        element.addEventListener('mousedown', startDrag);
+        element.addEventListener('touchstart', startDrag, {passive: false});
+
+        function startDrag(e) {
+            e.preventDefault(); // スクロール防止
+            isDragging = true;
+            
+            // タッチかマウスか判定
+            const clientX = e.type === 'touchstart' ? e.touches[0].clientX : e.clientX;
+            const clientY = e.type === 'touchstart' ? e.touches[0].clientY : e.clientY;
+
+            startX = clientX;
+            startY = clientY;
+            
+            // 現在の位置を数値で取得
+            const style = window.getComputedStyle(element);
+            initialLeft = parseInt(style.left || 0);
+            initialTop = parseInt(style.top || 0);
+
+            document.addEventListener('mousemove', drag);
+            document.addEventListener('touchmove', drag, {passive: false});
+            document.addEventListener('mouseup', stopDrag);
+            document.addEventListener('touchend', stopDrag);
+        }
+
+        // 動かしている時
+        function drag(e) {
+            if (!isDragging) return;
+            e.preventDefault();
+
+            const clientX = e.type === 'touchmove' ? e.touches[0].clientX : e.clientX;
+            const clientY = e.type === 'touchmove' ? e.touches[0].clientY : e.clientY;
+
+            const dx = clientX - startX;
+            const dy = clientY - startY;
+
+            element.style.left = (initialLeft + dx) + 'px';
+            element.style.top = (initialTop + dy) + 'px';
+        }
+
+        // 離した時
+        function stopDrag() {
+            isDragging = false;
+            document.removeEventListener('mousemove', drag);
+            document.removeEventListener('touchmove', drag);
+            document.removeEventListener('mouseup', stopDrag);
+            document.removeEventListener('touchend', stopDrag);
+        }
     }
     // ▼▼▼ ここから：隠し要素（ホラーモード）の制御プログラム ▼▼▼
 
