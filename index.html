@@ -1602,7 +1602,7 @@ canvas#drawCanvas {
     let secretInput = [];
     let logoTapCount = 0;
 
-    // 初期化処理
+    // ▼▼▼ 初期化処理（リロード時の表示修正版） ▼▼▼
     window.onload = function() { 
         // 1. ユーザー情報の復元
         const savedUser = localStorage.getItem('aoharu_user');
@@ -1610,41 +1610,49 @@ canvas#drawCanvas {
             currentUserData = JSON.parse(savedUser);
             isMemberLoggedIn = true;
             isOfficialAdmin = false; 
+
+            // ★★★ ここを追加！ヘッダーの表示をログイン状態にする ★★★
+            const headerBtn = document.getElementById('headerLoginBtn');
+            if(headerBtn) {
+                headerBtn.innerText = currentUserData.name; // 「LOGIN」を名前に変更
+                headerBtn.classList.add('logged-in-user'); // デザイン変更
+                headerBtn.onclick = () => showPage('mypage'); // クリックでマイページへ
+            }
         }
 
-    // ★★★ 【追加】 保存された落書きを復元する処理（自分だけに見える） ★★★
-    const savedGraffiti = localStorage.getItem('aoharu_graffiti');
-    if (savedGraffiti) {
-        graffitiPosts = JSON.parse(savedGraffiti);
-    }
-
-    // （ここからは元のコードと同じ）
-    fetchSheetData().finally(() => {
-        // もし公式メンバーだったら権限を付与するチェック
-        if(currentUserData && memberData.length > 0){
-             const matchedMember = memberData.find(m => m.name === currentUserData.name);
-             if (matchedMember) { isOfficialAdmin = true; }
+        // 2. 落書きの下書き復元（自分だけに見える）
+        const savedGraffiti = localStorage.getItem('aoharu_graffiti');
+        if (savedGraffiti) {
+            graffitiPosts = JSON.parse(savedGraffiti);
         }
 
-        renderStaticParts(); 
-        setTimeout(checkLiveStatus, 500);
-        initCardMaker(); 
-        renderRadioDiary(); 
-        fetchLikes(); 
-        initOmikuji(); 
-        initEasterEgg(); 
-        handleLocation(); 
-        
-        // 落書きリストを再描画（復元したデータを表示）
-        renderGraffitiList(); 
-        
-        const loader = document.getElementById('loadingScreen');
-        if(loader) {
-            loader.classList.add('loaded');
-            setTimeout(() => loader.remove(), 500); 
-        }
-    });
-};
+        // 3. データ取得開始
+        fetchSheetData().finally(() => {
+            // もし公式メンバーだったら権限を付与するチェック
+            if(currentUserData && memberData.length > 0){
+                 const matchedMember = memberData.find(m => m.name === currentUserData.name);
+                 if (matchedMember) { isOfficialAdmin = true; }
+            }
+
+            renderStaticParts(); 
+            setTimeout(checkLiveStatus, 500);
+            initCardMaker(); 
+            renderRadioDiary(); 
+            fetchLikes(); 
+            initOmikuji(); 
+            initEasterEgg(); 
+            handleLocation(); 
+            
+            // 落書きリストを再描画
+            renderGraffitiList(); 
+            
+            const loader = document.getElementById('loadingScreen');
+            if(loader) {
+                loader.classList.add('loaded');
+                setTimeout(() => loader.remove(), 500); 
+            }
+        });
+    };
 
     window.onpopstate = handleLocation;
 
