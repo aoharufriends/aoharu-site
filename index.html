@@ -1573,7 +1573,7 @@ canvas#drawCanvas {
 
 <script>
     // ★★★ GASのURL（あなたの最新のURLに書き換えてください！） ★★★
-    const GAS_API_URL = "https://script.google.com/macros/s/AKfycbxrxXvVgdhusrJXhIEjHK_gjYSZRWiPERKanm7zJe38jbEY20pJT-jvFGSByVap08c88Q/exec";
+    const GAS_API_URL = "https://script.google.com/macros/s/AKfycbzDxm1gUoofFLXAMscMEtsr1rgD8CcWhJWtmxUsQPramPsWQ0XPip1DlV_d-MQDYG2h5w/exec";
 
     let YOUTUBE_API_KEY = ""; 
     let GROUP_CONFIG = {};
@@ -2143,62 +2143,48 @@ const headerBtn = document.getElementById('headerLoginBtn');
     }
     function checkCanvasLock() { const overlay = document.getElementById('canvasLockOverlay'); if (overlay) overlay.style.display = isMemberLoggedIn ? 'none' : 'flex'; }
 
-    // ▼▼▼ 追加：落書き投稿機能 ▼▼▼
-    async function postGraffiti() {
-        const title = document.getElementById('graffitiTitle').value;
-        const name = document.getElementById('graffitiName').value;
+    // ▼▼▼ 落書き削除機能（完全削除版） ▼▼▼
+    async function deleteGraffiti(event, id) {
+        event.stopPropagation();
+        
+        // 1. 権限チェック（公式の人だけ消せる）
+        if (!isOfficialAdmin) { 
+            alert("削除権限がありません！"); 
+            return; 
+        }
 
-        if (!title || !name) {
-            alert('タイトルとニックネームを入力してください！');
+        // 2. 確認ダイアログ
+        if (!confirm("本当に削除しますか？\n（この操作は取り消せません）")) {
             return;
         }
 
-        const tempCanvas = document.createElement('canvas');
-        tempCanvas.width = canvas.width;
-        tempCanvas.height = canvas.height;
-        const tCtx = tempCanvas.getContext('2d');
-        tCtx.fillStyle = "#2b4a3c";
-        tCtx.fillRect(0, 0, tempCanvas.width, tempCanvas.height);
-        tCtx.drawImage(canvas, 0, 0);
+        // 3. 削除処理開始
+        // ボタンの見た目を変えたりしても良いですが、ここではシンプルに通信します
         
-        const imageData = tempCanvas.toDataURL('image/jpeg', 0.5);
-
-        const btn = document.querySelector('button[onclick="postGraffiti()"]');
-        if (btn) {
-            btn.innerText = "投稿中...";
-            btn.disabled = true;
-        }
-
         try {
+            // ★サーバー（GAS）に「削除して！」と命令を送る
             const res = await fetch(GAS_API_URL, {
                 method: 'POST',
                 body: JSON.stringify({
-                    type: 'post',
-                    id: Date.now(),
-                    title: title,
-                    author: name,
-                    image: imageData
+                    type: 'delete', // 「削除」という命令
+                    id: id          // 消したい投稿のID
                 })
             });
-            
+
             const json = await res.json();
-            
+
             if (json.status === 'success') {
-                alert('投稿しました！');
-                document.getElementById('graffitiTitle').value = '';
-                ctx.clearRect(0, 0, canvas.width, canvas.height);
-                location.reload();
+                // 成功したら、画面上のリストからも消して再描画
+                graffitiPosts = graffitiPosts.filter(post => post.id !== id);
+                renderGraffitiList();
+                alert("完全に削除しました！");
             } else {
-                alert('エラー: ' + json.message);
+                alert("削除に失敗しました: " + (json.message || "サーバーエラー"));
             }
+
         } catch (e) {
-            alert('通信エラーが発生しました');
-            console.error(e);
-        } finally {
-            if (btn) {
-                btn.innerText = "投稿する";
-                btn.disabled = false;
-            }
+            console.error("Delete Error:", e);
+            alert("通信エラーが発生しました。\n削除できませんでした。");
         }
     }
     function renderGraffitiList() {
