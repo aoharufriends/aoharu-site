@@ -947,6 +947,18 @@ canvas#drawCanvas {
             border: 2px solid white; background-size: cover; box-shadow: 0 2px 5px rgba(0,0,0,0.1);
         }
         .bg-btn:hover { transform: scale(1.1); }
+    /* マイクラ背景ボタンの枠線 */
+    .bg-btn.minecraft-bg {
+        border-radius: 2px;
+        border: 2px solid #555;
+    }
+    /* モブ変身ボタンのデザイン */
+    .c-btn.mob-btn {
+        background: #2d3436; color: #dfe6e9; border: 1px solid #636e72;
+    }
+    .c-btn.mob-btn:hover {
+        background: #d63031; color: white; border-color: #d63031;
+    }
     </style>
 </head>
 <body>
@@ -1519,11 +1531,16 @@ canvas#drawCanvas {
                     </div>
                 </div>
 
-                <div class="control-group">
-                    <div class="c-label"><i class="fas fa-user"></i> YOUR SKIN</div>
-                    <input type="file" id="skinUpload" accept="image/png" onchange="uploadUserSkin(this)" style="display:none;">
-                    <button class="c-btn main" onclick="document.getElementById('skinUpload').click()">スキンを変更する</button>
-                </div>
+<div class="control-group">
+    <div class="c-label" style="color:#ff4757;"><i class="fas fa-skull"></i> MOB CHANGE</div>
+    <div class="pose-grid">
+        <button class="c-btn mob-btn" onclick="changeActorSkin('skin_zombie.png')">🧟 ゾンビ</button>
+        <button class="c-btn mob-btn" onclick="changeActorSkin('skin_skeleton.png')">💀 ガイコツ</button>
+        <button class="c-btn mob-btn" onclick="changeActorSkin('skin_villager.png')">👨‍🌾 村人</button>
+        <button class="c-btn mob-btn" onclick="changeActorSkin('skin_creeper.png')">💥 匠</button>
+    </div>
+    <p style="font-size:10px; color:#888; margin-top:5px;">※選択中のキャラが変身します</p>
+</div>
 
                 <div class="control-group">
                     <div class="c-label"><i class="fas fa-image"></i> BACKGROUND</div>
@@ -1533,6 +1550,10 @@ canvas#drawCanvas {
                         <div class="bg-btn" onclick="changeStudioBg('#a29bfe')" style="background:#a29bfe;"></div>
                         <div class="bg-btn" onclick="changeStudioBg('#81ecec')" style="background:#81ecec;"></div>
                         <div class="bg-btn" onclick="changeStudioBg('#55efc4')" style="background:#55efc4;"></div>
+                        <div class="bg-btn minecraft-bg" onclick="changeStudioBg('url(bg_forest.jpg)')" style="background-image:url('bg_forest.jpg');" title="森"></div>
+                        <div class="bg-btn minecraft-bg" onclick="changeStudioBg('url(bg_nether.jpg)')" style="background-image:url('bg_nether.jpg');" title="ネザー"></div>
+                        <div class="bg-btn minecraft-bg" onclick="changeStudioBg('url(bg_snow.jpg)')" style="background-image:url('bg_snow.jpg');" title="雪原"></div>
+                        <div class="bg-btn minecraft-bg" onclick="changeStudioBg('url(bg_cave.jpg)')" style="background-image:url('bg_cave.jpg');" title="洞窟"></div>
                         <div class="bg-btn" onclick="changeStudioBg('#00ff00')" style="background:#00ff00; color:#000; font-size:10px; display:flex; align-items:center; justify-content:center;">GB</div>
                         <div class="bg-btn" onclick="changeStudioBg('url(https://placehold.co/800x450/333/fff?text=Stage)')" style="background-image:url('https://placehold.co/100x100/333/fff?text=St');"></div>
                         </div>
@@ -3049,7 +3070,25 @@ async function toggleGraffitiLike() {
             }
         }
     }
-    // ▲▲▲ ここまで：隠し要素の制御プログラム ▲▲▲
+    // ▼▼▼ キャラクター変身機能 ▼▼▼
+    function changeActorSkin(skinFileName) {
+        if (studioViewers.length === 0) return;
+
+        // 「全員」が選択されている場合
+        if (selectedActorIndex === -1) {
+            if (!confirm("全員の姿を変更しますか？\n（元のスキンに戻すにはリロードが必要です）")) return;
+            studioViewers.forEach(viewer => {
+                viewer.loadSkin(skinFileName);
+            });
+        }
+        // 特定のキャラが選択されている場合
+        else {
+            const viewer = studioViewers[selectedActorIndex];
+            if (viewer) {
+                viewer.loadSkin(skinFileName);
+            }
+        }
+    }
 </script>
 </body>
 </html>
