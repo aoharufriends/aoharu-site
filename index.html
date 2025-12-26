@@ -868,40 +868,84 @@ canvas#drawCanvas {
     border-color: var(--primary);
     transform: scale(1.1);
 }
-       /* ▼▼▼ AOHARU STUDIOのデザイン ▼▼▼ */
+        /* ▼▼▼ AOHARU STUDIO（統合版）のデザイン ▼▼▼ */
         .studio-stage {
             position: relative; width: 100%; aspect-ratio: 16 / 9;
-            background: #333; border-radius: 10px; overflow: hidden;
+            background: #333; border-radius: 15px; overflow: hidden;
             box-shadow: 0 10px 30px rgba(0,0,0,0.3); border: 4px solid #fff;
         }
         .studio-bg {
             position: absolute; inset: 0; background-size: cover; background-position: center;
-            background-color: #87CEEB; transition: 0.3s;
+            background-color: #ff9a9e; /* デフォルトかわいいピンク */
+            transition: 0.3s;
         }
         .studio-watermark {
-            position: absolute; bottom: 10px; right: 10px; width: 100px; opacity: 0.8; z-index: 20; pointer-events: none;
+            position: absolute; bottom: 10px; right: 10px; width: 120px; opacity: 0.8; z-index: 50; pointer-events: none;
         }
         .studio-actors {
             position: absolute; inset: 0; display: flex; align-items: flex-end; justify-content: center;
             padding-bottom: 20px; z-index: 10;
         }
-        .actor-box { width: 18%; height: 60%; position: relative; transition: transform 0.2s; }
-        .actor-box.center { width: 24%; height: 75%; z-index: 15; filter: drop-shadow(0 0 10px rgba(255, 255, 255, 0.5)); }
+        
+        /* ★ここが距離感の調整！マイナスで重ねる */
+        .actor-box {
+            width: 140px; height: 300px; position: relative; 
+            margin: 0 -25px; /* ここでギュッと近づける */
+            transition: transform 0.2s; cursor: pointer;
+        }
+        .actor-box:hover { transform: translateY(-10px); z-index: 40 !important; }
+        
+        /* 選択中のリング表示 */
+        .actor-select-ring {
+            position: absolute; bottom: 0; left: 50%; transform: translateX(-50%);
+            width: 80px; height: 20px; border-radius: 50%;
+            background: rgba(255, 255, 0, 0.5); opacity: 0; transition: 0.2s;
+            box-shadow: 0 0 10px yellow;
+        }
+        .actor-box.selected .actor-select-ring { opacity: 1; }
+
+        /* 重なり順の制御（真ん中を手前に） */
+        .actor-box:nth-child(1) { z-index: 10; transform: scale(0.9); }
+        .actor-box:nth-child(2) { z-index: 20; transform: scale(0.95); }
+        .actor-box.center       { z-index: 30; transform: scale(1.05); margin: 0 -15px; filter: drop-shadow(0 0 15px rgba(255,255,255,0.6)); }
+        .actor-box:nth-child(4) { z-index: 20; transform: scale(0.95); }
+        .actor-box:nth-child(5) { z-index: 10; transform: scale(0.9); }
+
         .actor-box canvas { width: 100% !important; height: 100% !important; outline:none; }
         .user-label {
-            position: absolute; bottom: -30px; left: 50%; transform: translateX(-50%);
-            background: #e1b12c; color: white; font-weight: bold; font-size: 10px; padding: 2px 8px; border-radius: 4px;
+            position: absolute; bottom: -20px; left: 50%; transform: translateX(-50%);
+            background: #e1b12c; color: white; font-weight: bold; font-size: 10px; padding: 2px 8px; border-radius: 4px; pointer-events: none;
         }
+
+        /* 操作パネル */
         .studio-controls {
-            background: #2f3640; color: white; padding: 20px; border-radius: 10px; margin-top: 10px;
-            display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px;
+            background: #fff; color: #444; padding: 20px; border-radius: 15px; margin-top: 15px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05); border: 2px solid #eee;
         }
-        .c-label { font-size: 12px; font-weight: bold; color: #aaa; margin-bottom: 8px; border-bottom: 1px solid #444; padding-bottom: 3px; }
-        .c-btn { background: #444; color: white; border: none; padding: 8px 15px; border-radius: 5px; cursor: pointer; font-size: 12px; font-weight: bold; transition: 0.2s; }
-        .c-btn:hover { background: #e1b12c; color: #222; }
-        .c-btn.main { width: 100%; background: #e1b12c; color: #222; }
-        .bg-selector { display: flex; gap: 8px; }
-        .bg-btn { width: 30px; height: 30px; border-radius: 4px; cursor: pointer; border: 2px solid white; background-size: cover; }
+        .control-header {
+            font-weight: bold; margin-bottom: 15px; border-bottom: 2px dashed #eee; padding-bottom: 10px;
+            display: flex; justify-content: space-between; align-items: center;
+        }
+        .reset-select-btn {
+            font-size: 10px; background: #888; color: white; border: none; padding: 3px 8px; border-radius: 4px; cursor: pointer;
+        }
+        .control-group { margin-bottom: 15px; }
+        .c-label { font-size: 12px; font-weight: 900; color: var(--primary); margin-bottom: 8px; display: block; }
+        
+        .pose-grid { display: flex; flex-wrap: wrap; gap: 5px; }
+        .c-btn {
+            background: white; color: #555; border: 1px solid #ddd;
+            padding: 8px 12px; border-radius: 20px; cursor: pointer;
+            font-size: 12px; font-weight: bold; transition: 0.2s; flex: 1; min-width: 60px;
+        }
+        .c-btn:hover { background: var(--primary); color: white; border-color: var(--primary); }
+        .c-btn.main { width: 100%; background: var(--primary); color: white; border: none; box-shadow: 0 4px 10px rgba(39, 198, 245, 0.3); }
+        
+        .bg-selector { display: flex; gap: 8px; flex-wrap: wrap; }
+        .bg-btn {
+            width: 35px; height: 35px; border-radius: 8px; cursor: pointer;
+            border: 2px solid white; background-size: cover; box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
         .bg-btn:hover { transform: scale(1.1); }
     </style>
 </head>
@@ -932,7 +976,6 @@ canvas#drawCanvas {
         <a href="javascript:void(0)" class="menu-link" onclick="showPage('radio')">RADIO</a>
         <a href="javascript:void(0)" class="menu-link" onclick="showPage('guideline')">GUIDELINE</a> 
         <a href="javascript:void(0)" class="menu-link" onclick="showPage('rakugaki')">GRAFFITI</a>
-        <a href="javascript:void(0)" class="menu-link" onclick="showPage('skinviewer')">SKIN VIEWER</a>
         <a href="javascript:void(0)" class="menu-link" onclick="showPage('studio')">STUDIO</a>
         <a href="javascript:void(0)" class="menu-link" onclick="openLoginModal(); toggleMenu();" style="color:var(--primary);">LOGIN</a>
     </div>
@@ -1414,85 +1457,87 @@ canvas#drawCanvas {
         </div>
     </div>
 </div>    
-    <div id="skinviewer" class="page">
-        <div class="page-header">
-            <div class="page-title-en" style="color:#2ecc71;">SKIN VIEWER</div>
-            <div class="page-title-jp">3Dスキンビューワー</div>
-        </div>
-        <div class="container">
-            <div style="text-align:center; margin-bottom:20px;">
-                <p style="font-size:12px; color:#666;">くるくる回したり、ポーズを変えて観察しよう！</p>
-            </div>
-            <div class="skin-member-select" id="skinMemberButtons"></div>
-            <div class="skin-viewer-container">
-                <canvas id="skin_container"></canvas>
-            </div>
-            <div class="skin-controls">
-                <button class="skin-btn active" onclick="setSkinAnim('idle', this)">立ち</button>
-                <button class="skin-btn" onclick="setSkinAnim('walk', this)">歩き</button>
-                <button class="skin-btn" onclick="setSkinAnim('run', this)">走り</button>
-                <button class="skin-btn" onclick="setSkinAnim('fly', this)">飛行</button>
-                <button class="skin-btn" onclick="skinViewer.autoRotate = !skinViewer.autoRotate;">回転 ON/OFF</button>
-            </div>
-            <div style="text-align:center;">
-                <button onclick="showPage('top')" class="more-btn">TOPへ戻る</button>
-            </div>
-        </div>
-    </div> 
 <div id="studio" class="page">
         <div class="page-header">
             <div class="page-title-en" style="color:#e1b12c;">STUDIO</div>
             <div class="page-title-jp">あおはるスタジオ</div>
         </div>
         
-        <div class="container" style="max-width: 1200px;">
+        <div class="container" style="max-width: 1000px;">
             <div style="text-align:center; margin-bottom:20px;">
                 <p style="font-size:14px; font-weight:bold; color:#555;">
-                    メンバーとコラボ写真が撮れる！<br>
-                    自分のスキンをアップロードして、真ん中に並ぼう！
+                    メンバーをタップしてポーズを変更できるよ！<br>
+                    真ん中の「YOU」に自分のスキンを着せてね！
                 </p>
             </div>
 
             <div id="studioStage" class="studio-stage">
                 <div id="studioBg" class="studio-bg"></div>
                 <img src="logo.png" class="studio-watermark">
+                
                 <div class="studio-actors">
-                    <div class="actor-box"><canvas id="skin_member_1"></canvas></div>
-                    <div class="actor-box"><canvas id="skin_member_2"></canvas></div>
-                    <div class="actor-box center">
+                    <div class="actor-box" onclick="selectActor(0)">
+                        <canvas id="skin_member_1"></canvas>
+                        <div class="actor-select-ring"></div>
+                    </div>
+                    <div class="actor-box" onclick="selectActor(1)">
+                        <canvas id="skin_member_2"></canvas>
+                        <div class="actor-select-ring"></div>
+                    </div>
+                    <div class="actor-box center" onclick="selectActor(2)">
                         <canvas id="skin_user"></canvas>
                         <div class="user-label">YOU</div>
+                        <div class="actor-select-ring"></div>
                     </div>
-                    <div class="actor-box"><canvas id="skin_member_3"></canvas></div>
-                    <div class="actor-box"><canvas id="skin_member_4"></canvas></div>
+                    <div class="actor-box" onclick="selectActor(3)">
+                        <canvas id="skin_member_3"></canvas>
+                        <div class="actor-select-ring"></div>
+                    </div>
+                    <div class="actor-box" onclick="selectActor(4)">
+                        <canvas id="skin_member_4"></canvas>
+                        <div class="actor-select-ring"></div>
+                    </div>
                 </div>
             </div>
 
             <div class="studio-controls">
-                <div class="control-group">
-                    <div class="c-label"><i class="fas fa-user"></i> YOUR SKIN</div>
-                    <input type="file" id="skinUpload" accept="image/png" onchange="uploadUserSkin(this)" style="display:none;">
-                    <button class="c-btn main" onclick="document.getElementById('skinUpload').click()">スキンを選択</button>
+                
+                <div class="control-header">
+                    操作対象：<span id="targetName" style="color:#e1b12c;">全員</span>
+                    <button class="reset-select-btn" onclick="selectActor(-1)">全員に戻す</button>
                 </div>
-                <div class="control-group">
-                    <div class="c-label"><i class="fas fa-image"></i> BACKGROUND</div>
-                    <div class="bg-selector">
-                        <div class="bg-btn" onclick="changeStudioBg('#87CEEB')" style="background:#87CEEB;"></div>
-                        <div class="bg-btn" onclick="changeStudioBg('#ff9ff3')" style="background:#ff9ff3;"></div>
-                        <div class="bg-btn" onclick="changeStudioBg('#00ff00')" style="background:#00ff00;">GB</div>
-                        <div class="bg-btn" onclick="changeStudioBg('url(old_school.jpg)')" style="background-image:url(old_school.jpg); background-size:cover;"></div>
-                        <div class="bg-btn" onclick="changeStudioBg('#2f3640')" style="background:#2f3640;"></div>
-                    </div>
-                </div>
+
                 <div class="control-group">
                     <div class="c-label"><i class="fas fa-running"></i> POSE</div>
-                    <div style="display:flex; gap:5px; flex-wrap:wrap; justify-content:center;">
+                    <div class="pose-grid">
                         <button class="c-btn" onclick="setStudioAnim('idle')">立ち</button>
                         <button class="c-btn" onclick="setStudioAnim('walk')">歩き</button>
                         <button class="c-btn" onclick="setStudioAnim('run')">走り</button>
                         <button class="c-btn" onclick="setStudioAnim('fly')">飛行</button>
+                        <button class="c-btn" onclick="toggleHeadTilt()">首かしげ</button>
+                        <button class="c-btn" onclick="toggleRotate()">回転</button>
                     </div>
                 </div>
+
+                <div class="control-group">
+                    <div class="c-label"><i class="fas fa-user"></i> YOUR SKIN</div>
+                    <input type="file" id="skinUpload" accept="image/png" onchange="uploadUserSkin(this)" style="display:none;">
+                    <button class="c-btn main" onclick="document.getElementById('skinUpload').click()">スキンを変更する</button>
+                </div>
+
+                <div class="control-group">
+                    <div class="c-label"><i class="fas fa-image"></i> BACKGROUND</div>
+                    <div class="bg-selector">
+                        <div class="bg-btn" onclick="changeStudioBg('#ff9a9e')" style="background:#ff9a9e;"></div>
+                        <div class="bg-btn" onclick="changeStudioBg('#fad390')" style="background:#fad390;"></div>
+                        <div class="bg-btn" onclick="changeStudioBg('#a29bfe')" style="background:#a29bfe;"></div>
+                        <div class="bg-btn" onclick="changeStudioBg('#81ecec')" style="background:#81ecec;"></div>
+                        <div class="bg-btn" onclick="changeStudioBg('#55efc4')" style="background:#55efc4;"></div>
+                        <div class="bg-btn" onclick="changeStudioBg('#00ff00')" style="background:#00ff00; color:#000; font-size:10px; display:flex; align-items:center; justify-content:center;">GB</div>
+                        <div class="bg-btn" onclick="changeStudioBg('url(https://placehold.co/800x450/333/fff?text=Stage)')" style="background-image:url('https://placehold.co/100x100/333/fff?text=St');"></div>
+                        </div>
+                </div>
+
             </div>
 
             <div style="text-align:center; margin-top:30px;">
@@ -2565,36 +2610,89 @@ async function toggleGraffitiLike() {
     }
 
 
-    // ▼▼▼ 2. AOHARU STUDIO 制御（新規・5人コラボ用） ▼▼▼
+    // ▼▼▼ AOHARU STUDIO 制御プログラム（統合・個別操作版） ▼▼▼
     let studioViewers = [];
+    let selectedActorIndex = -1; // -1は「全員」
 
     function initStudio() {
-        if(studioViewers.length > 0) return; // 起動済みなら何もしない
+        if(studioViewers.length > 0) return;
 
         const canvasIds = ['skin_member_1', 'skin_member_2', 'skin_user', 'skin_member_3', 'skin_member_4'];
         
-        // 左から順に：いよ、たく、YOU、ゆあ、あお（実際のファイル名に合わせてください）
+        // ★実際のファイル名に合わせてね！
         const defaultSkins = ["skin_iyo.png", "skin_taku.png", "skin_ao.png", "skin_yua.png", "skin_ao.png"];
 
         canvasIds.forEach((id, index) => {
             const canvas = document.getElementById(id);
             if(!canvas) return;
+            
             const viewer = new skinview3d.SkinViewer({
                 canvas: canvas, width: 300, height: 400,
                 skin: defaultSkins[index]
             });
-            viewer.fov = 70; viewer.zoom = 0.8; viewer.autoRotate = false;
-            viewer.animation = new skinview3d.WalkingAnimation();
+            
+            // 全体調整
+            viewer.fov = 60; 
+            viewer.zoom = 0.9; 
+            viewer.autoRotate = false;
+            viewer.animation = new skinview3d.WalkingAnimation(); // 最初は歩く
+
             studioViewers.push(viewer);
         });
     }
 
+    // メンバーを選択する関数
+    function selectActor(index) {
+        selectedActorIndex = index;
+        
+        // 選択リングの表示切り替え
+        const boxes = document.querySelectorAll('.actor-box');
+        boxes.forEach((box, i) => {
+            if(i === index) box.classList.add('selected');
+            else box.classList.remove('selected');
+        });
+
+        // 名前表示の更新
+        const names = ["いよ", "たく", "YOU", "ゆあ", "あお"];
+        const targetName = index === -1 ? "全員" : names[index];
+        document.getElementById('targetName').innerText = targetName;
+    }
+
+    // ポーズ変更（選択中の人だけ、または全員）
     function setStudioAnim(type) {
-        studioViewers.forEach(v => {
-            if(type === 'idle') v.animation = new skinview3d.IdleAnimation();
-            if(type === 'walk') v.animation = new skinview3d.WalkingAnimation();
-            if(type === 'run') v.animation = new skinview3d.RunningAnimation();
-            if(type === 'fly') v.animation = new skinview3d.FlyingAnimation();
+        studioViewers.forEach((v, i) => {
+            if (selectedActorIndex === -1 || selectedActorIndex === i) {
+                if(type === 'idle') v.animation = new skinview3d.IdleAnimation();
+                if(type === 'walk') v.animation = new skinview3d.WalkingAnimation();
+                if(type === 'run') v.animation = new skinview3d.RunningAnimation();
+                if(type === 'fly') v.animation = new skinview3d.FlyingAnimation();
+                
+                // 首の角度をリセット
+                v.playerObject.skin.head.rotation.z = 0;
+            }
+        });
+    }
+
+    // ★新機能：首をかしげる（あざとポーズ）
+    function toggleHeadTilt() {
+        studioViewers.forEach((v, i) => {
+            if (selectedActorIndex === -1 || selectedActorIndex === i) {
+                // 現在の首の角度を見て切り替え
+                if (v.playerObject.skin.head.rotation.z === 0) {
+                    v.playerObject.skin.head.rotation.z = -0.5; // かしげる
+                } else {
+                    v.playerObject.skin.head.rotation.z = 0; // 戻す
+                }
+            }
+        });
+    }
+
+    // 回転のON/OFF
+    function toggleRotate() {
+        studioViewers.forEach((v, i) => {
+            if (selectedActorIndex === -1 || selectedActorIndex === i) {
+                v.autoRotate = !v.autoRotate;
+            }
         });
     }
 
