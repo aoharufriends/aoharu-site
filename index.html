@@ -994,6 +994,20 @@ canvas#drawCanvas {
         .free-mob-box:hover .mob-delete-btn {
             display: block; /* ホバー時だけ表示 */
         }
+        /* ▼▼▼ スマホの時だけロゴを小さくする ▼▼▼ */
+        @media (max-width: 768px) {
+            .studio-watermark {
+                width: 60px;  /* PC(120px)の半分にする */
+                bottom: 5px;  /* 端っこに寄せる */
+                right: 5px;
+            }
+            
+            /* ついでに操作パネルの文字も少し小さくして見やすく */
+            .c-btn {
+                font-size: 10px;
+                padding: 6px 10px;
+            }
+        }
     </style>
 </head>
 <body>
