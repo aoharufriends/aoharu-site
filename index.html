@@ -1570,35 +1570,36 @@ canvas#drawCanvas {
             <div class="studio-controls">
                 
                 <div class="control-header">
-                    操作対象：<span id="targetName" style="color:#e1b12c;">全員</span>
-                    <button class="reset-select-btn" onclick="selectActor(-1)">全員に戻す</button>
+                    <div>CONTROLLER <span id="targetName" class="target-badge">全員</span></div>
+                    <button class="reset-select-btn" onclick="selectActor(-1)"><i class="fas fa-undo"></i> 選択解除</button>
                 </div>
 
                 <div class="control-group">
-                    <div class="c-label"><i class="fas fa-running"></i> POSE</div>
+                    <div class="c-label"><i class="fas fa-running"></i> MOTION & POSE</div>
                     <div class="pose-grid">
-                        <button class="c-btn" onclick="setStudioAnim('idle')">立ち</button>
-                        <button class="c-btn" onclick="setStudioAnim('walk')">歩き</button>
-                        <button class="c-btn" onclick="setStudioAnim('run')">走り</button>
-                        <button class="c-btn" onclick="setStudioAnim('fly')">飛行</button>
-                        <button class="c-btn" onclick="toggleHeadTilt()">首かしげ</button>
-                        <button class="c-btn" onclick="toggleRotate()">回転</button>
+                        <button class="c-btn" onclick="setStudioAnim('idle')"><i class="fas fa-male"></i>立ち</button>
+                        <button class="c-btn" onclick="setStudioAnim('walk')"><i class="fas fa-walking"></i>歩き</button>
+                        <button class="c-btn" onclick="setStudioAnim('run')"><i class="fas fa-running"></i>走り</button>
+                        <button class="c-btn" onclick="setStudioAnim('fly')"><i class="fas fa-plane"></i>飛行</button>
+                        
+                        <button class="c-btn" onclick="setPose('hug')"><i class="fas fa-child"></i>ハグ</button>
+                        <button class="c-btn" onclick="setPose('cheer')"><i class="fas fa-hands-up"></i>バンザイ</button>
+                        <button class="c-btn" onclick="setPose('point')"><i class="fas fa-hand-point-right"></i>指差し</button>
+                        <button class="c-btn" onclick="setPose('sit')"><i class="fas fa-chair"></i>座る</button>
+                        <button class="c-btn" onclick="setPose('ninja')"><i class="fas fa-mask"></i>忍者</button>
+                        <button class="c-btn" onclick="setPose('zombie')"><i class="fas fa-book-dead"></i>キョンシー</button>
+
+                        <button class="c-btn" onclick="toggleHeadTilt()"><i class="fas fa-question"></i>首かしげ</button>
+                        <button class="c-btn" onclick="toggleRotate()"><i class="fas fa-sync"></i>回転ON</button>
                     </div>
                 </div>
 
                 <div class="control-group">
-                    <div class="c-label" style="color:#ff4757;"><i class="fas fa-plus-circle"></i> ADD MOB</div>
-                    <div class="pose-grid">
-                        <button class="c-btn mob-btn" onclick="addFreeMob('skin_zombie.png')">🧟 ゾンビ追加</button>
-                        <button class="c-btn mob-btn" onclick="addFreeMob('skin_skeleton.png')">💀 ガイコツ追加</button>
-                        <button class="c-btn mob-btn" onclick="addFreeMob('skin_villager.png')">👨‍🌾 村人追加</button>
-                        <button class="c-btn mob-btn" onclick="addFreeMob('skin_creeper.png')">💥 匠追加</button>
-                    </div>
-                    <p style="font-size:10px; color:#888; margin-top:5px;">
-                        ※ボタンを押すと画面に追加されます。<br>
-                        ※追加されたキャラは<strong>ドラッグで移動</strong>できます。<br>
-                        ※ダブルクリックで削除できます。
-                    </p>
+                    <div class="c-label"><i class="fas fa-tshirt"></i> CHANGE SKIN (YOU)</div>
+                    <input type="file" id="skinUpload" accept="image/png" onchange="uploadUserSkin(this)" style="display:none;">
+                    <button class="c-btn main" onclick="document.getElementById('skinUpload').click()">
+                        <i class="fas fa-upload"></i> スキン画像を選択する
+                    </button>
                 </div>
 
                 <div class="control-group">
@@ -1609,13 +1610,27 @@ canvas#drawCanvas {
                         <div class="bg-btn" onclick="changeStudioBg('#a29bfe')" style="background:#a29bfe;"></div>
                         <div class="bg-btn" onclick="changeStudioBg('#81ecec')" style="background:#81ecec;"></div>
                         <div class="bg-btn" onclick="changeStudioBg('#55efc4')" style="background:#55efc4;"></div>
-                        <div class="bg-btn minecraft-bg" onclick="changeStudioBg('url(bg_forest.jpg)')" style="background-image:url('bg_forest.jpg');" title="森"></div>
-                        <div class="bg-btn minecraft-bg" onclick="changeStudioBg('url(bg_nether.jpg)')" style="background-image:url('bg_nether.jpg');" title="ネザー"></div>
-                        <div class="bg-btn minecraft-bg" onclick="changeStudioBg('url(bg_snow.jpg)')" style="background-image:url('bg_snow.jpg');" title="雪原"></div>
-                        <div class="bg-btn minecraft-bg" onclick="changeStudioBg('url(bg_cave.jpg)')" style="background-image:url('bg_cave.jpg');" title="洞窟"></div>
-                        <div class="bg-btn" onclick="changeStudioBg('#00ff00')" style="background:#00ff00; color:#000; font-size:10px; display:flex; align-items:center; justify-content:center;">GB</div>
-                        <div class="bg-btn" onclick="changeStudioBg('url(https://placehold.co/800x450/333/fff?text=Stage)')" style="background-image:url('https://placehold.co/100x100/333/fff?text=St');"></div>
-                        </div>
+                        
+                        <div class="bg-btn minecraft-bg" onclick="changeStudioBg('url(bg_forest.jpg)')" style="background-image:url('bg_forest.jpg');"></div>
+                        <div class="bg-btn minecraft-bg" onclick="changeStudioBg('url(bg_nether.jpg)')" style="background-image:url('bg_nether.jpg');"></div>
+                        <div class="bg-btn minecraft-bg" onclick="changeStudioBg('url(bg_snow.jpg)')" style="background-image:url('bg_snow.jpg');"></div>
+                        
+                        <div class="bg-btn" onclick="changeStudioBg('#00ff00')" style="background:#00ff00; border-color:#000;"></div>
+                    </div>
+                </div>
+
+                <div class="control-group">
+                    <div class="c-label" style="color:#ff4757;"><i class="fas fa-plus-circle"></i> ADD MOB & ITEM</div>
+                    <div class="pose-grid">
+                        <button class="c-btn mob-btn" onclick="addFreeMob('skin_zombie.png')">🧟 ゾンビ</button>
+                        <button class="c-btn mob-btn" onclick="addFreeMob('skin_skeleton.png')">💀 ガイコツ</button>
+                        <button class="c-btn mob-btn" onclick="addFreeMob('skin_villager.png')">👨‍🌾 村人</button>
+                        <button class="c-btn mob-btn" onclick="addFreeMob('skin_creeper.png')">💥 匠</button>
+                    </div>
+                    <p style="font-size:10px; color:#aaa; margin-top:8px;">
+                        <i class="fas fa-info-circle"></i> キャラを移動するには足元の「MOVEバー」をドラッグしてください。<br>
+                        <i class="fas fa-sync"></i> キャラ自体をドラッグすると回転します。
+                    </p>
                 </div>
 
             </div>
@@ -2296,51 +2311,56 @@ canvas#drawCanvas {
         list.scrollTop = list.scrollHeight; 
     }
 
-    // --------------------------------------------------
-    // ▼ 6. AOHARU STUDIO (5人配置 & モブ追加 & ドラッグ移動)
-    // --------------------------------------------------
+    // ▼▼▼ AOHARU STUDIO 制御プログラム（公式風・ポーズ増量版） ▼▼▼
     let studioViewers = [];
-    let selectedActorIndex = -1; // -1は「全員」
+    let selectedActorIndex = -1; 
 
     function initStudio() {
         if(studioViewers.length > 0) return;
 
         const canvasIds = ['skin_member_1', 'skin_member_2', 'skin_user', 'skin_member_3', 'skin_member_4'];
-        
-        // ★実際の画像ファイル名に合わせてください！
         const defaultSkins = ["skin_iyo.png", "skin_taku.png", "skin_ao.png", "skin_yua.png", "skin_ao.png"];
 
         canvasIds.forEach((id, index) => {
             const canvas = document.getElementById(id);
             if(!canvas) return;
             
-            // 親要素(.actor-box)を取得
+            // 親要素(.actor-box)
             const container = canvas.parentElement;
-            
-            // ★ 5人にもドラッグ機能を適用 ★
-            makeDraggable(container); 
 
-            // サイズ合わせ
-            const rect = container.getBoundingClientRect();
+            // ★追加：移動用ハンドルを作成して挿入
+            const handle = document.createElement('div');
+            handle.className = 'move-handle';
+            handle.innerHTML = '<i class="fas fa-arrows-alt"></i> MOVE';
+            container.appendChild(handle);
             
+            // ★ハンドルの部分だけドラッグ可能にする
+            makeDraggable(container, handle); 
+
+            // ビューワー作成
+            const rect = container.getBoundingClientRect();
             const viewer = new skinview3d.SkinViewer({
                 canvas: canvas,
                 width: rect.width,
                 height: rect.height,
                 skin: defaultSkins[index],
-                preserveDrawingBuffer: true // ★撮影で消えない設定
+                preserveDrawingBuffer: true
             });
             
+            // 角度変更できるようにコントロールを有効化
+            viewer.controls.enableRotate = true; 
+            viewer.controls.enableZoom = false; // ズームは無効（レイアウト崩れ防止）
+            viewer.controls.enablePan = false;
+
             viewer.fov = 50; 
             viewer.zoom = 0.85; 
-            viewer.autoRotate = false;
             viewer.animation = new skinview3d.WalkingAnimation();
 
             studioViewers.push(viewer);
         });
     }
 
-    // メンバーを選択する関数
+    // メンバー選択
     function selectActor(index) {
         selectedActorIndex = index;
         const boxes = document.querySelectorAll('.actor-box');
@@ -2350,32 +2370,71 @@ canvas#drawCanvas {
         });
         const names = ["いよ", "たく", "YOU", "ゆあ", "あお"];
         const targetName = index === -1 ? "全員" : names[index];
-        const label = document.getElementById('targetName');
-        if(label) label.innerText = targetName;
+        document.getElementById('targetName').innerText = targetName;
     }
 
-    // ポーズ変更
+    // アニメーション設定
     function setStudioAnim(type) {
         studioViewers.forEach((v, i) => {
             if (selectedActorIndex === -1 || selectedActorIndex === i) {
+                resetPose(v); // 一旦リセット
                 if(type === 'idle') v.animation = new skinview3d.IdleAnimation();
                 if(type === 'walk') v.animation = new skinview3d.WalkingAnimation();
                 if(type === 'run') v.animation = new skinview3d.RunningAnimation();
                 if(type === 'fly') v.animation = new skinview3d.FlyingAnimation();
-                v.playerObject.skin.head.rotation.z = 0; // 首リセット
             }
         });
     }
 
-    // 首かしげ
+    // ★新機能：カスタムポーズ設定
+    function setPose(poseName) {
+        studioViewers.forEach((v, i) => {
+            if (selectedActorIndex === -1 || selectedActorIndex === i) {
+                // アニメーションを停止してリセット
+                v.animation = null;
+                resetPose(v);
+
+                const skin = v.playerObject.skin;
+
+                if (poseName === 'hug') {
+                    skin.rightArm.rotation.x = -1.5; skin.rightArm.rotation.z = 0.5;
+                    skin.leftArm.rotation.x = -1.5; skin.leftArm.rotation.z = -0.5;
+                }
+                else if (poseName === 'cheer') {
+                    skin.rightArm.rotation.z = 2.8; skin.leftArm.rotation.z = -2.8;
+                }
+                else if (poseName === 'point') {
+                    skin.rightArm.rotation.x = -1.5; skin.rightArm.rotation.y = -0.5;
+                }
+                else if (poseName === 'sit') {
+                    skin.rightLeg.rotation.x = -1.5; skin.leftLeg.rotation.x = -1.5;
+                }
+                else if (poseName === 'ninja') {
+                    skin.body.rotation.x = 0.5;
+                    skin.rightArm.rotation.x = 1.0; skin.leftArm.rotation.x = 1.0;
+                }
+                else if (poseName === 'zombie') {
+                    skin.rightArm.rotation.x = -1.5; skin.leftArm.rotation.x = -1.5;
+                }
+            }
+        });
+    }
+
+    // ポーズリセット用
+    function resetPose(viewer) {
+        const skin = viewer.playerObject.skin;
+        skin.head.rotation.x = 0; skin.head.rotation.y = 0; skin.head.rotation.z = 0;
+        skin.leftArm.rotation.x = 0; skin.leftArm.rotation.z = 0;
+        skin.rightArm.rotation.x = 0; skin.rightArm.rotation.z = 0;
+        skin.leftLeg.rotation.x = 0; skin.rightLeg.rotation.x = 0;
+        skin.body.rotation.x = 0;
+    }
+
+    // 首かしげ（トグル）
     function toggleHeadTilt() {
         studioViewers.forEach((v, i) => {
             if (selectedActorIndex === -1 || selectedActorIndex === i) {
-                if (v.playerObject.skin.head.rotation.z === 0) {
-                    v.playerObject.skin.head.rotation.z = -0.5;
-                } else {
-                    v.playerObject.skin.head.rotation.z = 0;
-                }
+                v.playerObject.skin.head.rotation.z = (v.playerObject.skin.head.rotation.z === 0 ? -0.4 : 0);
             }
         });
     }
@@ -2389,150 +2448,79 @@ canvas#drawCanvas {
         });
     }
 
-    // 背景変更
-    function changeStudioBg(cssValue) {
-        const bg = document.getElementById('studioBg');
-        if(!bg) return;
-        if(cssValue.includes('url')) {
-            bg.style.backgroundImage = cssValue; 
-            bg.style.backgroundColor = 'transparent';
-        } else {
-            bg.style.backgroundImage = 'none'; 
-            bg.style.backgroundColor = cssValue;
-        }
-    }
-
-    // 自分のスキン変更
-    function uploadUserSkin(input) {
-        if (input.files && input.files[0]) {
-            const reader = new FileReader();
-            reader.onload = function(e) {
-                if(studioViewers[2]) studioViewers[2].loadSkin(e.target.result);
-            };
-            reader.readAsDataURL(input.files[0]);
-        }
-    }
-
-    // キャラクター変身機能
-    function changeActorSkin(skinFileName) {
-        if (studioViewers.length === 0) return;
-        if (selectedActorIndex === -1) {
-            if (!confirm("全員の姿を変更しますか？")) return;
-            studioViewers.forEach(viewer => {
-                viewer.loadSkin(skinFileName);
-            });
-        } else {
-            const viewer = studioViewers[selectedActorIndex];
-            if (viewer) viewer.loadSkin(skinFileName);
-        }
-    }
-
-    // 撮影機能
-    function captureStudio() {
-        const target = document.getElementById('studioStage');
-        html2canvas(target, { scale: 2, useCORS: true, backgroundColor: null }).then(canvas => {
-            const link = document.createElement('a');
-            link.download = 'aoharu_studio.png';
-            link.href = canvas.toDataURL('image/png');
-            link.click();
-        });
-    }
-
-    // ▼▼▼ 自由配置モブの制御 ▼▼▼
+    // 背景・スキン変更・保存（変更なし）
+    function changeStudioBg(val) { const bg=document.getElementById('studioBg'); if(val.includes('url')) { bg.style.backgroundImage=val; bg.style.backgroundColor='transparent'; } else { bg.style.backgroundImage='none'; bg.style.backgroundColor=val; } }
+    function uploadUserSkin(input) { if(input.files[0]) { const r = new FileReader(); r.onload = (e) => studioViewers[2].loadSkin(e.target.result); r.readAsDataURL(input.files[0]); } }
+    function captureStudio() { html2canvas(document.getElementById('studioStage'), {scale:2, useCORS:true}).then(c=>{ const l=document.createElement('a'); l.download='studio.png'; l.href=c.toDataURL(); l.click(); }); }
+    
+    // ▼▼▼ モブ追加（ハンドル付き） ▼▼▼
     let freeMobs = []; 
-
-    function addFreeMob(skinFileName) {
-        const stage = document.getElementById('studioStage');
+    function addFreeMob(skin) { 
+        const stage = document.getElementById('studioStage'); 
+        const box = document.createElement('div'); box.className = 'free-mob-box'; 
+        box.style.top = '30%'; box.style.left = '40%';
         
-        const mobBox = document.createElement('div');
-        mobBox.className = 'free-mob-box';
-        // 初期位置をランダムに
-        mobBox.style.top = (20 + Math.random() * 40) + '%'; 
-        mobBox.style.left = (30 + Math.random() * 40) + '%';
+        const cvs = document.createElement('canvas'); box.appendChild(cvs); 
         
-        const canvas = document.createElement('canvas');
-        mobBox.appendChild(canvas);
+        // ハンドル追加
+        const handle = document.createElement('div');
+        handle.className = 'move-handle';
+        handle.innerHTML = '<i class="fas fa-arrows-alt"></i>';
+        box.appendChild(handle);
+        
+        const del = document.createElement('div'); del.className = 'mob-delete-btn'; del.innerText='×'; del.onclick=()=>box.remove(); box.appendChild(del);
+        
+        stage.appendChild(box);
+        
+        // ハンドルのみドラッグ可能に
+        makeDraggable(box, handle);
 
-        const delBtn = document.createElement('div');
-        delBtn.className = 'mob-delete-btn';
-        delBtn.innerText = '×';
-        delBtn.onclick = function() { mobBox.remove(); }; 
-        mobBox.appendChild(delBtn);
-
-        stage.appendChild(mobBox);
-
-        const viewer = new skinview3d.SkinViewer({
-            canvas: canvas,
-            width: 100, height: 200,
-            skin: skinFileName,
-            preserveDrawingBuffer: true
-        });
-        viewer.fov = 60; 
-        viewer.zoom = 0.9;
-        viewer.animation = new skinview3d.WalkingAnimation();
-        viewer.autoRotate = true; 
-        viewer.autoRotateSpeed = 0.5;
-
-        // モブにもドラッグ機能を付ける
-        makeDraggable(mobBox);
+        const v = new skinview3d.SkinViewer({ canvas: cvs, width: 100, height: 200, skin: skin, preserveDrawingBuffer: true });
+        v.controls.enableRotate = true; v.controls.enableZoom = false;
+        v.fov = 60; v.zoom = 0.9; v.animation = new skinview3d.WalkingAnimation(); v.autoRotate = true;
     }
+    
+    // ▼▼▼ ドラッグ機能（改良版：ハンドル指定） ▼▼▼
+    function makeDraggable(element, handle) {
+        let isDragging=false, startX, startY, initLeft, initTop;
+        
+        // ハンドルに対してイベントを設定（ハンドルがない場合は要素全体）
+        const target = handle || element;
 
-    // ドラッグ移動させる関数
-    function makeDraggable(element) {
-        let isDragging = false;
-        let startX, startY, initialLeft, initialTop;
+        target.addEventListener('mousedown', start); 
+        target.addEventListener('touchstart', start, {passive:false});
 
-        element.addEventListener('mousedown', startDrag);
-        element.addEventListener('touchstart', startDrag, {passive: false});
-
-        function startDrag(e) {
-            if(e.target.tagName === 'CANVAS') {
-                // 特になにもしなくてOK
-            }
+        function start(e) { 
             e.preventDefault(); 
-            isDragging = true;
+            e.stopPropagation(); // 他のイベントを邪魔しない
+            isDragging=true; 
+            const t = e.type==='touchstart'?e.touches[0]:e; 
+            startX=t.clientX; startY=t.clientY; 
+            initLeft=element.offsetLeft; initTop=element.offsetTop; 
             
-            const clientX = e.type === 'touchstart' ? e.touches[0].clientX : e.clientX;
-            const clientY = e.type === 'touchstart' ? e.touches[0].clientY : e.clientY;
-
-            startX = clientX;
-            startY = clientY;
+            // ピクセル配置に固定
+            element.style.bottom='auto'; element.style.right='auto'; 
+            element.style.left=initLeft+'px'; element.style.top=initTop+'px'; 
             
-            // 現在の座標を取得して上書き
-            initialLeft = element.offsetLeft;
-            initialTop = element.offsetTop;
-
-            element.style.bottom = 'auto';
-            element.style.right = 'auto';
-            element.style.left = initialLeft + 'px';
-            element.style.top = initialTop + 'px';
-
-            document.addEventListener('mousemove', drag);
-            document.addEventListener('touchmove', drag, {passive: false});
-            document.addEventListener('mouseup', stopDrag);
-            document.addEventListener('touchend', stopDrag);
+            document.addEventListener('mousemove', move); 
+            document.addEventListener('touchmove', move, {passive:false}); 
+            document.addEventListener('mouseup', stop); 
+            document.addEventListener('touchend', stop); 
         }
-
-        function drag(e) {
-            if (!isDragging) return;
-            e.preventDefault();
-
-            const clientX = e.type === 'touchmove' ? e.touches[0].clientX : e.clientX;
-            const clientY = e.type === 'touchmove' ? e.touches[0].clientY : e.clientY;
-
-            const dx = clientX - startX;
-            const dy = clientY - startY;
-
-            element.style.left = (initialLeft + dx) + 'px';
-            element.style.top = (initialTop + dy) + 'px';
+        function move(e) { 
+            if(!isDragging) return; 
+            e.preventDefault(); 
+            const t = e.type==='touchmove'?e.touches[0]:e; 
+            const dx=t.clientX-startX; const dy=t.clientY-startY; 
+            element.style.left=(initLeft+dx)+'px'; 
+            element.style.top=(initTop+dy)+'px'; 
         }
-
-        function stopDrag() {
-            isDragging = false;
-            document.removeEventListener('mousemove', drag);
-            document.removeEventListener('touchmove', drag);
-            document.removeEventListener('mouseup', stopDrag);
-            document.removeEventListener('touchend', stopDrag);
+        function stop() { 
+            isDragging=false; 
+            document.removeEventListener('mousemove', move); 
+            document.removeEventListener('touchmove', move); 
+            document.removeEventListener('mouseup', stop); 
+            document.removeEventListener('touchend', stop); 
         }
     }
 
