@@ -2291,7 +2291,79 @@
     async function saveProfile() { if (!currentUserData) return; const name = document.getElementById('myNameInput').value; const icon = document.getElementById('myIconInput').value; const bio = document.getElementById('myBioInput').value; const x = document.getElementById('myXInput').value; const yt = document.getElementById('myYtInput').value; const btn = document.querySelector('.save-btn'); btn.innerText = "保存中..."; btn.disabled = true; try { const url = `${GAS_API_URL}?action=update_profile` + `&id=${encodeURIComponent(currentUserData.id)}` + `&name=${encodeURIComponent(name)}` + `&icon=${encodeURIComponent(icon)}` + `&bio=${encodeURIComponent(bio)}` + `&x=${encodeURIComponent(x)}` + `&yt=${encodeURIComponent(yt)}`; const res = await fetch(url); const json = await res.json(); if (json.status === 'success') { alert("更新しました！"); currentUserData.name = name; currentUserData.icon = icon; currentUserData.bio = bio; currentUserData.x = x; currentUserData.yt = yt; localStorage.setItem('aoharu_user', JSON.stringify(currentUserData)); location.reload(); } else { alert("エラー: " + json.message); } } catch (e) { alert("通信エラー"); } finally { btn.innerText = "変更を保存する"; btn.disabled = false; } }
     function logoutUser() { if(confirm("ログアウトしますか？")) { localStorage.removeItem('aoharu_user'); location.reload(); } }
     async function openUserProfile(name, event) { if(event) event.stopPropagation(); document.getElementById('graffitiModal').classList.remove('open'); document.getElementById('userProfileModal').classList.remove('open'); const officialMember = memberData.find(m => m.name === name); if (officialMember) { const index = memberData.indexOf(officialMember); openMemberDetail(index); return; } document.getElementById('upName').innerText = "Loading..."; document.getElementById('upBio').innerText = "..."; document.getElementById('upIcon').src = "icon.png"; document.getElementById('upBadge').style.display = "none"; document.getElementById('upLinkX').style.display = "none"; document.getElementById('upLinkYt').style.display = "none"; document.getElementById('userProfileModal').classList.add('open'); try { const res = await fetch(`${GAS_API_URL}?action=get_user_profile&name=${encodeURIComponent(name)}`); const json = await res.json(); if (json.status === 'success') { document.getElementById('upName').innerText = json.name; document.getElementById('upIcon').src = json.icon || "icon.png"; document.getElementById('upBio').innerText = json.bio || ""; if (json.x) { document.getElementById('upLinkX').href = json.x; document.getElementById('upLinkX').style.display = "flex"; } if (json.yt) { document.getElementById('upLinkYt').href = json.yt; document.getElementById('upLinkYt').style.display = "flex"; } } } catch (e) { console.log(e); } }
-    function openMemberDetail(index, pushHistory = true) { const m = memberData[index]; if(!m) return; const detailPage = document.getElementById('memberDetail'); let snsBtns = ''; if(m.youtubeId) snsBtns += `<a href="${m.youtubeId.startsWith('http')?m.youtubeId:'https://youtube.com/'+m.youtubeId}" target="_blank" class="p-btn yt"><i class="fab fa-youtube"></i> Channel</a>`; if(m.twitterId) snsBtns += `<a href="${m.twitterId.startsWith('http')?m.twitterId:'https://twitter.com/'+m.twitterId}" target="_blank" class="p-btn x"><i class="fab fa-x-twitter"></i> X</a>`; let voiceHtml = ''; const voices = [ {url: m.voice1, title: m.title1}, {url: m.voice2, title: m.title2}, {url: m.voice3, title: m.title3} ]; let voiceItems = ''; voices.forEach((v, i) => { if(v.url) voiceItems += `<div class="voice-card" onclick="playVoice(this, '${v.url}')"><i class="fas fa-play voice-icon"></i><div class="voice-title">${v.title||'Voice'}</div></div>`; }); if(voiceItems) voiceHtml = `<div class="section-title"><span class="ja-title">VOICE</span></div><div class="voice-grid">${voiceItems}</div>`; const html = `<div class="profile-header-bg" style="background-image:linear-gradient(135deg, ${m.color}cc 0%, rgba(255,255,255,0.9) 100%), url('${m.img}'); background-size:cover;"><div class="profile-wrapper"><div class="profile-visual"><img src="${m.img}" class="profile-tachie"></div><div class="profile-info"><div class="profile-en-name" style="color:${m.color}">${m.enName}</div><div class="profile-jp-name">${m.name}</div><div class="profile-catch" style="border-color:${m.color}">${m.catchphrase||''}</div><div class="profile-bio">${m.bio||''}</div><div class="profile-actions">${snsBtns}</div>${voiceHtml}<div style="text-align:center;"><div class="back-link" onclick="showPage('member')">◀ 戻る</div></div></div></div></div>`; detailPage.innerHTML = html; showPage('memberDetail', m.name, false); if (pushHistory) history.pushState(null, null, '#member_' + index); updateBreadcrumbs('memberDetail', m.name); }
+    // ▼▼▼ メンバー詳細を表示する関数（Twitch追加版） ▼▼▼
+    function openMemberDetail(index, pushHistory = true) { 
+        const m = memberData[index]; 
+        if(!m) return; 
+        const detailPage = document.getElementById('memberDetail'); 
+        
+        // SNSボタンの生成
+        let snsBtns = ''; 
+        // YouTube
+        if(m.youtubeId) snsBtns += `<a href="${m.youtubeId.startsWith('http')?m.youtubeId:'https://youtube.com/'+m.youtubeId}" target="_blank" class="p-btn yt"><i class="fab fa-youtube"></i> Channel</a>`; 
+        
+        // ★★★ 追加：Twitchボタン（ここを追加しました！） ★★★
+        if(m.twitchId) snsBtns += `<a href="${m.twitchId.startsWith('http')?m.twitchId:'https://twitch.tv/'+m.twitchId}" target="_blank" class="p-btn tw"><i class="fab fa-twitch"></i> Twitch</a>`; 
+        
+        // X (Twitter)
+        if(m.twitterId) snsBtns += `<a href="${m.twitterId.startsWith('http')?m.twitterId:'https://twitter.com/'+m.twitterId}" target="_blank" class="p-btn x"><i class="fab fa-x-twitter"></i> X</a>`; 
+        
+        // ボイスリストの生成
+        let voiceHtml = ''; 
+        const voices = [ {url: m.voice1, title: m.title1}, {url: m.voice2, title: m.title2}, {url: m.voice3, title: m.title3} ]; 
+        let voiceItems = ''; 
+        voices.forEach((v, i) => { if(v.url) voiceItems += `<div class="voice-card" onclick="playVoice(this, '${v.url}')"><i class="fas fa-play voice-icon"></i><div class="voice-title">${v.title||'Voice'}</div></div>`; }); 
+        if(voiceItems) voiceHtml = `<div class="section-title"><span class="ja-title">VOICE</span></div><div class="voice-grid">${voiceItems}</div>`; 
+        
+        // 詳細データリスト
+        const dataListHtml = `
+            <div class="profile-data-list">
+                <div class="p-data-item">
+                    <span class="p-label">BIRTHDAY</span>
+                    <span class="p-value">${m.birthday || '???'}</span>
+                </div>
+                <div class="p-data-item">
+                    <span class="p-label">HEIGHT</span>
+                    <span class="p-value">${m.height || '???'}</span>
+                </div>
+                <div class="p-data-item">
+                    <span class="p-label">FAN NAME</span>
+                    <span class="p-value">${m.fanName || '-'}</span>
+                </div>
+                <div class="p-data-item">
+                    <span class="p-label">HASHTAG</span>
+                    <span class="p-value">${m.hashTag || '#'}</span>
+                </div>
+            </div>
+        `;
+
+        // HTMLの組み立て
+        const html = `
+        <div class="profile-header-bg" style="background-image:linear-gradient(135deg, ${m.color}cc 0%, rgba(255,255,255,0.9) 100%), url('${m.img}'); background-size:cover;">
+            <div class="profile-wrapper">
+                <div class="profile-visual">
+                    <img src="${m.img}" class="profile-tachie">
+                </div>
+                <div class="profile-info">
+                    <div class="profile-en-name" style="color:${m.color}">${m.enName}</div>
+                    <div class="profile-jp-name">${m.name}</div>
+                    <div class="profile-catch" style="border-color:${m.color}">${m.catchphrase||''}</div>
+                    
+                    ${dataListHtml}
+                    
+                    <div class="profile-bio">${m.bio||''}</div>
+                    <div class="profile-actions">${snsBtns}</div>
+                    ${voiceHtml}
+                    <div style="text-align:center;"><div class="back-link" onclick="showPage('member')">◀ 戻る</div></div>
+                </div>
+            </div>
+        </div>`; 
+        
+        detailPage.innerHTML = html; 
+        showPage('memberDetail', m.name, false); 
+        if (pushHistory) history.pushState(null, null, '#member_' + index); 
+        updateBreadcrumbs('memberDetail', m.name); 
+    }
     function closeUserProfileModal() { document.getElementById('userProfileModal').classList.remove('open'); }
     function openForgotModal() { closeLoginModal(); document.getElementById('forgotModal').classList.add('open'); }
     function closeForgotModal() { document.getElementById('forgotModal').classList.remove('open'); }
