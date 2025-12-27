@@ -272,11 +272,11 @@
             z-index: 2; /* 影がテキストボックスの上にくるように */
         }
 
-        /* PICK UP画像の本体設定 */
+        /* PICK UP画像の本体設定（修正版） */
         .news-pickup-img {
             width: 100%;
-            height: 100%;       /* 親要素(.news-pickup)に合わせる */
-            object-fit: cover;  /* 枠に合わせて表示（比率が同じなら見切れません） */
+            height: 100%;       /* 親要素に合わせる */
+            object-fit: cover;  /* 比率を維持して隙間なく表示 */
             object-position: center;
         }
 
@@ -2028,6 +2028,10 @@
     const secretCode = ['ArrowUp', 'ArrowUp', 'ArrowDown', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'ArrowLeft', 'ArrowRight', 'b', 'a'];
     let secretInput = [];
     let logoTapCount = 0;
+    let secretTapCount = 0;   // これがないと入れません
+    let secretTapTimer = null;
+    let horrorAudio = {};     // これがないと音が鳴りません
+    let secretData = {};      // 恐怖のテキストデータ
 
     // ▼ 初期化 ▼
     window.onload = function() { 
