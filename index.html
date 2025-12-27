@@ -882,29 +882,33 @@ canvas#drawCanvas {
         .studio-watermark {
             position: absolute; bottom: 10px; right: 10px; width: 120px; opacity: 0.8; z-index: 50; pointer-events: none;
         }
-        /* ▼▼▼ 自由配置用のスタイル（ここから上書き） ▼▼▼ */
+        /* ▼▼▼ 自由配置用のスタイル（スマホ対応版） ▼▼▼ */
         .studio-actors {
             position: absolute; inset: 0; 
-            /* display: flex; ←これをやめて自由配置にする */
             z-index: 10;
+            pointer-events: none; /* エリア自体はクリックを通す */
         }
         
         .actor-box {
-            position: absolute; /* 自由に動けるようにする */
-            width: 140px; height: 300px;
-            bottom: 10%; /* 最初は下の方に配置 */
-            cursor: grab; /* 掴めるアイコン */
-            transition: transform 0.1s; /* 掴んだ時の動き */
+            position: absolute;
+            /* ★ここを変更！高さに合わせて自動リサイズさせる */
+            height: 65%;          /* ステージの高さの65%にする */
+            width: auto;          /* 幅はなりゆき */
+            aspect-ratio: 140 / 300; /* 縦横比を維持 */
+            bottom: 10%;
+            cursor: grab;
+            transition: transform 0.1s;
+            pointer-events: auto; /* キャラはクリック可能に */
+            touch-action: none;   /* スマホでのスクロール干渉を防ぐ */
         }
         .actor-box:active { cursor: grabbing; transform: scale(1.05); z-index: 100 !important; }
 
-        /* ▼ 5人の初期位置を決める（左からの％） ▼ */
-        .actor-box:nth-child(1) { left: 10%; } /* いよ */
-        .actor-box:nth-child(2) { left: 30%; } /* たく */
-        .actor-box:nth-child(3) { left: 50%; transform: translateX(-50%); z-index: 20; } /* YOU (真ん中) */
-        .actor-box:nth-child(4) { right: 30%; } /* ゆあ */
-        .actor-box:nth-child(5) { right: 10%; } /* あお */
-
+        /* 初期位置（スマホでも重なりすぎないように調整） */
+        .actor-box:nth-child(1) { left: 5%; }
+        .actor-box:nth-child(2) { left: 25%; }
+        .actor-box:nth-child(3) { left: 50%; transform: translateX(-50%); z-index: 20; }
+        .actor-box:nth-child(4) { right: 25%; }
+        .actor-box:nth-child(5) { right: 5%; }
         /* 選択リング */
         .actor-select-ring {
             position: absolute; bottom: 0; left: 50%; transform: translateX(-50%);
@@ -1853,7 +1857,7 @@ canvas#drawCanvas {
             initOmikuji(); 
             initEasterEgg(); 
             handleLocation(); 
-            renderGraffitiList(); // ★ここでエラーが出ていた関数を実行
+            renderGraffitiList(); 
             
             // ローディング画面を消す
             const loader = document.getElementById('loadingScreen');
@@ -2016,7 +2020,7 @@ canvas#drawCanvas {
     }
 
     // --------------------------------------------------
-    // ▼ 3. 各種レンダリング関数 (これらが消えていました！)
+    // ▼ 3. 各種レンダリング関数
     // --------------------------------------------------
     function renderNews() { 
         const newsHtml = newsData.map((n, i) => { 
@@ -2146,7 +2150,7 @@ canvas#drawCanvas {
     
     function initCanvas() { 
         const container = document.querySelector('.board-container'); 
-        graffitiCanvas = document.getElementById('drawCanvas'); 
+        graffitiCanvas = document.getElementById('drawCanvas'); // リネーム
         if(!container || !graffitiCanvas) return; 
         const rect = container.getBoundingClientRect(); 
         graffitiCanvas.width = rect.width; 
