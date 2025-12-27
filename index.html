@@ -868,140 +868,146 @@ canvas#drawCanvas {
     border-color: var(--primary);
     transform: scale(1.1);
 }
-        /* ▼▼▼ AOHARU STUDIO（統合版）のデザイン ▼▼▼ */
+        /* ▼▼▼ AOHARU STUDIO (公式風デザイン) ▼▼▼ */
         .studio-stage {
             position: relative; width: 100%; aspect-ratio: 16 / 9;
-            background: #333; border-radius: 15px; overflow: hidden;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.3); border: 4px solid #fff;
+            background: #2d3436; border-radius: 20px; overflow: hidden;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.4); border: 4px solid #fff;
         }
         .studio-bg {
             position: absolute; inset: 0; background-size: cover; background-position: center;
-            background-color: #ff9a9e; /* デフォルトかわいいピンク */
-            transition: 0.3s;
+            background-color: #ff9a9e; transition: 0.3s;
         }
         .studio-watermark {
-            position: absolute; bottom: 10px; right: 10px; width: 120px; opacity: 0.8; z-index: 50; pointer-events: none;
+            position: absolute; bottom: 15px; right: 15px; width: 120px; opacity: 0.9; z-index: 50; pointer-events: none;
+            filter: drop-shadow(0 2px 4px rgba(0,0,0,0.3));
         }
-        /* ▼▼▼ 自由配置用のスタイル（スマホ対応版） ▼▼▼ */
+
+        /* キャラクター配置エリア */
         .studio-actors {
-            position: absolute; inset: 0; 
-            z-index: 10;
-            pointer-events: none; /* エリア自体はクリックを通す */
+            position: absolute; inset: 0; z-index: 10; pointer-events: none;
         }
         
+        /* キャラクターボックス */
         .actor-box {
             position: absolute;
-            /* ★ここを変更！高さに合わせて自動リサイズさせる */
-            height: 65%;          /* ステージの高さの65%にする */
-            width: auto;          /* 幅はなりゆき */
-            aspect-ratio: 140 / 300; /* 縦横比を維持 */
+            height: 65%; width: auto; aspect-ratio: 140 / 300;
             bottom: 10%;
-            cursor: grab;
             transition: transform 0.1s;
-            pointer-events: auto; /* キャラはクリック可能に */
-            touch-action: none;   /* スマホでのスクロール干渉を防ぐ */
+            pointer-events: auto; /* ここは触れる */
+            display: flex; flex-direction: column; align-items: center; justify-content: flex-end;
         }
-        .actor-box:active { cursor: grabbing; transform: scale(1.05); z-index: 100 !important; }
+        
+        /* 3Dキャンバス（ここを掴むと回転する） */
+        .actor-box canvas { 
+            width: 100% !important; height: 100% !important; 
+            outline: none; cursor: col-resize; /* 回転できそうなカーソル */
+            filter: drop-shadow(0 5px 15px rgba(0,0,0,0.3));
+        }
 
-        /* 初期位置（スマホでも重なりすぎないように調整） */
-        .actor-box:nth-child(1) { left: 5%; }
-        .actor-box:nth-child(2) { left: 25%; }
-        .actor-box:nth-child(3) { left: 50%; transform: translateX(-50%); z-index: 20; }
-        .actor-box:nth-child(4) { right: 25%; }
-        .actor-box:nth-child(5) { right: 5%; }
+        /* ★新機能：移動用のハンドル（ここを掴むと移動する） */
+        .move-handle {
+            width: 100%; height: 24px;
+            background: rgba(0, 0, 0, 0.6);
+            border-radius: 12px;
+            color: white; font-size: 10px; font-weight: bold;
+            display: flex; align-items: center; justify-content: center;
+            cursor: move; /* 移動カーソル */
+            opacity: 0; transition: 0.2s;
+            margin-top: -10px; z-index: 100;
+            backdrop-filter: blur(4px);
+        }
+        .actor-box:hover .move-handle, .actor-box.selected .move-handle { opacity: 1; }
+        .move-handle i { margin-right: 4px; }
+
         /* 選択リング */
         .actor-select-ring {
-            position: absolute; bottom: 0; left: 50%; transform: translateX(-50%);
-            width: 80px; height: 20px; border-radius: 50%;
-            background: rgba(255, 255, 0, 0.5); opacity: 0; transition: 0.2s;
-            pointer-events: none;
+            position: absolute; bottom: 5px; left: 50%; transform: translateX(-50%);
+            width: 80%; height: 15px; border-radius: 50%;
+            background: radial-gradient(rgba(255, 255, 0, 0.6), transparent 70%);
+            opacity: 0; transition: 0.2s; pointer-events: none;
+            box-shadow: 0 0 15px #f1c40f;
         }
         .actor-box.selected .actor-select-ring { opacity: 1; }
 
-        .actor-box canvas { width: 100% !important; height: 100% !important; outline:none; pointer-events: none; }
-        
-        .user-label {
-            position: absolute; bottom: -20px; left: 50%; transform: translateX(-50%);
-            background: #e1b12c; color: white; font-weight: bold; font-size: 10px; padding: 2px 8px; border-radius: 4px; pointer-events: none;
-        }
-
-        /* 操作パネル */
+        /* 操作パネル（リッチデザイン） */
         .studio-controls {
-            background: #fff; color: #444; padding: 20px; border-radius: 15px; margin-top: 15px;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.05); border: 2px solid #eee;
+            background: #fff; color: #333; padding: 25px; border-radius: 20px; margin-top: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.05); border: 1px solid #eee;
         }
         .control-header {
-            font-weight: bold; margin-bottom: 15px; border-bottom: 2px dashed #eee; padding-bottom: 10px;
+            font-weight: 900; margin-bottom: 20px; border-bottom: 2px solid #f0f0f0; padding-bottom: 10px;
             display: flex; justify-content: space-between; align-items: center;
+            font-family: 'Poppins', sans-serif; letter-spacing: 1px; color: #555;
+        }
+        .target-badge {
+            background: #e1b12c; color: white; padding: 4px 12px; border-radius: 20px; font-size: 12px; margin-left: 10px;
         }
         .reset-select-btn {
-            font-size: 10px; background: #888; color: white; border: none; padding: 3px 8px; border-radius: 4px; cursor: pointer;
+            font-size: 11px; background: #eee; color: #666; border: none; padding: 6px 15px; border-radius: 20px; cursor: pointer; font-weight: bold; transition:0.2s;
         }
-        .control-group { margin-bottom: 15px; }
-        .c-label { font-size: 12px; font-weight: 900; color: var(--primary); margin-bottom: 8px; display: block; }
-        
-        .pose-grid { display: flex; flex-wrap: wrap; gap: 5px; }
+        .reset-select-btn:hover { background: #ddd; }
+
+        .control-group { margin-bottom: 25px; }
+        .c-label { 
+            font-size: 13px; font-weight: 900; color: #888; margin-bottom: 12px; 
+            display: flex; align-items: center; gap: 8px; font-family: 'Poppins', sans-serif;
+        }
+        .c-label i { color: var(--primary); font-size: 16px; }
+
+        /* 公式っぽいボタンデザイン */
+        .pose-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(80px, 1fr)); gap: 10px; }
         .c-btn {
-            background: white; color: #555; border: 1px solid #ddd;
-            padding: 8px 12px; border-radius: 20px; cursor: pointer;
-            font-size: 12px; font-weight: bold; transition: 0.2s; flex: 1; min-width: 60px;
+            background: white; color: #555; 
+            border: 2px solid #f0f0f0;
+            padding: 10px 5px; border-radius: 12px; cursor: pointer;
+            font-size: 11px; font-weight: bold; transition: all 0.2s;
+            display: flex; flex-direction: column; align-items: center; gap: 5px;
         }
-        .c-btn:hover { background: var(--primary); color: white; border-color: var(--primary); }
-        .c-btn.main { width: 100%; background: var(--primary); color: white; border: none; box-shadow: 0 4px 10px rgba(39, 198, 245, 0.3); }
-        
-        .bg-selector { display: flex; gap: 8px; flex-wrap: wrap; }
+        .c-btn i { font-size: 18px; color: #ccc; transition: 0.2s; }
+        .c-btn:hover { border-color: var(--primary); color: var(--primary); transform: translateY(-3px); box-shadow: 0 5px 15px rgba(39, 198, 245, 0.15); }
+        .c-btn:hover i { color: var(--primary); }
+        .c-btn:active { transform: translateY(0); }
+
+        .c-btn.main { 
+            width: 100%; background: linear-gradient(135deg, var(--primary), #89CFF0); 
+            color: white; border: none; padding: 15px; font-size: 14px; letter-spacing: 1px;
+            box-shadow: 0 5px 15px rgba(39, 198, 245, 0.4);
+            flex-direction: row; justify-content: center;
+        }
+        .c-btn.main i { color: white; }
+        .c-btn.main:hover { opacity: 0.9; transform: translateY(-2px); }
+
+        /* 背景ボタン */
+        .bg-selector { display: flex; gap: 10px; overflow-x: auto; padding-bottom: 10px; }
         .bg-btn {
-            width: 35px; height: 35px; border-radius: 8px; cursor: pointer;
-            border: 2px solid white; background-size: cover; box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            flex: 0 0 50px; height: 50px; border-radius: 12px; cursor: pointer;
+            border: 3px solid transparent; background-size: cover; background-position: center;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1); transition: 0.2s;
         }
-        .bg-btn:hover { transform: scale(1.1); }
-    /* マイクラ背景ボタンの枠線 */
-    .bg-btn.minecraft-bg {
-        border-radius: 2px;
-        border: 2px solid #555;
-    }
-    /* モブ変身ボタンのデザイン */
-    .c-btn.mob-btn {
-        background: #2d3436; color: #dfe6e9; border: 1px solid #636e72;
-    }
-    .c-btn.mob-btn:hover {
-        background: #d63031; color: white; border-color: #d63031;
-    }
-    /* 自由配置モブ用のスタイル */
+        .bg-btn:hover { transform: scale(1.1); border-color: var(--primary); }
+        
+        /* 自由配置モブ */
         .free-mob-box {
-            position: absolute;
-            width: 100px; height: 200px; /* 少し小さめに表示 */
-            z-index: 50; /* メンバーより手前に */
-            cursor: grab; /* 掴めるアイコン */
+            position: absolute; width: 100px; height: 200px; z-index: 50;
+            display: flex; flex-direction: column; align-items: center; justify-content: flex-end;
             transition: transform 0.1s;
         }
-        .free-mob-box:active {
-            cursor: grabbing;
-            transform: scale(1.1); /* 掴んでいる時は少し大きくなる */
-            z-index: 100; /* 最前面へ */
-        }
-        .free-mob-box canvas {
-            pointer-events: none; /* キャンバス自体はクリック判定を無視 */
-        }
-        /* 削除ボタン（右上） */
+        .free-mob-box:active { z-index: 100; }
         .mob-delete-btn {
-            position: absolute; top: -10px; right: -10px;
-            width: 20px; height: 20px; background: red; color: white;
-            border-radius: 50%; text-align: center; line-height: 20px;
-            font-size: 12px; font-weight: bold; cursor: pointer;
-            display: none; /* 普段は隠す */
+            position: absolute; top: 0; right: 0;
+            width: 24px; height: 24px; background: #ff4757; color: white;
+            border-radius: 50%; text-align: center; line-height: 24px;
+            font-size: 14px; font-weight: bold; cursor: pointer;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+            opacity: 0; transition: 0.2s;
         }
-        .free-mob-box:hover .mob-delete-btn {
-            display: block; /* ホバー時だけ表示 */
-        }
-        /* ▼▼▼ スマホの時だけロゴを小さくする ▼▼▼ */
+        .free-mob-box:hover .mob-delete-btn { opacity: 1; }
         @media (max-width: 768px) {
-            .studio-watermark {
-                width: 60px;  /* PC(120px)の半分にする */
-                bottom: 5px;  /* 端っこに寄せる */
-                right: 5px;
-            }
-            
+            .studio-watermark { width: 60px; bottom: 5px; right: 5px; }
+            .actor-box { height: 50%; } /* スマホは少し小さく */
+            .c-btn { font-size: 10px; }
+        }
             /* ついでに操作パネルの文字も少し小さくして見やすく */
             .c-btn {
                 font-size: 10px;
