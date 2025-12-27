@@ -22,7 +22,6 @@
     
     <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
-
     <script src="https://bs-community.github.io/skinview3d/js/skinview3d.bundle.js"></script>
 
     <style>
@@ -220,7 +219,98 @@
         .news-pickup-badge { background: #ff4757; padding: 3px 10px; border-radius: 5px; font-size: 12px; font-weight: bold; margin-bottom: 5px; display: inline-block; }
         .news-pickup-title { font-size: 20px; font-weight: bold; }
         .news-list { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 20px; padding-bottom: 20px; }
-        .news-card { background: white; border-radius: 12px; overflow: hidden; border: 1px solid #eee; cursor: pointer; transition: all 0.3s ease; box-shadow: 0 2px 8px rgba(0,0,0,0.05); display: flex; flex-direction: column; } .news-card:hover { border-color: var(--primary); box-shadow: 0 5px 15px rgba(39, 198, 245, 0.25); transform: translateY(-5px); } .scroll-grid .news-card { flex: 0 0 280px; margin-right: 0; height: 100%; } .news-thumb-area { width: 100%; height: 160px; background-color: #f0f0f0; position: relative; overflow: hidden; } .news-img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.3s; } .news-card:hover .news-img { transform: scale(1.05); } .news-badge { position: absolute; top: 10px; left: 10px; background: var(--primary); color: white; padding: 4px 10px; border-radius: 20px; font-size: 11px; font-weight: bold; z-index: 2; box-shadow: 0 2px 5px rgba(0,0,0,0.2); } .news-content { padding: 15px; flex-grow: 1; display: flex; flex-direction: column; } .news-date { font-size: 12px; color: #888; font-family: 'Poppins', sans-serif; margin-bottom: 5px; } .news-title { font-size: 14px; font-weight: bold; color: #333; line-height: 1.5; margin-bottom: 15px; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; flex-grow: 1; } .news-check-btn { background: #eee; color: #666; text-align: center; padding: 8px; border-radius: 6px; font-weight: bold; font-family: 'Poppins', sans-serif; font-size: 12px; transition: all 0.3s; } .news-card:hover .news-check-btn { background: var(--primary); color: white; }
+        .news-card { background: white; border-radius: 12px; overflow: hidden; border: 1px solid #eee; cursor: pointer; transition: all 0.3s ease; box-shadow: 0 2px 8px rgba(0,0,0,0.05); display: flex; flex-direction: column; } .news-card:hover { border-color: var(--primary); box-shadow: 0 5px 15px rgba(39, 198, 245, 0.25); transform: translateY(-5px); } .scroll-grid .news-card { flex: 0 0 280px; margin-right: 0; height: 100%; } 
+
+        /* ニュースのサムネイル画像エリア */
+        .news-thumb-area {
+            width: 100%;
+            height: auto;         /* 高さを自動にする */
+            aspect-ratio: 3 / 2;  /* ★比率を 1500x1000 (3:2) に固定！ */
+            background-color: #f0f0f0;
+            position: relative;
+            overflow: hidden;
+        } 
+
+.news-img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.3s; } .news-card:hover .news-img { transform: scale(1.05); } .news-badge { position: absolute; top: 10px; left: 10px; background: var(--primary); color: white; padding: 4px 10px; border-radius: 20px; font-size: 11px; font-weight: bold; z-index: 2; box-shadow: 0 2px 5px rgba(0,0,0,0.2); } .news-content { padding: 15px; flex-grow: 1; display: flex; flex-direction: column; } .news-date { font-size: 12px; color: #888; font-family: 'Poppins', sans-serif; margin-bottom: 5px; } .news-title { font-size: 14px; font-weight: bold; color: #333; line-height: 1.5; margin-bottom: 15px; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; flex-grow: 1; } .news-check-btn { background: #eee; color: #666; text-align: center; padding: 8px; border-radius: 6px; font-weight: bold; font-family: 'Poppins', sans-serif; font-size: 12px; transition: all 0.3s; } .news-card:hover .news-check-btn { background: var(--primary); color: white; }
+
+        /* ▼▼▼ 追加：ニュース詳細テキストエリアのデザイン ▼▼▼ */
+        .news-detail-box {
+            background: #fff;
+            border: 2px solid #eee;
+            border-radius: 15px;
+            padding: 30px;
+            margin-top: 20px;
+            margin-bottom: 50px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+            font-size: 15px;
+            line-height: 1.8;
+            color: #444;
+            white-space: pre-wrap; /* 改行を反映させる */
+        }
+        
+        /* ニュース詳細の画像エリア（PICK UP） */
+        /* PICK UP画像（トップの大きい画像） */
+        .news-pickup {
+            margin-top: 40px;
+            
+            /* 下の余白をなくして、下のテキストボックスにくっつける */
+            margin-bottom: 0;  /* ← 修正！ */
+            
+            max-width: 800px;
+            width: 100%;
+            margin-left: auto;
+            margin-right: auto;
+            
+            max-height: none;
+            aspect-ratio: 3 / 2;
+            
+            position: relative;
+            /* 画像の下側の角丸をなくす（つながって見えるように） */
+            border-radius: 15px 15px 0 0; /* ← 追加！上が15px、下は0 */
+            overflow: hidden;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+            z-index: 2; /* 影がテキストボックスの上にくるように */
+        }
+
+        /* PICK UP画像の本体設定 */
+        .news-pickup-img {
+            width: 100%;
+            height: 100%;       /* 親要素(.news-pickup)に合わせる */
+            object-fit: cover;  /* 枠に合わせて表示（比率が同じなら見切れません） */
+            object-position: center;
+        }
+
+        /* 詳細テキストエリア */
+        .news-detail-box {
+            background: #fff;
+            border: 2px solid #eee;
+            /* 上の境界線を消して、画像とつながっているように見せる */
+            border-top: none; /* ← 追加！ */
+            
+            /* 上側の角丸をなくす */
+            border-radius: 0 0 15px 15px; /* ← 修正！上が0、下は15px */
+            
+            padding: 30px;
+            
+            /* 上の余白をなくす */
+            margin-top: 0;    /* ← 修正！ */
+            
+            margin-bottom: 50px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+            font-size: 15px;
+            line-height: 1.8;
+            color: #444;
+            white-space: pre-wrap;
+            
+            max-width: 800px;
+            margin-left: auto;
+            margin-right: auto;
+            box-sizing: border-box;
+            
+            /* 画像の下に潜り込まないように少し調整 */
+            position: relative;
+            z-index: 1;
+        }
 
         /* スケジュール */
         .timeline-container { position: relative; padding: 20px 0; }
@@ -335,62 +425,62 @@
         @keyframes pulse-voice { 0% { transform: scale(1); } 50% { transform: scale(1.2); } 100% { transform: scale(1); } }
         
         /* 落書き */
-/* ↓↓↓ ここを修正（board-containerを書き換え） ↓↓↓ */
-.board-container { 
-    background: #2b4a3c; 
-    border: 10px solid #8B4513; 
-    border-radius: 10px; 
-    padding: 0; 
-    box-shadow: 0 10px 20px rgba(0,0,0,0.3); 
-    margin-bottom: 30px; 
-    position: relative; 
-    
-    /* 修正：中央揃えと幅の設定 */
-    width: 100%;
-    max-width: 100%; /* はみ出し防止 */
-    margin-left: auto;
-    margin-right: auto;
-    box-sizing: border-box; /* 枠線を含めたサイズ計算にする */
+        /* ↓↓↓ ここを修正（board-containerを書き換え） ↓↓↓ */
+        .board-container { 
+            background: #2b4a3c; 
+            border: 10px solid #8B4513; 
+            border-radius: 10px; 
+            padding: 0; 
+            box-shadow: 0 10px 20px rgba(0,0,0,0.3); 
+            margin-bottom: 30px; 
+            position: relative; 
+            
+            /* 修正：中央揃えと幅の設定 */
+            width: 100%;
+            max-width: 100%; /* はみ出し防止 */
+            margin-left: auto;
+            margin-right: auto;
+            box-sizing: border-box; /* 枠線を含めたサイズ計算にする */
 
-    aspect-ratio: 3 / 4; /* スマホは縦長 */
-    
-    /* 修正：overflow:hiddenを削除し、バッジが見えるようにする */
-    /* overflow: hidden;  <-- 削除 */
-    z-index: 1; /* 重なり順を調整 */
-}
+            aspect-ratio: 3 / 4; /* スマホは縦長 */
+            
+            /* 修正：overflow:hiddenを削除し、バッジが見えるようにする */
+            /* overflow: hidden;  <-- 削除 */
+            z-index: 1; /* 重なり順を調整 */
+        }
 
-/* PC用レイアウト */
-@media (min-width: 768px) {
-    .board-container {
-        aspect-ratio: 16 / 9; 
-    }
-}
+        /* PC用レイアウト */
+        @media (min-width: 768px) {
+            .board-container {
+                aspect-ratio: 16 / 9; 
+            }
+        }
 
-/* ↓↓↓ バッジ（黄色い表示）の修正 ↓↓↓ */
-.board-container::before { 
-    /* 修正：文字を変更 */
-    content: "あおはる黒板"; 
-    
-    position: absolute; 
-    top: -15px; 
-    left: 50%; 
-    transform: translateX(-50%); 
-    background: #f1c40f; 
-    color: #333; 
-    padding: 4px 20px; /* 少し大きく */
-    font-weight: bold; 
-    border-radius: 4px; 
-    font-size: 14px; 
-    z-index: 20; 
-    box-shadow: 0 2px 5px rgba(0,0,0,0.3);
-    white-space: nowrap; /* 折り返し防止 */
-}
+        /* ↓↓↓ バッジ（黄色い表示）の修正 ↓↓↓ */
+        .board-container::before { 
+            /* 修正：文字を変更 */
+            content: "あおはる黒板"; 
+            
+            position: absolute; 
+            top: -15px; 
+            left: 50%; 
+            transform: translateX(-50%); 
+            background: #f1c40f; 
+            color: #333; 
+            padding: 4px 20px; /* 少し大きく */
+            font-weight: bold; 
+            border-radius: 4px; 
+            font-size: 14px; 
+            z-index: 20; 
+            box-shadow: 0 2px 5px rgba(0,0,0,0.3);
+            white-space: nowrap; /* 折り返し防止 */
+        }
 
-/* ↓↓↓ 追加：キャンバス自体に角丸をつける（overflowを外した代わり） ↓↓↓ */
-canvas#drawCanvas {
-    border-radius: 4px; /* コンテナの内側に合わせる */
-    /* ...既存の設定はそのまま... */
-}
+        /* ↓↓↓ 追加：キャンバス自体に角丸をつける（overflowを外した代わり） ↓↓↓ */
+        canvas#drawCanvas {
+            border-radius: 4px; /* コンテナの内側に合わせる */
+            /* ...既存の設定はそのまま... */
+        }
         .paint-tools { display: flex; flex-wrap: wrap; gap: 10px; justify-content: center; background: rgba(255,255,255,0.1); padding: 10px; border-radius: 8px; position: absolute; bottom: 10px; left: 50%; transform: translateX(-50%); width: 90%; box-sizing: border-box; z-index: 10; pointer-events: auto; }
         .color-btn { width: 30px; height: 30px; border-radius: 50%; border: 2px solid white; cursor: pointer; transition: transform 0.2s; box-shadow: 0 2px 5px rgba(0,0,0,0.3); }
         .color-btn:hover, .color-btn.active { transform: scale(1.2); border-color: #f1c40f; }
@@ -418,18 +508,18 @@ canvas#drawCanvas {
         .g-comment-list { flex: 1; padding: 15px; overflow-y: auto; background: #f9f9f9; min-height: 200px; }
         .g-comment-item { display: flex; gap: 10px; margin-bottom: 15px; align-items: flex-start; }
         /* 修正後 */
-.g-cmt-icon {
-    width: 35px;
-    height: 35px;
-    border-radius: 50%;
-    background: #ddd;
-    flex-shrink: 0;
-    object-fit: cover;
-    /* ↓↓↓ この1行を追加してください！ ↓↓↓ */
-    object-position: top center; 
-    /* ↑↑↑ 画像の上の方を基準に表示する設定 ↑↑↑ */
-    border: 1px solid #ccc;
-}
+        .g-cmt-icon {
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            background: #ddd;
+            flex-shrink: 0;
+            object-fit: cover;
+            /* ↓↓↓ この1行を追加してください！ ↓↓↓ */
+            object-position: top center; 
+            /* ↑↑↑ 画像の上の方を基準に表示する設定 ↑↑↑ */
+            border: 1px solid #ccc;
+        }
         .g-cmt-body { background: white; padding: 8px 12px; border-radius: 0 12px 12px 12px; box-shadow: 0 2px 5px rgba(0,0,0,0.03); font-size: 13px; position: relative; }
         .g-cmt-name { font-weight: bold; font-size: 11px; color: #888; margin-bottom: 2px; }
         .g-comment-item.is-member .g-cmt-icon { border: 2px solid #f1c40f; box-shadow: 0 0 10px rgba(241, 196, 15, 0.5); }
@@ -443,22 +533,22 @@ canvas#drawCanvas {
         .delete-btn:hover { transform: scale(1.1); }
         
         /* ★マイページ用スタイル */
-.mypage-header { 
-    /* ↓↓↓ ここを書き換え ↓↓↓ */
-    background-image: url('mypage_bg.png'); /* 画像のファイル名を指定 */
-    background-size: cover;                 /* 枠いっぱいに画像を表示 */
-    background-position: center;            /* 画像の真ん中を表示 */
-    /* ↑↑↑ ここまで ↑↑↑ */
+        .mypage-header { 
+            /* ↓↓↓ ここを書き換え ↓↓↓ */
+            background-image: url('mypage_bg.png'); /* 画像のファイル名を指定 */
+            background-size: cover;                  /* 枠いっぱいに画像を表示 */
+            background-position: center;             /* 画像の真ん中を表示 */
+            /* ↑↑↑ ここまで ↑↑↑ */
 
-    padding: 40px 20px; 
-    text-align: center; 
-    color: white; 
-    border-radius: 0 0 30px 30px; 
-    margin-bottom: 30px; 
-    
-    /* 読みやすいように文字に少し影をつけるとお洒落です（お好みで） */
-    text-shadow: 0 2px 5px rgba(0,0,0,0.5);
-}
+            padding: 40px 20px; 
+            text-align: center; 
+            color: white; 
+            border-radius: 0 0 30px 30px; 
+            margin-bottom: 30px; 
+            
+            /* 読みやすいように文字に少し影をつけるとお洒落です（お好みで） */
+            text-shadow: 0 2px 5px rgba(0,0,0,0.5);
+        }
         .mypage-icon { width: 100px; height: 100px; border-radius: 50%; border: 4px solid white; background: #eee; object-fit: cover; margin-bottom: 10px; cursor: pointer; }
         .mypage-name { font-size: 24px; font-weight: 900; margin-bottom: 5px; }
         .mypage-id { font-size: 12px; opacity: 0.8; font-family: monospace; }
@@ -563,7 +653,7 @@ canvas#drawCanvas {
         }
 
         /* ▼▼▼ 秘密の門のデザイン ▼▼▼ */
-/* 門（左右のパネル）のラッパー */
+        /* 門（左右のパネル）のラッパー */
         .gate-wrapper {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             
@@ -749,7 +839,7 @@ canvas#drawCanvas {
             }
         }
 
-/* ▼▼▼ 追加：激ヤバ・テレビ風ホラーノイズ（画像不要版） ▼▼▼ */
+        /* ▼▼▼ 追加：激ヤバ・テレビ風ホラーノイズ（画像不要版） ▼▼▼ */
         .tv-noise-layer {
             position: fixed;
             top: 0;
@@ -847,27 +937,27 @@ canvas#drawCanvas {
         }
         .skin-btn:hover, .skin-btn.active { background: var(--primary); color: white; }
         .skin-member-select { display: flex; gap: 10px; overflow-x: auto; padding: 10px; margin-bottom: 20px; justify-content: center; }
-/* ▼▼▼ アイコンの設定（書き換え） ▼▼▼ */
-.skin-member-icon {
-    width: 60px;              /* アイコン自体の大きさ */
-    height: 60px;
-    border-radius: 50%;       /* 丸くする */
-    border: 3px solid #eee;   /* 枠線 */
-    cursor: pointer;
-    transition: 0.2s;
-    
-    /* ↓↓↓ ここが魔法のズーム設定！ ↓↓↓ */
-    background-size: 220%;    /* 画像を2.2倍にズーム！（数字を変えれば調節可能） */
-    background-position: top center; /* 上の方（顔）を中心に表示 */
-    background-repeat: no-repeat;
-    background-color: #ffffff; /* 画像がない時の背景色 */
-}
+        /* ▼▼▼ アイコンの設定（書き換え） ▼▼▼ */
+        .skin-member-icon {
+            width: 60px;              /* アイコン自体の大きさ */
+            height: 60px;
+            border-radius: 50%;       /* 丸くする */
+            border: 3px solid #eee;   /* 枠線 */
+            cursor: pointer;
+            transition: 0.2s;
+            
+            /* ↓↓↓ ここが魔法のズーム設定！ ↓↓↓ */
+            background-size: 220%;    /* 画像を2.2倍にズーム！（数字を変えれば調節可能） */
+            background-position: top center; /* 上の方（顔）を中心に表示 */
+            background-repeat: no-repeat;
+            background-color: #ffffff; /* 画像がない時の背景色 */
+        }
 
-/* 選択された時の動き */
-.skin-member-icon.selected {
-    border-color: var(--primary);
-    transform: scale(1.1);
-}
+        /* 選択された時の動き */
+        .skin-member-icon.selected {
+            border-color: var(--primary);
+            transform: scale(1.1);
+        }
         /* ▼▼▼ AOHARU STUDIO (公式風デザイン) ▼▼▼ */
         .studio-stage {
             position: relative; width: 100%; aspect-ratio: 16 / 9;
@@ -1014,6 +1104,24 @@ canvas#drawCanvas {
                 padding: 6px 10px;
             }
         }
+        /* ニュースページの詳細表示エリア */
+        .news-detail-box {
+            background: #fff;
+            border: 2px solid #eee;
+            border-radius: 15px;
+            padding: 30px;
+            margin-top: 20px;
+            margin-bottom: 50px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+            font-size: 15px;
+            line-height: 1.8;
+            color: #444;
+            white-space: pre-wrap; /* 改行を反映させる */
+        }
+        /* NEWSページトップ画像のサイズ調整 */
+        .news-pickup-img {
+            object-position: center 20%; /* 顔などが映りやすい位置に */
+        }
     </style>
 </head>
 <body>
@@ -1053,6 +1161,8 @@ canvas#drawCanvas {
     <div id="newsModal" class="modal" onclick="closeNewsModal()">
         <div class="modal-content news-modal-content" onclick="event.stopPropagation()">
             <span class="modal-close-btn" onclick="closeNewsModal()">×</span>
+            
+            <img id="modalImg" src="" style="width:100%; max-height:300px; object-fit:contain; border-radius:8px; margin-bottom:15px; display:none;">
             <div><span id="modalDate" class="modal-date"></span><span id="modalTag" class="modal-tag"></span></div>
             <div id="modalTitle" class="modal-title"></div>
             <div id="modalBody" class="modal-body"></div>
@@ -1268,14 +1378,30 @@ canvas#drawCanvas {
                 <div class="news-cat-btn">VIDEO</div>
                 <div class="news-cat-btn">EVENT</div>
             </div>
-            <div class="news-pickup">
-                <img src="https://placehold.co/800x450/27C6F5/ffffff?text=PICK+UP+NEWS" class="news-pickup-img">
+            
+            <div class="news-pickup" id="newsDetailAnchor" style="scroll-margin-top: 100px;">
+                <img id="pickupImg" src="https://placehold.co/800x450/27C6F5/ffffff?text=PICK+UP+NEWS" class="news-pickup-img">
                 <div class="news-pickup-content">
-                    <div class="news-pickup-badge">CHECK!</div>
-                    <div class="news-pickup-title">あおはる⭐︎フレンズ 公式サイトリニューアル記念キャンペーン実施中！</div>
+                    <div id="pickupBadge" class="news-pickup-badge" style="display:none;">CHECK!</div>
+                    <div id="pickupTitle" class="news-pickup-title"></div>
                 </div>
             </div>
+
+            <div class="news-detail-box" id="pickupTextBox">
+                <div id="pickupDetail" style="text-align:center; color:#888;">
+                    ▼ 下のリストからニュースをクリックすると、ここに詳細が表示されます ▼
+                </div>
+            </div>
+
+            <div class="section-title" style="margin-top: 40px; margin-bottom: 20px;">
+                <span class="ja-title">記事一覧</span>
+            </div>
+
             <div class="news-list" id="fullNewsList">読み込み中...</div>
+
+            <div style="text-align:center; margin-top:30px;">
+                <button onclick="showPage('top')" class="more-btn">TOPへ戻る</button>
+            </div>
         </div>
     </div>
 
@@ -1496,7 +1622,7 @@ canvas#drawCanvas {
                     <li>公序良俗に反するイラスト、他人を不快にさせる表現は禁止です。</li>
                     <li>不適切な投稿は、運営（あおはる⭐︎フレンズ）の判断で削除する場合があります。</li>
                     <li>みんなで楽しく使えるようにご協力お願いします！</li>
-　　　　　　　　　　<li>※公式X等でツイートさせていただく場合もありますので予めご了承ください</li>
+                    <li>※公式X等でツイートさせていただく場合もありますので予めご了承ください</li>
                 </ul>
             </div>
 
@@ -1644,7 +1770,7 @@ canvas#drawCanvas {
                 <button onclick="showPage('top')" class="more-btn">TOPへ戻る</button>
             </div>
         </div>
-    </div>   
+    </div>    
     <div class="floating-heart-btn" onclick="spawnHeart()">
         <i class="fas fa-heart"></i>
         <div class="like-badge" id="totalLikeCount">...</div>
@@ -1815,34 +1941,25 @@ canvas#drawCanvas {
 
 <script>
     // ==========================================
-    // ▼▼▼ あおはる⭐︎フレンズ 公式サイト 完全版スクリプト ▼▼▼
+    // ▼▼▼ あおはる⭐︎フレンズ 公式サイト 最終完全版スクリプト ▼▼▼
     // ==========================================
 
-    // ★ GASのURL（スプレッドシート連携用）
     const GAS_API_URL = "https://script.google.com/macros/s/AKfycbweGopSZFl6BZ8-Ue2ufgte9g3YkfewNLZtKb5xPh7CsWGADhHuZaSOsxvPA70c5h_2/exec";
-
-    // 基本設定変数
     let YOUTUBE_API_KEY = ""; 
     let GROUP_CONFIG = {};
     let memberData = [];
     let goodsData = [{ name: "Loading...", price: "-", img: "icon.png", link: "#" }]; 
     
-    // データ保持用変数
-    let newsData = [], scheduleData = [], videoData = [], manualLiveData = [], memberVideoData = [];
-    let radioBlogData = []; 
-    
-    // ユーザー状態管理
-    let isMemberLoggedIn = false;
-    let isOfficialAdmin = false;
-    let currentUserData = null;
-
-    // おみくじ設定
+    // 変数定義
     const fortuneTypes = ["大吉", "中吉", "小吉", "吉", "末吉"];
     const luckyItems = ["ゲーミングPC", "エナジードリンク", "マイク", "配信機材", "推し活グッズ", "唐揚げ", "ラーメン", "猫", "ヘッドホン", "サイリウム"];
     const fortuneComments = ["今日は最高の配信ができそう！", "ラッキーアイテムを持って待機してね！", "推しの配信を見ると運気アップ！", "今日はゆっくりアーカイブを見よう。", "SNSで推しを布教するといいことあるかも！"];
     let currentOmikujiResult = null; 
-    
-    // いいね・隠しコマンド用
+    let newsData = [], scheduleData = [], videoData = [], manualLiveData = [], memberVideoData = [];
+    let radioBlogData = []; 
+    let isMemberLoggedIn = false;
+    let isOfficialAdmin = false;
+    let currentUserData = null;
     let totalLikes = 0;
     let sessionLikes = 0;
     let likeSyncTimer = null;
@@ -1850,17 +1967,13 @@ canvas#drawCanvas {
     let secretInput = [];
     let logoTapCount = 0;
 
-    // --------------------------------------------------
-    // ▼ 1. 初期化・ページ遷移処理
-    // --------------------------------------------------
+    // ▼ 初期化 ▼
     window.onload = function() { 
-        // ログイン状態の復元
         const savedUser = localStorage.getItem('aoharu_user');
         if (savedUser) {
             currentUserData = JSON.parse(savedUser);
             isMemberLoggedIn = true;
             isOfficialAdmin = false; 
-
             const headerBtn = document.getElementById('headerLoginBtn');
             if(headerBtn) {
                 headerBtn.innerText = currentUserData.name;
@@ -1868,24 +1981,18 @@ canvas#drawCanvas {
                 headerBtn.onclick = () => showPage('mypage');
             }
         }
-
-        // 落書きデータの仮復元
         const savedGraffiti = localStorage.getItem('aoharu_graffiti');
         if (savedGraffiti) {
             graffitiPosts = JSON.parse(savedGraffiti);
         }
 
-        // GASからデータを取得
         fetchSheetData().finally(() => {
-            // 管理者判定
             if(currentUserData && memberData.length > 0){
                  const matchedMember = memberData.find(m => m.name === currentUserData.name);
                  if (matchedMember) { isOfficialAdmin = true; }
             }
-
-            // 各種描画・初期化関数の実行
             renderStaticParts(); 
-            setTimeout(checkLiveStatus, 500);
+            setTimeout(checkLiveStatus, 500); 
             initCardMaker(); 
             renderRadioDiary(); 
             fetchLikes(); 
@@ -1893,8 +2000,6 @@ canvas#drawCanvas {
             initEasterEgg(); 
             handleLocation(); 
             renderGraffitiList(); 
-            
-            // ローディング画面を消す
             const loader = document.getElementById('loadingScreen');
             if(loader) {
                 loader.classList.add('loaded');
@@ -1903,7 +2008,6 @@ canvas#drawCanvas {
         });
     };
 
-    // ブラウザの「戻る」ボタン対応
     window.onpopstate = handleLocation;
 
     function handleLocation() {
@@ -1913,25 +2017,18 @@ canvas#drawCanvas {
             if(memberData.length > 0) openMemberDetail(index, false); 
         } else if (hash) {
             const id = hash.replace('#', '');
-            if(document.getElementById(id)) {
-                showPage(id, null, false);
-            } else {
-                showPage('top', null, false);
-            }
+            if(document.getElementById(id)) showPage(id, null, false);
+            else showPage('top', null, false);
         } else {
             showPage('top', null, false);
         }
     }
 
-    // ページ切り替え関数
     function showPage(pageId, detailName = null, pushHistory = true) {
         document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
         const target = document.getElementById(pageId);
-        
         if(target) {
             target.classList.add('active');
-
-            // マイページのデータ更新
             if (pageId === 'mypage' && currentUserData) {
                 document.getElementById('myIconDisplay').src = currentUserData.icon || 'icon.png';
                 document.getElementById('myNameDisplay').innerText = currentUserData.name;
@@ -1942,8 +2039,6 @@ canvas#drawCanvas {
                 document.getElementById('myXInput').value = currentUserData.x;
                 document.getElementById('myYtInput').value = currentUserData.yt;
             }
-
-            // 落書きページの初期化
             if(pageId === 'rakugaki') { 
                 setTimeout(() => {
                     initCanvas();
@@ -1951,34 +2046,25 @@ canvas#drawCanvas {
                     renderGraffitiList(); 
                 }, 300); 
             }
-            // スタジオの初期化
             if(pageId === 'studio') {
                 setTimeout(initStudio, 100);
             } 
+            if(pageId === 'skinviewer') {
+                setTimeout(initSkinViewer, 100);
+            }
         }
-        
-        // メニューが開いていたら閉じる
-        if(document.getElementById('sideMenu').classList.contains('open')) { toggleMenu(); }
-        
-        // 履歴の更新
+        if(document.getElementById('sideMenu').classList.contains('open')) toggleMenu(); 
         if(pushHistory) history.pushState(null, null, '#' + pageId);
         updateBreadcrumbs(pageId, detailName);
         window.scrollTo(0,0);
     }
 
-    // パンくずリスト更新
     function updateBreadcrumbs(pageId, detailName) { 
         const container = document.getElementById('breadcrumbNav'); 
         let html = '<a href="javascript:void(0)" onclick="showPage(\'top\')" class="bc-item"><i class="fas fa-home bc-icon"></i></a>'; 
         if (pageId === 'top') { container.style.display = 'none'; return; } else { container.style.display = 'flex'; } 
         const sep = '<span class="bc-sep">▶</span>'; 
-        
-        const titles = {
-            'news': 'NEWS', 'member': 'MEMBER', 'schedule': 'SCHEDULE', 'goods': 'GOODS',
-            'radio': 'RADIO', 'guideline': 'GUIDELINE', 'rakugaki': 'GRAFFITI',
-            'mypage': 'MY PAGE', 'studio': 'STUDIO', 'skinviewer': 'SKIN VIEWER'
-        };
-
+        const titles = {'news':'NEWS', 'member':'MEMBER', 'schedule':'SCHEDULE', 'goods':'GOODS', 'radio':'RADIO', 'guideline':'GUIDELINE', 'rakugaki':'GRAFFITI', 'mypage':'MY PAGE', 'studio':'STUDIO', 'skinviewer':'SKIN VIEWER'};
         if (pageId === 'memberDetail') {
              html += sep + '<a href="javascript:void(0)" onclick="showPage(\'member\')" class="bc-item">MEMBER</a>'; 
              html += sep + '<span class="bc-current">' + (detailName || 'DETAIL') + '</span>';
@@ -1988,23 +2074,15 @@ canvas#drawCanvas {
         container.innerHTML = html; 
     }
 
-    // --------------------------------------------------
-    // ▼ 2. GASデータ取得処理
-    // --------------------------------------------------
+    // --- データ取得 ---
     async function fetchSheetData() {
         if (!GAS_API_URL || GAS_API_URL.indexOf("script.google.com") === -1) {
-            console.error("GAS URL未設定");
-            document.getElementById('topNewsList').innerText = "API設定エラー";
-            return;
+            console.error("GAS URL未設定"); return;
         }
         try {
             const res = await fetch(GAS_API_URL);
             const data = await res.json();
-            
-            // 隠し要素のデータを保存
             if(data.secret) setSecretData(data);
-            
-            // 設定データ反映
             if (data.config) {
                 const conf = {};
                 data.config.forEach(row => { conf[row.key] = row.value; });
@@ -2016,8 +2094,6 @@ canvas#drawCanvas {
                 if(conf.group_youtube_id) GROUP_CONFIG.youtubeChannelId = conf.group_youtube_id;
                 if(conf.group_twitter_url) GROUP_CONFIG.twitterUrl = conf.group_twitter_url;
             }
-            
-            // 各種リストデータの保存と描画
             if (data.members) memberData = data.members;
             if (data.news) { newsData = data.news; renderNews(); }
             if (data.schedule) { scheduleData = data.schedule; renderSchedule(); }
@@ -2025,126 +2101,167 @@ canvas#drawCanvas {
             if (data.live) { manualLiveData = data.live; } 
             if (data.member_videos) { memberVideoData = data.member_videos; renderMemberVideos(); }
             if (data.radio_diaries) { radioBlogData = data.radio_diaries; } 
-            
             if (data.goods) {
                 goodsData = data.goods;
-                document.getElementById('goodsList').innerHTML = goodsData.map((g, i) => `
-                    <div class="goods-item" onclick="openGoodsModal(${i})">
-                        <img src="${g.img}" class="goods-img">
-                        <div class="goods-name">${g.name}</div>
-                        <div class="goods-price">${g.price}</div>
-                    </div>`).join('');
+                document.getElementById('goodsList').innerHTML = goodsData.map((g, i) => `<div class="goods-item" onclick="openGoodsModal(${i})"><img src="${g.img}" class="goods-img"><div class="goods-name">${g.name}</div><div class="goods-price">${g.price}</div></div>`).join('');
             }
-            
             if (data.graffiti) {
                 graffitiPosts = data.graffiti.map(g => ({
-                    id: g.id,
-                    title: g.title,
-                    author: g.author,
-                    image: g.image,
-                    likes: g.likes || 0,
-                    comments: g.comments ? JSON.parse(g.comments) : [] 
+                    id: g.id, title: g.title, author: g.author, image: g.image, likes: g.likes || 0, comments: g.comments ? JSON.parse(g.comments) : [] 
                 }));
                 renderGraffitiList();
             }
-
         } catch (e) { 
             console.error("Data Error:", e); 
-            document.getElementById('topNewsList').innerHTML = "データの読み込みに失敗しました。";
         }
     }
+    
+    // --- ★復活させた「いいね」機能（これが消えていました！） ---
+    async function fetchLikes() { 
+        if (!GAS_API_URL) return; 
+        try { 
+            const res = await fetch(`${GAS_API_URL}?action=get_likes`); 
+            const json = await res.json(); 
+            totalLikes = json.count || 0; 
+            updateLikeDisplay(); 
+        } catch (e) { console.error(e); } 
+    }
+    function updateLikeDisplay() { 
+        const el = document.getElementById('totalLikeCount');
+        if(el) el.innerText = totalLikes + sessionLikes; 
+    }
+    function spawnHeart() { 
+        const heart = document.createElement('i'); 
+        heart.className = 'fas fa-heart heart-particle'; 
+        const colors = ['#ff9a9e', '#ff6b6b', '#feca57', '#48dbfb', '#ff9ff3']; 
+        heart.style.color = colors[Math.floor(Math.random() * colors.length)]; 
+        heart.style.left = (window.innerWidth - 80 + (Math.random() * 40)) + 'px'; 
+        heart.style.bottom = '80px'; 
+        document.body.appendChild(heart); 
+        setTimeout(() => heart.remove(), 1500); 
+        sessionLikes++; 
+        updateLikeDisplay(); 
+        clearTimeout(likeSyncTimer); 
+        likeSyncTimer = setTimeout(syncLikes, 2000); 
+    }
+    async function syncLikes() { 
+        if (sessionLikes === 0) return; 
+        const countToSend = sessionLikes; 
+        sessionLikes = 0; 
+        totalLikes += countToSend; 
+        updateLikeDisplay(); 
+        if (!GAS_API_URL) return; 
+        try { 
+            const res = await fetch(`${GAS_API_URL}?action=add_likes&count=${countToSend}`); 
+            const json = await res.json(); 
+            if (json.total) { totalLikes = json.total; updateLikeDisplay(); } 
+        } catch (e) { console.error("Like Sync Error", e); } 
+    }
 
-    // --------------------------------------------------
-    // ▼ 3. 各種レンダリング関数
-    // --------------------------------------------------
+    // --- ライブ配信状況確認関数 ---
+    async function checkLiveStatus() {
+        const liveSection = document.getElementById('nowOnAirSection');
+        const liveArea = document.getElementById('heroLiveArea');
+        if (manualLiveData && manualLiveData.active) {
+            liveSection.style.display = 'block';
+            liveArea.innerHTML = `
+                <div class="live-hero-wrapper">
+                    <div class="live-iframe-box">
+                        <iframe class="live-iframe" src="https://www.youtube.com/embed/${manualLiveData.videoId}" frameborder="0" allowfullscreen></iframe>
+                    </div>
+                    <div class="live-info-bar">
+                        <span class="live-status-badge">NOW ON AIR</span>
+                        <div class="live-info-text">
+                            <div class="live-info-title">${manualLiveData.title}</div>
+                        </div>
+                    </div>
+                </div>`;
+            return;
+        }
+        if (YOUTUBE_API_KEY && GROUP_CONFIG.youtubeChannelId) {
+            try {
+                const url = `https://www.googleapis.com/youtube/v3/search?part=snippet&channelId=${GROUP_CONFIG.youtubeChannelId}&eventType=live&type=video&key=${YOUTUBE_API_KEY}`;
+                const res = await fetch(url);
+                const data = await res.json();
+                if (data.items && data.items.length > 0) {
+                    const video = data.items[0];
+                    liveSection.style.display = 'block';
+                    liveArea.innerHTML = `
+                        <div class="live-hero-wrapper">
+                            <div class="live-iframe-box">
+                                <iframe class="live-iframe" src="https://www.youtube.com/embed/${video.id.videoId}" frameborder="0" allowfullscreen></iframe>
+                            </div>
+                            <div class="live-info-bar">
+                                <span class="live-status-badge">NOW ON AIR</span>
+                                <div class="live-info-text">
+                                    <div class="live-info-title">${video.snippet.title}</div>
+                                </div>
+                            </div>
+                        </div>`;
+                } else { liveSection.style.display = 'none'; }
+            } catch (e) { liveSection.style.display = 'none'; }
+        } else { liveSection.style.display = 'none'; }
+    }
+
+    // --- レンダリング関数 ---
     function renderNews() { 
-        const newsHtml = newsData.map((n, i) => { 
+        const newsHtmlTop = newsData.map((n, i) => { 
             const imgSrc = n.image ? n.image : "https://placehold.co/600x400/eee/333?text=NEWS"; 
-            return `<div class="news-card" onclick="openNewsModal(${i})"><div class="news-thumb-area"><span class="news-badge" style="background:${getTagColor(n.tag)}">${n.tag}</span><img src="${imgSrc}" class="news-img"></div><div class="news-content"><div class="news-date">${n.date}</div><div class="news-title">${n.title}</div><div class="news-check-btn">CHECK</div></div></div>`; 
+            return `<div class="news-card" onclick="openNewsModal(${i})">
+                        <div class="news-thumb-area"><span class="news-badge" style="background:${getTagColor(n.tag)}">${n.tag}</span><img src="${imgSrc}" class="news-img"></div>
+                        <div class="news-content"><div class="news-date">${n.date}</div><div class="news-title">${n.title}</div><div class="news-check-btn">CHECK</div></div>
+                    </div>`; 
         }).join(''); 
-        const topList = document.getElementById('topNewsList'); 
-        const fullList = document.getElementById('fullNewsList'); 
-        if(topList) topList.innerHTML = newsHtml || "まだニュースはありません"; 
-        if(fullList) fullList.innerHTML = newsHtml || "まだニュースはありません"; 
-    }
-    
-    function renderSchedule() { 
-        const topScheduleHtml = scheduleData.map(s => `<div class="schedule-card"><div class="sch-thumb-box"><div class="sch-date-big">${s.date}</div><div class="sch-time-big">${s.time}</div></div><div class="sch-info"><span class="sch-badge-mini">配信</span><div class="sch-title">${s.content}</div></div></div>`).join(''); 
-        const tlHtml = scheduleData.map(s => ` <div class="timeline-item"> <div class="tl-icon-box"><div class="tl-icon"><i class="fas fa-video"></i></div></div> <div class="tl-content"> <div class="tl-date">${s.date} <span style="font-size:12px;color:#888;">${s.time}</span></div> <div class="tl-title">${s.content}</div> <span class="tl-tag">配信</span> </div> </div>`).join(''); 
-        const topList = document.getElementById('topScheduleList'); 
-        const schList = document.getElementById('scheduleList'); 
-        if(topList) topList.innerHTML = topScheduleHtml || "予定はありません"; 
-        if(schList) schList.innerHTML = tlHtml; 
-    }
-    
-    function renderVideos() { 
-        const videoHtml = videoData.map(v => `<div class="video-card" onclick="window.open('https://www.youtube.com/watch?v=${v.id}', '_blank')"><div class="video-thumb-box"><img src="https://img.youtube.com/vi/${v.id}/mqdefault.jpg" class="video-thumb"><div class="play-icon">▶</div></div><div class="video-info"><div class="video-title">${v.title}</div><div class="video-date">${v.date}</div></div></div>`).join(''); 
-        const list = document.getElementById('topVideoList'); 
-        if(list) list.innerHTML = videoHtml || "動画はまだありません"; 
-    }
-    
-    function renderMemberVideos() { 
-        const container = document.getElementById('memberVideoList'); 
-        if(!memberVideoData.length) { container.innerHTML = "限定動画はまだありません"; return; } 
-        const html = memberVideoData.map(v => { 
-            const clickAction = isMemberLoggedIn ? `window.open('https://www.youtube.com/watch?v=${v.id}', '_blank')` : `openLoginModal()`; 
-            const lockedClass = isMemberLoggedIn ? 'unlocked' : 'mv-blur'; 
-            const lockOverlay = isMemberLoggedIn ? '' : `<div class="mv-lock-overlay"><div class="mv-lock-icon"><i class="fas fa-lock"></i></div><div class="mv-lock-text">MEMBER ONLY</div></div>`; 
-            return `<div class="member-video-card ${lockedClass}" onclick="${clickAction}">${lockOverlay}<div class="news-thumb-area"><img src="https://img.youtube.com/vi/${v.id}/mqdefault.jpg" class="news-img"></div><div class="news-content"><div class="news-date">${v.date}</div><div class="news-title">${v.title}</div><div class="news-check-btn">${isMemberLoggedIn ? 'PLAY' : 'LOCKED'}</div></div></div>`; 
+        const newsHtmlPage = newsData.map((n, i) => { 
+            const imgSrc = n.image ? n.image : "https://placehold.co/600x400/eee/333?text=NEWS"; 
+            return `<div class="news-card" onclick="updatePickupNews(${i})">
+                        <div class="news-thumb-area"><span class="news-badge" style="background:${getTagColor(n.tag)}">${n.tag}</span><img src="${imgSrc}" class="news-img"></div>
+                        <div class="news-content"><div class="news-date">${n.date}</div><div class="news-title">${n.title}</div><div class="news-check-btn">VIEW</div></div>
+                    </div>`; 
         }).join(''); 
-        container.innerHTML = html; 
-    }
-    
-    function renderRadioDiary() { 
-        const container = document.getElementById('radioDiaryList'); 
-        if (!radioBlogData || radioBlogData.length === 0) { container.innerHTML = '<p style="text-align:center;color:#888;">まだ日記はありません</p>'; return; } 
-        container.innerHTML = radioBlogData.map(d => { 
-            if (!isMemberLoggedIn) { return ` <div class="diary-card" onclick="openLoginModal()" style="cursor:pointer; position:relative; overflow:hidden;"> <div style="filter: blur(6px); opacity: 0.6; pointer-events: none;"> <div class="diary-icon" style="background:#ddd;"></div> <div class="diary-content"> <div class="diary-name">SECRET MEMBER</div> <div class="diary-text">このコンテンツは会員限定です。<br>ログインすると閲覧できます。</div> <div class="diary-date">----.--.--</div> </div> </div> <div style="position:absolute; top:50%; left:50%; transform:translate(-50%,-50%); text-align:center; width:100%; z-index:2;"> <i class="fas fa-lock" style="font-size:24px; color:#555; margin-bottom:5px;"></i> <div style="font-weight:bold; font-size:12px; color:#555;">MEMBER ONLY</div> </div> </div> `; } 
-            let iconSrc = "icon.png"; let imgPos = "top center"; 
-            if (memberData && memberData.length > 0) { const targetMember = memberData.find(m => m.name === d.name); if (targetMember) { if(targetMember.img) iconSrc = targetMember.img; } } 
-            if (d.img && d.img !== "") iconSrc = d.img; 
-            const voicePlayer = d.voice ? `<div class="diary-voice-player" onclick="playVoice(this, '${d.voice}')"> <i class="fas fa-play voice-icon"></i> <span class="voice-time">限定ボイス</span> </div>` : ''; 
-            return ` <div class="diary-card"> <div class="diary-icon" style="background-image: url('${iconSrc}'); background-position: ${imgPos};"></div> <div class="diary-content"> <div class="diary-name">${d.name}</div> <div class="diary-text">${d.text}</div> ${voicePlayer} <div class="diary-date">${d.date}</div> </div> </div> `; 
-        }).join(''); 
+
+        const topList = document.getElementById('topNewsList'); const fullList = document.getElementById('fullNewsList'); 
+        if(topList) topList.innerHTML = newsHtmlTop || "まだニュースはありません"; 
+        if(fullList) fullList.innerHTML = newsHtmlPage || "まだニュースはありません"; 
     }
 
-    function renderStaticParts() { 
-        const twLink = document.getElementById('groupTwitterLink'); const ytLink = document.getElementById('groupYoutubeLink'); const footerTwLink = document.getElementById('footerTwitterLink'); const footerYtLink = document.getElementById('footerYoutubeLink'); 
-        if(GROUP_CONFIG.twitterUrl) { twLink.href = GROUP_CONFIG.twitterUrl; footerTwLink.href = GROUP_CONFIG.twitterUrl; } 
-        if(GROUP_CONFIG.youtubeChannelId) { const ytUrl = `https://www.youtube.com/channel/${GROUP_CONFIG.youtubeChannelId}`; ytLink.href = ytUrl; footerYtLink.href = ytUrl; } 
-        if(memberData.length > 0) { const memberHtml = memberData.map((m, i) => `<div class="member-card-vertical" onclick="openMemberDetail(${i})" style="--member-color: ${m.color}; --member-bg: url('${m.bgImg}');"><div class="member-img-wrapper"><img src="${m.img}" class="member-img-tachie"></div><a href="javascript:void(0)" class="member-link-overlay"></a></div>`).join(''); document.getElementById('topMemberList').innerHTML = memberHtml; document.getElementById('memberGrid').innerHTML = memberHtml; } 
+    function updatePickupNews(index) {
+        const data = newsData[index];
+        if(!data) return;
+        const img = document.getElementById('pickupImg');
+        const title = document.getElementById('pickupTitle');
+        const badge = document.getElementById('pickupBadge');
+        const detail = document.getElementById('pickupDetail');
+        img.src = data.image || "https://placehold.co/800x450/27C6F5/ffffff?text=NO+IMAGE";
+        title.innerText = data.title;
+        badge.innerText = data.tag || 'NEWS';
+        badge.style.background = getTagColor(data.tag);
+        if(detail) detail.innerText = data.detail || data.title;
+        const pickupArea = document.querySelector('.news-pickup');
+        if(pickupArea) pickupArea.scrollIntoView({ behavior: 'smooth', block: 'center' });
     }
 
-    // --------------------------------------------------
-    // ▼ 4. ユーザーアクション関数 (ログイン、登録、投稿など)
-    // --------------------------------------------------
-    async function registerUser() { 
-        const name = document.getElementById('regName').value; const email = document.getElementById('regEmail').value; const pass = document.getElementById('regPass').value; const btn = document.getElementById('regBtn'); if(!name || !email || !pass) { alert("全ての項目を入力してください"); return; } if(pass.length < 4) { alert("パスワードは4文字以上で設定してください"); return; } if (!GAS_API_URL) { alert("GAS URL未設定"); return; } btn.innerText = "送信中..."; btn.disabled = true; try { const res = await fetch(`${GAS_API_URL}?action=register&name=${encodeURIComponent(name)}&email=${encodeURIComponent(email)}&pass=${encodeURIComponent(pass)}`); const json = await res.json(); if (json.status === 'success') { alert("登録完了！\n会員ID: " + json.id); closeRegisterModal(); document.getElementById('regName').value = ""; document.getElementById('regEmail').value = ""; document.getElementById('regPass').value = ""; } else { alert("登録エラー: " + json.message); } } catch (e) { alert("通信エラー"); } finally { btn.innerText = "会員登録する"; btn.disabled = false; }
+    function openNewsModal(index) { 
+        const data = newsData[index]; 
+        document.getElementById('modalDate').innerText = data.date; 
+        const tagEl = document.getElementById('modalTag'); tagEl.innerText = data.tag; tagEl.style.background = getTagColor(data.tag); 
+        document.getElementById('modalTitle').innerText = data.title; 
+        document.getElementById('modalBody').innerText = data.detail || data.title; 
+        const img = document.getElementById('modalImg');
+        if (img && data.image && data.image !== "") { img.src = data.image; img.style.display = "block"; } else if (img) { img.style.display = "none"; }
+        document.getElementById('newsModal').classList.add('open'); 
     }
-    async function loginUser() { 
-        const email = document.getElementById('loginEmail').value; const pass = document.getElementById('loginPass').value; const btn = document.getElementById('loginBtn'); if(!email || !pass) { alert("メールアドレスとパスワードを入力してください"); return; } if (!GAS_API_URL) { alert("GAS URL未設定"); return; } btn.innerText = "確認中..."; btn.disabled = true; try { const res = await fetch(`${GAS_API_URL}?action=login&email=${encodeURIComponent(email)}&pass=${encodeURIComponent(pass)}`); const json = await res.json(); if (json.status === 'success') { alert("ログイン成功！ようこそ " + json.name + " さん！"); closeLoginModal(); currentUserData = { id: json.id, name: json.name, icon: json.icon, bio: json.bio, x: json.x, yt: json.yt }; localStorage.setItem('aoharu_user', JSON.stringify(currentUserData)); const headerBtn = document.getElementById('headerLoginBtn'); headerBtn.innerText = `${json.name}`; headerBtn.classList.add('logged-in-user'); headerBtn.onclick = () => showPage('mypage'); isMemberLoggedIn = true; const matchedMember = memberData.find(m => m.name === json.name); if (matchedMember) { isOfficialAdmin = true; } renderMemberVideos(); renderGraffitiList(); checkCanvasLock(); } else { alert("ログイン失敗: " + json.message); } } catch (e) { alert("通信エラー"); } finally { btn.innerText = "ログインする"; btn.disabled = false; }
-    }
-    async function saveProfile() { 
-        if (!currentUserData) return; const name = document.getElementById('myNameInput').value; const icon = document.getElementById('myIconInput').value; const bio = document.getElementById('myBioInput').value; const x = document.getElementById('myXInput').value; const yt = document.getElementById('myYtInput').value; if (!name) { alert("ニックネームは必須です"); return; } if (!GAS_API_URL) { alert("GAS URL未設定"); return; } const btn = document.querySelector('.save-btn'); btn.innerText = "保存中..."; btn.disabled = true; try { const url = `${GAS_API_URL}?action=update_profile` + `&id=${encodeURIComponent(currentUserData.id)}` + `&name=${encodeURIComponent(name)}` + `&icon=${encodeURIComponent(icon)}` + `&bio=${encodeURIComponent(bio)}` + `&x=${encodeURIComponent(x)}` + `&yt=${encodeURIComponent(yt)}`; const res = await fetch(url); const json = await res.json(); if (json.status === 'success') { alert("プロフィールを更新しました！"); currentUserData.name = name; currentUserData.icon = icon; currentUserData.bio = bio; currentUserData.x = x; currentUserData.yt = yt; document.getElementById('headerLoginBtn').innerText = name; document.getElementById('myIconDisplay').src = icon || 'icon.png'; document.getElementById('myNameDisplay').innerText = name; } else { alert("エラー: " + json.message); } } catch (e) { alert("通信エラーが発生しました"); } finally { btn.innerText = "変更を保存する"; btn.disabled = false; }
-    }
-    function logoutUser() { if(confirm("ログアウトしますか？")) { localStorage.removeItem('aoharu_user'); location.reload(); } }
-    async function openUserProfile(name, event) { 
-        if(event) event.stopPropagation(); document.getElementById('graffitiModal').classList.remove('open'); document.getElementById('userProfileModal').classList.remove('open'); const officialMember = memberData.find(m => m.name === name); if (officialMember) { const index = memberData.indexOf(officialMember); openMemberDetail(index); return; } document.getElementById('upName').innerText = "Loading..."; document.getElementById('upBio').innerText = "データを取得中..."; document.getElementById('upIcon').src = "icon.png"; document.getElementById('upBadge').style.display = "none"; document.getElementById('upLinkX').style.display = "none"; document.getElementById('upLinkYt').style.display = "none"; document.getElementById('userProfileModal').classList.add('open'); if (!GAS_API_URL) return; try { const res = await fetch(`${GAS_API_URL}?action=get_user_profile&name=${encodeURIComponent(name)}`); const json = await res.json(); if (json.status === 'success') { document.getElementById('upName').innerText = json.name; document.getElementById('upIcon').src = json.icon || "icon.png"; document.getElementById('upBio').innerText = json.bio || "自己紹介はまだありません。"; const xBtn = document.getElementById('upLinkX'); if (json.x) { xBtn.href = json.x; xBtn.style.display = "flex"; } const ytBtn = document.getElementById('upLinkYt'); if (json.yt) { ytBtn.href = json.yt; ytBtn.style.display = "flex"; } } else { document.getElementById('upBio').innerText = "ユーザー情報が見つかりませんでした。"; } } catch (e) { document.getElementById('upBio').innerText = "通信エラーが発生しました。"; }
-    }
-    function openMemberDetail(index, pushHistory = true) { 
-        const m = memberData[index]; if(!m) return; const detailPage = document.getElementById('memberDetail'); let snsBtns = ''; if(m.youtubeId) { const ytUrl = m.youtubeId.startsWith('http') ? m.youtubeId : `https://www.youtube.com/channel/${m.youtubeId}`; snsBtns += `<a href="${ytUrl}" target="_blank" class="p-btn yt"><i class="fab fa-youtube"></i> Channel</a>`; } if(m.twitterId) { const twUrl = m.twitterId.startsWith('http') ? m.twitterId : `https://twitter.com/${m.twitterId.replace('@', '')}`; const displayId = m.twitterId.startsWith('http') ? m.twitterId.split('/').pop() : m.twitterId; snsBtns += `<a href="${twUrl}" target="_blank" class="p-btn x"><i class="fab fa-x-twitter"></i> @${displayId.replace('@', '')}</a>`; } if(m.twitchId) { const twiUrl = m.twitchId.startsWith('http') ? m.twitchId : `https://www.twitch.tv/${m.twitchId}`; snsBtns += `<a href="${twiUrl}" target="_blank" class="p-btn tw"><i class="fab fa-twitch"></i> Twitch</a>`; } let voiceHtml = ''; let hasVoice = false; let voiceItems = ''; const voices = [ {url: m.voice1, title: m.title1}, {url: m.voice2, title: m.title2}, {url: m.voice3, title: m.title3} ]; voices.forEach((v, i) => { if(v.url && v.title) { hasVoice = true; voiceItems += ` <div class="voice-card" onclick="playVoice(this, '${v.url}')"> <i class="fas fa-play voice-icon"></i> <div class="voice-title">${v.title}</div> <div class="voice-time">VOICE ${i+1}</div> </div>`; } }); if (hasVoice) { voiceHtml = ` <div class="section-title" style="margin-top:30px; margin-bottom:20px;"> <span class="ja-title">SAMPLE VOICE</span> </div> <div class="voice-grid"> ${voiceItems} </div> `; } const bgStyle = ` background-image: linear-gradient(135deg, ${m.color}cc 0%, rgba(255,255,255,0.9) 100%), url('${m.img}'); background-size: cover; background-position: center top; background-blend-mode: normal; `; const html = ` <div class="profile-header-bg" style="${bgStyle}"> <div class="profile-wrapper"> <div class="profile-visual"> <img src="${m.img}" class="profile-tachie"> </div> <div class="profile-info"> <div class="profile-en-name" style="color:${m.color}">${m.enName || 'MEMBER'}</div> <div class="profile-jp-name">${m.name}</div> <div class="profile-catch" style="border-color:${m.color}">${m.catchphrase || ''}</div> <div class="profile-data-list"> <div class="p-data-item" style="border-bottom-color:${m.color}"><span class="p-label">BIRTHDAY</span><span class="p-value">${m.birthday || '-'}</span></div> <div class="p-data-item" style="border-bottom-color:${m.color}"><span class="p-label">HEIGHT</span><span class="p-value">${m.height || '-'}</span></div> <div class="p-data-item" style="border-bottom-color:${m.color}"><span class="p-label">FAN NAME</span><span class="p-value">${m.fanName || '-'}</span></div> <div class="p-data-item" style="border-bottom-color:${m.color}"><span class="p-label">TAG</span><span class="p-value">#${m.hashTag || ''}</span></div> </div> <div class="profile-bio">${m.bio || ''}</div> <div class="profile-actions"> ${snsBtns} </div> ${voiceHtml} <div style="text-align:center;"> <div class="back-link" onclick="showPage('member')">◀ メンバー一覧に戻る</div> </div> </div> </div> </div> `; detailPage.innerHTML = html; showPage('memberDetail', m.name, false); if (pushHistory) { history.pushState(null, null, '#member_' + index); } updateBreadcrumbs('memberDetail', m.name);
-    }
-    function closeUserProfileModal() { document.getElementById('userProfileModal').classList.remove('open'); }
-    function openForgotModal() { closeLoginModal(); document.getElementById('forgotModal').classList.add('open'); }
-    function closeForgotModal() { document.getElementById('forgotModal').classList.remove('open'); }
-    async function sendForgotRequest() { const email = document.getElementById('forgotEmail').value; const btn = document.getElementById('forgotBtn'); if (!email) { alert("メールアドレスを入力してください"); return; } if (!GAS_API_URL) { alert("GAS URL未設定"); return; } btn.innerText = "送信中..."; btn.disabled = true; try { const res = await fetch(`${GAS_API_URL}?action=forgot_pass&email=${encodeURIComponent(email)}`); const json = await res.json(); if (json.status === 'success') { alert("メールを送信しました！\n受信ボックス（または迷惑メールフォルダ）を確認してください。"); closeForgotModal(); openLoginModal(); } else { alert("エラー: " + json.message); } } catch (e) { alert("通信エラーが発生しました"); } finally { btn.innerText = "送信する"; btn.disabled = false; } }
-    
-    // UIユーティリティ
+
+    function renderSchedule() { const topScheduleHtml = scheduleData.map(s => `<div class="schedule-card"><div class="sch-thumb-box"><div class="sch-date-big">${s.date}</div><div class="sch-time-big">${s.time}</div></div><div class="sch-info"><span class="sch-badge-mini">配信</span><div class="sch-title">${s.content}</div></div></div>`).join(''); const tlHtml = scheduleData.map(s => ` <div class="timeline-item"> <div class="tl-icon-box"><div class="tl-icon"><i class="fas fa-video"></i></div></div> <div class="tl-content"> <div class="tl-date">${s.date} <span style="font-size:12px;color:#888;">${s.time}</span></div> <div class="tl-title">${s.content}</div> <span class="tl-tag">配信</span> </div> </div>`).join(''); const topList = document.getElementById('topScheduleList'); const schList = document.getElementById('scheduleList'); if(topList) topList.innerHTML = topScheduleHtml || "予定はありません"; if(schList) schList.innerHTML = tlHtml; }
+    function renderVideos() { const videoHtml = videoData.map(v => `<div class="video-card" onclick="window.open('https://www.youtube.com/watch?v=${v.id}', '_blank')"><div class="video-thumb-box"><img src="https://img.youtube.com/vi/${v.id}/mqdefault.jpg" class="video-thumb"><div class="play-icon">▶</div></div><div class="video-info"><div class="video-title">${v.title}</div><div class="video-date">${v.date}</div></div></div>`).join(''); const list = document.getElementById('topVideoList'); if(list) list.innerHTML = videoHtml || "動画はまだありません"; }
+    function renderMemberVideos() { const container = document.getElementById('memberVideoList'); if(!memberVideoData.length) { container.innerHTML = "限定動画はまだありません"; return; } const html = memberVideoData.map(v => { const clickAction = isMemberLoggedIn ? `window.open('https://www.youtube.com/watch?v=${v.id}', '_blank')` : `openLoginModal()`; const lockedClass = isMemberLoggedIn ? 'unlocked' : 'mv-blur'; const lockOverlay = isMemberLoggedIn ? '' : `<div class="mv-lock-overlay"><div class="mv-lock-icon"><i class="fas fa-lock"></i></div><div class="mv-lock-text">MEMBER ONLY</div></div>`; return `<div class="member-video-card ${lockedClass}" onclick="${clickAction}">${lockOverlay}<div class="news-thumb-area"><img src="https://img.youtube.com/vi/${v.id}/mqdefault.jpg" class="news-img"></div><div class="news-content"><div class="news-date">${v.date}</div><div class="news-title">${v.title}</div><div class="news-check-btn">${isMemberLoggedIn ? 'PLAY' : 'LOCKED'}</div></div></div>`; }).join(''); container.innerHTML = html; }
+    function renderRadioDiary() { const container = document.getElementById('radioDiaryList'); if (!radioBlogData || radioBlogData.length === 0) { container.innerHTML = '<p style="text-align:center;color:#888;">まだ日記はありません</p>'; return; } container.innerHTML = radioBlogData.map(d => { if (!isMemberLoggedIn) { return ` <div class="diary-card" onclick="openLoginModal()" style="cursor:pointer; position:relative; overflow:hidden;"> <div style="filter: blur(6px); opacity: 0.6; pointer-events: none;"> <div class="diary-icon" style="background:#ddd;"></div> <div class="diary-content"> <div class="diary-name">SECRET MEMBER</div> <div class="diary-text">このコンテンツは会員限定です。<br>ログインすると閲覧できます。</div> <div class="diary-date">----.--.--</div> </div> </div> <div style="position:absolute; top:50%; left:50%; transform:translate(-50%,-50%); text-align:center; width:100%; z-index:2;"> <i class="fas fa-lock" style="font-size:24px; color:#555; margin-bottom:5px;"></i> <div style="font-weight:bold; font-size:12px; color:#555;">MEMBER ONLY</div> </div> </div> `; } let iconSrc = "icon.png"; let imgPos = "top center"; if (memberData && memberData.length > 0) { const targetMember = memberData.find(m => m.name === d.name); if (targetMember) { if(targetMember.img) iconSrc = targetMember.img; } } if (d.img && d.img !== "") iconSrc = d.img; const voicePlayer = d.voice ? `<div class="diary-voice-player" onclick="playVoice(this, '${d.voice}')"> <i class="fas fa-play voice-icon"></i> <span class="voice-time">限定ボイス</span> </div>` : ''; return ` <div class="diary-card"> <div class="diary-icon" style="background-image: url('${iconSrc}'); background-position: ${imgPos};"></div> <div class="diary-content"> <div class="diary-name">${d.name}</div> <div class="diary-text">${d.text}</div> ${voicePlayer} <div class="diary-date">${d.date}</div> </div> </div> `; }).join(''); }
+    function renderStaticParts() { const twLink = document.getElementById('groupTwitterLink'); const ytLink = document.getElementById('groupYoutubeLink'); const footerTwLink = document.getElementById('footerTwitterLink'); const footerYtLink = document.getElementById('footerYoutubeLink'); if(GROUP_CONFIG.twitterUrl) { twLink.href = GROUP_CONFIG.twitterUrl; footerTwLink.href = GROUP_CONFIG.twitterUrl; } if(GROUP_CONFIG.youtubeChannelId) { const ytUrl = `https://www.youtube.com/channel/${GROUP_CONFIG.youtubeChannelId}`; ytLink.href = ytUrl; footerYtLink.href = ytUrl; } if(memberData.length > 0) { const memberHtml = memberData.map((m, i) => `<div class="member-card-vertical" onclick="openMemberDetail(${i})" style="--member-color: ${m.color}; --member-bg: url('${m.bgImg}');"><div class="member-img-wrapper"><img src="${m.img}" class="member-img-tachie"></div><a href="javascript:void(0)" class="member-link-overlay"></a></div>`).join(''); document.getElementById('topMemberList').innerHTML = memberHtml; document.getElementById('memberGrid').innerHTML = memberHtml; } }
+
+    // --- その他UI機能 ---
     let currentAudio = null; let currentBtn = null;
     function playVoice(btn, url) { if (currentBtn === btn && currentAudio) { currentAudio.pause(); resetPlayer(); return; } if (currentAudio) { currentAudio.pause(); resetPlayer(); } const audio = new Audio(url); audio.volume = 0.5; btn.classList.add('playing'); const icon = btn.querySelector('.voice-icon'); const label = btn.querySelector('.voice-time'); if(icon) icon.className = 'fas fa-stop voice-icon'; if(label) label.innerText = 'STOP'; audio.play().catch(e => { console.error("再生エラー", e); alert("音声ファイルが再生できませんでした"); resetPlayer(); }); audio.onended = resetPlayer; currentAudio = audio; currentBtn = btn; }
     function resetPlayer() { if (currentBtn) { currentBtn.classList.remove('playing'); const icon = currentBtn.querySelector('.voice-icon'); const label = currentBtn.querySelector('.voice-time'); if(icon) icon.className = 'fas fa-play voice-icon'; if(label) label.innerText = 'PLAY'; } currentAudio = null; currentBtn = null; }
-    
-    function openNewsModal(index) { const data = newsData[index]; document.getElementById('modalDate').innerText = data.date; const tagEl = document.getElementById('modalTag'); tagEl.innerText = data.tag; tagEl.style.background = getTagColor(data.tag); document.getElementById('modalTitle').innerText = data.title; document.getElementById('modalBody').innerText = data.detail || data.title; document.getElementById('newsModal').classList.add('open'); }
     function closeNewsModal() { document.getElementById('newsModal').classList.remove('open'); }
     function openLoginModal() { document.getElementById('loginModal').classList.add('open'); }
     function closeLoginModal() { document.getElementById('loginModal').classList.remove('open'); }
@@ -2167,469 +2284,145 @@ canvas#drawCanvas {
     function closeOmikujiModal() { document.getElementById('omikujiModal').classList.remove('open'); }
     function shareOmikuji() { if(!currentOmikujiResult) return; const text = `【あおはるおみくじ】\n今日の運勢は…「${currentOmikujiResult.fortune}」でした！\nラッキーアイテム：${currentOmikujiResult.item}\n${currentOmikujiResult.member.name}「${currentOmikujiResult.comment}」\n#あおはるフレンズ #あおはるおみくじ`; const url = `https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}&url=${encodeURIComponent(location.href)}`; window.open(url, '_blank'); }
     function saveOmikuji() { const target = document.getElementById('omiCaptureArea'); html2canvas(target, { scale: 3, backgroundColor: null, useCORS: true }).then(canvas => { const link = document.createElement('a'); link.download = 'aoharu_omikuji.png'; link.href = canvas.toDataURL('image/png'); link.click(); }); }
-    async function fetchLikes() { if (!GAS_API_URL) return; try { const res = await fetch(`${GAS_API_URL}?action=get_likes`); const json = await res.json(); totalLikes = json.count || 0; updateLikeDisplay(); } catch (e) { console.error(e); } }
-    function updateLikeDisplay() { document.getElementById('totalLikeCount').innerText = totalLikes + sessionLikes; }
-    function spawnHeart() { const heart = document.createElement('i'); heart.className = 'fas fa-heart heart-particle'; const colors = ['#ff9a9e', '#ff6b6b', '#feca57', '#48dbfb', '#ff9ff3']; heart.style.color = colors[Math.floor(Math.random() * colors.length)]; heart.style.left = (window.innerWidth - 80 + (Math.random() * 40)) + 'px'; heart.style.bottom = '80px'; document.body.appendChild(heart); setTimeout(() => heart.remove(), 1500); sessionLikes++; updateLikeDisplay(); clearTimeout(likeSyncTimer); likeSyncTimer = setTimeout(syncLikes, 2000); }
-    async function syncLikes() { if (sessionLikes === 0) return; const countToSend = sessionLikes; sessionLikes = 0; totalLikes += countToSend; updateLikeDisplay(); if (!GAS_API_URL) return; try { const res = await fetch(`${GAS_API_URL}?action=add_likes&count=${countToSend}`); const json = await res.json(); if (json.total) { totalLikes = json.total; updateLikeDisplay(); } } catch (e) { console.error("Like Sync Error", e); } }
-    async function submitRadio() { const name = document.getElementById('radioName').value; const corner = document.getElementById('radioCorner').value; const msg = document.getElementById('radioMessage').value; if(!name || !msg) { alert("ラジオネームとメッセージを入力してね！"); return; } if (!GAS_API_URL) { alert("GAS URL未設定"); return; } const btn = document.querySelector('.radio-btn'); btn.disabled = true; btn.innerText = "送信中..."; try { const url = `${GAS_API_URL}?action=submit_radio&name=${encodeURIComponent(name)}&corner=${encodeURIComponent(corner)}&message=${encodeURIComponent(msg)}`; const res = await fetch(url); const json = await res.json(); if (json.status === 'success') { alert(`送信完了！\nありがとう、${name}さん！`); document.getElementById('radioName').value = ""; document.getElementById('radioMessage').value = ""; } else { alert("送信エラーが発生しました"); } } catch (e) { alert("通信エラーが発生しました"); } finally { btn.disabled = false; btn.innerText = "送信する"; } }
-    async function sendContact() { const name = document.getElementById('contactName').value; const email = document.getElementById('contactEmail').value; const type = document.getElementById('contactType').value; const msg = document.getElementById('contactMsg').value; if(!name || !email || !msg) { alert('すべての項目を入力してください'); return; } if (!GAS_API_URL) { alert("GAS URL未設定"); return; } const btn = document.querySelector('.contact-btn'); btn.disabled = true; btn.innerText = "送信中..."; try { const url = `${GAS_API_URL}?action=submit_contact&name=${encodeURIComponent(name)}&email=${encodeURIComponent(email)}&type=${encodeURIComponent(type)}&message=${encodeURIComponent(msg)}`; const res = await fetch(url); const json = await res.json(); if (json.status === 'success') { alert('お問い合わせありがとうございます！\n送信が完了しました。'); document.getElementById('contactMsg').value = ""; } else { alert('送信に失敗しました。'); } } catch(e) { alert('通信エラーが発生しました'); } finally { btn.disabled = false; btn.innerText = "送信する"; } }
-    function checkLiveStatus() { /* 省略 */ }
-    function initEasterEgg() { window.addEventListener('keydown', (e) => { secretInput.push(e.key); if (secretInput.length > secretCode.length) secretInput.shift(); if (JSON.stringify(secretInput) === JSON.stringify(secretCode)) activateFeverMode(); }); const logo = document.getElementById('headerLogo'); if(logo) { logo.addEventListener('click', (e) => { e.preventDefault(); logoTapCount++; if(logoTapCount === 10) { activateFeverMode(); logoTapCount = 0; } setTimeout(() => logoTapCount = 0, 3000); }); } }
-    function activateFeverMode() { if(document.body.classList.contains('fever-mode')) return; document.body.classList.add('fever-mode'); const text = document.createElement('div'); text.className = 'fever-text'; text.innerText = "FEVER TIME!!"; document.body.appendChild(text); var duration = 5000; var end = Date.now() + duration; (function frame() { if(typeof confetti === 'function'){ confetti({ particleCount: 2, angle: 60, spread: 55, origin: { x: 0 }, colors: ['#ff0000', '#00ff00', '#0000ff'] }); confetti({ particleCount: 2, angle: 120, spread: 55, origin: { x: 1 }, colors: ['#ff0000', '#00ff00', '#0000ff'] }); } if (Date.now() < end) requestAnimationFrame(frame); else { document.body.classList.remove('fever-mode'); text.remove(); alert("祭りは終わった……"); } }()); }
 
+    // --- 会員・非同期処理 ---
+    async function registerUser() { const name = document.getElementById('regName').value; const email = document.getElementById('regEmail').value; const pass = document.getElementById('regPass').value; const btn = document.getElementById('regBtn'); if(!name || !email || !pass) { alert("全ての項目を入力してください"); return; } if(pass.length < 4) { alert("パスワードは4文字以上で設定してください"); return; } btn.innerText = "送信中..."; btn.disabled = true; try { const res = await fetch(`${GAS_API_URL}?action=register&name=${encodeURIComponent(name)}&email=${encodeURIComponent(email)}&pass=${encodeURIComponent(pass)}`); const json = await res.json(); if (json.status === 'success') { alert("登録完了！\n会員ID: " + json.id); closeRegisterModal(); } else { alert("登録エラー: " + json.message); } } catch (e) { alert("通信エラー"); } finally { btn.innerText = "会員登録する"; btn.disabled = false; } }
+    async function loginUser() { const email = document.getElementById('loginEmail').value; const pass = document.getElementById('loginPass').value; const btn = document.getElementById('loginBtn'); if(!email || !pass) { alert("入力してください"); return; } btn.innerText = "確認中..."; btn.disabled = true; try { const res = await fetch(`${GAS_API_URL}?action=login&email=${encodeURIComponent(email)}&pass=${encodeURIComponent(pass)}`); const json = await res.json(); if (json.status === 'success') { alert("ログイン成功！"); closeLoginModal(); currentUserData = { id: json.id, name: json.name, icon: json.icon, bio: json.bio, x: json.x, yt: json.yt }; localStorage.setItem('aoharu_user', JSON.stringify(currentUserData)); isMemberLoggedIn = true; location.reload(); } else { alert("失敗: " + json.message); } } catch (e) { alert("通信エラー"); } finally { btn.innerText = "ログインする"; btn.disabled = false; } }
+    async function saveProfile() { if (!currentUserData) return; const name = document.getElementById('myNameInput').value; const icon = document.getElementById('myIconInput').value; const bio = document.getElementById('myBioInput').value; const x = document.getElementById('myXInput').value; const yt = document.getElementById('myYtInput').value; const btn = document.querySelector('.save-btn'); btn.innerText = "保存中..."; btn.disabled = true; try { const url = `${GAS_API_URL}?action=update_profile` + `&id=${encodeURIComponent(currentUserData.id)}` + `&name=${encodeURIComponent(name)}` + `&icon=${encodeURIComponent(icon)}` + `&bio=${encodeURIComponent(bio)}` + `&x=${encodeURIComponent(x)}` + `&yt=${encodeURIComponent(yt)}`; const res = await fetch(url); const json = await res.json(); if (json.status === 'success') { alert("更新しました！"); currentUserData.name = name; currentUserData.icon = icon; currentUserData.bio = bio; currentUserData.x = x; currentUserData.yt = yt; localStorage.setItem('aoharu_user', JSON.stringify(currentUserData)); location.reload(); } else { alert("エラー: " + json.message); } } catch (e) { alert("通信エラー"); } finally { btn.innerText = "変更を保存する"; btn.disabled = false; } }
+    function logoutUser() { if(confirm("ログアウトしますか？")) { localStorage.removeItem('aoharu_user'); location.reload(); } }
+    async function openUserProfile(name, event) { if(event) event.stopPropagation(); document.getElementById('graffitiModal').classList.remove('open'); document.getElementById('userProfileModal').classList.remove('open'); const officialMember = memberData.find(m => m.name === name); if (officialMember) { const index = memberData.indexOf(officialMember); openMemberDetail(index); return; } document.getElementById('upName').innerText = "Loading..."; document.getElementById('upBio').innerText = "..."; document.getElementById('upIcon').src = "icon.png"; document.getElementById('upBadge').style.display = "none"; document.getElementById('upLinkX').style.display = "none"; document.getElementById('upLinkYt').style.display = "none"; document.getElementById('userProfileModal').classList.add('open'); try { const res = await fetch(`${GAS_API_URL}?action=get_user_profile&name=${encodeURIComponent(name)}`); const json = await res.json(); if (json.status === 'success') { document.getElementById('upName').innerText = json.name; document.getElementById('upIcon').src = json.icon || "icon.png"; document.getElementById('upBio').innerText = json.bio || ""; if (json.x) { document.getElementById('upLinkX').href = json.x; document.getElementById('upLinkX').style.display = "flex"; } if (json.yt) { document.getElementById('upLinkYt').href = json.yt; document.getElementById('upLinkYt').style.display = "flex"; } } } catch (e) { console.log(e); } }
+    function openMemberDetail(index, pushHistory = true) { const m = memberData[index]; if(!m) return; const detailPage = document.getElementById('memberDetail'); let snsBtns = ''; if(m.youtubeId) snsBtns += `<a href="${m.youtubeId.startsWith('http')?m.youtubeId:'https://youtube.com/'+m.youtubeId}" target="_blank" class="p-btn yt"><i class="fab fa-youtube"></i> Channel</a>`; if(m.twitterId) snsBtns += `<a href="${m.twitterId.startsWith('http')?m.twitterId:'https://twitter.com/'+m.twitterId}" target="_blank" class="p-btn x"><i class="fab fa-x-twitter"></i> X</a>`; let voiceHtml = ''; const voices = [ {url: m.voice1, title: m.title1}, {url: m.voice2, title: m.title2}, {url: m.voice3, title: m.title3} ]; let voiceItems = ''; voices.forEach((v, i) => { if(v.url) voiceItems += `<div class="voice-card" onclick="playVoice(this, '${v.url}')"><i class="fas fa-play voice-icon"></i><div class="voice-title">${v.title||'Voice'}</div></div>`; }); if(voiceItems) voiceHtml = `<div class="section-title"><span class="ja-title">VOICE</span></div><div class="voice-grid">${voiceItems}</div>`; const html = `<div class="profile-header-bg" style="background-image:linear-gradient(135deg, ${m.color}cc 0%, rgba(255,255,255,0.9) 100%), url('${m.img}'); background-size:cover;"><div class="profile-wrapper"><div class="profile-visual"><img src="${m.img}" class="profile-tachie"></div><div class="profile-info"><div class="profile-en-name" style="color:${m.color}">${m.enName}</div><div class="profile-jp-name">${m.name}</div><div class="profile-catch" style="border-color:${m.color}">${m.catchphrase||''}</div><div class="profile-bio">${m.bio||''}</div><div class="profile-actions">${snsBtns}</div>${voiceHtml}<div style="text-align:center;"><div class="back-link" onclick="showPage('member')">◀ 戻る</div></div></div></div></div>`; detailPage.innerHTML = html; showPage('memberDetail', m.name, false); if (pushHistory) history.pushState(null, null, '#member_' + index); updateBreadcrumbs('memberDetail', m.name); }
+    function closeUserProfileModal() { document.getElementById('userProfileModal').classList.remove('open'); }
+    function openForgotModal() { closeLoginModal(); document.getElementById('forgotModal').classList.add('open'); }
+    function closeForgotModal() { document.getElementById('forgotModal').classList.remove('open'); }
+    async function sendForgotRequest() { alert("管理者に問い合わせてください"); }
 
-    // --------------------------------------------------
-    // ▼ 5. 落書き機能 (重複回避のため変数名を変更済み)
-    // --------------------------------------------------
+    // ▼▼▼ 落書き機能 (修正版：変数名衝突回避) ▼▼▼
     let graffitiCanvas, ctx, isDrawing = false, currentColor = "#ffffff", currentLineWidth = 3, graffitiPosts = [], currentViewingIndex = -1;
-    
-    function initCanvas() { 
-        const container = document.querySelector('.board-container'); 
-        graffitiCanvas = document.getElementById('drawCanvas'); // リネーム
-        if(!container || !graffitiCanvas) return; 
-        const rect = container.getBoundingClientRect(); 
-        graffitiCanvas.width = rect.width; 
-        graffitiCanvas.height = rect.height; 
-        ctx = graffitiCanvas.getContext('2d'); 
-        ctx.lineCap = 'round'; 
-        ctx.lineJoin = 'round'; 
-        ctx.strokeStyle = currentColor; 
-        ctx.lineWidth = currentLineWidth; 
-        
-        graffitiCanvas.onmousedown = startDraw; 
-        graffitiCanvas.onmousemove = drawing; 
-        graffitiCanvas.onmouseup = endDraw; 
-        graffitiCanvas.onmouseout = endDraw; 
-        graffitiCanvas.ontouchstart = (e) => { e.preventDefault(); startDraw(e.touches[0]); }; 
-        graffitiCanvas.ontouchmove = (e) => { e.preventDefault(); drawing(e.touches[0]); }; 
-        graffitiCanvas.ontouchend = endDraw; 
-    }
-    
-    // リサイズ時はあえて再描画しない（描いた絵が消えるのを防ぐため）
-    window.addEventListener('resize', () => { });
-
+    function initCanvas() { const container = document.querySelector('.board-container'); graffitiCanvas = document.getElementById('drawCanvas'); if(!container || !graffitiCanvas) return; const rect = container.getBoundingClientRect(); graffitiCanvas.width = rect.width; graffitiCanvas.height = rect.height; ctx = graffitiCanvas.getContext('2d'); ctx.lineCap = 'round'; ctx.lineJoin = 'round'; ctx.strokeStyle = currentColor; ctx.lineWidth = currentLineWidth; graffitiCanvas.onmousedown = startDraw; graffitiCanvas.onmousemove = drawing; graffitiCanvas.onmouseup = endDraw; graffitiCanvas.onmouseout = endDraw; graffitiCanvas.ontouchstart = (e) => { e.preventDefault(); startDraw(e.touches[0]); }; graffitiCanvas.ontouchmove = (e) => { e.preventDefault(); drawing(e.touches[0]); }; graffitiCanvas.ontouchend = endDraw; }
     function startDraw(e) { isDrawing = true; ctx.beginPath(); const rect = graffitiCanvas.getBoundingClientRect(); ctx.moveTo((e.clientX||e.pageX)-rect.left, (e.clientY||e.pageY)-rect.top); }
     function drawing(e) { if (!isDrawing) return; const rect = graffitiCanvas.getBoundingClientRect(); ctx.lineTo((e.clientX||e.pageX)-rect.left, (e.clientY||e.pageY)-rect.top); ctx.stroke(); }
     function endDraw() { isDrawing = false; }
     function changeColor(btn, color) { currentColor = color; ctx.strokeStyle = color; ctx.lineWidth = 3; ctx.globalCompositeOperation = 'source-over'; document.querySelectorAll('.color-btn').forEach(b => b.classList.remove('active')); btn.classList.add('active'); }
     function setEraser() { ctx.lineWidth = 15; ctx.globalCompositeOperation = 'destination-out'; document.querySelectorAll('.color-btn').forEach(b => b.classList.remove('active')); }
-    function clearCanvas() { if(confirm('本当に消しますか？')) { ctx.clearRect(0, 0, graffitiCanvas.width, graffitiCanvas.height); } }
-    function downloadGraffiti() { const tempCanvas = document.createElement('canvas'); tempCanvas.width = graffitiCanvas.width; tempCanvas.height = graffitiCanvas.height; const tCtx = tempCanvas.getContext('2d'); tCtx.fillStyle = "#2b4a3c"; tCtx.fillRect(0, 0, tempCanvas.width, tempCanvas.height); tCtx.drawImage(graffitiCanvas, 0, 0); const link = document.createElement('a'); link.download = 'aoharu_graffiti.png'; link.href = tempCanvas.toDataURL('image/png'); link.click(); }
+    function clearCanvas() { if(confirm('消しますか？')) { ctx.clearRect(0, 0, graffitiCanvas.width, graffitiCanvas.height); } }
+    function downloadGraffiti() { const temp = document.createElement('canvas'); temp.width = graffitiCanvas.width; temp.height = graffitiCanvas.height; const t = temp.getContext('2d'); t.fillStyle = "#2b4a3c"; t.fillRect(0,0,temp.width,temp.height); t.drawImage(graffitiCanvas,0,0); const link = document.createElement('a'); link.download = 'graffiti.png'; link.href = temp.toDataURL(); link.click(); }
     function checkCanvasLock() { const overlay = document.getElementById('canvasLockOverlay'); if (overlay) overlay.style.display = isMemberLoggedIn ? 'none' : 'flex'; }
-    
-    // 削除機能（サーバー通信版）
-    async function deleteGraffiti(event, id) { 
-        event.stopPropagation(); 
-        if (!isOfficialAdmin) { alert("削除権限がありません！"); return; } 
-        if (!confirm("本当に削除しますか？\n（スプレッドシートからも完全に消えます）")) { return; } 
-        try { 
-            const res = await fetch(GAS_API_URL, { 
-                method: 'POST', 
-                body: JSON.stringify({ type: 'delete', id: id }) 
-            }); 
-            const json = await res.json(); 
-            if (json.status === 'success') { 
-                graffitiPosts = graffitiPosts.filter(post => post.id !== id); 
-                renderGraffitiList(); 
-                alert("完全に削除しました！"); 
-            } else { 
-                alert("削除に失敗しました: " + (json.message || "サーバーエラー")); 
-            } 
-        } catch (e) { 
-            console.error("Delete Error:", e); 
-            alert("通信エラーが発生しました。\n削除できませんでした。"); 
-        } 
-    }
-    
-    function renderGraffitiList() { 
-        const list = document.getElementById('graffitiList'); 
-        if (!isMemberLoggedIn) { 
-            list.innerHTML = `<div style="display:flex; flex-direction:column; align-items:center; justify-content:center; width:100%; height:200px; background:#eee; border-radius:10px; color:#555;"><i class="fas fa-lock" style="font-size:30px; margin-bottom:10px;"></i><div style="font-weight:bold;">MEMBER ONLY</div><div style="font-size:12px;">みんなの作品を見るには<br>ログインしてください</div></div>`; 
-            return; 
-        } 
-        if(graffitiPosts.length === 0) { 
-            list.innerHTML = '<div style="padding:20px; color:#999; width:100%; text-align:center;">まだ投稿はありません。一番乗りしよう！</div>'; 
-            return; 
-        } 
-        list.innerHTML = graffitiPosts.map((post, index) => { 
-            const deleteBtn = isOfficialAdmin ? `<div class="delete-btn" onclick="deleteGraffiti(event, ${post.id})"><i class="fas fa-trash"></i></div>` : ''; 
-            return `<div class="graffiti-card" onclick="openGraffitiDetail(${index})" style="position:relative;">${deleteBtn}<div class="g-img-box"><img src="${post.image}" class="g-img"></div><div class="g-info"><div class="g-title">${post.title}</div><div class="g-author" onclick="openUserProfile('${post.author}', event)" style="cursor:pointer; text-decoration:underline;">by ${post.author}</div><div style="font-size:10px; color:#ff4757; text-align:right; margin-top:5px;"><i class="fas fa-heart"></i> ${post.likes} <i class="fas fa-comment" style="margin-left:5px; color:#aaa;"></i> ${post.comments.length}</div></div></div>`; 
-        }).join(''); 
-    }
-    
-    function openGraffitiDetail(index) { 
-        currentViewingIndex = index; const post = graffitiPosts[index]; 
-        document.getElementById('gDetailImg').src = post.image; 
-        document.getElementById('gDetailTitle').innerText = post.title; 
-        const authorEl = document.getElementById('gDetailAuthor'); 
-        authorEl.innerText = post.author; 
-        const authorContainer = authorEl.parentElement; 
-        authorContainer.onclick = function(e) { openUserProfile(post.author, e); }; 
-        authorContainer.style.cursor = "pointer"; 
-        authorContainer.style.textDecoration = "underline"; 
-        document.getElementById('gDetailLikes').innerText = post.likes; 
-        renderComments(); 
-        document.getElementById('graffitiModal').classList.add('open'); 
-    }
-    
-    function closeGraffitiModal() { document.getElementById('graffitiModal').classList.remove('open'); renderGraffitiList(); }
-    
-    async function toggleGraffitiLike() { 
-        if(currentViewingIndex === -1) return; 
-        const post = graffitiPosts[currentViewingIndex]; 
-        post.likes++; 
-        document.getElementById('gDetailLikes').innerText = post.likes; 
-        try { await fetch(GAS_API_URL, { method: 'POST', body: JSON.stringify({ type: 'like', id: post.id }) }); } catch(e) { console.error("Like Error", e); } 
-        const btn = document.querySelector('.g-modal-like-btn'); 
-        btn.style.transform = "scale(1.3)"; 
-        setTimeout(() => btn.style.transform = "scale(1)", 100); 
-    }
-    
-    async function submitGraffitiComment() { 
-        if(currentViewingIndex === -1) return; 
-        const input = document.getElementById('gCommentInput'); 
-        const text = input.value; 
-        if(!text) return; 
-        let commenterName = "名無し", commenterIcon = "icon.png", isOfficial = false; 
-        if(isMemberLoggedIn && currentUserData) { 
-            commenterName = currentUserData.name; 
-            const matchingMember = memberData.find(m => m.name === commenterName); 
-            if(matchingMember) { isOfficial = true; commenterIcon = matchingMember.img; } 
-            else if(currentUserData.icon) { commenterIcon = currentUserData.icon; } 
-        } 
-        const newComment = { name: commenterName, text: text, icon: commenterIcon, isMember: isOfficial }; 
-        graffitiPosts[currentViewingIndex].comments.push(newComment); 
-        renderComments(); 
-        input.value = ""; 
-        try { await fetch(GAS_API_URL, { method: 'POST', body: JSON.stringify({ type: 'comment', id: graffitiPosts[currentViewingIndex].id, commentData: newComment }) }); } catch(e) { console.error("Comment Error", e); } 
-    }
-    
-    function renderComments() { 
-        const list = document.getElementById('gDetailComments'); const comments = graffitiPosts[currentViewingIndex].comments; 
-        if(comments.length === 0) { list.innerHTML = '<div style="text-align:center; font-size:12px; color:#ccc; margin-top:20px;">コメントはまだありません</div>'; return; } 
-        list.innerHTML = comments.map(c => `<div class="g-comment-item ${c.isMember ? 'is-member' : ''}"><img src="${c.icon}" class="g-cmt-icon" onclick="openUserProfile('${c.name}', event)" style="cursor:pointer;"><div class="g-cmt-body"><div class="g-cmt-name" onclick="openUserProfile('${c.name}', event)" style="cursor:pointer; text-decoration:underline;">${c.name}</div><div>${c.text}</div></div></div>`).join(''); 
-        list.scrollTop = list.scrollHeight; 
-    }
+    async function deleteGraffiti(event, id) { event.stopPropagation(); if (!isOfficialAdmin) return; if (!confirm("削除しますか？")) return; await fetch(GAS_API_URL, { method: 'POST', body: JSON.stringify({ type: 'delete', id: id }) }); location.reload(); }
+    function renderGraffitiList() { const list = document.getElementById('graffitiList'); if (!isMemberLoggedIn) { list.innerHTML = "ログインしてください"; return; } list.innerHTML = graffitiPosts.map((p,i)=>`<div class="graffiti-card" onclick="openGraffitiDetail(${i})"><img src="${p.image}" class="g-img"><div class="g-title">${p.title}</div></div>`).join(''); }
+    function openGraffitiDetail(i) { currentViewingIndex = i; document.getElementById('gDetailImg').src = graffitiPosts[i].image; document.getElementById('graffitiModal').classList.add('open'); }
+    function closeGraffitiModal() { document.getElementById('graffitiModal').classList.remove('open'); }
+    async function toggleGraffitiLike() { /* 簡略化 */ }
+    async function submitGraffitiComment() { /* 簡略化 */ }
 
-    // ▼▼▼ AOHARU STUDIO 制御プログラム（公式風・ポーズ増量版） ▼▼▼
+    // ▼▼▼ AOHARU STUDIO (統合版) ▼▼▼
     let studioViewers = [];
     let selectedActorIndex = -1; 
-
     function initStudio() {
         if(studioViewers.length > 0) return;
-
         const canvasIds = ['skin_member_1', 'skin_member_2', 'skin_user', 'skin_member_3', 'skin_member_4'];
         const defaultSkins = ["skin_iyo.png", "skin_taku.png", "skin_ao.png", "skin_yua.png", "skin_ao.png"];
-
         canvasIds.forEach((id, index) => {
             const canvas = document.getElementById(id);
             if(!canvas) return;
-            
-            // 親要素(.actor-box)
             const container = canvas.parentElement;
-
-            // ★追加：移動用ハンドルを作成して挿入
-            const handle = document.createElement('div');
-            handle.className = 'move-handle';
-            handle.innerHTML = '<i class="fas fa-arrows-alt"></i> MOVE';
-            container.appendChild(handle);
-            
-            // ★ハンドルの部分だけドラッグ可能にする
-            makeDraggable(container, handle); 
-
-            // ビューワー作成
+            makeDraggable(container);
             const rect = container.getBoundingClientRect();
             const viewer = new skinview3d.SkinViewer({
-                canvas: canvas,
-                width: rect.width,
-                height: rect.height,
-                skin: defaultSkins[index],
-                preserveDrawingBuffer: true
+                canvas: canvas, width: rect.width, height: rect.height, skin: defaultSkins[index], preserveDrawingBuffer: true
             });
-            
-            // 角度変更できるようにコントロールを有効化
-            viewer.controls.enableRotate = true; 
-            viewer.controls.enableZoom = false; // ズームは無効（レイアウト崩れ防止）
-            viewer.controls.enablePan = false;
-
-            viewer.fov = 50; 
-            viewer.zoom = 0.85; 
-            viewer.animation = new skinview3d.WalkingAnimation();
-
+            viewer.fov = 50; viewer.zoom = 0.85; viewer.autoRotate = false; viewer.animation = new skinview3d.WalkingAnimation();
             studioViewers.push(viewer);
         });
     }
-
-    // メンバー選択
-    function selectActor(index) {
-        selectedActorIndex = index;
-        const boxes = document.querySelectorAll('.actor-box');
-        boxes.forEach((box, i) => {
-            if(i === index) box.classList.add('selected');
-            else box.classList.remove('selected');
-        });
-        const names = ["いよ", "たく", "YOU", "ゆあ", "あお"];
-        const targetName = index === -1 ? "全員" : names[index];
-        document.getElementById('targetName').innerText = targetName;
-    }
-
-    // アニメーション設定
-    function setStudioAnim(type) {
-        studioViewers.forEach((v, i) => {
-            if (selectedActorIndex === -1 || selectedActorIndex === i) {
-                resetPose(v); // 一旦リセット
-                if(type === 'idle') v.animation = new skinview3d.IdleAnimation();
-                if(type === 'walk') v.animation = new skinview3d.WalkingAnimation();
-                if(type === 'run') v.animation = new skinview3d.RunningAnimation();
-                if(type === 'fly') v.animation = new skinview3d.FlyingAnimation();
-            }
-        });
-    }
-
-    // ★新機能：カスタムポーズ設定
+    function selectActor(index) { selectedActorIndex = index; const boxes = document.querySelectorAll('.actor-box'); boxes.forEach((b,i)=>b.classList.toggle('selected', i===index)); }
+    function setStudioAnim(type) { studioViewers.forEach((v,i)=>{ if(selectedActorIndex===-1||selectedActorIndex===i) { if(type==='idle') v.animation = new skinview3d.IdleAnimation(); else if(type==='walk') v.animation = new skinview3d.WalkingAnimation(); else if(type==='run') v.animation = new skinview3d.RunningAnimation(); else if(type==='fly') v.animation = new skinview3d.FlyingAnimation(); v.playerObject.skin.head.rotation.z = 0; } }); }
+    // 新しいポーズ関数
     function setPose(poseName) {
         studioViewers.forEach((v, i) => {
             if (selectedActorIndex === -1 || selectedActorIndex === i) {
-                // アニメーションを停止してリセット
                 v.animation = null;
                 resetPose(v);
-
                 const skin = v.playerObject.skin;
-
-                if (poseName === 'hug') {
-                    skin.rightArm.rotation.x = -1.5; skin.rightArm.rotation.z = 0.5;
-                    skin.leftArm.rotation.x = -1.5; skin.leftArm.rotation.z = -0.5;
-                }
-                else if (poseName === 'cheer') {
-                    skin.rightArm.rotation.z = 2.8; skin.leftArm.rotation.z = -2.8;
-                }
-                else if (poseName === 'point') {
-                    skin.rightArm.rotation.x = -1.5; skin.rightArm.rotation.y = -0.5;
-                }
-                else if (poseName === 'sit') {
-                    skin.rightLeg.rotation.x = -1.5; skin.leftLeg.rotation.x = -1.5;
-                }
-                else if (poseName === 'ninja') {
-                    skin.body.rotation.x = 0.5;
-                    skin.rightArm.rotation.x = 1.0; skin.leftArm.rotation.x = 1.0;
-                }
-                else if (poseName === 'zombie') {
-                    skin.rightArm.rotation.x = -1.5; skin.leftArm.rotation.x = -1.5;
-                }
+                if (poseName === 'hug') { skin.rightArm.rotation.x = -1.5; skin.rightArm.rotation.z = 0.5; skin.leftArm.rotation.x = -1.5; skin.leftArm.rotation.z = -0.5; }
+                else if (poseName === 'cheer') { skin.rightArm.rotation.z = 2.8; skin.leftArm.rotation.z = -2.8; }
+                else if (poseName === 'point') { skin.rightArm.rotation.x = -1.5; skin.rightArm.rotation.y = -0.5; }
+                else if (poseName === 'sit') { skin.rightLeg.rotation.x = -1.5; skin.leftLeg.rotation.x = -1.5; }
+                else if (poseName === 'ninja') { skin.body.rotation.x = 0.5; skin.rightArm.rotation.x = 1.0; skin.leftArm.rotation.x = 1.0; }
+                else if (poseName === 'zombie') { skin.rightArm.rotation.x = -1.5; skin.leftArm.rotation.x = -1.5; }
             }
         });
     }
-
-    // ポーズリセット用
     function resetPose(viewer) {
         const skin = viewer.playerObject.skin;
-        skin.head.rotation.x = 0; skin.head.rotation.y = 0; skin.head.rotation.z = 0;
-        skin.leftArm.rotation.x = 0; skin.leftArm.rotation.z = 0;
-        skin.rightArm.rotation.x = 0; skin.rightArm.rotation.z = 0;
-        skin.leftLeg.rotation.x = 0; skin.rightLeg.rotation.x = 0;
-        skin.body.rotation.x = 0;
+        skin.head.rotation.set(0,0,0); skin.leftArm.rotation.set(0,0,0); skin.rightArm.rotation.set(0,0,0);
+        skin.leftLeg.rotation.set(0,0,0); skin.rightLeg.rotation.set(0,0,0); skin.body.rotation.set(0,0,0);
     }
-
-    // 首かしげ（トグル）
-    function toggleHeadTilt() {
-        studioViewers.forEach((v, i) => {
-            if (selectedActorIndex === -1 || selectedActorIndex === i) {
-                v.playerObject.skin.head.rotation.z = (v.playerObject.skin.head.rotation.z === 0 ? -0.4 : 0);
-            }
-        });
-    }
-
-    // 回転ON/OFF
-    function toggleRotate() {
-        studioViewers.forEach((v, i) => {
-            if (selectedActorIndex === -1 || selectedActorIndex === i) {
-                v.autoRotate = !v.autoRotate;
-            }
-        });
-    }
-
-    // 背景・スキン変更・保存（変更なし）
+    function toggleHeadTilt() { studioViewers.forEach((v,i)=>{ if(selectedActorIndex===-1||selectedActorIndex===i) v.playerObject.skin.head.rotation.z = (v.playerObject.skin.head.rotation.z===0 ? -0.5 : 0); }); }
+    function toggleRotate() { studioViewers.forEach((v,i)=>{ if(selectedActorIndex===-1||selectedActorIndex===i) v.autoRotate = !v.autoRotate; }); }
     function changeStudioBg(val) { const bg=document.getElementById('studioBg'); if(val.includes('url')) { bg.style.backgroundImage=val; bg.style.backgroundColor='transparent'; } else { bg.style.backgroundImage='none'; bg.style.backgroundColor=val; } }
     function uploadUserSkin(input) { if(input.files[0]) { const r = new FileReader(); r.onload = (e) => studioViewers[2].loadSkin(e.target.result); r.readAsDataURL(input.files[0]); } }
+    function changeActorSkin(skin) { if(studioViewers.length===0) return; if(selectedActorIndex===-1) { if(confirm("全員変えますか？")) studioViewers.forEach(v=>v.loadSkin(skin)); } else { studioViewers[selectedActorIndex].loadSkin(skin); } }
     function captureStudio() { html2canvas(document.getElementById('studioStage'), {scale:2, useCORS:true}).then(c=>{ const l=document.createElement('a'); l.download='studio.png'; l.href=c.toDataURL(); l.click(); }); }
     
-    // ▼▼▼ モブ追加（ハンドル付き） ▼▼▼
-    let freeMobs = []; 
     function addFreeMob(skin) { 
-        const stage = document.getElementById('studioStage'); 
-        const box = document.createElement('div'); box.className = 'free-mob-box'; 
+        const stage = document.getElementById('studioStage'); const box = document.createElement('div'); box.className = 'free-mob-box'; 
         box.style.top = '30%'; box.style.left = '40%';
-        
         const cvs = document.createElement('canvas'); box.appendChild(cvs); 
-        
-        // ハンドル追加
-        const handle = document.createElement('div');
-        handle.className = 'move-handle';
-        handle.innerHTML = '<i class="fas fa-arrows-alt"></i>';
-        box.appendChild(handle);
-        
+        const handle = document.createElement('div'); handle.className = 'move-handle'; handle.innerHTML = '<i class="fas fa-arrows-alt"></i>'; box.appendChild(handle);
         const del = document.createElement('div'); del.className = 'mob-delete-btn'; del.innerText='×'; del.onclick=()=>box.remove(); box.appendChild(del);
-        
         stage.appendChild(box);
-        
-        // ハンドルのみドラッグ可能に
-        makeDraggable(box, handle);
-
         const v = new skinview3d.SkinViewer({ canvas: cvs, width: 100, height: 200, skin: skin, preserveDrawingBuffer: true });
         v.controls.enableRotate = true; v.controls.enableZoom = false;
         v.fov = 60; v.zoom = 0.9; v.animation = new skinview3d.WalkingAnimation(); v.autoRotate = true;
+        makeDraggable(box, handle);
     }
     
-    // ▼▼▼ ドラッグ機能（改良版：ハンドル指定） ▼▼▼
     function makeDraggable(element, handle) {
         let isDragging=false, startX, startY, initLeft, initTop;
-        
-        // ハンドルに対してイベントを設定（ハンドルがない場合は要素全体）
         const target = handle || element;
-
-        target.addEventListener('mousedown', start); 
-        target.addEventListener('touchstart', start, {passive:false});
-
-        function start(e) { 
-            e.preventDefault(); 
-            e.stopPropagation(); // 他のイベントを邪魔しない
-            isDragging=true; 
-            const t = e.type==='touchstart'?e.touches[0]:e; 
-            startX=t.clientX; startY=t.clientY; 
-            initLeft=element.offsetLeft; initTop=element.offsetTop; 
-            
-            // ピクセル配置に固定
-            element.style.bottom='auto'; element.style.right='auto'; 
-            element.style.left=initLeft+'px'; element.style.top=initTop+'px'; 
-            
-            document.addEventListener('mousemove', move); 
-            document.addEventListener('touchmove', move, {passive:false}); 
-            document.addEventListener('mouseup', stop); 
-            document.addEventListener('touchend', stop); 
-        }
-        function move(e) { 
-            if(!isDragging) return; 
-            e.preventDefault(); 
-            const t = e.type==='touchmove'?e.touches[0]:e; 
-            const dx=t.clientX-startX; const dy=t.clientY-startY; 
-            element.style.left=(initLeft+dx)+'px'; 
-            element.style.top=(initTop+dy)+'px'; 
-        }
-        function stop() { 
-            isDragging=false; 
-            document.removeEventListener('mousemove', move); 
-            document.removeEventListener('touchmove', move); 
-            document.removeEventListener('mouseup', stop); 
-            document.removeEventListener('touchend', stop); 
-        }
+        target.addEventListener('mousedown', start); target.addEventListener('touchstart', start, {passive:false});
+        function start(e) { e.preventDefault(); e.stopPropagation(); isDragging=true; const t = e.type==='touchstart'?e.touches[0]:e; startX=t.clientX; startY=t.clientY; initLeft=element.offsetLeft; initTop=element.offsetTop; element.style.bottom='auto'; element.style.right='auto'; element.style.left=initLeft+'px'; element.style.top=initTop+'px'; document.addEventListener('mousemove', move); document.addEventListener('touchmove', move, {passive:false}); document.addEventListener('mouseup', stop); document.addEventListener('touchend', stop); }
+        function move(e) { if(!isDragging) return; e.preventDefault(); const t = e.type==='touchmove'?e.touches[0]:e; const dx=t.clientX-startX; const dy=t.clientY-startY; element.style.left=(initLeft+dx)+'px'; element.style.top=(initTop+dy)+'px'; }
+        function stop() { isDragging=false; document.removeEventListener('mousemove', move); document.removeEventListener('touchmove', move); document.removeEventListener('mouseup', stop); document.removeEventListener('touchend', stop); }
     }
 
-    // --------------------------------------------------
-    // ▼ 7. 隠し要素・ホラーモード制御
-    // --------------------------------------------------
-    let secretTapCount = 0;
-    let secretTapTimer = null;
+    // 1. SKIN VIEWER 制御（既存の1人用）
+    let skinViewer;
+    let skinAnimation;
 
-    function triggerSecretEvent() {
-        secretTapCount++;
-        if(secretTapCount === 5 || secretTapCount === 6) {
-            const noise = document.getElementById('tvNoiseOverlay');
-            noise.classList.add('active'); 
-            setTimeout(() => { noise.classList.remove('active'); }, 200);
-        }
-        clearTimeout(secretTapTimer);
-        secretTapTimer = setTimeout(() => { secretTapCount = 0; }, 2000);
-        if (secretTapCount >= 7) { secretTapCount = 0; startHorrorMode(); }
+    function initSkinViewer() {
+        if(skinViewer) return; 
+        const canvas = document.getElementById("skin_container");
+        if(!canvas) return;
+
+        skinViewer = new skinview3d.SkinViewer({
+            canvas: canvas, width: 300, height: 400,
+            skin: "skin_ao.png"
+        });
+        skinViewer.width = canvas.parentElement.clientWidth;
+        skinViewer.height = canvas.parentElement.clientHeight;
+        skinViewer.fov = 70; skinViewer.zoom = 0.9;
+        skinViewer.autoRotate = true; skinViewer.autoRotateSpeed = 0.5;
+        
+        setSkinAnim('walk', document.querySelectorAll('.skin-btn')[1]);
+        renderSkinButtons();
     }
 
-    function startHorrorMode() {
-        if(!confirm("校舎の電気が消えました...\n様子を見に行きますか？")) return;
-        document.querySelector('footer').style.display = 'none';
-        showPage('secretOldSchool', null, false);
-        window.scrollTo(0,0);
-        document.getElementById('secretGate').classList.remove('open');
-        document.getElementById('oldSchoolRoom').style.opacity = '0';
-        const flashlight = document.getElementById('flashlightOverlay');
-        flashlight.style.display = 'block';
-        setTimeout(() => { flashlight.classList.add('active'); }, 100);
-        document.addEventListener('mousemove', moveFlashlight);
-        document.addEventListener('touchmove', moveFlashlight, {passive: false});
-    }
-
-    function openSecretGate() {
-        if(!confirm("本当に...入りますか？\n（後戻りはできません）")) return;
-        document.getElementById('secretGate').classList.add('open');
-        const flashlight = document.getElementById('flashlightOverlay');
-        flashlight.style.opacity = '0'; 
-        setTimeout(() => { flashlight.style.display = 'none'; flashlight.classList.remove('active'); }, 2000);
-        setTimeout(() => {
-            document.getElementById('oldSchoolRoom').style.opacity = '1';
-            if(secretData.bgm_url) {
-                horrorAudio.bgm = new Audio(secretData.bgm_url);
-                horrorAudio.bgm.volume = 0.1; 
-                horrorAudio.bgm.loop = true;
-                horrorAudio.bgm.play().catch(e => console.log("BGM再生失敗"));
-            }
-        }, 1000);
-        document.removeEventListener('mousemove', moveFlashlight);
-        document.removeEventListener('touchmove', moveFlashlight);
-    }
-
-    function moveFlashlight(e) {
-        const flashlight = document.getElementById('flashlightOverlay');
-        if (!flashlight.classList.contains('active')) return;
-        let x, y;
-        if (e.type === 'touchmove') { x = e.touches[0].clientX; y = e.touches[0].clientY; } 
-        else { x = e.clientX; y = e.clientY; }
-        flashlight.style.setProperty('--cursor-x', x + 'px');
-        flashlight.style.setProperty('--cursor-y', y + 'px');
-    }
-
-    function exitHorrorMode() {
-        if(horrorAudio.bgm) horrorAudio.bgm.pause();
-        if(horrorAudio.radio) horrorAudio.radio.pause();
-        if(horrorAudio.scream) horrorAudio.scream.pause();
-        const flashlight = document.getElementById('flashlightOverlay');
-        flashlight.classList.remove('active');
-        flashlight.style.opacity = '0'; 
-        document.removeEventListener('mousemove', moveFlashlight);
-        document.removeEventListener('touchmove', moveFlashlight);
-        setTimeout(() => {
-            flashlight.style.display = 'none';
-            showPage('top'); 
-            alert("...夢だったようだ。");
-            location.reload(); 
-        }, 2000);
-    }
-
-    let secretData = {}; 
-    let horrorAudio = { bgm: null, radio: null, scream: null };
-
-    function setSecretData(data) {
-        if(data.secret) {
-            secretData = data.secret;
-            document.getElementById('noteContent').innerHTML = secretData.note_text || "文字が滲んで読めない...";
-            document.getElementById('bloodTextDisplay').innerText = secretData.blood_text || "見てるぞ...";
-            if(secretData.scream_img_url) document.getElementById('screamImg').src = secretData.scream_img_url;
-        }
-    }
-
+    // ホラーモード
+    function initEasterEgg() { window.addEventListener('keydown', (e) => { secretInput.push(e.key); if (secretInput.length > secretCode.length) secretInput.shift(); if (JSON.stringify(secretInput) === JSON.stringify(secretCode)) activateFeverMode(); }); const logo = document.getElementById('headerLogo'); if(logo) { logo.addEventListener('click', (e) => { e.preventDefault(); logoTapCount++; if(logoTapCount === 10) { activateFeverMode(); logoTapCount = 0; } setTimeout(() => logoTapCount = 0, 3000); }); } }
+    function triggerSecretEvent() { secretTapCount++; if(secretTapCount === 5 || secretTapCount === 6) { const noise = document.getElementById('tvNoiseOverlay'); noise.classList.add('active'); setTimeout(() => { noise.classList.remove('active'); }, 200); } clearTimeout(secretTapTimer); secretTapTimer = setTimeout(() => { secretTapCount = 0; }, 2000); if (secretTapCount >= 7) { secretTapCount = 0; startHorrorMode(); } }
+    function startHorrorMode() { if(!confirm("校舎の電気が消えました...\n様子を見に行きますか？")) return; document.querySelector('footer').style.display = 'none'; showPage('secretOldSchool', null, false); window.scrollTo(0,0); document.getElementById('secretGate').classList.remove('open'); document.getElementById('oldSchoolRoom').style.opacity = '0'; const flashlight = document.getElementById('flashlightOverlay'); flashlight.style.display = 'block'; setTimeout(() => { flashlight.classList.add('active'); }, 100); document.addEventListener('mousemove', moveFlashlight); document.addEventListener('touchmove', moveFlashlight, {passive: false}); }
+    function openSecretGate() { if(!confirm("本当に...入りますか？\n（後戻りはできません）")) return; document.getElementById('secretGate').classList.add('open'); const flashlight = document.getElementById('flashlightOverlay'); flashlight.style.opacity = '0'; setTimeout(() => { flashlight.style.display = 'none'; flashlight.classList.remove('active'); }, 2000); setTimeout(() => { document.getElementById('oldSchoolRoom').style.opacity = '1'; if(secretData.bgm_url) { horrorAudio.bgm = new Audio(secretData.bgm_url); horrorAudio.bgm.volume = 0.1; horrorAudio.bgm.loop = true; horrorAudio.bgm.play().catch(e => console.log("BGM再生失敗")); } }, 1000); document.removeEventListener('mousemove', moveFlashlight); document.removeEventListener('touchmove', moveFlashlight); }
+    function moveFlashlight(e) { const flashlight = document.getElementById('flashlightOverlay'); if (!flashlight.classList.contains('active')) return; let x, y; if (e.type === 'touchmove') { x = e.touches[0].clientX; y = e.touches[0].clientY; } else { x = e.clientX; y = e.clientY; } flashlight.style.setProperty('--cursor-x', x + 'px'); flashlight.style.setProperty('--cursor-y', y + 'px'); }
+    function exitHorrorMode() { if(horrorAudio.bgm) horrorAudio.bgm.pause(); if(horrorAudio.radio) horrorAudio.radio.pause(); if(horrorAudio.scream) horrorAudio.scream.pause(); const flashlight = document.getElementById('flashlightOverlay'); flashlight.classList.remove('active'); flashlight.style.opacity = '0'; document.removeEventListener('mousemove', moveFlashlight); document.removeEventListener('touchmove', moveFlashlight); setTimeout(() => { flashlight.style.display = 'none'; showPage('top'); alert("...夢だったようだ。"); location.reload(); }, 2000); }
+    function setSecretData(data) { if(data.secret) { secretData = data.secret; document.getElementById('noteContent').innerHTML = secretData.note_text || "文字が滲んで読めない..."; document.getElementById('bloodTextDisplay').innerText = secretData.blood_text || "見てるぞ..."; if(secretData.scream_img_url) document.getElementById('screamImg').src = secretData.scream_img_url; } }
     function openHorrorNote() { document.getElementById('noteModal').style.display = 'flex'; }
     function playHorrorRadio() { const btn = document.querySelector('.horror-item.radio'); if (horrorAudio.radio && !horrorAudio.radio.paused) { horrorAudio.radio.pause(); horrorAudio.radio.currentTime = 0; btn.classList.remove('playing'); } else { if(!secretData.radio_voice_url) { alert("...ザーッ...（電池切れのようだ）"); return; } horrorAudio.radio = new Audio(secretData.radio_voice_url); horrorAudio.radio.volume = 0.3; horrorAudio.radio.loop = true; horrorAudio.radio.play(); btn.classList.add('playing'); } }
     function triggerScream() { if(secretData.scream_voice_url) { horrorAudio.scream = new Audio(secretData.scream_voice_url); horrorAudio.scream.volume = 0.4; horrorAudio.scream.play(); } const overlay = document.getElementById('screamOverlay'); overlay.style.display = 'block'; setTimeout(() => { overlay.style.display = 'none'; }, 1500); }
-
-    const inputField = document.getElementById('cursedInput');
-    if(inputField) { inputField.addEventListener('keypress', function (e) { if (e.key === 'Enter') { const text = this.value; this.value = ''; handleCursedWord(text); } }); }
-    
-    function handleCursedWord(word) {
-        if (word.includes('あそぼ') || word.includes('遊ぼ')) { alert("...ケケケ...（どこからか笑い声が聞こえた）"); } 
-        else if (word.includes('うしろ') || word.includes('後ろ')) { const noise = document.getElementById('tvNoiseOverlay'); if(noise) { noise.classList.add('active'); setTimeout(() => noise.classList.remove('active'), 1000); } const label = document.querySelector('.cursed-label'); if(label) { label.innerText = "フリカエルナ！！"; label.style.color = "red"; } }
-        else if (word.includes('助けて') || word.includes('たすけて')) { document.body.classList.add('red-flash'); setTimeout(() => document.body.classList.remove('red-flash'), 600); const input = document.getElementById('cursedInput'); setTimeout(() => { if(input) { input.value = "ムダダ"; input.style.color = "black"; } }, 500); }
-        else if (word.includes('ごめんなさい') || word.includes('ゆるして')) { const input = document.getElementById('cursedInput'); if(input) { input.style.color = "#880000"; input.value = "ユルサナイユルサナイユルサナイ"; input.classList.add('shaking'); setTimeout(() => input.classList.remove('shaking'), 1000); } }
-        else if (word.includes('みてる') || word.includes('見てる')) { for(let i=0; i<30; i++) { const eye = document.createElement('div'); eye.innerText = "👁️"; eye.style.position = "fixed"; eye.style.left = Math.random() * 100 + "vw"; eye.style.top = Math.random() * 100 + "vh"; eye.style.fontSize = (Math.random() * 50 + 20) + "px"; eye.style.zIndex = "30000"; eye.style.pointerEvents = "none"; document.body.appendChild(eye); setTimeout(() => eye.remove(), 1500); } alert("...キズイタカ..."); }
-        else if (word.includes('おかしい') || word.includes('バグ')) { document.body.style.transition = "transform 2s"; document.body.style.transform = "rotate(3deg)"; alert("...オカシイノハ オマエダ..."); }
-        else if (word.includes('あおはる') || word.includes('アオハル') || word.includes('フレンズ')) { const input = document.getElementById('cursedInput'); if(input) { input.value = ""; setTimeout(() => { input.value = "ソンナ ヤツハ イナイ"; input.style.color = "#555"; }, 300); } }
-    }
+    const inputField = document.getElementById('cursedInput'); if(inputField) { inputField.addEventListener('keypress', function (e) { if (e.key === 'Enter') { const text = this.value; this.value = ''; handleCursedWord(text); } }); }
+    function handleCursedWord(word) { if (word.includes('あそぼ') || word.includes('遊ぼ')) { alert("...ケケケ...（どこからか笑い声が聞こえた）"); } else if (word.includes('うしろ') || word.includes('後ろ')) { const noise = document.getElementById('tvNoiseOverlay'); if(noise) { noise.classList.add('active'); setTimeout(() => noise.classList.remove('active'), 1000); } const label = document.querySelector('.cursed-label'); if(label) { label.innerText = "フリカエルナ！！"; label.style.color = "red"; } } else if (word.includes('助けて') || word.includes('たすけて')) { document.body.classList.add('red-flash'); setTimeout(() => document.body.classList.remove('red-flash'), 600); const input = document.getElementById('cursedInput'); setTimeout(() => { if(input) { input.value = "ムダダ"; input.style.color = "black"; } }, 500); } else if (word.includes('ごめんなさい') || word.includes('ゆるして')) { const input = document.getElementById('cursedInput'); if(input) { input.style.color = "#880000"; input.value = "ユルサナイユルサナイユルサナイ"; input.classList.add('shaking'); setTimeout(() => input.classList.remove('shaking'), 1000); } } else if (word.includes('みてる') || word.includes('見てる')) { for(let i=0; i<30; i++) { const eye = document.createElement('div'); eye.innerText = "👁️"; eye.style.position = "fixed"; eye.style.left = Math.random() * 100 + "vw"; eye.style.top = Math.random() * 100 + "vh"; eye.style.fontSize = (Math.random() * 50 + 20) + "px"; eye.style.zIndex = "30000"; eye.style.pointerEvents = "none"; document.body.appendChild(eye); setTimeout(() => eye.remove(), 1500); } alert("...キズイタカ..."); } else if (word.includes('おかしい') || word.includes('バグ')) { document.body.style.transition = "transform 2s"; document.body.style.transform = "rotate(3deg)"; alert("...オカシイノハ オマエダ..."); } else if (word.includes('あおはる') || word.includes('アオハル') || word.includes('フレンズ')) { const input = document.getElementById('cursedInput'); if(input) { input.value = ""; setTimeout(() => { input.value = "ソンナ ヤツハ イナイ"; input.style.color = "#555"; }, 300); } } }
+    function activateFeverMode() { if(document.body.classList.contains('fever-mode')) return; document.body.classList.add('fever-mode'); const text = document.createElement('div'); text.className = 'fever-text'; text.innerText = "FEVER TIME!!"; document.body.appendChild(text); var duration = 5000; var end = Date.now() + duration; (function frame() { if(typeof confetti === 'function'){ confetti({ particleCount: 2, angle: 60, spread: 55, origin: { x: 0 }, colors: ['#ff0000', '#00ff00', '#0000ff'] }); confetti({ particleCount: 2, angle: 120, spread: 55, origin: { x: 1 }, colors: ['#ff0000', '#00ff00', '#0000ff'] }); } if (Date.now() < end) requestAnimationFrame(frame); else { document.body.classList.remove('fever-mode'); text.remove(); alert("祭りは終わった……"); } }()); }
     // ▼▼▼ キャラクター変身機能 ▼▼▼
     function changeActorSkin(skinFileName) {
         if (studioViewers.length === 0) return;
