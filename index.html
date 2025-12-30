@@ -173,20 +173,71 @@
         #nowOnAirSection { display: none; margin-bottom: 60px; animation: fadeIn 0.5s ease; width: 100%; }
         .noa-title { text-align: center; font-family: 'Poppins', sans-serif; font-weight: 900; font-size: 32px; color: #ff0000; margin-bottom: 20px; letter-spacing: 2px; text-shadow: 0 2px 10px rgba(255,0,0,0.1); display: flex; align-items: center; justify-content: center; gap: 10px; }
         .noa-title::before, .noa-title::after { content: "●"; font-size: 14px; animation: pulse-red 1s infinite; }
-        /* 修正：NOW ON AIRのメイン表示サイズを調整 */
-        .live-hero-wrapper {
-            position: relative;
+        /* ▼▼▼ 追加：人数に応じて変わる可変グリッドシステム ▼▼▼ */
+        .live-dynamic-grid {
+            display: grid;
+            gap: 15px;
+            width: 95%;
+            margin: 0 auto;
+            transition: all 0.3s ease;
+        }
+
+        /* 配信ごとのカードデザイン */
+        .live-grid-item {
+            background: #000;
             border-radius: 12px;
             overflow: hidden;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
-            /* ▼▼▼ ここを変更しました（サイズ調整と中央寄せ） ▼▼▼ */
-            max-width: 640px;  /* パソコンでの最大幅を制限（これで約半分になります） */
-            width: 95%;        /* スマホでは画面幅に合わせて程よく表示 */
-            margin: 0 auto;    /* 画面の中央に寄せる */
-            /* ▲▲▲ ここまで ▲▲▲ */
+            border: 3px solid #ff0000; /* 配信中らしい赤い枠 */
+            box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+            position: relative;
         }
-        .live-iframe-box { position: relative; width: 100%; padding-top: 56.25%; /* 16:9 */ }
-        .live-iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: none; }
+
+        /* ▼ PC画面でのレイアウト設定（ここが重要！） ▼ */
+        @media (min-width: 768px) {
+            /* 1人のとき：中央に程よい大きさで表示 */
+            .live-dynamic-grid.layout-1 {
+                grid-template-columns: 1fr;
+                max-width: 640px;
+            }
+            /* 2人のとき：半分ずつ横並び */
+            .live-dynamic-grid.layout-2 {
+                grid-template-columns: 1fr 1fr;
+                max-width: 1000px;
+            }
+            /* 3人のとき：3等分 */
+            .live-dynamic-grid.layout-3 {
+                grid-template-columns: 1fr 1fr 1fr;
+                max-width: 1200px;
+            }
+            /* 4人（以上）のとき：4等分で横一列！ */
+            .live-dynamic-grid.layout-4 {
+                grid-template-columns: repeat(4, 1fr);
+                max-width: 1400px;
+            }
+        }
+
+        /* スマホ画面では見やすく縦に並べる（または2列） */
+        @media (max-width: 767px) {
+            .live-dynamic-grid {
+                grid-template-columns: 1fr; /* スマホは基本1列 */
+            }
+            /* 4人の時だけスマホでも2列にして一覧性を高める */
+            .live-dynamic-grid.layout-4 {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+
+        /* 共通：埋め込み動画の比率固定 (16:9) */
+        .live-iframe-box {
+            position: relative;
+            width: 100%;
+            padding-top: 56.25%;
+        }
+        .live-iframe {
+            position: absolute;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+        }
         .live-info-bar { padding: 15px; background: white; display: flex; align-items: center; gap: 15px; border-bottom: 2px solid #f0f0f0; }
         .live-info-icon { width: 50px; height: 50px; border-radius: 50%; border: 2px solid #ff0000; object-fit: cover; }
         .live-info-text { flex: 1; }
@@ -2770,79 +2821,72 @@
     }
 
     // --- ライブ配信状況確認関数 ---
-    // ▼▼▼ 修正版：ライブ配信表示機能（API消費ゼロ・キャッシュ読み込み版） ▼▼▼
+    // ▼▼▼ 修正版：人数可変型ライブ表示機能（1〜4人横並び対応） ▼▼▼
     function checkLiveStatus() {
         const liveSection = document.getElementById('nowOnAirSection');
         const heroArea = document.getElementById('heroLiveArea');
         const subGrid = document.getElementById('subLiveGrid');
         
-        // 一旦リセット
+        // エリアをリセット
         heroArea.innerHTML = '';
         subGrid.innerHTML = '';
+        subGrid.style.display = 'none'; // 古いサブエリアは使わないので隠す
         liveSection.style.display = 'none';
 
-        // GASから受け取ったデータ (manualLiveData) があるか確認
-        // ※GAS側で定期チェックした結果がここに入っています
+        // データがない場合は終了
         if (!manualLiveData || manualLiveData.length === 0) {
-            return; // 配信データがなければ何もしない
+            return;
         }
 
         // データを整形
         const liveVideos = manualLiveData.map(video => {
-            // URLから動画IDを抽出
             let vId = video.url;
             if (video.url.includes('v=')) {
                 vId = video.url.split('v=')[1].split('&')[0];
             } else if (video.url.includes('youtu.be/')) {
                 vId = video.url.split('youtu.be/')[1].split('?')[0];
             }
-
             return {
                 videoId: vId,
                 title: video.title,
-                channelTitle: video.name, // スプシの列名に合わせて 'name'
-                thumbnail: video.image    // スプシの列名に合わせて 'image'
+                channelTitle: video.name, 
+                thumbnail: video.image
             };
         });
 
-        // 画面に表示
+        if (liveVideos.length === 0) return;
+
+        // 配信あり：表示ON
         liveSection.style.display = 'block';
 
-        // 1つ目をメイン（大きく）表示
-        const mainVideo = liveVideos[0];
-        heroArea.innerHTML = `
-            <div class="live-hero-wrapper">
+        // ★ここがポイント：人数に合わせてクラス名を変える（layout-1, layout-2...）
+        const count = liveVideos.length;
+        const layoutClass = count >= 4 ? 'layout-4' : `layout-${count}`;
+
+        // グリッドコンテナを作成
+        const gridWrapper = document.createElement('div');
+        gridWrapper.className = `live-dynamic-grid ${layoutClass}`;
+
+        // 全員分のHTMLを生成して突っ込む
+        let html = '';
+        liveVideos.forEach(video => {
+            html += `
+            <div class="live-grid-item">
                 <div class="live-iframe-box">
-                    <iframe class="live-iframe" src="https://www.youtube.com/embed/${mainVideo.videoId}" frameborder="0" allowfullscreen></iframe>
+                    <iframe class="live-iframe" src="https://www.youtube.com/embed/${video.videoId}" frameborder="0" allowfullscreen></iframe>
                 </div>
                 <div class="live-info-bar">
                     <span class="live-status-badge">NOW ON AIR</span>
                     <div class="live-info-text">
-                        <div class="live-info-name">${mainVideo.channelTitle}</div>
-                        <div class="live-info-title">${mainVideo.title}</div>
+                        <div class="live-info-name">${video.channelTitle}</div>
+                        <div class="live-info-title">${video.title}</div>
                     </div>
                 </div>
             </div>`;
+        });
 
-        // 2つ目以降があれば、下に小さく並べる（サブグリッド）
-        if (liveVideos.length > 1) {
-            let subHtml = '';
-            for (let i = 1; i < liveVideos.length; i++) {
-                const sub = liveVideos[i];
-                subHtml += `
-                <div class="sub-live-card" onclick="window.open('https://www.youtube.com/watch?v=${sub.videoId}', '_blank')">
-                    <div style="position:relative;">
-                        <img src="${sub.thumbnail}" class="sub-live-thumb">
-                        <div style="position:absolute; top:5px; left:5px; background:red; color:white; font-size:10px; padding:2px 5px; border-radius:3px; font-weight:bold;">LIVE</div>
-                    </div>
-                    <div class="sub-live-title">${sub.title}</div>
-                </div>`;
-            }
-            subGrid.innerHTML = subHtml;
-            subGrid.style.display = 'flex';
-        } else {
-            subGrid.style.display = 'none';
-        }
+        gridWrapper.innerHTML = html;
+        heroArea.appendChild(gridWrapper);
     }
 
     // --- レンダリング関数 ---
