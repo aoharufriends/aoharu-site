@@ -3451,7 +3451,7 @@ function renderSchedule() {
         // サイト全体のテーマカラー変数を書き換え
         document.documentElement.style.setProperty('--primary', color);
     }
-    // ▼▼▼ 修正版：ビジネスお問い合わせ送信機能（スプシの列に対応） ▼▼▼
+    // ▼▼▼ 修正版：ビジネスお問い合わせ送信機能（合言葉を修正済み） ▼▼▼
     async function submitBusinessForm() {
         const company = document.getElementById('bizCompany').value;
         const name = document.getElementById('bizName').value;
@@ -3472,12 +3472,12 @@ function renderSchedule() {
         btn.disabled = true;
 
         try {
-            // ★修正ポイント：スプレッドシートの列（A:日時, B:名前, C:メアド, D:種別, E:メッセージ）に合わせてデータを送る
-            const url = `${GAS_API_URL}?action=contact` 
-                      + `&name=${encodeURIComponent(name + ' (' + company + ')')}` // B列：お名前（会社名付き）
-                      + `&email=${encodeURIComponent(email)}`                      // C列：メールアドレス
-                      + `&type=${encodeURIComponent(type)}`                        // D列：種別（★ここを追加しました！）
-                      + `&message=${encodeURIComponent('【予算】' + budget + '\n\n' + msg)}`; // E列：メッセージ（予算＋本文）
+            // ★ここを修正しました！ action=contact ではなく action=submit_contact です
+            const url = `${GAS_API_URL}?action=submit_contact` 
+                      + `&name=${encodeURIComponent(name + ' (' + company + ')')}` 
+                      + `&email=${encodeURIComponent(email)}`                      
+                      + `&type=${encodeURIComponent(type)}`                        
+                      + `&message=${encodeURIComponent('【予算】' + budget + '\n\n' + msg)}`; 
 
             await fetch(url);
 
