@@ -3299,46 +3299,51 @@ function renderSchedule() {
         }
     }
 
-    // 2. マウスストーカー（キラキラ演出）
-    let isMouseMoving = false;
+    // 2. クリック・エフェクト（クリック時にキラキラ）
     
-    document.addEventListener('mousemove', function(e) {
-        // 処理を軽くするため、毎回生成せず間引く（フラグ管理などは簡易的に省略し、動きに合わせて生成）
-        createParticle(e.clientX, e.clientY);
+    // PC：クリックした時
+    document.addEventListener('mousedown', function(e) {
+        spawnSparkles(e.clientX, e.clientY);
     });
 
-    // タッチデバイス（スマホ）でも少しキラキラさせる
-    document.addEventListener('touchmove', function(e) {
+    // スマホ：タップした時
+    document.addEventListener('touchstart', function(e) {
         const touch = e.touches[0];
-        createParticle(touch.clientX, touch.clientY);
+        spawnSparkles(touch.clientX, touch.clientY);
     }, {passive: true});
 
+    // まとめてキラキラを生成する関数
+    function spawnSparkles(x, y) {
+        // 1回のクリックで 8個 のキラキラを出す
+        for (let i = 0; i < 8; i++) {
+            createParticle(x, y);
+        }
+    }
+
     function createParticle(x, y) {
-        // パーティクル要素を作成
         const p = document.createElement('div');
         
         // 50%の確率で「星」か「光の点」にする
         if (Math.random() > 0.5) {
             p.className = 'mouse-particle star';
-            // 色をランダムに（パステルカラー）
             const colors = ['#ff9a9e', '#feca57', '#48dbfb', '#ff9ff3', '#1dd1a1'];
             p.style.color = colors[Math.floor(Math.random() * colors.length)];
         } else {
             p.className = 'mouse-particle';
         }
 
-        // 位置を設定
         p.style.left = x + 'px';
         p.style.top = y + 'px';
         
-        // 少しランダムに位置をずらす（自然に見せるため）
-        const randomX = (Math.random() - 0.5) * 20;
-        const randomY = (Math.random() - 0.5) * 20;
+        // ★修正：クリックした場所を中心に、少し広めに散らばるように設定
+        const randomX = (Math.random() - 0.5) * 80; // 横に散らばる範囲 (-40px ~ +40px)
+        const randomY = (Math.random() - 0.5) * 80; // 縦に散らばる範囲
+        
         p.style.transform = `translate(calc(-50% + ${randomX}px), calc(-50% + ${randomY}px))`;
 
         document.body.appendChild(p);
 
-        // 1秒後に要素を削除（ゴミが溜まらないように）
+        // 1秒後に消す
         setTimeout(() => {
             p.remove();
         }, 1000);
