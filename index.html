@@ -2200,7 +2200,7 @@
                     <input type="email" id="bizEmail" class="form-input" placeholder="info@example.com">
 
                     <label class="form-label">対象メンバー</label>
-                    <select id="bizBudget" class="form-select">
+                    <select id="bizBudget" class="form-select"> <label class="form-label">対象メンバー</label>>
                         <option>お問い合わせメンバー</option>
                         <option>あおはる☆フレンズへ</option>
                         <option>たく兄ちゃん</option>
@@ -2534,7 +2534,7 @@
     // ▼▼▼ あおはる⭐︎フレンズ 公式サイト 最終完全版スクリプト ▼▼▼
     // ==========================================
 
-    const GAS_API_URL = "https://script.google.com/macros/s/AKfycbzVO7j5m-Kna81YkZoX23tZK_Td8QGXswHXLJHg8XtUGE1ERLK4KkuVSQu7JBY_Vxq6kQ/exec";
+    const GAS_API_URL = "https://script.google.com/macros/s/AKfycbw3tDDd19soRt2vAuY-xCcJsXqwex135ecYxXfF90_WboBk3W-J8ywMkAX4CARx-spUhQ/exec";
     let YOUTUBE_API_KEY = ""; 
     let GROUP_CONFIG = {};
     let memberData = [];
@@ -3431,12 +3431,15 @@ function renderSchedule() {
         // サイト全体のテーマカラー変数を書き換え
         document.documentElement.style.setProperty('--primary', color);
     }
-    // ▼▼▼ 修正版：ビジネスお問い合わせ送信機能（合言葉を修正済み） ▼▼▼
+    // ▼▼▼ 修正版：ビジネスお問い合わせ送信機能（対象メンバー・予算対応） ▼▼▼
     async function submitBusinessForm() {
         const company = document.getElementById('bizCompany').value;
         const name = document.getElementById('bizName').value;
         const email = document.getElementById('bizEmail').value;
         const type = document.getElementById('bizType').value;
+        
+        // ★IDを修正した "bizTarget" を取得
+        const target = document.getElementById('bizTarget').value; 
         const budget = document.getElementById('bizBudget').value;
         const msg = document.getElementById('bizMessage').value;
 
@@ -3452,12 +3455,14 @@ function renderSchedule() {
         btn.disabled = true;
 
         try {
-            // ★ここを修正しました！ action=contact ではなく action=submit_contact です
+            // ★ GASに送るデータを追加（target, budget）
             const url = `${GAS_API_URL}?action=submit_contact` 
                       + `&name=${encodeURIComponent(name + ' (' + company + ')')}` 
                       + `&email=${encodeURIComponent(email)}`                      
-                      + `&type=${encodeURIComponent(type)}`                        
-                      + `&message=${encodeURIComponent('【予算】' + budget + '\n\n' + msg)}`; 
+                      + `&type=${encodeURIComponent(type)}`
+                      + `&target=${encodeURIComponent(target)}`   // 追加：対象メンバー
+                      + `&budget=${encodeURIComponent(budget)}`   // 追加：予算
+                      + `&message=${encodeURIComponent(msg)}`;
 
             await fetch(url);
 
@@ -3468,6 +3473,10 @@ function renderSchedule() {
             document.getElementById('bizName').value = "";
             document.getElementById('bizEmail').value = "";
             document.getElementById('bizMessage').value = "";
+            // セレクトボックスも初期値に戻す（必要なら）
+            document.getElementById('bizTarget').selectedIndex = 0;
+            document.getElementById('bizBudget').selectedIndex = 0;
+            document.getElementById('bizType').selectedIndex = 0;
             
         } catch (e) {
             console.error(e);
