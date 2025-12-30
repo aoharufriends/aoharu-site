@@ -1048,8 +1048,8 @@
         /* キャラクターボックス */
         .actor-box {
             position: absolute;
-            height: 65%; width: auto; aspect-ratio: 140 / 300;
-            bottom: 10%;
+            height: 90%; width: auto; aspect-ratio: 140 / 300;
+            bottom: 5%;
             transition: transform 0.1s;
             pointer-events: auto; /* ここは触れる */
             display: flex; flex-direction: column; align-items: center; justify-content: flex-end;
@@ -1162,7 +1162,7 @@
         .free-mob-box:hover .mob-delete-btn { opacity: 1; }
         @media (max-width: 768px) {
             .studio-watermark { width: 60px; bottom: 5px; right: 5px; }
-            .actor-box { height: 50%; } /* スマホは少し小さく */
+            .actor-box { height: 75%; } /* スマホは少し小さく */
             .c-btn { font-size: 10px; }
         }
             /* ついでに操作パネルの文字も少し小さくして見やすく */
@@ -2601,7 +2601,7 @@
             const viewer = new skinview3d.SkinViewer({
                 canvas: canvas, width: rect.width, height: rect.height, skin: defaultSkins[index], preserveDrawingBuffer: true
             });
-            viewer.fov = 50; viewer.zoom = 0.85; viewer.autoRotate = false; viewer.animation = new skinview3d.WalkingAnimation();
+            viewer.fov = 50; viewer.zoom = 0.65; viewer.autoRotate = false; viewer.animation = new skinview3d.WalkingAnimation();
             studioViewers.push(viewer);
         });
     }
