@@ -1476,6 +1476,60 @@
             0% { opacity: 1; transform: translate(-50%, -50%) scale(1); }
             100% { opacity: 0; transform: translate(-50%, 20px) scale(0.5); } /* 下に落ちながら消える */
         }
+        /* ▼▼▼ 追加：ビジネス（法人向け）ページ用スタイル ▼▼▼ */
+        .biz-header {
+            background: linear-gradient(135deg, #2c3e50, #4ca1af); /* 落ち着いた知的なグラデーション */
+            color: white;
+            padding: 60px 20px;
+            text-align: center;
+            border-radius: 0 0 30px 30px;
+            margin-bottom: 40px;
+        }
+        .biz-title-en { font-family: 'Oswald', sans-serif; font-size: 40px; letter-spacing: 3px; }
+        .biz-title-jp { font-size: 14px; opacity: 0.8; margin-top: 5px; font-weight: bold; }
+        
+        .biz-section { margin-bottom: 60px; }
+        .biz-h2 {
+            font-size: 24px; font-weight: 900; color: #2c3e50; border-left: 5px solid var(--primary);
+            padding-left: 15px; margin-bottom: 25px; font-family: 'Poppins', sans-serif; letter-spacing: 1px;
+        }
+        
+        /* サービス紹介カード */
+        .biz-card-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; }
+        .biz-card {
+            background: white; border: 1px solid #ddd; border-radius: 8px; padding: 25px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05); transition: transform 0.2s;
+        }
+        .biz-card:hover { transform: translateY(-5px); border-color: var(--primary); }
+        .biz-icon { font-size: 30px; color: var(--primary); margin-bottom: 15px; }
+        .biz-card-title { font-weight: bold; font-size: 16px; margin-bottom: 10px; color: #333; }
+        .biz-card-text { font-size: 13px; line-height: 1.6; color: #666; }
+
+        /* 数字で見る実績エリア */
+        .biz-stats-box {
+            background: #f8f9fa; border-radius: 15px; padding: 30px;
+            display: flex; justify-content: space-around; flex-wrap: wrap; gap: 20px;
+            border: 1px solid #eee;
+        }
+        .biz-stat-item { text-align: center; min-width: 120px; }
+        .biz-stat-num { font-size: 32px; font-weight: 900; color: var(--primary); font-family: 'Oswald', sans-serif; }
+        .biz-stat-label { font-size: 12px; font-weight: bold; color: #555; }
+
+        /* ビジネスフォーム */
+        .biz-form-area { background: white; padding: 40px; border-radius: 10px; border: 1px solid #ccc; box-shadow: 0 10px 30px rgba(0,0,0,0.05); }
+        .biz-btn {
+            background: #2c3e50; color: white; width: 100%; padding: 15px; border: none;
+            border-radius: 5px; font-weight: bold; cursor: pointer; transition: 0.3s; margin-top: 20px;
+        }
+        .biz-btn:hover { background: #34495e; box-shadow: 0 5px 15px rgba(44, 62, 80, 0.3); }
+
+        /* ダークモード時の調整 */
+        body.dark-mode .biz-header { background: linear-gradient(135deg, #0f2027, #203a43, #2c5364); }
+        body.dark-mode .biz-h2 { color: #e0f7ff; }
+        body.dark-mode .biz-card, body.dark-mode .biz-form-area, body.dark-mode .biz-stats-box { background: #16213e; border-color: #0f3460; color: #e0f7ff; }
+        body.dark-mode .biz-card-title { color: #fff; }
+        body.dark-mode .biz-card-text, body.dark-mode .biz-stat-label { color: #aaa; }
+        body.dark-mode .biz-btn { background: var(--primary); color: #000; }
     </style>
 </head>
 <body>
@@ -1514,6 +1568,7 @@
         <a href="javascript:void(0)" class="menu-link" onclick="showPage('guideline')">GUIDELINE</a> 
         <a href="javascript:void(0)" class="menu-link" onclick="showPage('rakugaki')">GRAFFITI</a>
         <a href="javascript:void(0)" class="menu-link" onclick="showPage('studio')">STUDIO</a>
+        <a href="javascript:void(0)" class="menu-link" onclick="showPage('business')">BUSINESS <span style="font-size:10px; color:#999;">(法人の方へ)</span></a>
         <a href="javascript:void(0)" class="menu-link" onclick="openLoginModal(); toggleMenu();" style="color:var(--primary);">LOGIN</a>
     </div>
     <div id="overlay" class="overlay" onclick="toggleMenu()"></div>
@@ -1982,17 +2037,15 @@
             </div>
         </div>
     </div>
-
 <div id="rakugaki" class="page">
         <div class="page-header">
             <div class="page-title-en" style="color:#f1c40f;">GRAFFITI</div>
             <div class="page-title-jp">みんなの黒板落書き</div>
-            
             <p style="margin-top: 20px; font-size: 14px; color: #666; line-height: 1.8; font-weight: bold;">
                 推しへの愛をキャンバスに！🎨<br>
                 イラストや応援メッセージを自由に描いて投稿しよう！
             </p>
-            </div>
+        </div>
         <div class="container">
             <div class="board-container">
                 <canvas id="drawCanvas"></canvas>                
@@ -2049,7 +2102,122 @@
             </div>
         </div>
     </div>
-</div>    
+
+    <div id="business" class="page">
+        <div class="biz-header">
+            <div class="biz-title-en">BUSINESS</div>
+            <div class="biz-title-jp">法人・企業様向け窓口</div>
+            <p style="font-size:12px; margin-top:15px; opacity:0.9;">
+                あおはる⭐︎フレンズとのタイアップ・コラボレーションについて
+            </p>
+        </div>
+
+        <div class="container">
+            <div class="biz-section">
+                <div class="biz-h2">ABOUT US</div>
+                <p style="font-size:14px; line-height:1.8; color:var(--text-main); margin-bottom:20px;">
+                    「あおはる⭐︎フレンズ」は、2026年にデビューした4人組VTuberグループです。<br>
+                    "青春"をテーマに、ゲーム実況、音楽活動、バラエティ企画など多岐にわたるエンターテインメントを提供しています。<br>
+                    10代〜20代の若年層を中心に、熱量の高いファンコミュニティを形成しています。
+                </p>
+                
+                <div class="biz-stats-box">
+                    <div class="biz-stat-item">
+                        <div class="biz-stat-num">100,000+</div>
+                        <div class="biz-stat-label">総SNSフォロワー数</div>
+                    </div>
+                    <div class="biz-stat-item">
+                        <div class="biz-stat-num">12.5%</div>
+                        <div class="biz-stat-label">平均エンゲージメント率</div>
+                    </div>
+                    <div class="biz-stat-item">
+                        <div class="biz-stat-num">4:6</div>
+                        <div class="biz-stat-label">男女比 M/F</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="biz-section">
+                <div class="biz-h2">SERVICE</div>
+                <div class="biz-card-grid">
+                    <div class="biz-card">
+                        <div class="biz-icon"><i class="fas fa-bullhorn"></i></div>
+                        <div class="biz-card-title">商品・サービスPR</div>
+                        <div class="biz-card-text">
+                            YouTube配信やSNSでの商品紹介を行います。ゲーム、アプリ、食品、ガジェットなど、メンバーの個性に合わせた自然な訴求が可能です。
+                        </div>
+                    </div>
+                    <div class="biz-card">
+                        <div class="biz-icon"><i class="fas fa-handshake"></i></div>
+                        <div class="biz-card-title">コラボグッズ制作</div>
+                        <div class="biz-card-text">
+                            貴社IPやブランドとのコラボレーショングッズの企画・販売。描き下ろしイラストを使用した限定アイテムの展開など。
+                        </div>
+                    </div>
+                    <div class="biz-card">
+                        <div class="biz-icon"><i class="fas fa-microphone-alt"></i></div>
+                        <div class="biz-card-title">イベント出演・MC</div>
+                        <div class="biz-card-text">
+                            オンライン・オフライン問わず、イベントへのゲスト出演や司会進行。歌唱ライブの実施などもご相談ください。
+                        </div>
+                    </div>
+                    <div class="biz-card">
+                        <div class="biz-icon"><i class="fas fa-music"></i></div>
+                        <div class="biz-card-title">楽曲タイアップ</div>
+                        <div class="biz-card-text">
+                            オリジナル楽曲の制作、貴社CMソングの歌唱など、音楽を通じたプロモーション活動。
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="biz-section">
+                <div class="biz-h2">CONTACT</div>
+                <p style="font-size:12px; color:var(--text-sub); margin-bottom:20px;">
+                    お仕事のご依頼、ご相談はこちらのフォームよりお願いいたします。<br>
+                    担当者より3営業日以内にご連絡させていただきます。
+                </p>
+                
+                <div class="biz-form-area">
+                    <label class="form-label">貴社名 / 団体名 <span style="color:red">*</span></label>
+                    <input type="text" id="bizCompany" class="form-input" placeholder="株式会社あおはる">
+
+                    <label class="form-label">ご担当者様名 <span style="color:red">*</span></label>
+                    <input type="text" id="bizName" class="form-input" placeholder="山田 太郎">
+
+                    <label class="form-label">メールアドレス <span style="color:red">*</span></label>
+                    <input type="email" id="bizEmail" class="form-input" placeholder="info@example.com">
+
+                    <label class="form-label">お問い合わせ種別</label>
+                    <select id="bizType" class="form-select">
+                        <option>PR・プロモーション依頼</option>
+                        <option>コラボレーションのご相談</option>
+                        <option>イベント出演依頼</option>
+                        <option>取材・メディア掲載</option>
+                        <option>その他</option>
+                    </select>
+
+                    <label class="form-label">ご予算感（任意）</label>
+                    <select id="bizBudget" class="form-select">
+                        <option>未定</option>
+                        <option>〜50万円</option>
+                        <option>50〜100万円</option>
+                        <option>100〜300万円</option>
+                        <option>300万円〜</option>
+                    </select>
+
+                    <label class="form-label">お問い合わせ内容詳細 <span style="color:red">*</span></label>
+                    <textarea id="bizMessage" class="form-textarea" rows="6" placeholder="企画の概要、実施時期、ご要望などをご記入ください"></textarea>
+
+                    <button class="biz-btn" onclick="submitBusinessForm()">上記の内容で送信する</button>
+                </div>
+            </div>
+
+            <div style="text-align:center;">
+                <button onclick="showPage('top')" class="more-btn">TOPへ戻る</button>
+            </div>
+        </div>
+    </div>   
 <div id="studio" class="page">
         <div class="page-header">
             <div class="page-title-en" style="color:#e1b12c;">STUDIO</div>
@@ -2250,6 +2418,8 @@
                     <li><a href="javascript:void(0)" onclick="showPage('guideline')">GUIDELINE<span class="footer-menu-ja">ガイドライン</span></a></li> 
                     <li><a href="javascript:void(0)" onclick="showPage('rakugaki')">GRAFFITI<span class="footer-menu-ja">落書き広場</span></a></li>
                     <li><a href="javascript:void(0)" onclick="showPage('studio')">STUDIO<span class="footer-menu-ja">スタジオ</span></a></li>
+                    
+                    <li><a href="javascript:void(0)" onclick="showPage('business')">BUSINESS<span class="footer-menu-ja">法人の方へ</span></a></li>
                     <li><a href="javascript:void(0)" onclick="openLoginModal()">LOGIN<span class="footer-menu-ja">ログイン</span></a></li>
                 </ul>
             </div>
@@ -3280,6 +3450,52 @@ function renderSchedule() {
     function changeTheme(color) {
         // サイト全体のテーマカラー変数を書き換え
         document.documentElement.style.setProperty('--primary', color);
+    }
+// ▼▼▼ 修正版：ビジネスお問い合わせ送信機能（実際にGASに送る） ▼▼▼
+    async function submitBusinessForm() {
+        const company = document.getElementById('bizCompany').value;
+        const name = document.getElementById('bizName').value;
+        const email = document.getElementById('bizEmail').value;
+        const type = document.getElementById('bizType').value;
+        const budget = document.getElementById('bizBudget').value;
+        const msg = document.getElementById('bizMessage').value;
+
+        if(!company || !name || !email || !msg) {
+            alert("必須項目（*）を入力してください。");
+            return;
+        }
+
+        if(!confirm("この内容で企業案件・お問い合わせを送信しますか？")) return;
+
+        const btn = document.querySelector('.biz-btn');
+        btn.innerText = "送信中...";
+        btn.disabled = true;
+
+        try {
+            // GASにデータを送信
+            // action=business_contact として送信します（GAS側での対応が必要な場合がありますが、まずはcontactとして送ります）
+            const url = `${GAS_API_URL}?action=contact` 
+                      + `&name=${encodeURIComponent(name + ' (' + company + ')')}` // 名前欄に会社名も含める
+                      + `&email=${encodeURIComponent(email)}` 
+                      + `&message=${encodeURIComponent('【種別】' + type + '\n【予算】' + budget + '\n\n' + msg)}`;
+
+            await fetch(url);
+
+            alert("お問い合わせを受け付けました。\n担当者よりご連絡させていただきます。");
+            
+            // フォームをクリア
+            document.getElementById('bizCompany').value = "";
+            document.getElementById('bizName').value = "";
+            document.getElementById('bizEmail').value = "";
+            document.getElementById('bizMessage').value = "";
+            
+        } catch (e) {
+            console.error(e);
+            alert("送信に失敗しました。時間をおいて再度お試しください。");
+        } finally {
+            btn.disabled = false;
+            btn.innerText = "上記の内容で送信する";
+        }
     }
     // ▼▼▼ 追加機能：ダークモード＆マウスストーカー ▼▼▼
 
