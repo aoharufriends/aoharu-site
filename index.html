@@ -1388,6 +1388,94 @@
             border: 2px solid white;
             box-shadow: 0 2px 5px rgba(0,0,0,0.3);
         }
+        /* ▼▼▼ 追加：ダークモード（ゲーミング/サイバー）の設定 ▼▼▼ */
+        body.dark-mode {
+            /* サイバーパンク風の配色に上書き */
+            --bg-color: #050510;       /* 超濃い紺色（ほぼ黒） */
+            --text-main: #e0f7ff;      /* 発光するような白水色 */
+            --text-sub: #8899a6;       /* くすんだ青グレー */
+            --light-bg: #1a1a2e;       /* カード背景用の暗い色 */
+            --primary: #00f3ff;        /* ネオンシアン */
+        }
+
+        /* ダークモード時のカードの見た目 */
+        body.dark-mode .news-card,
+        body.dark-mode .schedule-card,
+        body.dark-mode .member-card-vertical,
+        body.dark-mode .radio-theme-box,
+        body.dark-mode .letter-form,
+        body.dark-mode .guideline-box,
+        body.dark-mode .maker-container,
+        body.dark-mode .contact-form,
+        body.dark-mode .diary-card {
+            background: #16213e;       /* 暗いネイビー */
+            border-color: #0f3460;     /* 枠線も暗く */
+            color: #e0f7ff;            /* 文字色 */
+            box-shadow: 0 0 15px rgba(0, 243, 255, 0.1); /* ほんのり光らせる */
+        }
+
+        /* ダークモード時のヘッダー */
+        body.dark-mode header,
+        body.dark-mode .breadcrumb-nav {
+            background: rgba(5, 5, 16, 0.9); /* 黒っぽく透過 */
+            border-bottom: 1px solid #0f3460;
+        }
+        
+        /* ダークモード切替スイッチのデザイン */
+        .theme-switch-btn {
+            cursor: pointer;
+            font-size: 20px;
+            margin-right: 15px;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: #eee;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: 0.3s;
+            box-shadow: inset 0 2px 5px rgba(0,0,0,0.1);
+        }
+        /* ダークモードONの時のスイッチ */
+        body.dark-mode .theme-switch-btn {
+            background: #0f3460;
+            color: #ffeb3b; /* 月の色（黄色） */
+            box-shadow: 0 0 10px #ffeb3b; /* 発光 */
+        }
+
+        /* ▼▼▼ 追加：マウスストーカー（キラキラパーティクル） ▼▼▼ */
+        .mouse-particle {
+            position: fixed;
+            top: 0;
+            left: 0;
+            pointer-events: none;
+            z-index: 9999;
+            width: 10px;
+            height: 10px;
+            background: radial-gradient(circle, #fff, transparent); /* 光る点 */
+            border-radius: 50%;
+            transform: translate(-50%, -50%); /* 中心に合わせる */
+            animation: particle-fade 1s forwards; /* 1秒で消える */
+        }
+        /* 星の形にするバリエーション */
+        .mouse-particle.star {
+            background: none;
+            width: 15px;
+            height: 15px;
+            color: #FFD700; /* 金色 */
+            font-size: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .mouse-particle.star::before {
+            content: "✦"; /* キラキラ記号 */
+        }
+
+        @keyframes particle-fade {
+            0% { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+            100% { opacity: 0; transform: translate(-50%, 20px) scale(0.5); } /* 下に落ちながら消える */
+        }
     </style>
 </head>
 <body>
@@ -1402,6 +1490,11 @@
         <img src="logo.png" alt="AOHARU FRIENDS" class="logo-img" onclick="showPage('top')" id="headerLogo">
         <div class="header-right">
             <div id="themeColorButtons" class="theme-btn-container"></div>
+            
+            <div class="theme-switch-btn" onclick="toggleDarkMode()" title="昼/夜 切り替え">
+                <i class="fas fa-sun" id="themeIcon"></i>
+            </div>
+
             <div id="headerLoginBtn" class="login-btn-header" onclick="openLoginModal()">LOGIN</div>
             <div class="menu-btn" onclick="toggleMenu()"><span style="margin-top:-2px;">☰</span></div>
         </div>
@@ -3187,6 +3280,68 @@ function renderSchedule() {
     function changeTheme(color) {
         // サイト全体のテーマカラー変数を書き換え
         document.documentElement.style.setProperty('--primary', color);
+    }
+    // ▼▼▼ 追加機能：ダークモード＆マウスストーカー ▼▼▼
+
+    // 1. ダークモード切り替え機能
+    function toggleDarkMode() {
+        const body = document.body;
+        const icon = document.getElementById('themeIcon');
+        
+        // クラスを付け外し（トグル）
+        body.classList.toggle('dark-mode');
+        
+        // アイコンを太陽(sun)と月(moon)で切り替え
+        if (body.classList.contains('dark-mode')) {
+            icon.className = 'fas fa-moon';
+        } else {
+            icon.className = 'fas fa-sun';
+        }
+    }
+
+    // 2. マウスストーカー（キラキラ演出）
+    let isMouseMoving = false;
+    
+    document.addEventListener('mousemove', function(e) {
+        // 処理を軽くするため、毎回生成せず間引く（フラグ管理などは簡易的に省略し、動きに合わせて生成）
+        createParticle(e.clientX, e.clientY);
+    });
+
+    // タッチデバイス（スマホ）でも少しキラキラさせる
+    document.addEventListener('touchmove', function(e) {
+        const touch = e.touches[0];
+        createParticle(touch.clientX, touch.clientY);
+    }, {passive: true});
+
+    function createParticle(x, y) {
+        // パーティクル要素を作成
+        const p = document.createElement('div');
+        
+        // 50%の確率で「星」か「光の点」にする
+        if (Math.random() > 0.5) {
+            p.className = 'mouse-particle star';
+            // 色をランダムに（パステルカラー）
+            const colors = ['#ff9a9e', '#feca57', '#48dbfb', '#ff9ff3', '#1dd1a1'];
+            p.style.color = colors[Math.floor(Math.random() * colors.length)];
+        } else {
+            p.className = 'mouse-particle';
+        }
+
+        // 位置を設定
+        p.style.left = x + 'px';
+        p.style.top = y + 'px';
+        
+        // 少しランダムに位置をずらす（自然に見せるため）
+        const randomX = (Math.random() - 0.5) * 20;
+        const randomY = (Math.random() - 0.5) * 20;
+        p.style.transform = `translate(calc(-50% + ${randomX}px), calc(-50% + ${randomY}px))`;
+
+        document.body.appendChild(p);
+
+        // 1秒後に要素を削除（ゴミが溜まらないように）
+        setTimeout(() => {
+            p.remove();
+        }, 1000);
     }
 </script>
 </body>
