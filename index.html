@@ -330,6 +330,50 @@
             .tl-body-box { flex-direction: column; gap: 5px; }
             .tl-thumb-img { width: 100%; max-width: 200px; }
         }
+        /* ▼▼▼ 追加：スケジュール用アイコンのデザイン ▼▼▼ */
+        .tl-icons-row {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-top: 5px;
+        }
+        /* メンバーアイコン */
+        .tl-member-icon {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            border: 2px solid white;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            object-fit: cover;
+            background: #eee;
+        }
+        /* 媒体アイコン */
+        .tl-platform-icon {
+            width: 20px;
+            height: 20px;
+            object-fit: contain;
+            filter: drop-shadow(0 1px 2px rgba(0,0,0,0.1));
+        }
+        
+        /* TOPページのカード用調整 */
+        .sch-icons-overlay {
+            position: absolute;
+            bottom: 5px;
+            right: 5px;
+            display: flex;
+            gap: 5px;
+            z-index: 3;
+        }
+        .sch-mini-icon {
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            border: 1px solid white;
+            background: white;
+            padding: 2px;
+            box-sizing: border-box;
+            object-fit: cover;
+        }
 
         /* TOPページのカード（サムネ対応） */
         .schedule-card { flex: 0 0 160px; background: white; border-radius: 8px; overflow: hidden; box-shadow: 0 2px 5px rgba(0,0,0,0.05); transition: transform 0.3s; scroll-snap-align: start; text-align: center; border: 1px solid #eee; } 
@@ -2054,7 +2098,7 @@
     // ▼▼▼ あおはる⭐︎フレンズ 公式サイト 最終完全版スクリプト ▼▼▼
     // ==========================================
 
-    const GAS_API_URL = "https://script.google.com/macros/s/AKfycbwa6bG9eusANCCOiixVR9ij3bce2MWsUO4NeaCpGICP5w1QGAlwkMQFmhfMuATbJcCq/exec";
+    const GAS_API_URL = "https://script.google.com/macros/s/AKfycby_qq3_EBcgITkVStFSbca1JmVeh2B3Dv3Xd72ycSwXd1uxSJJ9MDKlgFCzC3_heFKMWQ/exec";
     let YOUTUBE_API_KEY = ""; 
     let GROUP_CONFIG = {};
     let memberData = [];
@@ -2395,23 +2439,48 @@
     }
 
     function renderSchedule() {
-        // ▼ TOPページ用カード（クリック対応！）
-        const topScheduleHtml = scheduleData.map((s, i) => { // ← (s, i) に変更！
+        // ▼ TOPページ用カード
+        const topScheduleHtml = scheduleData.map((s, i) => {
             let bgHtml = '';
-            let boxClass = 'sch-thumb-box no-img'; 
+            let boxClass = 'sch-thumb-box no-img';
             
             if (s.img && s.img !== "") {
-                bgHtml = `<img src="${s.img}" class="sch-bg-img"><div style="position:absolute; inset:0; background:rgba(0,0,0,0.3); z-index:1;"></div>`;
+                bgHtml = `<img src="${s.img}" class="sch-bg-img" style="width:100%; height:100%; object-fit:cover; position:absolute; inset:0; z-index:0;"><div style="position:absolute; inset:0; background:rgba(0,0,0,0.4); z-index:1;"></div>`;
                 boxClass = 'sch-thumb-box';
             }
 
-            // onclick="openScheduleModal(i)" を追加！
+            // ★アイコン生成（TOP用・複数対応版）
+            let iconsHtml = '';
+            // 媒体アイコン（複数対応）
+            if (s.platform) {
+                // カンマで区切って配列にする
+                s.platform.split(',').forEach(pf => {
+                    pf = pf.trim(); // 前後の空白を削除
+                    if(pf) {
+                        iconsHtml += `<img src="icon_pf_${pf}.png" class="sch-mini-icon" onerror="this.style.display='none'">`;
+                    }
+                });
+            }
+            // メンバーアイコン（1人想定だが、念のため同じ処理にしておく）
+            if (s.member) {
+                 s.member.split(',').forEach(mem => {
+                    mem = mem.trim();
+                    if(mem) {
+                        iconsHtml += `<img src="icon_sch_${mem}.png" class="sch-mini-icon" style="border-radius:50%;" onerror="this.style.display='none'">`;
+                    }
+                });
+            }
+
             return `
-            <div class="schedule-card" onclick="openScheduleModal(${i})">
-                <div class="${boxClass}">
+            <div class="schedule-card" onclick="openScheduleModal(${i})" style="cursor:pointer;">
+                <div class="${boxClass}" style="position:relative; overflow:hidden;">
                     ${bgHtml}
-                    <div class="sch-date-big">${s.date}</div>
-                    <div class="sch-time-big">${s.time}</div>
+                    <div class="sch-date-big" style="position:relative; z-index:2;">${s.date}</div>
+                    <div class="sch-time-big" style="position:relative; z-index:2;">${s.time}</div>
+                    
+                    <div class="sch-icons-overlay">
+                        ${iconsHtml}
+                    </div>
                 </div>
                 <div class="sch-info">
                     <span class="sch-badge-mini">配信</span>
@@ -2420,28 +2489,50 @@
             </div>`;
         }).join('');
 
-        // ▼ 個別ページ用リスト（こちらもクリック対応！）
-        const tlHtml = scheduleData.map((s, i) => { // ← (s, i) に変更！
+        // ▼ 個別ページ用リスト
+        const tlHtml = scheduleData.map((s, i) => {
             let thumbHtml = '';
             if (s.img && s.img !== "") {
-                thumbHtml = `<img src="${s.img}" class="tl-thumb-img">`;
+                thumbHtml = `<img src="${s.img}" class="tl-thumb-img" style="width:120px; aspect-ratio:16/9; object-fit:cover; border-radius:6px; margin-right:15px; display:block;">`;
             }
 
-            // onclick="openScheduleModal(i)" を追加！
+            // ★アイコン生成（リスト用・複数対応版）
+            let platformIconsHtml = '';
+            if (s.platform) {
+                s.platform.split(',').forEach(pf => {
+                    pf = pf.trim();
+                    if(pf) {
+                        platformIconsHtml += `<img src="icon_pf_${pf}.png" class="tl-platform-icon" title="${pf}">`;
+                    }
+                });
+            }
+            
+            let memberIconHtml = '';
+             if (s.member) {
+                // メンバーも複数入れる可能性があるならここもforEachに変更可。今回は1人想定のままにしてます
+                memberIconHtml = `<img src="icon_sch_${s.member}.png" class="tl-member-icon" title="${s.member}" onerror="this.style.display='none'">`;
+            }
+
             return `
             <div class="timeline-item" onclick="openScheduleModal(${i})" style="cursor:pointer;">
                 <div class="tl-icon-box">
                     <div class="tl-icon"><i class="fas fa-video"></i></div>
                 </div>
                 <div class="tl-content">
-                    <div class="tl-date">${s.date} <span style="font-size:12px;color:#888;">${s.time}</span></div>
-                    
-                    <div class="tl-body-box">
-                        ${thumbHtml}
-                        <div class="tl-title">${s.content}</div>
+                    <div style="display:flex; justify-content:space-between; align-items:center;">
+                        <div class="tl-date">${s.date} <span style="font-size:12px;color:#888;">${s.time}</span></div>
+                        <div class="tl-icons-row">
+                            ${platformIconsHtml}
+                            ${memberIconHtml}
+                        </div>
                     </div>
                     
-                    <span class="tl-tag">配信</span>
+                    <div class="tl-body-box" style="display:flex; align-items:flex-start; margin-top:5px;">
+                        ${thumbHtml}
+                        <div class="tl-title" style="flex:1;">${s.content}</div>
+                    </div>
+                    
+                    <span class="tl-tag" style="margin-top:5px; display:inline-block;">配信</span>
                 </div>
             </div>`;
         }).join('');
@@ -2727,7 +2818,7 @@
         // 閉じるボタン自体を隠す
         document.getElementById('pickupCloseBtn').style.display = "none";
     }
-// ▼ スケジュール詳細を開く関数
+// ▼ スケジュール詳細を開く関数（アイコン対応版）
     function openScheduleModal(index) {
         const s = scheduleData[index];
         if(!s) return;
@@ -2746,12 +2837,37 @@
             img.style.display = "none";
         }
 
-        document.getElementById('scheduleModal').classList.add('open');
-    }
+        // ★追加：詳細画面にもアイコンを表示するための処理
+        // (詳細画面にアイコン用のエリアがない場合は、タイトルの上に追加します)
+        let iconsHtml = '';
+        if (s.platform) {
+            s.platform.split(',').forEach(pf => {
+                pf = pf.trim();
+                if(pf) iconsHtml += `<img src="icon_pf_${pf}.png" style="width:24px; height:24px; object-fit:contain; margin-right:5px;">`;
+            });
+        }
+        if (s.member) {
+            s.member.split(',').forEach(mem => {
+                mem = mem.trim();
+                if(mem) iconsHtml += `<img src="icon_sch_${mem}.png" style="width:30px; height:30px; border-radius:50%; object-fit:cover; margin-left:5px; border:1px solid #ccc;">`;
+            });
+        }
 
-    // ▼ 閉じる関数
-    function closeScheduleModal() {
-        document.getElementById('scheduleModal').classList.remove('open');
+        // アイコンを表示する場所を作る（なければ作る）
+        let iconContainer = document.getElementById('schModalIcons');
+        if (!iconContainer) {
+            iconContainer = document.createElement('div');
+            iconContainer.id = 'schModalIcons';
+            iconContainer.style.marginTop = '10px';
+            iconContainer.style.display = 'flex';
+            iconContainer.style.alignItems = 'center';
+            // タイトルの手前に挿入
+            const titleEl = document.getElementById('schModalTitle');
+            titleEl.parentNode.insertBefore(iconContainer, titleEl);
+        }
+        iconContainer.innerHTML = iconsHtml;
+
+        document.getElementById('scheduleModal').classList.add('open');
     }
 </script>
 </body>
