@@ -78,6 +78,34 @@
         .logged-in-user { font-weight: bold; color: var(--text-main); font-size: 14px; background: #e0f7ff; padding: 5px 15px; border-radius: 20px; }
         .menu-btn { width: 40px; height: 40px; background: var(--primary); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-size: 20px; cursor: pointer; box-shadow: 0 4px 10px rgba(39, 198, 245, 0.4); }
 
+        /* ▼▼▼ 追加：カラーチェンジボタンのスタイル ▼▼▼ */
+        .theme-btn-container { 
+            display: flex; 
+            gap: 8px; 
+            margin-right: 15px; 
+            align-items: center; 
+        }
+        .theme-btn { 
+            width: 32px; 
+            height: 32px; 
+            border-radius: 50%; 
+            border: 2px solid white; 
+            cursor: pointer; 
+            background-size: cover; 
+            background-position: center; 
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2); 
+            transition: transform 0.2s, border-color 0.2s; 
+        }
+        .theme-btn:hover { 
+            transform: scale(1.2); 
+            border-color: var(--primary); 
+        }
+        /* スマホ向け調整 */
+        @media (max-width: 480px) {
+            .theme-btn { width: 24px; height: 24px; }
+            .theme-btn-container { gap: 5px; margin-right: 10px; }
+        }
+
         /* ナビゲーション */
         .breadcrumb-nav { position: fixed; top: 70px; left: 0; width: 100%; padding: 10px 20px; background: rgba(255, 255, 255, 0.95); z-index: 900; display: none; align-items: center; font-size: 14px; font-family: 'Poppins', sans-serif; border-bottom: 1px solid #eee; box-sizing: border-box; }
         .bc-item { color: var(--text-sub); text-decoration: none; display: flex; align-items: center; font-weight: bold; transition: color 0.2s; } .bc-item:hover { color: var(--primary); } .bc-icon { font-size: 16px; margin-bottom: 2px; } .bc-sep { margin: 0 10px; color: #ccc; font-size: 10px; } .bc-current { color: var(--primary); font-weight: bold; }
@@ -1373,6 +1401,7 @@
     <header>
         <img src="logo.png" alt="AOHARU FRIENDS" class="logo-img" onclick="showPage('top')" id="headerLogo">
         <div class="header-right">
+            <div id="themeColorButtons" class="theme-btn-container"></div>
             <div id="headerLoginBtn" class="login-btn-header" onclick="openLoginModal()">LOGIN</div>
             <div class="menu-btn" onclick="toggleMenu()"><span style="margin-top:-2px;">☰</span></div>
         </div>
@@ -2283,6 +2312,7 @@
             handleLocation(); 
             renderGraffitiList(); 
             initBackgroundShapes();
+            renderThemeButtons();
             const loader = document.getElementById('loadingScreen');
             if(loader) {
                 loader.classList.add('loaded');
@@ -3115,6 +3145,48 @@ function renderSchedule() {
             }
             container.appendChild(shape);
         }
+    }
+    // ▼▼▼ 追加：カラーチェンジ機能（ファイル名修正版） ▼▼▼
+    function renderThemeButtons() {
+        const container = document.getElementById('themeColorButtons');
+        if(!container) return;
+        
+        let html = '';
+        
+        // 1. あおはる☆フレンズモード（デフォルト水色 #27C6F5）
+        html += `<div class="theme-btn" style="background-image:url('icon.png');" onclick="changeTheme('#27C6F5')" title="あおはる☆フレンズ"></div>`;
+        
+        // 2. メンバー4人のモード
+        if(memberData && memberData.length > 0) {
+            memberData.forEach(m => {
+                // ★修正：ファイル名を正しく生成するロジック
+                let fileName = 'default';
+                if (m.enName) {
+                    let name = m.enName.toLowerCase(); // まず小文字にする
+                    
+                    // スペースがある場合（例: "Togami Yua"）→ 後ろの "yua" を使う
+                    if (name.includes(' ')) {
+                        name = name.split(' ').pop();
+                    }
+                    // ハイフンがある場合（例: "Taku-niichan"）→ 前の "taku" を使う
+                    if (name.includes('-')) {
+                        name = name.split('-')[0];
+                    }
+                    
+                    fileName = name;
+                }
+                
+                // 生成したファイル名（taku, yua, iyo, ao）を使用
+                html += `<div class="theme-btn" style="background-image:url('icon_sch_${fileName}.png');" onclick="changeTheme('${m.color}')" title="${m.name}"></div>`;
+            });
+        }
+        
+        container.innerHTML = html;
+    }
+
+    function changeTheme(color) {
+        // サイト全体のテーマカラー変数を書き換え
+        document.documentElement.style.setProperty('--primary', color);
     }
 </script>
 </body>
