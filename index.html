@@ -312,7 +312,7 @@
             z-index: 1;
         }
 
-        /* スケジュール */
+        /* ▼▼▼ スケジュール（サムネ対応版） ▼▼▼ */
         .timeline-container { position: relative; padding: 20px 0; }
         .timeline-container::before { content: ''; position: absolute; top: 0; left: 24px; height: 100%; width: 2px; background: #eee; }
         .timeline-item { display: flex; margin-bottom: 25px; position: relative; }
@@ -323,23 +323,54 @@
         .tl-title { font-weight: bold; font-size: 15px; margin-bottom: 5px; }
         .tl-tag { font-size: 11px; background: #eee; padding: 2px 8px; border-radius: 4px; color: #666; }
 
-        /* グッズ */
-        .goods-hero { background: #f9f9f9; border-radius: 15px; padding: 30px; text-align: center; margin-bottom: 40px; }
-        .goods-hero h3 { margin: 0 0 10px 0; color: var(--primary); font-family: 'Poppins', sans-serif; }
-        .goods-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 15px; }
-        .goods-item { background: white; padding: 10px; border-radius: 10px; text-align: center; box-shadow: 0 2px 5px rgba(0,0,0,0.05); border: 1px solid #eee; transition: 0.3s; cursor: pointer; }
-        .goods-item:hover { transform: translateY(-5px); border-color: var(--primary); }
-        .goods-name { font-size: 13px; font-weight: bold; height: 2.8em; overflow: hidden; line-height: 1.4; }
-        .goods-price { font-family: 'Poppins', sans-serif; color: var(--primary); font-weight: bold; margin-top: 5px; }
-        .goods-img { width: 100%; aspect-ratio: 1 / 1; object-fit: cover; border-radius: 8px; margin-bottom: 10px; background-color:#eee; }
+        /* 個別ページのサムネイル */
+        .tl-body-box { display: flex; gap: 15px; margin-bottom: 5px; align-items: flex-start; }
+        .tl-thumb-img { width: 120px; aspect-ratio: 16/9; object-fit: cover; border-radius: 6px; flex-shrink: 0; border: 1px solid #eee; display: block; }
+        @media (max-width: 480px) {
+            .tl-body-box { flex-direction: column; gap: 5px; }
+            .tl-thumb-img { width: 100%; max-width: 200px; }
+        }
+
+        /* TOPページのカード（サムネ対応） */
+        .schedule-card { flex: 0 0 160px; background: white; border-radius: 8px; overflow: hidden; box-shadow: 0 2px 5px rgba(0,0,0,0.05); transition: transform 0.3s; scroll-snap-align: start; text-align: center; border: 1px solid #eee; } 
+        .schedule-card:hover { transform: translateY(-3px); border-color: var(--primary); } 
         
-        #goodsModal .modal-content { text-align: left; padding: 25px; }
-        #goodsModalImg { width: 100%; max-height: 300px; object-fit: contain; border-radius: 8px; margin-bottom: 15px; background: #fff; }
-        #goodsModalTitle { font-size: 18px; font-weight: bold; margin-bottom: 5px; }
-        #goodsModalPrice { font-size: 20px; font-weight: bold; color: var(--primary); font-family: 'Poppins', sans-serif; margin-bottom: 15px; }
-        #goodsModalDesc { font-size: 14px; line-height: 1.6; color: #555; margin-bottom: 20px; white-space: pre-wrap; }
-        .buy-btn { display: block; width: 100%; text-align: center; background: var(--primary); color: white; padding: 12px; border-radius: 30px; text-decoration: none; font-weight: bold; transition: 0.2s; box-sizing: border-box; }
-        .buy-btn:hover { opacity: 0.9; transform: translateY(-2px); }
+        .sch-thumb-box { 
+            background: linear-gradient(135deg, var(--primary), #89CFF0); 
+            color: white; 
+            padding: 0; /* 画像のためにパディングなしに */
+            display: flex; 
+            flex-direction: column; 
+            justify-content: center; 
+            align-items: center; 
+            aspect-ratio: 16 / 9; 
+            position: relative; /* 重ね合わせ用 */
+            overflow: hidden;
+        }
+        
+        /* 画像がある場合 */
+        .sch-bg-img {
+            width: 100%; height: 100%; object-fit: cover; position: absolute; top: 0; left: 0; z-index: 0;
+        }
+        /* 画像の上に載せる文字 */
+        .sch-date-big, .sch-time-big { 
+            position: relative; z-index: 2; /* 画像より手前 */
+            font-family: 'Poppins', sans-serif; 
+            text-shadow: 0 2px 5px rgba(0,0,0,0.8); /* 文字が見えるように影 */
+        }
+        .sch-date-big { font-size: 16px; font-weight: bold; margin-top: 10px; }
+        .sch-time-big { font-size: 12px; margin-top: 3px; margin-bottom: 10px; }
+
+        /* 画像がない場合のデフォルト背景（日付の位置調整） */
+        .sch-thumb-box.no-img .sch-date-big, 
+        .sch-thumb-box.no-img .sch-time-big {
+            text-shadow: none;
+        }
+        .sch-thumb-box.no-img { padding: 10px 0; }
+
+        .sch-info { padding: 8px; } 
+        .sch-title { font-size: 10px; font-weight: bold; margin-bottom: 2px; color: var(--text-main); display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; line-height: 1.4; text-align: left; } 
+        .sch-badge-mini { font-size: 9px; color: var(--primary); border: 1px solid var(--primary); padding: 1px 4px; border-radius: 3px; display: inline-block; margin-bottom: 3px; }
 
         /* ラジオ */
         .radio-theme-box { background: #333; color: white; padding: 20px; border-radius: 10px; border: 4px solid #8B4513; margin-bottom: 30px; position: relative; box-shadow: 0 5px 15px rgba(0,0,0,0.2); }
@@ -1214,17 +1245,21 @@
 
     <div id="copyToast">コピーしました✨</div>
 
-    <div id="newsModal" class="modal" onclick="closeNewsModal()">
+    <div id="scheduleModal" class="modal" onclick="closeScheduleModal()">
         <div class="modal-content news-modal-content" onclick="event.stopPropagation()">
-            <span class="modal-close-btn" onclick="closeNewsModal()">×</span>
+            <span class="modal-close-btn" onclick="closeScheduleModal()">×</span>
             
-            <img id="modalImg" src="" style="width:100%; max-height:300px; object-fit:contain; border-radius:8px; margin-bottom:15px; display:none;">
-            <div><span id="modalDate" class="modal-date"></span><span id="modalTag" class="modal-tag"></span></div>
-            <div id="modalTitle" class="modal-title"></div>
-            <div id="modalBody" class="modal-body"></div>
+            <img id="schModalImg" src="" style="width:100%; aspect-ratio:16/9; object-fit:cover; border-radius:8px; margin-bottom:15px; display:none;">
+            
+            <div>
+                <span id="schModalDate" class="modal-date" style="font-size:16px; color:#27C6F5; font-weight:bold;"></span>
+                <span class="modal-tag" style="background:#27C6F5;">配信</span>
+            </div>
+            
+            <div id="schModalTitle" class="modal-title" style="font-size:20px; margin-top:10px;"></div>
 
             <div style="margin-top: 30px; text-align: center;">
-                <button onclick="closeNewsModal()" class="contact-btn" style="background:#888; width:auto; padding:10px 40px;">閉じる</button>
+                <button onclick="closeScheduleModal()" class="contact-btn" style="background:#888; width:auto; padding:10px 40px;">閉じる</button>
             </div>
         </div>
     </div>
@@ -1345,37 +1380,50 @@
     </div>
 
     <div id="top" class="page active">
-        <div class="hero-section">
-            <img src="top_logo.png" alt="AOHARU FRIENDS MAIN VISUAL" class="hero-logo-img">
-        </div>
-        <div class="container">
-            <div id="nowOnAirSection">
-                <div class="noa-title">NOW ON AIR</div>
-                <div id="heroLiveArea"></div>
-                <div id="subLiveGrid" class="sub-live-grid"></div>
+            <div class="hero-section">
+                <img src="top_logo.png" alt="AOHARU FRIENDS MAIN VISUAL" class="hero-logo-img">
             </div>
+            <div class="container">
+                <div id="nowOnAirSection">
+                    <div class="noa-title">NOW ON AIR</div>
+                    <div id="heroLiveArea"></div>
+                    <div id="subLiveGrid" class="sub-live-grid"></div>
+                </div>
 
-            <div class="section-title" style="margin-top: 0;"><div class="en-title">NEWS</div><span class="ja-title">最新情報</span></div>
-            <div class="scroll-wrapper">
-                <button class="scroll-btn left" onclick="scrollContent('topNewsList', 'left')">◀</button>
-                <div class="scroll-grid" id="topNewsList">読み込み中...</div>
-                <button class="scroll-btn right" onclick="scrollContent('topNewsList', 'right')">▶</button>
-            </div>
-            <div style="text-align:center;"><button onclick="showPage('news')" class="more-btn">MORE VIEW</button></div>
+                <div class="section-title" style="margin-top: 0;">
+                    <div class="en-title">NEWS</div><span class="ja-title">最新情報</span>
+                </div>
+                <div class="scroll-wrapper">
+                    <button class="scroll-btn left" onclick="scrollContent('topNewsList', 'left')">◀</button>
+                    <div class="scroll-grid" id="topNewsList">読み込み中...</div>
+                    <button class="scroll-btn right" onclick="scrollContent('topNewsList', 'right')">▶</button>
+                </div>
+                <div style="text-align:center;">
+                    <button onclick="showPage('news')" class="more-btn">MORE VIEW</button>
+                </div>
 
-            <div class="section-title"><div class="en-title">SCHEDULE</div><span class="ja-title">配信スケジュール</span></div>
-            <div class="scroll-wrapper">
-                <button class="scroll-btn left" onclick="scrollContent('topScheduleList', 'left')">◀</button>
-                <div class="scroll-grid" id="topScheduleList">読み込み中...</div>
-                <button class="scroll-btn right" onclick="scrollContent('topScheduleList', 'right')">▶</button>
-            </div>
-            
-            <div id="memberVideoSection" class="section-title"><div class="en-title">MEMBER ONLY</div><span class="ja-title">会員限定動画※会員登録しないと視聴できません</span></div>
-            <div class="scroll-wrapper">
-                <button class="scroll-btn left" onclick="scrollContent('memberVideoList', 'left')">◀</button>
-                <div class="scroll-grid" id="memberVideoList">読み込み中...</div>
-                <button class="scroll-btn right" onclick="scrollContent('memberVideoList', 'right')">▶</button>
-            </div>
+
+                <div class="section-title">
+                    <div class="en-title">SCHEDULE</div><span class="ja-title">配信スケジュール</span>
+                </div>
+                <div class="scroll-wrapper">
+                    <button class="scroll-btn left" onclick="scrollContent('topScheduleList', 'left')">◀</button>
+                    <div class="scroll-grid" id="topScheduleList">読み込み中...</div>
+                    <button class="scroll-btn right" onclick="scrollContent('topScheduleList', 'right')">▶</button>
+                </div>
+                <div style="text-align:center;">
+                    <button onclick="showPage('schedule')" class="more-btn">MORE VIEW</button>
+                </div>
+
+
+                <div id="memberVideoSection" class="section-title">
+                    <div class="en-title">MEMBER ONLY</div><span class="ja-title">会員限定動画※会員登録しないと視聴できません</span>
+                </div>
+                <div class="scroll-wrapper">
+                    <button class="scroll-btn left" onclick="scrollContent('memberVideoList', 'left')">◀</button>
+                    <div class="scroll-grid" id="memberVideoList">読み込み中...</div>
+                    <button class="scroll-btn right" onclick="scrollContent('memberVideoList', 'right')">▶</button>
+                </div>
 
             <div style="text-align:center;"><button onclick="showPage('schedule')" class="more-btn">MORE VIEW</button></div>
 
@@ -2006,7 +2054,7 @@
     // ▼▼▼ あおはる⭐︎フレンズ 公式サイト 最終完全版スクリプト ▼▼▼
     // ==========================================
 
-    const GAS_API_URL = "https://script.google.com/macros/s/AKfycbweGopSZFl6BZ8-Ue2ufgte9g3YkfewNLZtKb5xPh7CsWGADhHuZaSOsxvPA70c5h_2/exec";
+    const GAS_API_URL = "https://script.google.com/macros/s/AKfycbxf0IwTl8-D6VTcf8c9b6OFfwp6VIbUoSr2AbNdMdrwcamA-O_jATZOXlfN4b-E5UjJHA/exec";
     let YOUTUBE_API_KEY = ""; 
     let GROUP_CONFIG = {};
     let memberData = [];
@@ -2014,8 +2062,8 @@
     
     // 変数定義
     const fortuneTypes = ["大吉", "中吉", "小吉", "吉", "末吉"];
-    const luckyItems = ["ゲーミングPC", "エナジードリンク", "マイク", "配信機材", "推し活グッズ", "唐揚げ", "ラーメン", "猫", "ヘッドホン", "サイリウム"];
-    const fortuneComments = ["今日は最高の配信ができそう！", "ラッキーアイテムを持って待機してね！", "推しの配信を見ると運気アップ！", "今日はゆっくりアーカイブを見よう。", "SNSで推しを布教するといいことあるかも！"];
+    let luckyItems = ["ゲーミングPC", "エナジードリンク", "マイク", "配信機材", "推し活グッズ", "唐揚げ", "ラーメン", "猫", "ヘッドホン", "サイリウム"];
+    let fortuneComments = ["今日は最高の配信ができそう！", "ラッキーアイテムを持って待機してね！", "推しの配信を見ると運気アップ！", "今日はゆっくりアーカイブを見よう。", "SNSで推しを布教するといいことあるかも！"];
     let currentOmikujiResult = null; 
     let newsData = [], scheduleData = [], videoData = [], manualLiveData = [], memberVideoData = [];
     let radioBlogData = []; 
@@ -2177,6 +2225,21 @@
                 }));
                 renderGraffitiList();
             }
+　　　　　　// ▼▼▼ おみくじデータをスプシから反映 ▼▼▼
+            if (data.omikuji_settings) {
+                const newItems = [];
+                const newComments = [];
+                
+                // スプシのデータを配列に入れる
+                data.omikuji_settings.forEach(row => {
+                    if (row.item) newItems.push(row.item);
+                    if (row.comment) newComments.push(row.comment);
+                });
+
+                // データがあれば上書きする
+                if (newItems.length > 0) luckyItems = newItems;
+                if (newComments.length > 0) fortuneComments = newComments;
+            }
         } catch (e) { 
             console.error("Data Error:", e); 
         }
@@ -2331,7 +2394,63 @@
         document.getElementById('newsModal').classList.add('open'); 
     }
 
-    function renderSchedule() { const topScheduleHtml = scheduleData.map(s => `<div class="schedule-card"><div class="sch-thumb-box"><div class="sch-date-big">${s.date}</div><div class="sch-time-big">${s.time}</div></div><div class="sch-info"><span class="sch-badge-mini">配信</span><div class="sch-title">${s.content}</div></div></div>`).join(''); const tlHtml = scheduleData.map(s => ` <div class="timeline-item"> <div class="tl-icon-box"><div class="tl-icon"><i class="fas fa-video"></i></div></div> <div class="tl-content"> <div class="tl-date">${s.date} <span style="font-size:12px;color:#888;">${s.time}</span></div> <div class="tl-title">${s.content}</div> <span class="tl-tag">配信</span> </div> </div>`).join(''); const topList = document.getElementById('topScheduleList'); const schList = document.getElementById('scheduleList'); if(topList) topList.innerHTML = topScheduleHtml || "予定はありません"; if(schList) schList.innerHTML = tlHtml; }
+    function renderSchedule() {
+        // ▼ TOPページ用カード（クリック対応！）
+        const topScheduleHtml = scheduleData.map((s, i) => { // ← (s, i) に変更！
+            let bgHtml = '';
+            let boxClass = 'sch-thumb-box no-img'; 
+            
+            if (s.img && s.img !== "") {
+                bgHtml = `<img src="${s.img}" class="sch-bg-img"><div style="position:absolute; inset:0; background:rgba(0,0,0,0.3); z-index:1;"></div>`;
+                boxClass = 'sch-thumb-box';
+            }
+
+            // onclick="openScheduleModal(i)" を追加！
+            return `
+            <div class="schedule-card" onclick="openScheduleModal(${i})">
+                <div class="${boxClass}">
+                    ${bgHtml}
+                    <div class="sch-date-big">${s.date}</div>
+                    <div class="sch-time-big">${s.time}</div>
+                </div>
+                <div class="sch-info">
+                    <span class="sch-badge-mini">配信</span>
+                    <div class="sch-title">${s.content}</div>
+                </div>
+            </div>`;
+        }).join('');
+
+        // ▼ 個別ページ用リスト（こちらもクリック対応！）
+        const tlHtml = scheduleData.map((s, i) => { // ← (s, i) に変更！
+            let thumbHtml = '';
+            if (s.img && s.img !== "") {
+                thumbHtml = `<img src="${s.img}" class="tl-thumb-img">`;
+            }
+
+            // onclick="openScheduleModal(i)" を追加！
+            return `
+            <div class="timeline-item" onclick="openScheduleModal(${i})" style="cursor:pointer;">
+                <div class="tl-icon-box">
+                    <div class="tl-icon"><i class="fas fa-video"></i></div>
+                </div>
+                <div class="tl-content">
+                    <div class="tl-date">${s.date} <span style="font-size:12px;color:#888;">${s.time}</span></div>
+                    
+                    <div class="tl-body-box">
+                        ${thumbHtml}
+                        <div class="tl-title">${s.content}</div>
+                    </div>
+                    
+                    <span class="tl-tag">配信</span>
+                </div>
+            </div>`;
+        }).join('');
+
+        const topList = document.getElementById('topScheduleList');
+        const schList = document.getElementById('scheduleList');
+        if (topList) topList.innerHTML = topScheduleHtml || "予定はありません";
+        if (schList) schList.innerHTML = tlHtml;
+    }
     function renderVideos() { const videoHtml = videoData.map(v => `<div class="video-card" onclick="window.open('https://www.youtube.com/watch?v=${v.id}', '_blank')"><div class="video-thumb-box"><img src="https://img.youtube.com/vi/${v.id}/mqdefault.jpg" class="video-thumb"><div class="play-icon">▶</div></div><div class="video-info"><div class="video-title">${v.title}</div><div class="video-date">${v.date}</div></div></div>`).join(''); const list = document.getElementById('topVideoList'); if(list) list.innerHTML = videoHtml || "動画はまだありません"; }
     function renderMemberVideos() { const container = document.getElementById('memberVideoList'); if(!memberVideoData.length) { container.innerHTML = "限定動画はまだありません"; return; } const html = memberVideoData.map(v => { const clickAction = isMemberLoggedIn ? `window.open('https://www.youtube.com/watch?v=${v.id}', '_blank')` : `openLoginModal()`; const lockedClass = isMemberLoggedIn ? 'unlocked' : 'mv-blur'; const lockOverlay = isMemberLoggedIn ? '' : `<div class="mv-lock-overlay"><div class="mv-lock-icon"><i class="fas fa-lock"></i></div><div class="mv-lock-text">MEMBER ONLY</div></div>`; return `<div class="member-video-card ${lockedClass}" onclick="${clickAction}">${lockOverlay}<div class="news-thumb-area"><img src="https://img.youtube.com/vi/${v.id}/mqdefault.jpg" class="news-img"></div><div class="news-content"><div class="news-date">${v.date}</div><div class="news-title">${v.title}</div><div class="news-check-btn">${isMemberLoggedIn ? 'PLAY' : 'LOCKED'}</div></div></div>`; }).join(''); container.innerHTML = html; }
     function renderRadioDiary() { const container = document.getElementById('radioDiaryList'); if (!radioBlogData || radioBlogData.length === 0) { container.innerHTML = '<p style="text-align:center;color:#888;">まだ日記はありません</p>'; return; } container.innerHTML = radioBlogData.map(d => { if (!isMemberLoggedIn) { return ` <div class="diary-card" onclick="openLoginModal()" style="cursor:pointer; position:relative; overflow:hidden;"> <div style="filter: blur(6px); opacity: 0.6; pointer-events: none;"> <div class="diary-icon" style="background:#ddd;"></div> <div class="diary-content"> <div class="diary-name">SECRET MEMBER</div> <div class="diary-text">このコンテンツは会員限定です。<br>ログインすると閲覧できます。</div> <div class="diary-date">----.--.--</div> </div> </div> <div style="position:absolute; top:50%; left:50%; transform:translate(-50%,-50%); text-align:center; width:100%; z-index:2;"> <i class="fas fa-lock" style="font-size:24px; color:#555; margin-bottom:5px;"></i> <div style="font-weight:bold; font-size:12px; color:#555;">MEMBER ONLY</div> </div> </div> `; } let iconSrc = "icon.png"; let imgPos = "top center"; if (memberData && memberData.length > 0) { const targetMember = memberData.find(m => m.name === d.name); if (targetMember) { if(targetMember.img) iconSrc = targetMember.img; } } if (d.img && d.img !== "") iconSrc = d.img; const voicePlayer = d.voice ? `<div class="diary-voice-player" onclick="playVoice(this, '${d.voice}')"> <i class="fas fa-play voice-icon"></i> <span class="voice-time">限定ボイス</span> </div>` : ''; return ` <div class="diary-card"> <div class="diary-icon" style="background-image: url('${iconSrc}'); background-position: ${imgPos};"></div> <div class="diary-content"> <div class="diary-name">${d.name}</div> <div class="diary-text">${d.text}</div> ${voicePlayer} <div class="diary-date">${d.date}</div> </div> </div> `; }).join(''); }
@@ -2607,6 +2726,32 @@
         
         // 閉じるボタン自体を隠す
         document.getElementById('pickupCloseBtn').style.display = "none";
+    }
+// ▼ スケジュール詳細を開く関数
+    function openScheduleModal(index) {
+        const s = scheduleData[index];
+        if(!s) return;
+
+        // 日付と時間をセット
+        document.getElementById('schModalDate').innerText = s.date + ' ' + s.time;
+        // タイトルをセット
+        document.getElementById('schModalTitle').innerText = s.content;
+
+        // 画像があれば表示、なければ隠す
+        const img = document.getElementById('schModalImg');
+        if (s.img && s.img !== "") {
+            img.src = s.img;
+            img.style.display = "block";
+        } else {
+            img.style.display = "none";
+        }
+
+        document.getElementById('scheduleModal').classList.add('open');
+    }
+
+    // ▼ 閉じる関数
+    function closeScheduleModal() {
+        document.getElementById('scheduleModal').classList.remove('open');
     }
 </script>
 </body>
