@@ -2332,48 +2332,119 @@
     }
 
     // --- ライブ配信状況確認関数 ---
+    // ▼▼▼ 自動配信チェック関数（複数人対応版） ▼▼▼
     async function checkLiveStatus() {
         const liveSection = document.getElementById('nowOnAirSection');
-        const liveArea = document.getElementById('heroLiveArea');
+        const heroArea = document.getElementById('heroLiveArea');
+        const subGrid = document.getElementById('subLiveGrid');
+        
+        // エリアをリセット
+        heroArea.innerHTML = '';
+        subGrid.innerHTML = '';
+        liveSection.style.display = 'none';
+
+        let liveVideos = [];
+
+        // 1. 手動設定（スプレッドシートの「ライブ中設定」）を確認
         if (manualLiveData && manualLiveData.active) {
+            liveVideos.push({
+                videoId: manualLiveData.videoId,
+                title: manualLiveData.title,
+                channelTitle: "OFFICIAL / MANUAL",
+                thumbnail: `https://img.youtube.com/vi/${manualLiveData.videoId}/mqdefault.jpg`
+            });
+        }
+
+        // 2. 自動チェック（APIキーがある場合のみ）
+        // ※注意：アクセスが多いとAPI制限(1日上限)にかかり、表示されなくなる場合があります
+        if (YOUTUBE_API_KEY) {
+            // チェックするIDのリストを作成（グループID + メンバー全員のID）
+            let targetIds = [];
+            if (GROUP_CONFIG.youtubeChannelId) targetIds.push(GROUP_CONFIG.youtubeChannelId);
+            if (memberData && memberData.length > 0) {
+                memberData.forEach(m => {
+                    if (m.youtubeId) targetIds.push(m.youtubeId);
+                });
+            }
+
+            // 重複を除去
+            targetIds = [...new Set(targetIds)];
+
+            // 全員分を並列でチェック（APIリクエスト）
+            const promises = targetIds.map(async (id) => {
+                try {
+                    const url = `https://www.googleapis.com/youtube/v3/search?part=snippet&channelId=${id}&eventType=live&type=video&key=${YOUTUBE_API_KEY}`;
+                    const res = await fetch(url);
+                    const data = await res.json();
+                    if (data.items && data.items.length > 0) {
+                        return data.items[0]; // ヒットした配信情報を返す
+                    }
+                } catch (e) {
+                    console.error("API Error for " + id, e);
+                }
+                return null;
+            });
+
+            // 全ての結果を待つ
+            const results = await Promise.all(promises);
+            
+            // ヒットした動画をリストに追加
+            results.forEach(video => {
+                if (video) {
+                    // 手動設定と重複していなければ追加
+                    const isDuplicate = liveVideos.some(v => v.videoId === video.id.videoId);
+                    if (!isDuplicate) {
+                        liveVideos.push({
+                            videoId: video.id.videoId,
+                            title: video.snippet.title,
+                            channelTitle: video.snippet.channelTitle,
+                            thumbnail: video.snippet.thumbnails.high.url
+                        });
+                    }
+                }
+            });
+        }
+
+        // 3. 画面に表示
+        if (liveVideos.length > 0) {
             liveSection.style.display = 'block';
-            liveArea.innerHTML = `
+
+            // 1つ目をメイン（大きく）表示
+            const mainVideo = liveVideos[0];
+            heroArea.innerHTML = `
                 <div class="live-hero-wrapper">
                     <div class="live-iframe-box">
-                        <iframe class="live-iframe" src="https://www.youtube.com/embed/${manualLiveData.videoId}" frameborder="0" allowfullscreen></iframe>
+                        <iframe class="live-iframe" src="https://www.youtube.com/embed/${mainVideo.videoId}" frameborder="0" allowfullscreen></iframe>
                     </div>
                     <div class="live-info-bar">
                         <span class="live-status-badge">NOW ON AIR</span>
                         <div class="live-info-text">
-                            <div class="live-info-title">${manualLiveData.title}</div>
+                            <div class="live-info-name">${mainVideo.channelTitle}</div>
+                            <div class="live-info-title">${mainVideo.title}</div>
                         </div>
                     </div>
                 </div>`;
-            return;
+
+            // 2つ目以降があれば、下に小さく並べる（サブグリッド）
+            if (liveVideos.length > 1) {
+                let subHtml = '';
+                for (let i = 1; i < liveVideos.length; i++) {
+                    const sub = liveVideos[i];
+                    subHtml += `
+                    <div class="sub-live-card" onclick="window.open('https://www.youtube.com/watch?v=${sub.videoId}', '_blank')">
+                        <div style="position:relative;">
+                            <img src="${sub.thumbnail}" class="sub-live-thumb">
+                            <div style="position:absolute; top:5px; left:5px; background:red; color:white; font-size:10px; padding:2px 5px; border-radius:3px; font-weight:bold;">LIVE</div>
+                        </div>
+                        <div class="sub-live-title">${sub.title}</div>
+                    </div>`;
+                }
+                subGrid.innerHTML = subHtml;
+                subGrid.style.display = 'flex';
+            } else {
+                subGrid.style.display = 'none';
+            }
         }
-        if (YOUTUBE_API_KEY && GROUP_CONFIG.youtubeChannelId) {
-            try {
-                const url = `https://www.googleapis.com/youtube/v3/search?part=snippet&channelId=${GROUP_CONFIG.youtubeChannelId}&eventType=live&type=video&key=${YOUTUBE_API_KEY}`;
-                const res = await fetch(url);
-                const data = await res.json();
-                if (data.items && data.items.length > 0) {
-                    const video = data.items[0];
-                    liveSection.style.display = 'block';
-                    liveArea.innerHTML = `
-                        <div class="live-hero-wrapper">
-                            <div class="live-iframe-box">
-                                <iframe class="live-iframe" src="https://www.youtube.com/embed/${video.id.videoId}" frameborder="0" allowfullscreen></iframe>
-                            </div>
-                            <div class="live-info-bar">
-                                <span class="live-status-badge">NOW ON AIR</span>
-                                <div class="live-info-text">
-                                    <div class="live-info-title">${video.snippet.title}</div>
-                                </div>
-                            </div>
-                        </div>`;
-                } else { liveSection.style.display = 'none'; }
-            } catch (e) { liveSection.style.display = 'none'; }
-        } else { liveSection.style.display = 'none'; }
     }
 
     // --- レンダリング関数 ---
@@ -2558,7 +2629,21 @@
     function closeRegisterModal() { document.getElementById('registerModal').classList.remove('open'); }
     function switchToRegister() { closeLoginModal(); setTimeout(openRegisterModal, 300); }
     function switchToLogin() { closeRegisterModal(); setTimeout(openLoginModal, 300); }
-    function getTagColor(tag) { if(tag === 'INFO') return '#27C6F5'; if(tag === 'VIDEO') return '#ff4757'; return '#ccc'; }
+    // ▼ タグの色を決める関数（色を増やしました！）
+    function getTagColor(tag) {
+        switch(tag) {
+            case 'INFO': return '#27C6F5';      // 水色
+            case 'VIDEO': return '#ff4757';     // 赤
+            case 'GOODS': return '#f1c40f';     // 黄色
+            case 'VOICE': return '#2ecc71';     // 緑
+            case 'MUSIC': return '#9b59b6';     // 紫
+            case 'COLLAB': return '#e67e22';    // オレンジ
+            case 'CAMPAIGN': return '#e84393';  // ピンク
+            case 'BIRTHDAY': return '#fdcb6e';  // ゴールド
+            case 'MEMBER': return '#34495e';    // 紺色
+            default: return '#ccc';             // その他はグレー
+        }
+    }
     function toggleMenu() { document.getElementById('sideMenu').classList.toggle('open'); document.getElementById('overlay').classList.toggle('open'); }
     function initCardMaker() { const today = new Date(); const dStr = `${today.getFullYear()}.${(today.getMonth()+1).toString().padStart(2,'0')}.${today.getDate().toString().padStart(2,'0')}`; const cardDateEl = document.getElementById('cardDate'); if(cardDateEl) cardDateEl.innerText = 'DATE: ' + dStr; const cardNoEl = document.getElementById('cardNo'); if(cardNoEl) cardNoEl.innerText = dStr.replace(/\./g,'') + '-' + (Math.floor(Math.random()*9000)+1000); const btnContainer = document.getElementById('oshiButtons'); if(btnContainer) { btnContainer.innerHTML = ''; memberData.forEach((m, i) => { const btn = document.createElement('div'); btn.className = 'oshi-btn'; btn.style.backgroundImage = `url('${m.img}')`; btn.onclick = () => selectOshi(i); btnContainer.appendChild(btn); }); if(memberData.length > 0) selectOshi(0); } }
     function selectOshi(index) { const m = memberData[index]; document.querySelectorAll('.oshi-btn').forEach((b, i) => b.classList.toggle('selected', i === index)); const card = document.getElementById('digitalCard'); if(card) { card.style.setProperty('--card-color', m.color); const bottom = m.card_bottom || "-20px"; const right = m.card_right || "-50px"; const width = m.card_width || "280px"; card.style.setProperty('--char-bottom', bottom); card.style.setProperty('--char-right', right); card.style.setProperty('--char-width', width); document.getElementById('cardOshiDisplay').innerText = m.name; document.getElementById('cardCharImg').src = m.img; } }
