@@ -2190,48 +2190,48 @@
                 </p>
                 
                 <div class="biz-form-area">
-                    <label class="form-label">貴社名 / 団体名 <span style="color:red">*</span></label>
-                    <input type="text" id="bizCompany" class="form-input" placeholder="株式会社あおはる">
+    <label class="form-label">貴社名 / 団体名 <span style="color:red">*</span></label>
+    <input type="text" id="bizCompany" class="form-input" placeholder="株式会社あおはる">
 
-                    <label class="form-label">ご担当者様名 <span style="color:red">*</span></label>
-                    <input type="text" id="bizName" class="form-input" placeholder="山田 太郎">
+    <label class="form-label">ご担当者様名 <span style="color:red">*</span></label>
+    <input type="text" id="bizName" class="form-input" placeholder="山田 太郎">
 
-                    <label class="form-label">メールアドレス <span style="color:red">*</span></label>
-                    <input type="email" id="bizEmail" class="form-input" placeholder="info@example.com">
+    <label class="form-label">メールアドレス <span style="color:red">*</span></label>
+    <input type="email" id="bizEmail" class="form-input" placeholder="info@example.com">
 
-                    <label class="form-label">対象メンバー</label>
-                    <select id="bizBudget" class="form-select"> <label class="form-label">対象メンバー</label>>
-                        <option>お問い合わせメンバー</option>
-                        <option>あおはる☆フレンズへ</option>
-                        <option>たく兄ちゃん</option>
-                        <option>兎神結愛</option>
-                        <option>鬼神イヨ</option>
-                        <option>緋羽アオ</option>
-                    </select>
-                    <label class="form-label">お問い合わせ種別</label>
-                    <select id="bizType" class="form-select">
-                        <option>PR・プロモーション依頼</option>
-                        <option>コラボレーションのご相談</option>
-                        <option>イベント出演依頼</option>
-                        <option>取材・メディア掲載</option>
-                        <option>その他</option>
-                    </select>
+    <label class="form-label">対象メンバー</label>
+    <select id="bizTarget" class="form-select">
+        <option>お問い合わせメンバー</option>
+        <option>あおはる☆フレンズへ</option>
+        <option>たく兄ちゃん</option>
+        <option>兎神結愛</option>
+        <option>鬼神イヨ</option>
+        <option>緋羽アオ</option>
+    </select>
 
-                    <label class="form-label">ご予算感（任意）</label>
-                    <select id="bizBudget" class="form-select">
-                        <option>未定</option>
-                        <option>〜5万円</option>
-                        <option>5〜10万円</option>
-                        <option>10〜30万円</option>
-                        <option>30万円〜</option>
-                    </select>
+    <label class="form-label">お問い合わせ種別</label>
+    <select id="bizType" class="form-select">
+        <option>PR・プロモーション依頼</option>
+        <option>コラボレーションのご相談</option>
+        <option>イベント出演依頼</option>
+        <option>取材・メディア掲載</option>
+        <option>その他</option>
+    </select>
 
-                    <label class="form-label">お問い合わせ内容詳細 <span style="color:red">*</span></label>
-                    <textarea id="bizMessage" class="form-textarea" rows="6" placeholder="企画の概要、実施時期、ご要望などをご記入ください"></textarea>
+    <label class="form-label">ご予算感（任意）</label>
+    <select id="bizBudget" class="form-select">
+        <option>未定</option>
+        <option>〜5万円</option>
+        <option>5〜10万円</option>
+        <option>10〜30万円</option>
+        <option>30万円〜</option>
+    </select>
 
-                    <button class="biz-btn" onclick="submitBusinessForm()">上記の内容で送信する</button>
-                </div>
-            </div>
+    <label class="form-label">お問い合わせ内容詳細 <span style="color:red">*</span></label>
+    <textarea id="bizMessage" class="form-textarea" rows="6" placeholder="企画の概要、実施時期、ご要望などをご記入ください"></textarea>
+
+    <button class="biz-btn" onclick="submitBusinessForm()">上記の内容で送信する</button>
+</div>
 
             <div style="text-align:center;">
                 <button onclick="showPage('top')" class="more-btn">TOPへ戻る</button>
@@ -3431,15 +3431,16 @@ function renderSchedule() {
         // サイト全体のテーマカラー変数を書き換え
         document.documentElement.style.setProperty('--primary', color);
     }
-    // ▼▼▼ 修正版：ビジネスお問い合わせ送信機能（対象メンバー・予算対応） ▼▼▼
+    // ▼▼▼ 修正版：ビジネスお問い合わせ送信機能 ▼▼▼
     async function submitBusinessForm() {
         const company = document.getElementById('bizCompany').value;
         const name = document.getElementById('bizName').value;
         const email = document.getElementById('bizEmail').value;
-        const type = document.getElementById('bizType').value;
         
-        // ★IDを修正した "bizTarget" を取得
+        // ★ここ重要！書き換えたID 'bizTarget' を取得する
         const target = document.getElementById('bizTarget').value; 
+        
+        const type = document.getElementById('bizType').value;
         const budget = document.getElementById('bizBudget').value;
         const msg = document.getElementById('bizMessage').value;
 
@@ -3455,7 +3456,7 @@ function renderSchedule() {
         btn.disabled = true;
 
         try {
-            // ★ GASに送るデータを追加（target, budget）
+            // ★ GASに送るデータに target と budget を含める
             const url = `${GAS_API_URL}?action=submit_contact` 
                       + `&name=${encodeURIComponent(name + ' (' + company + ')')}` 
                       + `&email=${encodeURIComponent(email)}`                      
@@ -3473,10 +3474,8 @@ function renderSchedule() {
             document.getElementById('bizName').value = "";
             document.getElementById('bizEmail').value = "";
             document.getElementById('bizMessage').value = "";
-            // セレクトボックスも初期値に戻す（必要なら）
-            document.getElementById('bizTarget').selectedIndex = 0;
+            document.getElementById('bizTarget').selectedIndex = 0; // 修正後のIDをリセット
             document.getElementById('bizBudget').selectedIndex = 0;
-            document.getElementById('bizType').selectedIndex = 0;
             
         } catch (e) {
             console.error(e);
