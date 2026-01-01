@@ -3183,11 +3183,32 @@
         // バッジのセット
         badge.innerText = data.tag || 'NEWS';
         badge.style.background = getTagColor(data.tag);
+        badge.style.display = "inline-block";
+    } 
+
+        // ▼▼▼ 修正版：updatePickupNews 完全版（重複削除済み） ▼▼▼
+    function updatePickupNews(index) {
+        const data = newsData[index];
+        if(!data) return;
+        
+        const img = document.getElementById('pickupImg');
+        const title = document.getElementById('pickupTitle');
+        const badge = document.getElementById('pickupBadge');
+        const detail = document.getElementById('pickupDetail');
+        
+        // 画像とタイトルのセット
+        img.src = data.image || "https://placehold.co/800x450/27C6F5/ffffff?text=NO+IMAGE";
+        title.innerText = data.title;
+        
+        // バッジのセット
+        badge.innerText = data.tag || 'NEWS';
+        badge.style.background = getTagColor(data.tag);
         badge.style.display = "inline-block"; 
 
+        // ---------------------------------------------------------
         // ▼▼▼ ここから：テキスト処理（URLリンク化 ＆ 特設ボタン対応） ▼▼▼
         
-        let contentText = data.detail || data.title;
+        let contentText = data.detail || data.title; // 詳細がない場合はタイトルを表示
         let appendHtml = "";
 
         // 1. 特設ページの合言葉「[[RECRUIT_LINK]]」があれば、ボタンを準備して合言葉を消す
@@ -3201,16 +3222,18 @@
         }
 
         // 2. URLを自動でリンク（<a>タグ）に変換する
-        // (http または https から始まるURLを見つけて、クリックできるように書き換えます)
+        // (word-break:break-all を追加して、長いURLでもレイアウトが崩れないようにしています)
         let htmlFormatted = contentText.replace(/(https?:\/\/[^\s]+)/g, '<a href="$1" target="_blank" style="color:#00aaff; text-decoration:underline; word-break:break-all;">$1</a>');
 
         // 3. スプレッドシートの改行（\n）を、HTMLの改行（<br>）に変換
         htmlFormatted = htmlFormatted.replace(/\n/g, '<br>');
 
         // 4. 画面に反映（本文 + ボタン）
+        // innerText ではなく innerHTML を使うことで、リンクやボタンを有効にします
         detail.innerHTML = htmlFormatted + appendHtml;
 
-        // ▲▲▲ ここまで ▲▲▲
+        // ▲▲▲ テキスト処理ここまで ▲▲▲
+        // ---------------------------------------------------------
 
         // 閉じるボタンとスクロール処理
         const closeBtn = document.getElementById('pickupCloseBtn');
@@ -3220,14 +3243,53 @@
         if(pickupArea) pickupArea.scrollIntoView({ behavior: 'smooth', block: 'center' });
     }
 
+    // ▼▼▼ 修正版：ニュース詳細モーダル（URLリンク化・改行・ボタン対応） ▼▼▼
     function openNewsModal(index) { 
         const data = newsData[index]; 
+        
+        // 日付とタグの設定
         document.getElementById('modalDate').innerText = data.date; 
-        const tagEl = document.getElementById('modalTag'); tagEl.innerText = data.tag; tagEl.style.background = getTagColor(data.tag); 
+        const tagEl = document.getElementById('modalTag'); 
+        tagEl.innerText = data.tag; 
+        tagEl.style.background = getTagColor(data.tag); 
+        
+        // タイトルの設定
         document.getElementById('modalTitle').innerText = data.title; 
-        document.getElementById('modalBody').innerText = data.detail || data.title; 
+        
+        // ▼▼▼ ここから修正：本文の処理（リンク化など） ▼▼▼
+        
+        let modalText = data.detail || data.title || "";
+        let modalBtnHtml = "";
+
+        // 1. 特設ページの合言葉があればボタンを作成
+        if (modalText.includes('[[RECRUIT_LINK]]')) {
+            modalText = modalText.replace('[[RECRUIT_LINK]]', '');
+            modalBtnHtml = `<div style="text-align:center; margin-top:20px;">
+                            <button onclick="showPage('recruitment'); closeNewsModal();" class="apply-btn" style="font-size:16px; padding:15px 40px; border-radius:30px; animation:none; cursor:pointer;">
+                                特設ページを見る
+                            </button>
+                          </div>`;
+        }
+
+        // 2. URLをリンク(aタグ)に変換 ＆ 改行を<br>に変換
+        let modalHtml = modalText.replace(/(https?:\/\/[^\s]+)/g, '<a href="$1" target="_blank" style="color:#00aaff; text-decoration:underline; word-break:break-all;">$1</a>');
+        modalHtml = modalHtml.replace(/\n/g, '<br>');
+
+        // 3. 画面に反映 (innerHTMLを使う！)
+        document.getElementById('modalBody').innerHTML = modalHtml + modalBtnHtml;
+        
+        // ▲▲▲ ここまで修正 ▲▲▲
+
+        // 画像の有無チェック
         const img = document.getElementById('modalImg');
-        if (img && data.image && data.image !== "") { img.src = data.image; img.style.display = "block"; } else if (img) { img.style.display = "none"; }
+        if (img && data.image && data.image !== "") { 
+            img.src = data.image; 
+            img.style.display = "block"; 
+        } else if (img) { 
+            img.style.display = "none"; 
+        }
+        
+        // モーダルを表示
         document.getElementById('newsModal').classList.add('open'); 
     }
 
