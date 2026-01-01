@@ -1592,6 +1592,127 @@
         body.dark-mode .biz-card-title { color: #fff; }
         body.dark-mode .biz-card-text, body.dark-mode .biz-stat-label { color: #aaa; }
         body.dark-mode .biz-btn { background: var(--primary); color: #000; }
+        /* ▼▼▼ 追加転校生募集ページ（特設サイト風）のデザイン ▼▼▼ */
+        .recruit-header {
+            position: relative;
+            width: 100%;
+            height: 400px;
+            background-color: #27C6F5;
+            background-image: url('メンバー募集.jpg'); /* アップロードされた画像 */
+            background-size: cover;
+            background-position: center;
+            display: flex;
+            align-items: flex-end;
+            justify-content: center;
+            padding-bottom: 40px;
+            margin-bottom: 40px;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+        }
+        /* 画像の上に文字を乗せる場合の背景暗転処理 */
+        .recruit-header::before {
+            content: ""; position: absolute; inset: 0;
+            background: linear-gradient(to top, rgba(0,0,0,0.8), transparent 50%);
+        }
+        .recruit-title-area {
+            position: relative; z-index: 2; text-align: center; color: white;
+        }
+        .recruit-main-title {
+            font-family: 'M PLUS Rounded 1c', sans-serif;
+            font-weight: 900; font-size: 36px; letter-spacing: 2px;
+            text-shadow: 0 0 10px rgba(39, 198, 245, 0.8);
+            margin-bottom: 10px;
+        }
+        .recruit-sub-title {
+            font-size: 16px; font-weight: bold; background: rgba(255,255,255,0.2);
+            padding: 5px 20px; border-radius: 20px; display: inline-block;
+            backdrop-filter: blur(5px); border: 1px solid rgba(255,255,255,0.4);
+        }
+
+        .recruit-section {
+            background: white; border-radius: 15px; padding: 40px;
+            margin-bottom: 40px; border: 1px solid #eee;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.03);
+            position: relative; overflow: hidden;
+        }
+        .recruit-h2 {
+            font-size: 24px; font-weight: 900; color: #333;
+            margin-bottom: 30px; padding-left: 20px; border-left: 6px solid var(--primary);
+            font-family: 'Poppins', sans-serif; letter-spacing: 1px;
+            display: flex; align-items: center; justify-content: space-between;
+        }
+        .recruit-text {
+            font-size: 15px; line-height: 2.0; color: #555; margin-bottom: 20px;
+        }
+        
+        /* 求める人物像のリスト */
+        .person-list { list-style: none; padding: 0; display: grid; gap: 15px; }
+        .person-item {
+            background: #f9f9f9; padding: 15px 20px; border-radius: 10px;
+            display: flex; align-items: flex-start; gap: 15px;
+            border: 1px solid #eee; transition: 0.2s;
+        }
+        .person-item:hover { transform: translateX(5px); border-color: var(--primary); background: #f0fbff; }
+        .person-icon {
+            background: var(--primary); color: white; width: 30px; height: 30px;
+            border-radius: 50%; display: flex; align-items: center; justify-content: center;
+            flex-shrink: 0; font-size: 14px;
+        }
+
+        /* 応募要項テーブル */
+        .req-table { width: 100%; border-collapse: collapse; margin-top: 10px; }
+        .req-table th, .req-table td { padding: 15px; border-bottom: 1px solid #eee; text-align: left; vertical-align: top; }
+        .req-table th { width: 30%; background: #f4f8fa; color: #333; font-weight: bold; border-radius: 8px 0 0 8px; }
+        .req-table td { color: #555; }
+        .req-list li { margin-bottom: 8px; list-style-type: none; position: relative; padding-left: 20px; }
+        .req-list li::before { content: "✔"; color: var(--primary); position: absolute; left: 0; font-weight: bold; }
+
+        /* 選考フロー */
+        .flow-container { display: flex; flex-direction: column; gap: 20px; }
+        .flow-step {
+            display: flex; align-items: center; gap: 20px;
+            background: white; border: 2px solid #eee; padding: 20px; border-radius: 12px;
+            position: relative;
+        }
+        .flow-step::after {
+            content: "▼"; position: absolute; bottom: -22px; left: 50%; transform: translateX(-50%);
+            color: #ccc; font-size: 14px;
+        }
+        .flow-step:last-child::after { content: none; }
+        .flow-num {
+            font-size: 24px; font-weight: 900; color: #ddd; font-family: 'Oswald', sans-serif;
+            min-width: 40px; text-align: center;
+        }
+        .flow-content h4 { margin: 0 0 5px 0; font-size: 16px; color: var(--primary); }
+        .flow-content p { margin: 0; font-size: 13px; color: #666; }
+
+        @media (min-width: 768px) {
+            .flow-container { flex-direction: row; }
+            .flow-step { flex: 1; flex-direction: column; text-align: center; padding: 30px 10px; }
+            .flow-step::after { content: "▶"; bottom: auto; right: -22px; left: auto; top: 50%; transform: translateY(-50%); }
+            .flow-content h4 { font-size: 18px; }
+        }
+
+        /* 応募ボタンエリア */
+        .apply-area {
+            text-align: center; background: #e0f7ff; padding: 50px 20px;
+            border-radius: 20px; border: 4px solid white; outline: 4px dashed var(--primary);
+            margin-top: 60px;
+        }
+        .apply-btn {
+            display: inline-block; background: linear-gradient(135deg, #ff4757, #ff6b81);
+            color: white; font-size: 24px; font-weight: 900; padding: 20px 60px;
+            border-radius: 50px; text-decoration: none; box-shadow: 0 10px 0 #c41e30, 0 20px 30px rgba(255, 71, 87, 0.4);
+            transition: transform 0.1s, box-shadow 0.1s;
+            position: relative; animation: pulse-btn 2s infinite;
+        }
+        .apply-btn:active { transform: translateY(6px); box-shadow: 0 4px 0 #c41e30, 0 10px 10px rgba(0,0,0,0.2); }
+        .apply-btn i { margin-right: 10px; }
+        @keyframes pulse-btn { 0% { transform: scale(1); } 50% { transform: scale(1.05); } 100% { transform: scale(1); } }
+
+        .message-box {
+            background: #fffbe6; border: 2px solid #ffeaa7; padding: 30px; border-radius: 15px;
+            font-family: 'M PLUS Rounded 1c', sans-serif;
+        }
     </style>
 </head>
 <body>
@@ -2476,6 +2597,140 @@
         </div>
     </div>
 
+<div id="recruitment" class="page">
+        <div class="recruit-header">
+            <div class="recruit-title-area">
+                <div class="recruit-main-title">ADDITIONAL MEMBERS</div>
+                <div class="recruit-sub-title">あおはる⭐︎フレンズ 追加転校生募集</div>
+            </div>
+        </div>
+
+        <div class="container">
+            <div class="recruit-section">
+                <div class="recruit-h2">募集の背景 <i class="fas fa-flag" style="color:#ddd;"></i></div>
+                <div class="recruit-text">
+                    『あおはる⭐︎フレンズ』は、「青春（あおはる）は、ここからクラフトする。」をコンセプトに、マインクラフトを中心としたゲーム実況や企画配信を行っています。<br>
+                    現在4名のメンバーで活動しておりますが、今後予定されている大型企画や新しいエンターテインメントの創造に向け、私たちと一緒に全力で遊び、全力で活動を楽しめる「新しい風」を求めています。<br>
+                    <br>
+                    <strong>「あおはる学園」は、まだ未完成の学校です。</strong><br>
+                    あなたの個性が加わることで、この学園はもっと面白く、もっと魅力的になります。
+                </div>
+            </div>
+
+            <div class="recruit-section">
+                <div class="recruit-h2">求める人物像 <i class="fas fa-heart" style="color:#ddd;"></i></div>
+                <ul class="person-list">
+                    <li class="person-item">
+                        <div class="person-icon"><i class="fas fa-gamepad"></i></div>
+                        <div><strong>ゲーム大好き！</strong><br>特にマインクラフトが大好きで、長時間プレイも苦にならない方。</div>
+                    </li>
+                    <li class="person-item">
+                        <div class="person-icon"><i class="fas fa-users"></i></div>
+                        <div><strong>わちゃわちゃ楽しめる</strong><br>協調性があり、メンバーと賑やかな空気感を一緒に作れる方。</div>
+                    </li>
+                    <li class="person-item">
+                        <div class="person-icon"><i class="fas fa-star"></i></div>
+                        <div><strong>キラリと光る特技</strong><br>歌、建築、イラスト、トークなど、何か一つでも「好き」や「得意」がある方。</div>
+                    </li>
+                    <li class="person-item">
+                        <div class="person-icon"><i class="fas fa-arrow-up"></i></div>
+                        <div><strong>向上心がある</strong><br>継続的に活動でき、目標に向かって前向きに取り組める方。</div>
+                    </li>
+                </ul>
+            </div>
+
+            <div class="recruit-section">
+                <div class="recruit-h2">応募要項 <i class="fas fa-list-check" style="color:#ddd;"></i></div>
+                <table class="req-table">
+                    <tr>
+                        <th>応募資格</th>
+                        <td>
+                            <ul class="req-list">
+                                <li>満18歳以上の方（性別不問）</li>
+                                <li>週1以上の配信、および週1以上の動画収録に参加可能な方</li>
+                                <li>配信活動に支障のないPCスペック、通信環境をお持ちの方</li>
+                                <li>特定のプロダクションや事務所に所属していない方</li>
+                                <li>1年以上、責任を持って継続的な活動が可能な方</li>
+                            </ul>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>歓迎スキル</th>
+                        <td>
+                            <ul class="req-list">
+                                <li>動画編集スキル、Photoshop等の画像編集スキル</li>
+                                <li>マインクラフトの建築センスやコマンド知識</li>
+                                <li>配信活動の経験（個人勢としての経験含む）</li>
+                            </ul>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>募集期間</th>
+                        <td style="font-weight:bold; color:#ff4757;">
+                            2026年1月1日 〜 2026年2月10日 23:59まで
+                        </td>
+                    </tr>
+                </table>
+            </div>
+
+            <div class="recruit-section">
+                <div class="recruit-h2">選考フロー <i class="fas fa-route" style="color:#ddd;"></i></div>
+                <div class="flow-container">
+                    <div class="flow-step">
+                        <div class="flow-num">01</div>
+                        <div class="flow-content">
+                            <h4>書類・動画選考</h4>
+                            <p>応募フォームより頂いた情報を元に選考します。通過者のみご連絡いたします。</p>
+                        </div>
+                    </div>
+                    <div class="flow-step">
+                        <div class="flow-num">02</div>
+                        <div class="flow-content">
+                            <h4>通話面談・実技</h4>
+                            <p>Discord等を使用したオンライン面談を行います。簡単な実技確認を行う場合もあります。</p>
+                        </div>
+                    </div>
+                    <div class="flow-step">
+                        <div class="flow-num">03</div>
+                        <div class="flow-content">
+                            <h4>最終選考</h4>
+                            <p>運営スタッフ、および既存メンバーを交えた最終確認を行います。</p>
+                        </div>
+                    </div>
+                    <div class="flow-step">
+                        <div class="flow-num">04</div>
+                        <div class="flow-content">
+                            <h4>合格・準備</h4>
+                            <p>キャラクター制作、機材調整などを経てデビューとなります！</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="message-box">
+                <div style="font-weight:bold; font-size:18px; color:var(--primary); margin-bottom:10px;">🌸 運営からのメッセージ</div>
+                <p style="margin:0; font-size:14px; line-height:1.8;">
+                    「我こそは！」という熱い想いを持った方からのご応募を、心よりお待ちしております。<br>
+                    一緒に新しい青春を作りましょう！<br>
+                    <br>
+                    あおはる⭐︎フレンズ 運営事務局
+                </p>
+            </div>
+
+            <div class="apply-area">
+                <p style="font-weight:bold; margin-bottom:20px; color:#555;">▼ 夢への第一歩はこちらから ▼</p>
+                <a href="https://forms.gle/hRXbjwjSMvNT9VE56" target="_blank" class="apply-btn">
+                    <i class="fas fa-paper-plane"></i> 応募フォームへ進む
+                </a>
+                <p style="font-size:12px; color:#888; margin-top:20px;">※Googleフォームへ移動します</p>
+            </div>
+
+            <div style="text-align:center; margin-top:40px;">
+                <button onclick="showPage('top')" class="more-btn">TOPへ戻る</button>
+            </div>
+        </div>
+    </div>
+
     <footer>
         <div class="footer-container">
             <div class="footer-left">
@@ -2585,7 +2840,7 @@
     // ▼▼▼ あおはる⭐︎フレンズ 公式サイト 最終完全版スクリプト ▼▼▼
     // ==========================================
 
-    const GAS_API_URL = "https://script.google.com/macros/s/AKfycbw3tDDd19soRt2vAuY-xCcJsXqwex135ecYxXfF90_WboBk3W-J8ywMkAX4CARx-spUhQ/exec";
+    const GAS_API_URL = "https://script.google.com/macros/s/AKfycbzg2nlp3H3R4cdjxDVqc3ZrXwApXKNvyIXzWLJddiadHz723NYhns-C_AUmn1mE2TwanQ/exec";
     let YOUTUBE_API_KEY = ""; 
     let GROUP_CONFIG = {};
     let memberData = [];
@@ -2923,19 +3178,26 @@
         // 画像やテキストの更新
         img.src = data.image || "https://placehold.co/800x450/27C6F5/ffffff?text=NO+IMAGE";
         title.innerText = data.title;
-        
-        // バッジの更新と表示（閉じた後に再表示するため display を指定）
         badge.innerText = data.tag || 'NEWS';
         badge.style.background = getTagColor(data.tag);
         badge.style.display = "inline-block"; 
         
-        if(detail) detail.innerText = data.detail || data.title;
+        // ★特設ページへのリンク判定
+        if (data.detail && data.detail.includes('[[RECRUIT_LINK]]')) {
+            const text = data.detail.replace('[[RECRUIT_LINK]]', '');
+            detail.innerHTML = text.replace(/\n/g, '<br>') + 
+                `<div style="text-align:center; margin-top:20px;">
+                    <button onclick="showPage('recruitment')" class="apply-btn" style="font-size:16px; padding:15px 40px; border-radius:30px; animation:none;">
+                        特設ページを見る
+                    </button>
+                </div>`;
+        } else {
+            detail.innerText = data.detail || data.title;
+        }
 
-        // ★追加：閉じるボタンを表示する
         const closeBtn = document.getElementById('pickupCloseBtn');
         if(closeBtn) closeBtn.style.display = "flex";
         
-        // スクロール処理（変数の宣言はここ1回だけに統一）
         const pickupArea = document.querySelector('.news-pickup');
         if(pickupArea) pickupArea.scrollIntoView({ behavior: 'smooth', block: 'center' });
     }
