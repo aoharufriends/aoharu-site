@@ -3,12 +3,18 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>あおはる⭐︎フレンズ Official</title>
     
+    <title>あおはる⭐︎フレンズ 公式サイト | 2026年デビューの新人VTuberグループ</title>
+    
+    <meta name="description" content="2026年デビュー予定！マインクラフト実況を中心に活動する4人組VTuberグループ「あおはる⭐︎フレンズ」の公式サイト。メンバー紹介、配信スケジュール、限定グッズ、参加型企画などの最新情報を発信中！青春はここからクラフトする。">
+    
+    <meta name="keywords" content="あおはるフレンズ,あおはる,VTuber,新人VTuber,マインクラフト,マイクラ実況,推し活,配信スケジュール,あおはる学園">
+
+    <meta name="google-site-verification" content="SaUIbh01TFhfAeSRGwS5UJhxy5SsbH2Jn6Gln9bcgrA" />
     <link rel="icon" href="icon.png">
     <link rel="apple-touch-icon" href="icon.png">
 
-    <meta property="og:title" content="あおはる⭐︎フレンズ Official Site">
+    <meta property="og:title" content="あおはる⭐︎フレンズ 公式サイト">
     <meta property="og:type" content="website">
     <meta property="og:url" content="https://aoharu-site.vercel.app/">
     <meta property="og:image" content="https://aoharu-site.vercel.app/ogp.png">
@@ -2984,11 +2990,15 @@
         }
     }
 
-    function showPage(pageId, detailName = null, pushHistory = true) {
+function showPage(pageId, detailName = null, pushHistory = true) {
+        // 1. ページ切り替え処理（既存のまま）
         document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
         const target = document.getElementById(pageId);
+        
         if(target) {
             target.classList.add('active');
+            
+            // 各ページの初期化処理（既存のまま）
             if (pageId === 'mypage' && currentUserData) {
                 document.getElementById('myIconDisplay').src = currentUserData.icon || 'icon.png';
                 document.getElementById('myNameDisplay').innerText = currentUserData.name;
@@ -3013,18 +3023,27 @@
                 setTimeout(initSkinViewer, 100);
             }
         }
-        if(document.getElementById('sideMenu').classList.contains('open')) toggleMenu(); 
-        if(pushHistory) history.pushState(null, null, '#' + pageId);
-        updateBreadcrumbs(pageId, detailName);
-        window.scrollTo(0,0);
-    }
 
+    // ▼▼▼ 消えてしまった updateBreadcrumbs を復活させる ▼▼▼
     function updateBreadcrumbs(pageId, detailName) { 
         const container = document.getElementById('breadcrumbNav'); 
         let html = '<a href="javascript:void(0)" onclick="showPage(\'top\')" class="bc-item"><i class="fas fa-home bc-icon"></i></a>'; 
-        if (pageId === 'top') { container.style.display = 'none'; return; } else { container.style.display = 'flex'; } 
+        
+        if (pageId === 'top') { 
+            container.style.display = 'none'; 
+            return; 
+        } else { 
+            container.style.display = 'flex'; 
+        } 
+        
         const sep = '<span class="bc-sep">▶</span>'; 
-        const titles = {'news':'NEWS', 'member':'MEMBER', 'schedule':'SCHEDULE', 'goods':'GOODS', 'radio':'RADIO', 'guideline':'GUIDELINE', 'rakugaki':'GRAFFITI', 'mypage':'MY PAGE', 'studio':'STUDIO', 'skinviewer':'SKIN VIEWER'};
+        const titles = {
+            'news':'NEWS', 'member':'MEMBER', 'schedule':'SCHEDULE', 
+            'goods':'GOODS', 'radio':'RADIO', 'guideline':'GUIDELINE', 
+            'rakugaki':'GRAFFITI', 'mypage':'MY PAGE', 'studio':'STUDIO', 
+            'skinviewer':'SKIN VIEWER', 'business':'BUSINESS', 'recruitment':'RECRUITMENT'
+        };
+        
         if (pageId === 'memberDetail') {
              html += sep + '<a href="javascript:void(0)" onclick="showPage(\'member\')" class="bc-item">MEMBER</a>'; 
              html += sep + '<span class="bc-current">' + (detailName || 'DETAIL') + '</span>';
@@ -3032,6 +3051,41 @@
              html += sep + '<span class="bc-current">' + (titles[pageId] || pageId.toUpperCase()) + '</span>';
         }
         container.innerHTML = html; 
+    }
+
+        // 2. 共通処理（メニュー閉じ、履歴追加、パンくず、スクロール）
+        if(document.getElementById('sideMenu').classList.contains('open')) toggleMenu(); 
+        if(pushHistory) history.pushState(null, null, '#' + pageId);
+        updateBreadcrumbs(pageId, detailName);
+        window.scrollTo(0,0);
+
+        // ▼▼▼ 追加：ページタイトルを動的に変更する処理 ▼▼▼
+        const pageTitles = {
+            'top': '公式サイトTOP',
+            'news': '最新ニュース',
+            'member': 'メンバー紹介',
+            'schedule': '配信スケジュール',
+            'goods': '公式グッズ',
+            'radio': 'ラジオ＆お便り',
+            'guideline': 'ガイドライン',
+            'rakugaki': '落書き広場',
+            'studio': 'スタジオ機能',
+            'business': '法人・企業様向け窓口',
+            'recruitment': '新メンバー募集',
+            'mypage': 'マイページ'
+        };
+        
+        // IDからタイトルを取得（なければデフォルト）
+        let titleText = pageTitles[pageId] || 'Official Site';
+        
+        // メンバー詳細ページなどの場合、その名前をタイトルにする
+        if (detailName) {
+            titleText = detailName;
+        }
+
+        // ブラウザのタブ名を変更
+        document.title = `あおはる⭐︎フレンズ | ${titleText}`;
+        // ▲▲▲ 追加ここまで ▲▲▲
     }
 
     // --- データ取得 ---
