@@ -2820,11 +2820,43 @@
 <div class="copyright" onclick="triggerSecretEvent()" style="cursor:pointer; user-select:none;">
     © 2026 AOHARU FRIENDS All Rights Reserved.
 </div>
+</footer>
     <div class="floating-heart-btn" onclick="spawnHeart()">
         <i class="fas fa-heart"></i>
         <div class="like-badge" id="totalLikeCount">...</div>
     </div>
-</footer>
+<div id="omikujiAnimModal" class="modal" style="background:rgba(0,0,0,0.85);">
+        <div class="modal-content" style="background:transparent; box-shadow:none; overflow:visible;">
+            <div class="omi-anim-container">
+                <div id="omiParticles" class="omi-particles"></div>
+                <div class="omi-box-container">
+                    <div id="omiSlip" class="omi-slip"></div>
+                    <div id="omiBox" class="omi-box">おみくじ</div>
+                </div>
+            </div>
+            <p style="color:white; font-weight:bold; margin-top:20px; font-size:20px; text-shadow:0 2px 5px rgba(0,0,0,0.5);">運命を抽選中...</p>
+        </div>
+    </div>
+
+    <div id="omikujiModal" class="modal" onclick="closeOmikujiModal()">
+        <div class="modal-content" style="text-align:center;" onclick="event.stopPropagation()">
+            <span class="modal-close-btn" onclick="closeOmikujiModal()">×</span>
+            
+            <div id="omiCaptureArea" style="background:white; padding:10px; border-radius:10px;">
+                <div style="font-size:24px; font-weight:900; margin-bottom:20px; color:var(--primary); font-family: 'M PLUS Rounded 1c', sans-serif;">今日の運勢は…？</div>
+                <img id="omiResultImg" src="" class="omi-chara-img">
+                <div id="omiResultRank" class="omi-rank"></div>
+                <div id="omiResultMsg" class="omi-msg"></div>
+                <div style="margin-top:15px;">ラッキーアイテム：<span id="omiResultItem" class="omi-item"></span></div>
+            </div>
+
+            <div class="omi-action-btns">
+                <button class="sns-share-btn" onclick="shareOmikuji()"><i class="fab fa-x-twitter"></i> ポストする</button>
+                <button class="save-img-btn" onclick="saveOmikuji()"><i class="fas fa-camera"></i> 保存する</button>
+            </div>
+            
+        </div>
+    </div>
 
 <div id="flashlightOverlay" class="flashlight-layer"></div>
 
@@ -4047,63 +4079,17 @@ function renderSchedule() {
             p.remove();
         }, 1000);
     }
-    // ▼▼▼ 追加機能：ニュースのいいね＆シェア機能 ▼▼▼
+    
 
-    // 記事ごとの「いいね」を保存するキーを作る関数
+    // ▼▼▼ ニュース機能のユーティリティ（いいね・シェア・コピー） ▼▼▼
+
+    // 記事ごとの「いいね」を保存するキーを作る関数（これが消えていました！）
     function getNewsLikeKey(index) {
-        // 日付とインデックスを組み合わせてユニークなIDにする
+        if (!newsData[index]) return 'news_like_unknown_' + index;
         return 'news_like_' + (newsData[index].date || 'no_date') + '_' + index;
     }
 
-    // いいねボタンが押された時の処理
-    function likeNews(index, btnElement) {
-        const key = getNewsLikeKey(index);
-        
-        // すでにいいねしているかチェック
-        if (localStorage.getItem(key)) {
-            // いいね解除
-            localStorage.removeItem(key);
-            btnElement.classList.remove('liked');
-        } else {
-            // いいね登録
-            localStorage.setItem(key, 'true');
-            btnElement.classList.add('liked');
-            // 画面全体にハートを飛ばす演出（既存機能の再利用！）
-            spawnHeart(); 
-        }
-    }
-
-    // ▼▼▼ 修正版：SNSシェア機能（画像URL対応） ▼▼▼
-    function shareNews(index) {
-        const data = newsData[index];
-        // 投稿文を作成
-        let text = `【あおはる⭐︎フレンズ】NEWS: ${data.title}\n`;
-        
-        // 画像URLがあれば、テキストの末尾に追加（これでTwitterカードに画像が出やすくなります）
-        // ※httpから始まるちゃんとしたURLの時だけ追加
-        if (data.image && data.image.startsWith('http')) {
-             text += ` ${data.image} \n`;
-        }
-
-        const siteUrl = "https://aoharu-site.vercel.app/"; 
-        const hashtags = "あおはるフレンズ";
-        
-        const twitterUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}&url=${encodeURIComponent(siteUrl)}&hashtags=${hashtags}`;
-        window.open(twitterUrl, '_blank');
-    }
-
-    // リンクをコピーする処理
-    function copyNewsLink(index) {
-        const data = newsData[index];
-        const text = `${data.title} - あおはる⭐︎フレンズ Official Site`;
-        
-        navigator.clipboard.writeText(text + "\nhttps://aoharu-site.vercel.app/").then(() => {
-            alert("記事のリンクをコピーしました！\nSNSなどで紹介してね！✨");
-        });
-    }
-    // ▼▼▼ 【ここに追加】ニュースのいいね＆シェア機能 ▼▼▼
-
-    // 1. いいね機能（スプシ連動）
+    // 1. いいね機能（スプシ連動＆ハート演出）
     async function likeNews(index, btnElement) {
         // 見た目を先に更新（サクサク動くように）
         const countSpan = btnElement.querySelector('.like-count-num');
@@ -4113,7 +4099,10 @@ function renderSchedule() {
         countSpan.innerText = currentCount + 1;
         btnElement.classList.add('liked');
         
-        // ハート演出（既存の関数があれば実行）
+        // ブラウザにも記録（リロード時の色付け用）
+        localStorage.setItem(getNewsLikeKey(index), 'true');
+        
+        // ハート演出
         if(typeof spawnHeart === 'function') spawnHeart(); 
 
         try {
