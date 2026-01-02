@@ -1723,19 +1723,34 @@
             align-items: center;
             flex-wrap: wrap;
         }
+        /* ▼▼▼ 修正：ボタンの形をきれいに整える設定 ▼▼▼ */
         .news-action-btn {
             border: none;
-            padding: 8px 16px;
-            border-radius: 20px;
-            font-size: 13px;
-            font-weight: bold;
-            cursor: pointer;
+            
+            /* ↓ 高さ・幅の調整 */
+            padding: 0 20px;        /* 横の余白を広めに */
+            height: 40px;           /* 高さを40pxに固定して揃える */
+            min-width: 90px;        /* 最低でもこれくらいの幅を確保（潰れ防止） */
+            border-radius: 50px;    /* 完全に丸いカプセル型にする */
+            
+            /* ↓ 中身の配置 */
             display: flex;
             align-items: center;
-            gap: 6px;
-            transition: all 0.2s;
+            justify-content: center; /* 真ん中に寄せる */
+            gap: 8px;                /* アイコンと文字の間隔 */
+            
+            /* ↓ 文字の設定 */
+            font-size: 14px;
+            font-weight: bold;
             font-family: 'Poppins', sans-serif;
+            white-space: nowrap;     /* 文字の折り返し禁止 */
+            
+            cursor: pointer;
+            transition: all 0.2s;
+            flex-shrink: 0;          /* 横並びでも潰れないようにする */
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05); /* うっすら影をつけて立体的に */
         }
+
         /* いいねボタン */
         .news-like-btn {
             background: #ffebeb;
@@ -1747,14 +1762,15 @@
             color: white;
             box-shadow: 0 4px 10px rgba(255, 71, 87, 0.4);
         }
-        /* シェアボタン */
+        /* シェアボタン（Post, Copy） */
         .news-share-btn {
             background: #f0f0f0;
             color: #555;
         }
         .news-share-btn:hover { background: #e0e0e0; transform: translateY(-2px); }
-        .news-share-btn.x-btn:hover { background: #000; color: white; 
-        }
+        
+        /* X (Twitter) ボタン専用色 */
+        .news-share-btn.x-btn:hover { background: #000; color: white; }
     </style>
 </head>
 <body>
