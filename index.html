@@ -1,3 +1,5 @@
+2026.1.2
+
 <!DOCTYPE html>
 <html lang="ja" prefix="og: http://ogp.me/ns#">
 <head>
@@ -28,8 +30,7 @@
     
     <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
-    <script src="https://bs-community.github.io/skinview3d/js/skinview3d.bundle.js"></script>    
-    <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
+    <script src="https://bs-community.github.io/skinview3d/js/skinview3d.bundle.js"></script>
 
     <style>
         /* ▼▼▼ ベーススタイル（カーソル設定を追加） ▼▼▼ */
@@ -122,38 +123,7 @@
         .overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.3); z-index: 1500; opacity: 0; visibility: hidden; transition: 0.3s; } .overlay.open { opacity: 1; visibility: visible; }
 
         /* 共通コンポーネント */
-        /* ▼▼▼ Neo-Porte風：全画面メインビジュアル ▼▼▼ */
-        .hero-section { 
-            width: 100%;
-            height: 100vh; /* 画面の高さいっぱいに広げる！ */
-            min-height: 600px; /* どんなに小さくてもこれ以上は縮めない */
-            background-color: #000; 
-            position: relative; 
-            margin-bottom: 0; 
-            padding: 0; 
-            overflow: hidden; 
-        } 
-        
-        /* メイン画像の設定 */
-        .hero-main-img { 
-            width: 100%; 
-            height: 100%; 
-            object-fit: cover;   /* 比率を保ったまま画面を埋め尽くす */
-            object-position: center top; /* 画像の上の方（顔）を中心に合わせる */
-            
-            /* ↓ おまけ：ゆっくり動くアニメーション（これがあるとプロっぽい！） */
-            animation: heroZoom 20s infinite alternate;
-        }
-        
-        @keyframes heroZoom {
-            0% { transform: scale(1.0); }
-            100% { transform: scale(1.1); }
-        }
-
-        /* スマホ向けの高さ調整 */
-        @media (max-width: 768px) {
-            .hero-section { height: 80vh; } /* スマホは少し短めに */
-        }
+        .hero-section { width: 100%; background-color: #e0f7ff; position: relative; margin-bottom: 40px; padding: 0; }.hero-logo-img { width: 100%; max-width: 1300px; height: auto; display: block; margin: 0 auto; filter: drop-shadow(0 5px 15px rgba(39, 198, 245, 0.3)); }
         .container { padding: 0 20px 40px; max-width: 1000px; margin: 0 auto; }
         .page-header { text-align: center; margin: 40px 0 60px; } .page-title-en { font-family: 'Oswald', sans-serif; font-size: 48px; color: var(--primary); letter-spacing: 2px; line-height: 1; margin-bottom: 10px; } .page-title-jp { font-size: 14px; color: var(--text-sub); font-weight: bold; letter-spacing: 1px; }
         .section-title { text-align: center; margin-bottom: 30px; margin-top: 40px; } .en-title { font-family: 'Poppins', sans-serif; font-size: 28px; font-weight: bold; color: var(--primary); letter-spacing: 2px; } .ja-title { display: block; font-size: 12px; color: var(--text-sub); margin-top: 5px; font-weight: bold; }
@@ -1809,121 +1779,6 @@
         
         /* X (Twitter) ボタン専用色 */
         .news-share-btn.x-btn:hover { background: #000; color: white; }
-
-        /* =========================================
-           ★あおはる アップグレード・デザイン★
-           ========================================= */
-
-        /* 1. スクロール連動アニメーション (下からポンッと出る) */
-        .fade-in-section {
-            opacity: 0;
-            transform: translateY(30px);
-            transition: opacity 0.6s cubic-bezier(0.25, 1, 0.5, 1), transform 0.6s cubic-bezier(0.25, 1, 0.5, 1);
-            will-change: opacity, transform;
-        }
-        .fade-in-section.is-visible {
-            opacity: 1;
-            transform: translateY(0);
-        }
-
-        /* 2. 背景パーティクル (ふわふわ浮く四角形) */
-        #particles-js {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            z-index: -5; /* 背景の一番奥 */
-            pointer-events: none;
-        }
-
-        /* 3. 斜めのライン・デザイン (セクション区切り) */
-        .diagonal-divider {
-            position: relative;
-            height: 50px;
-            background: var(--bg-color);
-            margin-top: -30px;
-            z-index: 5;
-            overflow: hidden;
-        }
-        .diagonal-divider::before {
-            content: "";
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(to right, var(--primary), #89CFF0);
-            transform: skewY(-2deg); /* 斜めにする魔法 */
-            transform-origin: top left;
-        }
-        
-        /* 流れる文字 (マーキーエリア) */
-        .marquee-container {
-            width: 100%;
-            background: #27C6F5;
-            overflow: hidden;
-            padding: 10px 0;
-            transform: rotate(-2deg); /* 全体を少し斜めにする */
-            margin: 40px 0;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
-            border-top: 2px solid white;
-            border-bottom: 2px solid white;
-        }
-        .marquee-content {
-            display: flex;
-            width: fit-content;
-            animation: marquee-anim 20s linear infinite;
-        }
-        .marquee-item {
-            color: white;
-            font-family: 'Oswald', sans-serif;
-            font-size: 24px;
-            font-weight: bold;
-            margin-right: 40px;
-            white-space: nowrap;
-            letter-spacing: 2px;
-            text-shadow: 1px 1px 0 rgba(0,0,0,0.1);
-        }
-        @keyframes marquee-anim {
-            0% { transform: translateX(0); }
-            100% { transform: translateX(-50%); }
-        }
-
-        /* 4. ホバーエフェクト強化 (ボタン・カード) */
-        /* ボタン: 押すと沈む3Dアクション */
-        .more-btn, .contact-btn, .biz-btn, .apply-btn, .omikuji-btn {
-            transition: all 0.1s ease !important;
-            box-shadow: 0 4px 0 rgba(0,0,0,0.2) !important; /* 影で厚みを出す */
-            transform: translateY(0);
-        }
-        .more-btn:active, .contact-btn:active, .biz-btn:active, .apply-btn:active, .omikuji-btn:active {
-            transform: translateY(4px) !important; /* 押した分だけ下がる */
-            box-shadow: 0 0 0 rgba(0,0,0,0.2) !important; /* 影を消す */
-        }
-        
-        /* カード: 光が走るエフェクト */
-        .news-card, .member-card-vertical, .video-card {
-            position: relative;
-            overflow: hidden;
-        }
-        .news-card::after, .member-card-vertical::after, .video-card::after {
-            content: "";
-            position: absolute;
-            top: 0;
-            left: -100%;
-            width: 50%;
-            height: 100%;
-            background: linear-gradient(to right, rgba(255,255,255,0) 0%, rgba(255,255,255,0.3) 50%, rgba(255,255,255,0) 100%);
-            transform: skewX(-25deg);
-            pointer-events: none;
-            transition: left 0.5s;
-        }
-        .news-card:hover::after, .member-card-vertical:hover::after, .video-card:hover::after {
-            left: 150%;
-            transition: left 0.7s;
-        }
-
         /* ▼▼▼ おみくじアニメーション用CSS（追加・修正） ▼▼▼ */
         #omikujiAnimModal {
             position: fixed;
@@ -2022,8 +1877,6 @@
         <img src="logo.png" class="loading-logo" alt="Loading...">
         <div class="loading-text">LOADING...</div>
     </div>
-    
-    <div id="particles-js"></div>
 
     <div id="bgShapes" class="bg-shape-container"></div>
 
@@ -2212,17 +2065,8 @@
 
     <div id="top" class="page active">
             <div class="hero-section">
-                <img src="main_visual.jpg" alt="MAIN VISUAL" class="hero-main-img">
-                </div>
-
-        <div class="marquee-container">
-            <div class="marquee-content">
-                <span class="marquee-item">★ AOHARU FRIENDS DEBUT 2026 ★ MINECRAFT & VARIETY ★ NEW GENERATION VTUBERS ★</span>
-                <span class="marquee-item">★ AOHARU FRIENDS DEBUT 2026 ★ MINECRAFT & VARIETY ★ NEW GENERATION VTUBERS ★</span>
-                <span class="marquee-item">★ AOHARU FRIENDS DEBUT 2026 ★ MINECRAFT & VARIETY ★ NEW GENERATION VTUBERS ★</span>
-                <span class="marquee-item">★ AOHARU FRIENDS DEBUT 2026 ★ MINECRAFT & VARIETY ★ NEW GENERATION VTUBERS ★</span>
+                <img src="top_logo.png" alt="AOHARU FRIENDS MAIN VISUAL" class="hero-logo-img">
             </div>
-        </div>
             <div class="container">
                 <div id="nowOnAirSection">
                     <div class="noa-title">NOW ON AIR</div>
@@ -3217,25 +3061,6 @@
             renderGraffitiList(); 
             initBackgroundShapes();
             renderThemeButtons();
-            // ★追加：スクロール連動アニメーションの開始
-            if(typeof initScrollAnimation === 'function') initScrollAnimation();
-
-            // ★追加：背景パーティクルの開始
-            if(window.particlesJS) {
-                particlesJS('particles-js', {
-                    "particles": {
-                        "number": { "value": 30, "density": { "enable": true, "value_area": 800 } },
-                        "color": { "value": ["#27C6F5", "#ff4757", "#f1c40f"] }, /* あおはるカラー */
-                        "shape": { "type": ["circle", "triangle", "edge"] },
-                        "opacity": { "value": 0.5, "random": true },
-                        "size": { "value": 8, "random": true },
-                        "line_linked": { "enable": false },
-                        "move": { "enable": true, "speed": 2, "direction": "top", "random": true, "straight": false, "out_mode": "out" }
-                    },
-                    "interactivity": { "events": { "onhover": { "enable": false } } },
-                    "retina_detect": true
-                });
-            }
             const loader = document.getElementById('loadingScreen');
             if(loader) {
                 loader.classList.add('loaded');
@@ -4210,22 +4035,6 @@
     function changeTheme(color) {
         // サイト全体のテーマカラー変数を書き換え
         document.documentElement.style.setProperty('--primary', color);
-    }
-    // ▼▼▼ 追加：スクロール連動アニメーション関数 ▼▼▼
-    function initScrollAnimation() {
-        // 監視対象にする要素（カードやタイトルなど）にクラスを付与
-        const targets = document.querySelectorAll('.news-card, .schedule-card, .video-card, .member-card-vertical, .section-title, .omikuji-area');
-        targets.forEach(el => el.classList.add('fade-in-section'));
-
-        const observer = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    entry.target.classList.add('is-visible');
-                }
-            });
-        }, { threshold: 0.1 });
-
-        targets.forEach(el => observer.observe(el));
     }
     // ▼▼▼ 修正版：ビジネスお問い合わせ送信機能 ▼▼▼
     async function submitBusinessForm() {
