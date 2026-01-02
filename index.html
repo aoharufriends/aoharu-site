@@ -206,7 +206,7 @@
 
         /* デジタル会員証メーカー */
         .oshi-buttons { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; margin-bottom: 20px; }
-        .oshi-btn { width: 55px; height: 55px; border-radius: 50%; border: 3px solid transparent; cursor: pointer; background-size: 200%; background-position: center 10%; transition: transform 0.2s; }
+        .oshi-btn { width: 55px; height: 55px; border-radius: 50%; border: 3px solid transparent; cursor: pointer; background-size: cover; background-position: center; transition: transform 0.2s; }
         .oshi-btn.selected { border-color: #333; transform: scale(1.1); box-shadow: 0 4px 10px rgba(0,0,0,0.2); }
         .card-maker-area { margin-top: 60px; padding-top: 40px; border-top: 1px dashed #ddd; }
         .maker-container { background: #fff; border-radius: 20px; padding: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.05); text-align: center; }
@@ -2295,7 +2295,38 @@
         }
     }
     function toggleMenu() { document.getElementById('sideMenu').classList.toggle('open'); document.getElementById('overlay').classList.toggle('open'); }
-    function initCardMaker() { const today = new Date(); const dStr = `${today.getFullYear()}.${(today.getMonth()+1).toString().padStart(2,'0')}.${today.getDate().toString().padStart(2,'0')}`; const cardDateEl = document.getElementById('cardDate'); if(cardDateEl) cardDateEl.innerText = 'DATE: ' + dStr; const cardNoEl = document.getElementById('cardNo'); if(cardNoEl) cardNoEl.innerText = dStr.replace(/\./g,'') + '-' + (Math.floor(Math.random()*9000)+1000); const btnContainer = document.getElementById('oshiButtons'); if(btnContainer) { btnContainer.innerHTML = ''; memberData.forEach((m, i) => { const btn = document.createElement('div'); btn.className = 'oshi-btn'; btn.style.backgroundImage = `url('${m.img}')`; btn.onclick = () => selectOshi(i); btnContainer.appendChild(btn); }); if(memberData.length > 0) selectOshi(0); } }
+    function initCardMaker() { 
+        const today = new Date(); 
+        const dStr = `${today.getFullYear()}.${(today.getMonth()+1).toString().padStart(2,'0')}.${today.getDate().toString().padStart(2,'0')}`; 
+        const cardDateEl = document.getElementById('cardDate'); 
+        if(cardDateEl) cardDateEl.innerText = 'DATE: ' + dStr; 
+        const cardNoEl = document.getElementById('cardNo'); 
+        if(cardNoEl) cardNoEl.innerText = dStr.replace(/\./g,'') + '-' + (Math.floor(Math.random()*9000)+1000); 
+        
+        const btnContainer = document.getElementById('oshiButtons'); 
+        if(btnContainer) { 
+            btnContainer.innerHTML = ''; 
+            memberData.forEach((m, i) => { 
+                const btn = document.createElement('div'); 
+                btn.className = 'oshi-btn'; 
+                
+                // ▼▼▼ Change: Use oshi-colored icon for the button ▼▼▼
+                let iconSrc = m.img; // Default to existing image
+                if (m.enName) {
+                    let name = m.enName.toLowerCase();
+                    if (name.includes(' ')) name = name.split(' ').pop();
+                    if (name.includes('-')) name = name.split('-')[0];
+                    iconSrc = `icon_sch_${name}.png`;
+                }
+                btn.style.backgroundImage = `url('${iconSrc}')`; 
+                // ▲▲▲ Change End ▲▲▲
+
+                btn.onclick = () => selectOshi(i); 
+                btnContainer.appendChild(btn); 
+            }); 
+            if(memberData.length > 0) selectOshi(0); 
+        } 
+    }
     function selectOshi(index) { const m = memberData[index]; document.querySelectorAll('.oshi-btn').forEach((b, i) => b.classList.toggle('selected', i === index)); const card = document.getElementById('digitalCard'); if(card) { card.style.setProperty('--card-color', m.color); const bottom = m.card_bottom || "-20px"; const right = m.card_right || "-50px"; const width = m.card_width || "280px"; card.style.setProperty('--char-bottom', bottom); card.style.setProperty('--char-right', right); card.style.setProperty('--char-width', width); document.getElementById('cardOshiDisplay').innerText = m.name; document.getElementById('cardCharImg').src = m.img; } }
     function updateCard() { const val = document.getElementById('cardNameInput').value; const display = document.getElementById('cardNameDisplay'); if(display) display.innerText = val ? val : 'GUEST'; }
     function downloadCard() { const card = document.getElementById('digitalCard'); html2canvas(card, { scale: 3, backgroundColor: null, useCORS: true }).then(canvas => { const link = document.createElement('a'); link.download = 'aoharu_card.png'; link.href = canvas.toDataURL('image/png'); link.click(); }); }
