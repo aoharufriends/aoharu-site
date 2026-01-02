@@ -1713,6 +1713,48 @@
             background: #fffbe6; border: 2px solid #ffeaa7; padding: 30px; border-radius: 15px;
             font-family: 'M PLUS Rounded 1c', sans-serif;
         }
+        /* ▼▼▼ 追加：ニュース記事のアクションボタン（いいね・シェア） ▼▼▼ */
+        .news-action-bar {
+            margin-top: 20px;
+            padding-top: 20px;
+            border-top: 1px dashed #eee;
+            display: flex;
+            gap: 10px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+        .news-action-btn {
+            border: none;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 13px;
+            font-weight: bold;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            transition: all 0.2s;
+            font-family: 'Poppins', sans-serif;
+        }
+        /* いいねボタン */
+        .news-like-btn {
+            background: #ffebeb;
+            color: #ff4757;
+        }
+        .news-like-btn:hover { background: #ffdbdb; transform: scale(1.05); }
+        .news-like-btn.liked {
+            background: #ff4757;
+            color: white;
+            box-shadow: 0 4px 10px rgba(255, 71, 87, 0.4);
+        }
+        /* シェアボタン */
+        .news-share-btn {
+            background: #f0f0f0;
+            color: #555;
+        }
+        .news-share-btn:hover { background: #e0e0e0; transform: translateY(-2px); }
+        .news-share-btn.x-btn:hover { background: #000; color: white; 
+        }
     </style>
 </head>
 <body>
@@ -2840,7 +2882,7 @@
     // ▼▼▼ あおはる⭐︎フレンズ 公式サイト 最終完全版スクリプト ▼▼▼
     // ==========================================
 
-    const GAS_API_URL = "https://script.google.com/macros/s/AKfycbzg2nlp3H3R4cdjxDVqc3ZrXwApXKNvyIXzWLJddiadHz723NYhns-C_AUmn1mE2TwanQ/exec";
+    const GAS_API_URL = "https://script.google.com/macros/s/AKfycbyTvrU9bNo0ybkM9FSYiEFk_M72feBQdOAE6Tf9qnqLYmnieeTFyVBFvawgWKP8K9MtXg/exec";
     let YOUTUBE_API_KEY = ""; 
     let GROUP_CONFIG = {};
     let memberData = [];
@@ -3166,27 +3208,7 @@
         if(fullList) fullList.innerHTML = newsHtmlPage || "まだニュースはありません"; 
     }
 
-    // ▼▼▼ 修正版：ニュース詳細（URL自動リンク ＆ 特設ボタン対応） ▼▼▼
-    function updatePickupNews(index) {
-        const data = newsData[index];
-        if(!data) return;
-        
-        const img = document.getElementById('pickupImg');
-        const title = document.getElementById('pickupTitle');
-        const badge = document.getElementById('pickupBadge');
-        const detail = document.getElementById('pickupDetail');
-        
-        // 画像とタイトルのセット
-        img.src = data.image || "https://placehold.co/800x450/27C6F5/ffffff?text=NO+IMAGE";
-        title.innerText = data.title;
-        
-        // バッジのセット
-        badge.innerText = data.tag || 'NEWS';
-        badge.style.background = getTagColor(data.tag);
-        badge.style.display = "inline-block";
-    } 
-
-        // ▼▼▼ 修正版：updatePickupNews 完全版（重複削除済み） ▼▼▼
+    // ▼▼▼ 修正版：updatePickupNews（いいね数＆シェアボタン対応） ▼▼▼
     function updatePickupNews(index) {
         const data = newsData[index];
         if(!data) return;
@@ -3206,12 +3228,12 @@
         badge.style.display = "inline-block"; 
 
         // ---------------------------------------------------------
-        // ▼▼▼ ここから：テキスト処理（URLリンク化 ＆ 特設ボタン対応） ▼▼▼
+        // ▼▼▼ テキスト処理（リンク化 ＆ 特設ボタン ＆ アクションボタン） ▼▼▼
         
-        let contentText = data.detail || data.title; // 詳細がない場合はタイトルを表示
+        let contentText = data.detail || data.title;
         let appendHtml = "";
 
-        // 1. 特設ページの合言葉「[[RECRUIT_LINK]]」があれば、ボタンを準備して合言葉を消す
+        // 1. 特設ボタンの処理
         if (contentText.includes('[[RECRUIT_LINK]]')) {
             contentText = contentText.replace('[[RECRUIT_LINK]]', '');
             appendHtml = `<div style="text-align:center; margin-top:20px;">
@@ -3221,18 +3243,28 @@
                           </div>`;
         }
 
-        // 2. URLを自動でリンク（<a>タグ）に変換する
-        // (word-break:break-all を追加して、長いURLでもレイアウトが崩れないようにしています)
+        // 2. URLリンク化 & 改行処理
         let htmlFormatted = contentText.replace(/(https?:\/\/[^\s]+)/g, '<a href="$1" target="_blank" style="color:#00aaff; text-decoration:underline; word-break:break-all;">$1</a>');
-
-        // 3. スプレッドシートの改行（\n）を、HTMLの改行（<br>）に変換
         htmlFormatted = htmlFormatted.replace(/\n/g, '<br>');
 
-        // 4. 画面に反映（本文 + ボタン）
-        // innerText ではなく innerHTML を使うことで、リンクやボタンを有効にします
-        detail.innerHTML = htmlFormatted + appendHtml;
+        // 3. アクションボタン（いいね・シェア）の作成 ★ここが追加！
+        const likesCount = data.likes ? data.likes : 0;
+        const actionHtml = `
+            <div class="news-action-bar" style="justify-content:center;">
+                <button class="news-action-btn news-like-btn" onclick="likeNews(${index}, this)">
+                    <i class="fas fa-heart"></i> <span class="like-count-num">${likesCount}</span>
+                </button>
+                <button class="news-action-btn news-share-btn x-btn" onclick="shareNews(${index})">
+                    <i class="fab fa-x-twitter"></i> Post
+                </button>
+                <button class="news-action-btn news-share-btn" onclick="copyNewsLink(${index})">
+                    <i class="fas fa-link"></i> Copy
+                </button>
+            </div>`;
 
-        // ▲▲▲ テキスト処理ここまで ▲▲▲
+        // 4. 画面に反映（本文 + 特設ボタン + アクションボタン）
+        detail.innerHTML = htmlFormatted + appendHtml + actionHtml;
+
         // ---------------------------------------------------------
 
         // 閉じるボタンとスクロール処理
@@ -3243,25 +3275,21 @@
         if(pickupArea) pickupArea.scrollIntoView({ behavior: 'smooth', block: 'center' });
     }
 
-    // ▼▼▼ 修正版：ニュース詳細モーダル（URLリンク化・改行・ボタン対応） ▼▼▼
+    // ▼▼▼ 修正版：openNewsModal（いいね・シェアボタン追加版） ▼▼▼
     function openNewsModal(index) { 
         const data = newsData[index]; 
         
-        // 日付とタグの設定
         document.getElementById('modalDate').innerText = data.date; 
         const tagEl = document.getElementById('modalTag'); 
         tagEl.innerText = data.tag; 
         tagEl.style.background = getTagColor(data.tag); 
         
-        // タイトルの設定
         document.getElementById('modalTitle').innerText = data.title; 
         
-        // ▼▼▼ ここから修正：本文の処理（リンク化など） ▼▼▼
-        
+        // --- 本文処理 ---
         let modalText = data.detail || data.title || "";
         let modalBtnHtml = "";
 
-        // 1. 特設ページの合言葉があればボタンを作成
         if (modalText.includes('[[RECRUIT_LINK]]')) {
             modalText = modalText.replace('[[RECRUIT_LINK]]', '');
             modalBtnHtml = `<div style="text-align:center; margin-top:20px;">
@@ -3271,16 +3299,28 @@
                           </div>`;
         }
 
-        // 2. URLをリンク(aタグ)に変換 ＆ 改行を<br>に変換
         let modalHtml = modalText.replace(/(https?:\/\/[^\s]+)/g, '<a href="$1" target="_blank" style="color:#00aaff; text-decoration:underline; word-break:break-all;">$1</a>');
         modalHtml = modalHtml.replace(/\n/g, '<br>');
 
-        // 3. 画面に反映 (innerHTMLを使う！)
-        document.getElementById('modalBody').innerHTML = modalHtml + modalBtnHtml;
-        
-        // ▲▲▲ ここまで修正 ▲▲▲
+        // ★★★ ここから追加：アクションボタンの生成 ★★★
+        const isLiked = localStorage.getItem(getNewsLikeKey(index)) ? 'liked' : '';
+        const actionHtml = `
+            <div class="news-action-bar" style="justify-content:center;">
+                <button class="news-action-btn news-like-btn ${isLiked}" onclick="likeNews(${index}, this)">
+                    <i class="fas fa-heart"></i> いいね！
+                </button>
+                <button class="news-action-btn news-share-btn x-btn" onclick="shareNews(${index})">
+                    <i class="fab fa-x-twitter"></i> Post
+                </button>
+                <button class="news-action-btn news-share-btn" onclick="copyNewsLink(${index})">
+                    <i class="fas fa-link"></i> Copy
+                </button>
+            </div>`;
 
-        // 画像の有無チェック
+        // 画面に反映
+        document.getElementById('modalBody').innerHTML = modalHtml + modalBtnHtml + actionHtml;
+        
+        // --- 画像処理 ---
         const img = document.getElementById('modalImg');
         if (img && data.image && data.image !== "") { 
             img.src = data.image; 
@@ -3289,7 +3329,6 @@
             img.style.display = "none"; 
         }
         
-        // モーダルを表示
         document.getElementById('newsModal').classList.add('open'); 
     }
 
@@ -3937,6 +3976,118 @@ function renderSchedule() {
         setTimeout(() => {
             p.remove();
         }, 1000);
+    }
+    // ▼▼▼ 追加機能：ニュースのいいね＆シェア機能 ▼▼▼
+
+    // 記事ごとの「いいね」を保存するキーを作る関数
+    function getNewsLikeKey(index) {
+        // 日付とインデックスを組み合わせてユニークなIDにする
+        return 'news_like_' + (newsData[index].date || 'no_date') + '_' + index;
+    }
+
+    // いいねボタンが押された時の処理
+    function likeNews(index, btnElement) {
+        const key = getNewsLikeKey(index);
+        
+        // すでにいいねしているかチェック
+        if (localStorage.getItem(key)) {
+            // いいね解除
+            localStorage.removeItem(key);
+            btnElement.classList.remove('liked');
+        } else {
+            // いいね登録
+            localStorage.setItem(key, 'true');
+            btnElement.classList.add('liked');
+            // 画面全体にハートを飛ばす演出（既存機能の再利用！）
+            spawnHeart(); 
+        }
+    }
+
+    // ▼▼▼ 修正版：SNSシェア機能（画像URL対応） ▼▼▼
+    function shareNews(index) {
+        const data = newsData[index];
+        // 投稿文を作成
+        let text = `【あおはる⭐︎フレンズ】NEWS: ${data.title}\n`;
+        
+        // 画像URLがあれば、テキストの末尾に追加（これでTwitterカードに画像が出やすくなります）
+        // ※httpから始まるちゃんとしたURLの時だけ追加
+        if (data.image && data.image.startsWith('http')) {
+             text += ` ${data.image} \n`;
+        }
+
+        const siteUrl = "https://aoharu-site.vercel.app/"; 
+        const hashtags = "あおはるフレンズ";
+        
+        const twitterUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}&url=${encodeURIComponent(siteUrl)}&hashtags=${hashtags}`;
+        window.open(twitterUrl, '_blank');
+    }
+
+    // リンクをコピーする処理
+    function copyNewsLink(index) {
+        const data = newsData[index];
+        const text = `${data.title} - あおはる⭐︎フレンズ Official Site`;
+        
+        navigator.clipboard.writeText(text + "\nhttps://aoharu-site.vercel.app/").then(() => {
+            alert("記事のリンクをコピーしました！\nSNSなどで紹介してね！✨");
+        });
+    }
+    // ▼▼▼ 【ここに追加】ニュースのいいね＆シェア機能 ▼▼▼
+
+    // 1. いいね機能（スプシ連動）
+    async function likeNews(index, btnElement) {
+        // 見た目を先に更新（サクサク動くように）
+        const countSpan = btnElement.querySelector('.like-count-num');
+        let currentCount = parseInt(countSpan.innerText);
+        if (isNaN(currentCount)) currentCount = 0;
+        
+        countSpan.innerText = currentCount + 1;
+        btnElement.classList.add('liked');
+        
+        // ハート演出（既存の関数があれば実行）
+        if(typeof spawnHeart === 'function') spawnHeart(); 
+
+        try {
+            // GASに送信して、スプシの数字を増やす
+            const res = await fetch(`${GAS_API_URL}?action=add_news_like&index=${index}`);
+            const json = await res.json();
+            
+            // サーバーから返ってきた「正確な数字」に同期する
+            if (json.status === 'success') {
+                countSpan.innerText = json.likes;
+                // 次回のためにローカルデータも更新
+                if(newsData[index]) newsData[index].likes = json.likes; 
+            }
+        } catch (e) {
+            console.error("Like Error:", e);
+        }
+    }
+
+    // 2. SNSシェア機能（画像URL対応）
+    function shareNews(index) {
+        const data = newsData[index];
+        let text = `【あおはる⭐︎フレンズ】NEWS: ${data.title}\n`;
+        
+        // 画像URLがあれば、テキストの末尾に追加
+        if (data.image && data.image.startsWith('http')) {
+             text += ` ${data.image} \n`;
+        }
+
+        const siteUrl = "https://aoharu-site.vercel.app/"; 
+        const hashtags = "あおはるフレンズ";
+        
+        const twitterUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}&url=${encodeURIComponent(siteUrl)}&hashtags=${hashtags}`;
+        window.open(twitterUrl, '_blank');
+    }
+
+    // 3. リンクコピー機能
+    function copyNewsLink(index) {
+        const data = newsData[index];
+        const text = `${data.title} - あおはる⭐︎フレンズ Official Site`;
+        const url = "https://aoharu-site.vercel.app/";
+        
+        navigator.clipboard.writeText(text + "\n" + url).then(() => {
+            alert("記事のリンクをコピーしました！\nSNSなどで紹介してね！✨");
+        });
     }
 </script>
 </body>
