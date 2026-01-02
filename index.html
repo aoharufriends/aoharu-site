@@ -362,7 +362,16 @@
         .radio-btn:hover { transform: translateY(-2px); }
         .diary-section { margin-top: 50px; }
         .diary-card { background: white; border-radius: 15px; padding: 15px; margin-bottom: 20px; border: 1px solid #eee; display: flex; gap: 15px; box-shadow: 0 2px 8px rgba(0,0,0,0.03); position: relative; }
-        .diary-icon { width: 60px; height: 60px; border-radius: 50%; flex-shrink: 0; border: 2px solid #eee; background-size: 330%; background-position: top center; background-repeat: no-repeat; }
+        .diary-icon { 
+    width: 60px; 
+    height: 60px; 
+    border-radius: 50%; 
+    flex-shrink: 0; 
+    border: 2px solid #eee; 
+    background-size: cover;       /* ← ここを cover に変更 */
+    background-position: center;  /* ← ここを center に変更 */
+    background-repeat: no-repeat; 
+}
         .diary-content { flex: 1; }
         .diary-name { font-weight: bold; font-size: 13px; margin-bottom: 5px; color: var(--text-sub); }
         .diary-text { font-size: 14px; line-height: 1.6; background: #f9f9f9; padding: 10px; border-radius: 0 10px 10px 10px; display: inline-block; position: relative; }
@@ -1536,6 +1545,105 @@
         </div>
     </div>
 
+<div id="business" class="page">
+        <div class="biz-header">
+            <div class="biz-title-en">BUSINESS</div>
+            <div class="biz-title-jp">法人・企業様向け窓口</div>
+            <p style="font-size:12px; margin-top:15px; opacity:0.9;">
+                あおはる⭐︎フレンズとのタイアップ・コラボレーションについて
+            </p>
+        </div>
+
+        <div class="container">
+            <div class="biz-section">
+                <div class="biz-h2">ABOUT US</div>
+                <p style="font-size:14px; line-height:1.8; color:var(--text-main); margin-bottom:20px;">
+                    「あおはる⭐︎フレンズ」は、2026年にデビューした4人組VTuberグループです。<br>
+                    "青春"をテーマに、ゲーム実況、音楽活動、バラエティ企画など多岐にわたるエンターテインメントを提供しています。<br>
+                    10代〜20代の若年層を中心に、熱量の高いファンコミュニティを形成しています。
+                </p>
+                <div class="biz-stats-box">
+                    <div class="biz-stat-item"><div class="biz-stat-num">35,000+</div><div class="biz-stat-label">総SNSフォロワー数</div></div>
+                    <div class="biz-stat-item"><div class="biz-stat-num">12.5%</div><div class="biz-stat-label">平均エンゲージメント率</div></div>
+                    <div class="biz-stat-item"><div class="biz-stat-num">7:3</div><div class="biz-stat-label">男女比 M/F</div></div>
+                </div>
+            </div>
+
+            <div class="biz-section">
+                <div class="biz-h2">SERVICE</div>
+                <div class="biz-card-grid">
+                    <div class="biz-card">
+                        <div class="biz-icon"><i class="fas fa-bullhorn"></i></div>
+                        <div class="biz-card-title">商品・サービスPR</div>
+                        <div class="biz-card-text">YouTube配信やSNSでの商品紹介を行います。ゲーム、アプリ、食品、ガジェットなど、メンバーの個性に合わせた自然な訴求が可能です。</div>
+                    </div>
+                    <div class="biz-card">
+                        <div class="biz-icon"><i class="fas fa-handshake"></i></div>
+                        <div class="biz-card-title">コラボグッズ制作</div>
+                        <div class="biz-card-text">貴社IPやブランドとのコラボレーショングッズの企画・販売。描き下ろしイラストを使用した限定アイテムの展開など。</div>
+                    </div>
+                    <div class="biz-card">
+                        <div class="biz-icon"><i class="fas fa-microphone-alt"></i></div>
+                        <div class="biz-card-title">イベント出演・MC</div>
+                        <div class="biz-card-text">オンライン・オフライン問わず、イベントへのゲスト出演や司会進行。歌唱ライブの実施などもご相談ください。</div>
+                    </div>
+                    <div class="biz-card">
+                        <div class="biz-icon"><i class="fas fa-music"></i></div>
+                        <div class="biz-card-title">楽曲タイアップ</div>
+                        <div class="biz-card-text">オリジナル楽曲の制作、貴社CMソングの歌唱など、音楽を通じたプロモーション活動。</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="biz-section">
+                <div class="biz-h2">CONTACT</div>
+                <p style="font-size:12px; color:var(--text-sub); margin-bottom:20px;">
+                    お仕事のご依頼、ご相談はこちらのフォームよりお願いいたします。<br>
+                    担当者より3営業日以内にご連絡させていただきます。
+                </p>
+                <div class="biz-form-area">
+                    <label class="form-label">貴社名 / 団体名 <span style="color:red">*</span></label>
+                    <input type="text" id="bizCompany" class="form-input" placeholder="株式会社あおはる">
+                    <label class="form-label">ご担当者様名 <span style="color:red">*</span></label>
+                    <input type="text" id="bizName" class="form-input" placeholder="山田 太郎">
+                    <label class="form-label">メールアドレス <span style="color:red">*</span></label>
+                    <input type="email" id="bizEmail" class="form-input" placeholder="info@example.com">
+                    <label class="form-label">対象メンバー</label>
+                    <select id="bizTarget" class="form-select">
+                        <option>お問い合わせメンバー</option>
+                        <option>あおはる☆フレンズへ</option>
+                        <option>たく兄ちゃん</option>
+                        <option>兎神結愛</option>
+                        <option>鬼神イヨ</option>
+                        <option>緋羽アオ</option>
+                    </select>
+                    <label class="form-label">お問い合わせ種別</label>
+                    <select id="bizType" class="form-select">
+                        <option>PR・プロモーション依頼</option>
+                        <option>コラボレーションのご相談</option>
+                        <option>イベント出演依頼</option>
+                        <option>取材・メディア掲載</option>
+                        <option>その他</option>
+                    </select>
+                    <label class="form-label">ご予算感（任意）</label>
+                    <select id="bizBudget" class="form-select">
+                        <option>未定</option>
+                        <option>〜5万円</option>
+                        <option>5〜10万円</option>
+                        <option>10〜30万円</option>
+                        <option>30万円〜</option>
+                    </select>
+                    <label class="form-label">お問い合わせ内容詳細 <span style="color:red">*</span></label>
+                    <textarea id="bizMessage" class="form-textarea" rows="6" placeholder="企画の概要、実施時期、ご要望などをご記入ください"></textarea>
+                    <button class="biz-btn" onclick="alert('送信機能は準備中です。')">上記の内容で送信する</button>
+                </div>
+            </div>
+            <div style="text-align:center;">
+                <button onclick="showPage('top')" class="more-btn">TOPへ戻る</button>
+            </div>
+        </div>
+    </div>
+
 <div id="recruitment" class="page">
         <div class="recruit-header">
             <div class="recruit-title-area">
@@ -1746,7 +1854,7 @@
     // ▼▼▼ JavaScript（全機能修正版） ▼▼▼
     // ==========================================
 
-    const GAS_API_URL = "https://script.google.com/macros/s/AKfycbyTvrU9bNo0ybkM9FSYiEFk_M72feBQdOAE6Tf9qnqLYmnieeTFyVBFvawgWKP8K9MtXg/exec";
+    const GAS_API_URL = "https://script.google.com/macros/s/AKfycbwEFBcpEG1lX_MM3gHu_TeCP1Pybm2xFLqNosK4miilbbYZhGqOvCMTpMoBKOePkMeYsQ/exec";
     let YOUTUBE_API_KEY = ""; 
     let GROUP_CONFIG = {};
     let memberData = [];
@@ -1775,16 +1883,6 @@
 
     // ▼ 初期化 ▼
     window.onload = function() { 
-        // ★★★ 追加：何があっても3秒後に強制的にLOADINGを消す（安全装置） ★★★
-        setTimeout(() => {
-            const loader = document.getElementById('loadingScreen');
-            if(loader && !loader.classList.contains('loaded')) {
-                console.log("読み込みタイムアウト：強制表示します");
-                loader.classList.add('loaded');
-                setTimeout(() => loader.remove(), 500);
-            }
-        }, 3000); // 3000ミリ秒 = 3秒
-
         const savedUser = localStorage.getItem('aoharu_user');
         if (savedUser) {
             currentUserData = JSON.parse(savedUser);
@@ -2121,7 +2219,61 @@
     }
     function renderVideos() { const videoHtml = videoData.map(v => `<div class="video-card" onclick="window.open('https://www.youtube.com/watch?v=${v.id}', '_blank')"><div class="video-thumb-box"><img src="https://img.youtube.com/vi/${v.id}/mqdefault.jpg" class="video-thumb"><div class="play-icon">▶</div></div><div class="video-info"><div class="video-title">${v.title}</div><div class="video-date">${v.date}</div></div></div>`).join(''); const list = document.getElementById('topVideoList'); if(list) list.innerHTML = videoHtml || "動画はまだありません"; }
     function renderMemberVideos() { const container = document.getElementById('memberVideoList'); if(!memberVideoData.length) { container.innerHTML = "限定動画はまだありません"; return; } const html = memberVideoData.map(v => { const clickAction = isMemberLoggedIn ? `window.open('https://www.youtube.com/watch?v=${v.id}', '_blank')` : `openLoginModal()`; const lockedClass = isMemberLoggedIn ? 'unlocked' : 'mv-blur'; const lockOverlay = isMemberLoggedIn ? '' : `<div class="mv-lock-overlay"><div class="mv-lock-icon"><i class="fas fa-lock"></i></div><div class="mv-lock-text">MEMBER ONLY</div></div>`; return `<div class="member-video-card ${lockedClass}" onclick="${clickAction}">${lockOverlay}<div class="news-thumb-area"><img src="https://img.youtube.com/vi/${v.id}/mqdefault.jpg" class="news-img"></div><div class="news-content"><div class="news-date">${v.date}</div><div class="news-title">${v.title}</div><div class="news-check-btn">${isMemberLoggedIn ? 'PLAY' : 'LOCKED'}</div></div></div>`; }).join(''); container.innerHTML = html; }
-    function renderRadioDiary() { const container = document.getElementById('radioDiaryList'); if (!radioBlogData || radioBlogData.length === 0) { container.innerHTML = '<p style="text-align:center;color:#888;">まだ日記はありません</p>'; return; } container.innerHTML = radioBlogData.map(d => { if (!isMemberLoggedIn) { return ` <div class="diary-card" onclick="openLoginModal()" style="cursor:pointer; position:relative; overflow:hidden;"> <div style="filter: blur(6px); opacity: 0.6; pointer-events: none;"> <div class="diary-icon" style="background:#ddd;"></div> <div class="diary-content"> <div class="diary-name">SECRET MEMBER</div> <div class="diary-text">このコンテンツは会員限定です。<br>ログインすると閲覧できます。</div> <div class="diary-date">----.--.--</div> </div> </div> <div style="position:absolute; top:50%; left:50%; transform:translate(-50%,-50%); text-align:center; width:100%; z-index:2;"> <i class="fas fa-lock" style="font-size:24px; color:#555; margin-bottom:5px;"></i> <div style="font-weight:bold; font-size:12px; color:#555;">MEMBER ONLY</div> </div> </div> `; } let iconSrc = "icon.png"; let imgPos = "top center"; if (memberData && memberData.length > 0) { const targetMember = memberData.find(m => m.name === d.name); if (targetMember) { if(targetMember.img) iconSrc = targetMember.img; } } if (d.img && d.img !== "") iconSrc = d.img; const voicePlayer = d.voice ? `<div class="diary-voice-player" onclick="playVoice(this, '${d.voice}')"> <i class="fas fa-play voice-icon"></i> <span class="voice-time">限定ボイス</span> </div>` : ''; return ` <div class="diary-card"> <div class="diary-icon" style="background-image: url('${iconSrc}'); background-position: ${imgPos};"></div> <div class="diary-content"> <div class="diary-name">${d.name}</div> <div class="diary-text">${d.text}</div> ${voicePlayer} <div class="diary-date">${d.date}</div> </div> </div> `; }).join(''); }
+    
+// ▼▼▼ RADIO日記の描画（名前・アイコン修正版） ▼▼▼
+    // ▼▼▼ RADIO日記（安全版） ▼▼▼
+    function renderRadioDiary() { 
+        const container = document.getElementById('radioDiaryList'); 
+        if (!radioBlogData || radioBlogData.length === 0) { 
+            container.innerHTML = '<p style="text-align:center;color:#888;">まだ日記はありません</p>'; 
+            return; 
+        } 
+        
+        container.innerHTML = radioBlogData.map(d => { 
+            // ログインしていない場合
+            if (!isMemberLoggedIn) { 
+                return `<div class="diary-card" onclick="openLoginModal()" style="cursor:pointer; position:relative; overflow:hidden;"><div style="filter: blur(6px); opacity: 0.6; pointer-events: none;"><div class="diary-icon" style="background:#ddd;"></div><div class="diary-content"><div class="diary-name">SECRET MEMBER</div><div class="diary-text">コンテンツ...</div><div class="diary-date">--.--</div></div></div><div style="position:absolute; top:50%; left:50%; transform:translate(-50%,-50%); font-weight:bold; color:#555;"><i class="fas fa-lock"></i> MEMBER ONLY</div></div>`; 
+            } 
+            
+            // アイコン・名前の決定
+            let iconSrc = "icon.png"; 
+            // 名前が空なら「AOHARU MEMBER」
+            let dispName = d.name ? d.name : "AOHARU MEMBER"; 
+
+            // 名前が一致するメンバーを探してアイコンを取得
+            if (d.name && memberData && memberData.length > 0) { 
+                const targetMember = memberData.find(m => m.name === d.name); 
+                if (targetMember) { 
+                    // ★変更：推しカラーアイコン (icon_sch_○○.png) を優先して生成！
+                    if (targetMember.enName) {
+                        let name = targetMember.enName.toLowerCase();
+                        // 命名ルールの適用 (例: Togami Yua -> yua, Taku-niichan -> taku)
+                        if (name.includes(' ')) name = name.split(' ').pop();
+                        if (name.includes('-')) name = name.split('-')[0];
+                        iconSrc = `icon_sch_${name}.png`;
+                    } else if (targetMember.img) {
+                        // 英語名がない場合は従来の立ち絵を使う（予備）
+                        iconSrc = targetMember.img; 
+                    }
+                }
+            }
+            // 個別に画像指定があればさらに優先
+            if (d.img && d.img !== "") iconSrc = d.img; 
+            
+            const voicePlayer = d.voice ? `<div class="diary-voice-player" onclick="playVoice(this, '${d.voice}')"><i class="fas fa-play"></i> Voice</div>` : ''; 
+            
+            return ` 
+            <div class="diary-card"> 
+                <div class="diary-icon" style="background-image: url('${iconSrc}'); background-size:cover; background-position:center;"></div> 
+                <div class="diary-content"> 
+                    <div class="diary-name">${dispName}</div> 
+                    <div class="diary-text">${d.text}</div> 
+                    ${voicePlayer} 
+                    <div class="diary-date">${d.date}</div> 
+                </div> 
+            </div> `; 
+        }).join(''); 
+    }
     function renderStaticParts() { const twLink = document.getElementById('groupTwitterLink'); const ytLink = document.getElementById('groupYoutubeLink'); const footerTwLink = document.getElementById('footerTwitterLink'); const footerYtLink = document.getElementById('footerYoutubeLink'); if(GROUP_CONFIG.twitterUrl) { twLink.href = GROUP_CONFIG.twitterUrl; footerTwLink.href = GROUP_CONFIG.twitterUrl; } if(GROUP_CONFIG.youtubeChannelId) { const ytUrl = `https://www.youtube.com/channel/${GROUP_CONFIG.youtubeChannelId}`; ytLink.href = ytUrl; footerYtLink.href = ytUrl; } if(memberData.length > 0) { const memberHtml = memberData.map((m, i) => `<div class="member-card-vertical" onclick="openMemberDetail(${i})" style="--member-color: ${m.color}; --member-bg: url('${m.bgImg}');"><div class="member-img-wrapper"><img src="${m.img}" class="member-img-tachie"></div><a href="javascript:void(0)" class="member-link-overlay"></a></div>`).join(''); document.getElementById('topMemberList').innerHTML = memberHtml; document.getElementById('memberGrid').innerHTML = memberHtml; } }
 
     // --- その他UI機能 ---
@@ -2234,7 +2386,34 @@
     
     function showOmikujiResult() {
         if(!currentOmikujiResult) return;
-        const imgSrc = currentOmikujiResult.member.img || "icon.png";
+        
+        const m = currentOmikujiResult.member;
+        let imgSrc = "icon.png";
+
+        // ▼▼▼ 修正：推しカラーアイコン（icon_sch_○○.png）を優先して使う処理 ▼▼▼
+        if (m.enName) {
+            // ヘッダーのボタンと同じロジックでファイル名を生成
+            let fileName = 'default';
+            let name = m.enName.toLowerCase();
+            
+            // スペースがある場合（例: "Togami Yua"）→ 後ろの "yua" を使う
+            if (name.includes(' ')) {
+                name = name.split(' ').pop();
+            }
+            // ハイフンがある場合（例: "Taku-niichan"）→ 前の "taku" を使う
+            if (name.includes('-')) {
+                name = name.split('-')[0];
+            }
+            fileName = name;
+            
+            // 生成したファイル名をセット
+            imgSrc = `icon_sch_${fileName}.png`;
+        } 
+        // データ読み込み前などの予備データの場合はそのまま使用
+        else if (m.img) {
+            imgSrc = m.img;
+        }
+        // ▲▲▲ 修正ここまで ▲▲▲
         
         const resultImg = document.getElementById('omiResultImg');
         if(resultImg) resultImg.src = imgSrc;
@@ -2243,7 +2422,7 @@
         if(rank) rank.innerText = currentOmikujiResult.fortune;
 
         const msg = document.getElementById('omiResultMsg');
-        if(msg) msg.innerText = `${currentOmikujiResult.member.name}「${currentOmikujiResult.comment}」`;
+        if(msg) msg.innerText = `${m.name}「${currentOmikujiResult.comment}」`;
 
         const item = document.getElementById('omiResultItem');
         if(item) item.innerText = currentOmikujiResult.item;
@@ -2518,14 +2697,13 @@
         window.open(twitterUrl, '_blank');
     }
 
-    // ▼▼▼ STUDIO機能のプログラム（ここを追加！） ▼▼▼
+    // ▼▼▼ STUDIO機能のプログラム（移動機能追加版） ▼▼▼
     let studioViewers = [];
     let selectedActorIndex = -1; 
 
     function initStudio() {
         if(studioViewers.length > 0) return;
         const canvasIds = ['skin_member_1', 'skin_member_2', 'skin_user', 'skin_member_3', 'skin_member_4'];
-        // ※実際のスキン画像がない場合はプレイスホルダーになります
         const defaultSkins = ["skin_iyo.png", "skin_taku.png", "skin_ao.png", "skin_yua.png", "skin_ao.png"];
         
         canvasIds.forEach((id, index) => {
@@ -2533,7 +2711,9 @@
             if(!canvas) return;
             const container = canvas.parentElement;
             
-            // 3Dビューワーの初期化
+            // ★追加：ここでドラッグ移動機能を有効化！
+            makeDraggable(container);
+
             const viewer = new skinview3d.SkinViewer({
                 canvas: canvas, width: container.clientWidth, height: container.clientHeight, skin: defaultSkins[index]
             });
@@ -2543,10 +2723,76 @@
         });
     }
 
+    // ★追加：ドラッグして移動させる関数
+    function makeDraggable(element) {
+        let isDragging = false;
+        let startX, startY, initialLeft, initialTop;
+
+        // PC & スマホ両対応
+        element.addEventListener('mousedown', startDrag);
+        element.addEventListener('touchstart', startDrag, {passive: false});
+
+        function startDrag(e) {
+            // "YOU"などの文字やキャンバス自体をクリックした時だけ反応
+            isDragging = true;
+            const clientX = e.type === 'touchstart' ? e.touches[0].clientX : e.clientX;
+            const clientY = e.type === 'touchstart' ? e.touches[0].clientY : e.clientY;
+            
+            startX = clientX;
+            startY = clientY;
+            
+            // 現在の位置を取得
+            const style = window.getComputedStyle(element);
+            initialLeft = parseInt(style.left || 0);
+            initialTop = parseInt(style.top || 0);
+            
+            // 選択状態にする
+            const index = Array.from(element.parentElement.children).indexOf(element);
+            // actor-boxのインデックスを取得するための簡易ロジック（実際はID等で判断推奨ですが今回は簡易版）
+            const canvasId = element.querySelector('canvas').id;
+            let actorIdx = -1;
+            if(canvasId.includes('member_1')) actorIdx = 0;
+            else if(canvasId.includes('member_2')) actorIdx = 1;
+            else if(canvasId.includes('user')) actorIdx = 2;
+            else if(canvasId.includes('member_3')) actorIdx = 3;
+            else if(canvasId.includes('member_4')) actorIdx = 4;
+            
+            if(actorIdx !== -1) selectActor(actorIdx);
+
+            document.addEventListener('mousemove', onDrag);
+            document.addEventListener('mouseup', stopDrag);
+            document.addEventListener('touchmove', onDrag, {passive: false});
+            document.addEventListener('touchend', stopDrag);
+        }
+
+        function onDrag(e) {
+            if (!isDragging) return;
+            e.preventDefault(); // スクロール防止
+            const clientX = e.type === 'touchmove' ? e.touches[0].clientX : e.clientX;
+            const clientY = e.type === 'touchmove' ? e.touches[0].clientY : e.clientY;
+
+            const dx = clientX - startX;
+            const dy = clientY - startY;
+
+            element.style.left = `${initialLeft + dx}px`;
+            element.style.top = `${initialTop + dy}px`;
+            element.style.bottom = 'auto'; // bottom指定を解除
+        }
+
+        function stopDrag() {
+            isDragging = false;
+            document.removeEventListener('mousemove', onDrag);
+            document.removeEventListener('mouseup', stopDrag);
+            document.removeEventListener('touchmove', onDrag);
+            document.removeEventListener('touchend', stopDrag);
+        }
+    }
+
     function selectActor(index) { 
         selectedActorIndex = index; 
         document.querySelectorAll('.actor-box').forEach((b,i)=>b.classList.toggle('selected', i===index));
-        document.getElementById('targetName').innerText = index === -1 ? "全員" : (index === 2 ? "YOU" : "MEMBER");
+        const targetLabel = document.getElementById('targetName');
+        if(targetLabel) targetLabel.innerText = index === -1 ? "全員" : (index === 2 ? "YOU" : "MEMBER");
     }
 
     function setStudioAnim(type) { 
