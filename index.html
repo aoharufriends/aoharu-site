@@ -2594,9 +2594,7 @@
                 <button onclick="showPage('top')" class="more-btn">TOPへ戻る</button>
             </div>
         </div>
-    </div>    
-
-    <div id="omikujiAnimModal" class="modal" style="background:rgba(0,0,0,0.85);">
+    </div> <div id="omikujiAnimModal" class="modal" style="background:rgba(0,0,0,0.85);">
         <div class="modal-content" style="background:transparent; box-shadow:none; overflow:visible;">
             <div class="omi-anim-container">
                 <div id="omiParticles" class="omi-particles"></div>
@@ -2612,7 +2610,6 @@
     <div id="omikujiModal" class="modal" onclick="closeOmikujiModal()">
         <div class="modal-content" style="text-align:center;" onclick="event.stopPropagation()">
             <span class="modal-close-btn" onclick="closeOmikujiModal()">×</span>
-            
             <div id="omiCaptureArea" style="background:white; padding:10px; border-radius:10px;">
                 <div style="font-size:24px; font-weight:900; margin-bottom:20px; color:var(--primary); font-family: 'M PLUS Rounded 1c', sans-serif;">今日の運勢は…？</div>
                 <img id="omiResultImg" src="" class="omi-chara-img">
@@ -2620,40 +2617,39 @@
                 <div id="omiResultMsg" class="omi-msg"></div>
                 <div style="margin-top:15px;">ラッキーアイテム：<span id="omiResultItem" class="omi-item"></span></div>
             </div>
-
-<div class="omi-action-btns">
+            <div class="omi-action-btns">
                 <button class="sns-share-btn" onclick="shareOmikuji()"><i class="fab fa-x-twitter"></i> ポストする</button>
                 <button class="save-img-btn" onclick="saveOmikuji()"><i class="fas fa-camera"></i> 保存する</button>
             </div>
-            
-        </div> </div> 
-            <div id="graffitiModal" class="modal" onclick="closeGraffitiModal()">
-                    <div class="modal-content" onclick="event.stopPropagation()">
-                        <span class="modal-close-btn" onclick="closeGraffitiModal()" style="z-index: 10; color: white; text-shadow: 0 0 5px black;">×</span>
-                        <div class="g-modal-body">
-                            <div class="g-modal-img-area">
-                                <img id="gDetailImg" src="" class="g-modal-img">
-                                <div class="g-modal-like-btn" onclick="toggleGraffitiLike()">
-                                    <i class="fas fa-heart"></i> <span id="gDetailLikes">0</span>
-                                </div>
-                            </div>
-                            <div class="g-modal-info-area">
-                                <div class="g-modal-header">
-                                    <div id="gDetailTitle" class="g-modal-title">タイトル</div>
-                                    <div class="g-modal-author">
-                                        <i class="fas fa-user-circle"></i> <span id="gDetailAuthor">作者名</span>
-                                    </div>
-                                </div>
-                                <div id="gDetailComments" class="g-comment-list">
-                                    </div>
-                                <div class="g-comment-form">
-                                    <input type="text" id="gCommentInput" class="g-cmt-input" placeholder="コメントを入力...">
-                                    <button class="g-cmt-btn" onclick="submitGraffitiComment()"><i class="fas fa-paper-plane"></i></button>
-                                </div>
-                            </div>
-                        </div>
+        </div>
+    </div>
+
+    <div id="graffitiModal" class="modal" onclick="closeGraffitiModal()">
+        <div class="modal-content" onclick="event.stopPropagation()">
+            <span class="modal-close-btn" onclick="closeGraffitiModal()" style="z-index: 10; color: white; text-shadow: 0 0 5px black;">×</span>
+            <div class="g-modal-body">
+                <div class="g-modal-img-area">
+                    <img id="gDetailImg" src="" class="g-modal-img">
+                    <div class="g-modal-like-btn" onclick="toggleGraffitiLike()">
+                        <i class="fas fa-heart"></i> <span id="gDetailLikes">0</span>
                     </div>
                 </div>
+                <div class="g-modal-info-area">
+                    <div class="g-modal-header">
+                        <div id="gDetailTitle" class="g-modal-title">タイトル</div>
+                        <div class="g-modal-author">
+                            <i class="fas fa-user-circle"></i> <span id="gDetailAuthor">作者名</span>
+                        </div>
+                    </div>
+                    <div id="gDetailComments" class="g-comment-list"></div>
+                    <div class="g-comment-form">
+                        <input type="text" id="gCommentInput" class="g-cmt-input" placeholder="コメントを入力...">
+                        <button class="g-cmt-btn" onclick="submitGraffitiComment()"><i class="fas fa-paper-plane"></i></button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
         </div>
     </div>
 
@@ -2804,7 +2800,6 @@
                     <li><a href="javascript:void(0)" onclick="showPage('guideline')">GUIDELINE<span class="footer-menu-ja">ガイドライン</span></a></li> 
                     <li><a href="javascript:void(0)" onclick="showPage('rakugaki')">GRAFFITI<span class="footer-menu-ja">落書き広場</span></a></li>
                     <li><a href="javascript:void(0)" onclick="showPage('studio')">STUDIO<span class="footer-menu-ja">スタジオ</span></a></li>
-                    
                     <li><a href="javascript:void(0)" onclick="showPage('business')">BUSINESS<span class="footer-menu-ja">法人の方へ</span></a></li>
                     <li><a href="javascript:void(0)" onclick="openLoginModal()">LOGIN<span class="footer-menu-ja">ログイン</span></a></li>
                 </ul>
@@ -2817,119 +2812,65 @@
                 </div>
             </div>
         </div>
-<div class="copyright" onclick="triggerSecretEvent()" style="cursor:pointer; user-select:none;">
-    © 2026 AOHARU FRIENDS All Rights Reserved.
-</div>
-</footer>
+        <div class="copyright" onclick="triggerSecretEvent()" style="cursor:pointer; user-select:none;">
+            © 2026 AOHARU FRIENDS All Rights Reserved.
+        </div>
+    </footer>
+
     <div class="floating-heart-btn" onclick="spawnHeart()">
         <i class="fas fa-heart"></i>
         <div class="like-badge" id="totalLikeCount">...</div>
     </div>
-<div id="omikujiAnimModal" class="modal" style="background:rgba(0,0,0,0.85);">
-        <div class="modal-content" style="background:transparent; box-shadow:none; overflow:visible;">
-            <div class="omi-anim-container">
-                <div id="omiParticles" class="omi-particles"></div>
-                <div class="omi-box-container">
-                    <div id="omiSlip" class="omi-slip"></div>
-                    <div id="omiBox" class="omi-box">おみくじ</div>
-                </div>
-            </div>
-            <p style="color:white; font-weight:bold; margin-top:20px; font-size:20px; text-shadow:0 2px 5px rgba(0,0,0,0.5);">運命を抽選中...</p>
-        </div>
-    </div>
 
-    <div id="omikujiModal" class="modal" onclick="closeOmikujiModal()">
-        <div class="modal-content" style="text-align:center;" onclick="event.stopPropagation()">
-            <span class="modal-close-btn" onclick="closeOmikujiModal()">×</span>
-            
-            <div id="omiCaptureArea" style="background:white; padding:10px; border-radius:10px;">
-                <div style="font-size:24px; font-weight:900; margin-bottom:20px; color:var(--primary); font-family: 'M PLUS Rounded 1c', sans-serif;">今日の運勢は…？</div>
-                <img id="omiResultImg" src="" class="omi-chara-img">
-                <div id="omiResultRank" class="omi-rank"></div>
-                <div id="omiResultMsg" class="omi-msg"></div>
-                <div style="margin-top:15px;">ラッキーアイテム：<span id="omiResultItem" class="omi-item"></span></div>
-            </div>
-
-            <div class="omi-action-btns">
-                <button class="sns-share-btn" onclick="shareOmikuji()"><i class="fab fa-x-twitter"></i> ポストする</button>
-                <button class="save-img-btn" onclick="saveOmikuji()"><i class="fas fa-camera"></i> 保存する</button>
-            </div>
-            
-        </div>
-    </div>
-
-<div id="flashlightOverlay" class="flashlight-layer"></div>
-
+    <div id="flashlightOverlay" class="flashlight-layer"></div>
     <div id="tvNoiseOverlay" class="tv-noise-layer"></div>
 
-<div id="secretOldSchool" class="page" style="background-color:#050505; min-height:100vh; overflow:hidden;">
-        
+    <div id="secretOldSchool" class="page" style="background-color:#050505; min-height:100vh; overflow:hidden;">
         <div id="secretGate" class="gate-wrapper">
             <div class="gate-door left"></div>
             <div class="gate-door right"></div>
-            
             <div class="gate-content">
-                <div class="warning-sign">
-                    ⚠️ DANGER ⚠️<br>立ち入り禁止
-                </div>
-                <div class="enter-message" onclick="openSecretGate()">
-                    入る...？
-                </div>
+                <div class="warning-sign">⚠️ DANGER ⚠️<br>立ち入り禁止</div>
+                <div class="enter-message" onclick="openSecretGate()">入る...？</div>
             </div>
         </div>
 
         <div id="oldSchoolRoom" class="room-content" style="opacity:0; transition:opacity 2s;">
-            
             <div class="horror-item note" onclick="openHorrorNote()" style="top: 70%; left: 20%;">
                 <img src="item_note.png" alt="ノート">
             </div>
-
             <div class="horror-item radio" onclick="playHorrorRadio()" style="top: 80%; right: 15%;">
                 <img src="item_radio.png" alt="ラジカセ">
             </div>
-
-            <div class="horror-item window" onclick="triggerScream()" style="top: 30%; left: 10%; width: 15%; height: 20%; opacity: 0;">
-                </div>
-
+            <div class="horror-item window" onclick="triggerScream()" style="top: 30%; left: 10%; width: 15%; height: 20%; opacity: 0;"></div>
             <div class="horror-item blood-wall" style="top: 20%; right: 30%;">
                 <span id="bloodTextDisplay" class="blood-text"></span>
             </div>
-
-<div class="cursed-input-area" style="top: 50%; left: 50%; transform: translate(-50%, -50%);">
+            <div class="cursed-input-area" style="top: 50%; left: 50%; transform: translate(-50%, -50%);">
                 <p class="cursed-label">...ナマエヲ カケ...</p>
                 <input type="text" id="cursedInput" class="cursed-input" placeholder="ここに入力..." autocomplete="off">
             </div>
-
             <div class="container" style="padding-top:50px; text-align:center; position:relative; z-index:1; pointer-events:none;">
-                <div style="font-family:'Times New Roman', serif; font-size:40px; color:#550000; letter-spacing:5px; margin-bottom:20px; opacity:0.5;">
-                    OLD SCHOOL
+                <div style="font-family:'Times New Roman', serif; font-size:40px; color:#550000; letter-spacing:5px; margin-bottom:20px; opacity:0.5;">OLD SCHOOL</div>
+                <div onclick="exitHorrorMode()" style="pointer-events:auto; display:inline-block; cursor:pointer; border:1px solid #555; padding:5px 15px; color:#555; border-radius:5px; background:rgba(0,0,0,0.5);">
+                    <i class="fas fa-running"></i> 非常口
                 </div>
-<div onclick="exitHorrorMode()" style="pointer-events:auto; display:inline-block; cursor:pointer; border:1px solid #555; padding:5px 15px; color:#555; border-radius:5px; background:rgba(0,0,0,0.5);">
-            <i class="fas fa-running"></i> 非常口
-        </div>
-    </div>
-
-    <div class="darkness-overlay"></div>
-    <div class="rain-layer layer1"></div>
-    <div class="rain-layer layer2"></div>
-    <div class="secret-bg-img"></div>
-
+            </div>
+            <div class="darkness-overlay"></div>
+            <div class="rain-layer layer1"></div>
+            <div class="rain-layer layer2"></div>
+            <div class="secret-bg-img"></div>
+            
             <div id="noteModal" class="note-overlay" onclick="this.style.display='none'">
                 <div class="note-paper">
                     <p id="noteContent">読み込み中...</p>
                 </div>
             </div>
-
             <div id="screamOverlay" class="scream-overlay">
                 <img id="screamImg" src="" style="width:100%; height:100%; object-fit:cover;">
             </div>
         </div>
-
-<div id="secretOldSchool" class="page" style="background-color:#050505; min-height:100vh; overflow:hidden;">
-       <div id="screamOverlay" class="scream-overlay">
-           <img id="screamImg" src="" style="width:100%; height:100%; object-fit:cover;">
-       </div>
-</div>
+    </div>
 
 <script>
     // ==========================================
@@ -2958,10 +2899,10 @@
     const secretCode = ['ArrowUp', 'ArrowUp', 'ArrowDown', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'ArrowLeft', 'ArrowRight', 'b', 'a'];
     let secretInput = [];
     let logoTapCount = 0;
-    let secretTapCount = 0;   // これがないと入れません
+    let secretTapCount = 0; 
     let secretTapTimer = null;
-    let horrorAudio = {};     // これがないと音が鳴りません
-    let secretData = {};      // 恐怖のテキストデータ
+    let horrorAudio = {}; 
+    let secretData = {}; 
 
     // ▼ 初期化 ▼
     window.onload = function() { 
@@ -3022,15 +2963,13 @@
         }
     }
 
-function showPage(pageId, detailName = null, pushHistory = true) {
-        // 1. ページ切り替え処理（既存のまま）
+    function showPage(pageId, detailName = null, pushHistory = true) {
         document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
         const target = document.getElementById(pageId);
         
         if(target) {
             target.classList.add('active');
             
-            // 各ページの初期化処理（既存のまま）
             if (pageId === 'mypage' && currentUserData) {
                 document.getElementById('myIconDisplay').src = currentUserData.icon || 'icon.png';
                 document.getElementById('myNameDisplay').innerText = currentUserData.name;
@@ -3056,18 +2995,26 @@ function showPage(pageId, detailName = null, pushHistory = true) {
             }
         }
 
-    // ▼▼▼ 消えてしまった updateBreadcrumbs を復活させる ▼▼▼
+        if(document.getElementById('sideMenu').classList.contains('open')) toggleMenu(); 
+        if(pushHistory) history.pushState(null, null, '#' + pageId);
+        updateBreadcrumbs(pageId, detailName);
+        window.scrollTo(0,0);
+
+        const pageTitles = {
+            'top': '公式サイトTOP', 'news': '最新ニュース', 'member': 'メンバー紹介',
+            'schedule': '配信スケジュール', 'goods': '公式グッズ', 'radio': 'ラジオ＆お便り',
+            'guideline': 'ガイドライン', 'rakugaki': '落書き広場', 'studio': 'スタジオ機能',
+            'business': '法人・企業様向け窓口', 'recruitment': '新メンバー募集', 'mypage': 'マイページ'
+        };
+        let titleText = pageTitles[pageId] || 'Official Site';
+        if (detailName) titleText = detailName;
+        document.title = `あおはる⭐︎フレンズ | ${titleText}`;
+    }
+
     function updateBreadcrumbs(pageId, detailName) { 
         const container = document.getElementById('breadcrumbNav'); 
         let html = '<a href="javascript:void(0)" onclick="showPage(\'top\')" class="bc-item"><i class="fas fa-home bc-icon"></i></a>'; 
-        
-        if (pageId === 'top') { 
-            container.style.display = 'none'; 
-            return; 
-        } else { 
-            container.style.display = 'flex'; 
-        } 
-        
+        if (pageId === 'top') { container.style.display = 'none'; return; } else { container.style.display = 'flex'; } 
         const sep = '<span class="bc-sep">▶</span>'; 
         const titles = {
             'news':'NEWS', 'member':'MEMBER', 'schedule':'SCHEDULE', 
@@ -3075,7 +3022,6 @@ function showPage(pageId, detailName = null, pushHistory = true) {
             'rakugaki':'GRAFFITI', 'mypage':'MY PAGE', 'studio':'STUDIO', 
             'skinviewer':'SKIN VIEWER', 'business':'BUSINESS', 'recruitment':'RECRUITMENT'
         };
-        
         if (pageId === 'memberDetail') {
              html += sep + '<a href="javascript:void(0)" onclick="showPage(\'member\')" class="bc-item">MEMBER</a>'; 
              html += sep + '<span class="bc-current">' + (detailName || 'DETAIL') + '</span>';
@@ -3083,41 +3029,6 @@ function showPage(pageId, detailName = null, pushHistory = true) {
              html += sep + '<span class="bc-current">' + (titles[pageId] || pageId.toUpperCase()) + '</span>';
         }
         container.innerHTML = html; 
-    }
-
-        // 2. 共通処理（メニュー閉じ、履歴追加、パンくず、スクロール）
-        if(document.getElementById('sideMenu').classList.contains('open')) toggleMenu(); 
-        if(pushHistory) history.pushState(null, null, '#' + pageId);
-        updateBreadcrumbs(pageId, detailName);
-        window.scrollTo(0,0);
-
-        // ▼▼▼ 追加：ページタイトルを動的に変更する処理 ▼▼▼
-        const pageTitles = {
-            'top': '公式サイトTOP',
-            'news': '最新ニュース',
-            'member': 'メンバー紹介',
-            'schedule': '配信スケジュール',
-            'goods': '公式グッズ',
-            'radio': 'ラジオ＆お便り',
-            'guideline': 'ガイドライン',
-            'rakugaki': '落書き広場',
-            'studio': 'スタジオ機能',
-            'business': '法人・企業様向け窓口',
-            'recruitment': '新メンバー募集',
-            'mypage': 'マイページ'
-        };
-        
-        // IDからタイトルを取得（なければデフォルト）
-        let titleText = pageTitles[pageId] || 'Official Site';
-        
-        // メンバー詳細ページなどの場合、その名前をタイトルにする
-        if (detailName) {
-            titleText = detailName;
-        }
-
-        // ブラウザのタブ名を変更
-        document.title = `あおはる⭐︎フレンズ | ${titleText}`;
-        // ▲▲▲ 追加ここまで ▲▲▲
     }
 
     // --- データ取得 ---
@@ -3157,18 +3068,13 @@ function showPage(pageId, detailName = null, pushHistory = true) {
                 }));
                 renderGraffitiList();
             }
-　　　　　　// ▼▼▼ おみくじデータをスプシから反映 ▼▼▼
             if (data.omikuji_settings) {
                 const newItems = [];
                 const newComments = [];
-                
-                // スプシのデータを配列に入れる
                 data.omikuji_settings.forEach(row => {
                     if (row.item) newItems.push(row.item);
                     if (row.comment) newComments.push(row.comment);
                 });
-
-                // データがあれば上書きする
                 if (newItems.length > 0) luckyItems = newItems;
                 if (newComments.length > 0) fortuneComments = newComments;
             }
@@ -3177,7 +3083,7 @@ function showPage(pageId, detailName = null, pushHistory = true) {
         }
     }
     
-    // --- ★復活させた「いいね」機能（これが消えていました！） ---
+    // --- いいね機能 ---
     async function fetchLikes() { 
         if (!GAS_API_URL) return; 
         try { 
@@ -3220,24 +3126,18 @@ function showPage(pageId, detailName = null, pushHistory = true) {
     }
 
     // --- ライブ配信状況確認関数 ---
-    // ▼▼▼ 修正版：人数可変型ライブ表示機能（1〜4人横並び対応） ▼▼▼
     function checkLiveStatus() {
         const liveSection = document.getElementById('nowOnAirSection');
         const heroArea = document.getElementById('heroLiveArea');
         const subGrid = document.getElementById('subLiveGrid');
         
-        // エリアをリセット
         heroArea.innerHTML = '';
         subGrid.innerHTML = '';
-        subGrid.style.display = 'none'; // 古いサブエリアは使わないので隠す
+        subGrid.style.display = 'none'; 
         liveSection.style.display = 'none';
 
-        // データがない場合は終了
-        if (!manualLiveData || manualLiveData.length === 0) {
-            return;
-        }
+        if (!manualLiveData || manualLiveData.length === 0) return;
 
-        // データを整形
         const liveVideos = manualLiveData.map(video => {
             let vId = video.url;
             if (video.url.includes('v=')) {
@@ -3255,18 +3155,13 @@ function showPage(pageId, detailName = null, pushHistory = true) {
 
         if (liveVideos.length === 0) return;
 
-        // 配信あり：表示ON
         liveSection.style.display = 'block';
-
-        // ★ここがポイント：人数に合わせてクラス名を変える（layout-1, layout-2...）
         const count = liveVideos.length;
         const layoutClass = count >= 4 ? 'layout-4' : `layout-${count}`;
 
-        // グリッドコンテナを作成
         const gridWrapper = document.createElement('div');
         gridWrapper.className = `live-dynamic-grid ${layoutClass}`;
 
-        // 全員分のHTMLを生成して突っ込む
         let html = '';
         liveVideos.forEach(video => {
             html += `
@@ -3310,7 +3205,6 @@ function showPage(pageId, detailName = null, pushHistory = true) {
         if(fullList) fullList.innerHTML = newsHtmlPage || "まだニュースはありません"; 
     }
 
-    // ▼▼▼ 修正版：updatePickupNews（いいね数＆シェアボタン対応） ▼▼▼
     function updatePickupNews(index) {
         const data = newsData[index];
         if(!data) return;
@@ -3320,22 +3214,14 @@ function showPage(pageId, detailName = null, pushHistory = true) {
         const badge = document.getElementById('pickupBadge');
         const detail = document.getElementById('pickupDetail');
         
-        // 画像とタイトルのセット
         img.src = data.image || "https://placehold.co/800x450/27C6F5/ffffff?text=NO+IMAGE";
         title.innerText = data.title;
-        
-        // バッジのセット
         badge.innerText = data.tag || 'NEWS';
         badge.style.background = getTagColor(data.tag);
         badge.style.display = "inline-block"; 
 
-        // ---------------------------------------------------------
-        // ▼▼▼ テキスト処理（リンク化 ＆ 特設ボタン ＆ アクションボタン） ▼▼▼
-        
         let contentText = data.detail || data.title;
         let appendHtml = "";
-
-        // 1. 特設ボタンの処理
         if (contentText.includes('[[RECRUIT_LINK]]')) {
             contentText = contentText.replace('[[RECRUIT_LINK]]', '');
             appendHtml = `<div style="text-align:center; margin-top:20px;">
@@ -3344,12 +3230,9 @@ function showPage(pageId, detailName = null, pushHistory = true) {
                             </button>
                           </div>`;
         }
-
-        // 2. URLリンク化 & 改行処理
         let htmlFormatted = contentText.replace(/(https?:\/\/[^\s]+)/g, '<a href="$1" target="_blank" style="color:#00aaff; text-decoration:underline; word-break:break-all;">$1</a>');
         htmlFormatted = htmlFormatted.replace(/\n/g, '<br>');
 
-        // 3. アクションボタン（いいね・シェア）の作成 ★ここが追加！
         const likesCount = data.likes ? data.likes : 0;
         const actionHtml = `
             <div class="news-action-bar" style="justify-content:center;">
@@ -3364,20 +3247,14 @@ function showPage(pageId, detailName = null, pushHistory = true) {
                 </button>
             </div>`;
 
-        // 4. 画面に反映（本文 + 特設ボタン + アクションボタン）
         detail.innerHTML = htmlFormatted + appendHtml + actionHtml;
 
-        // ---------------------------------------------------------
-
-        // 閉じるボタンとスクロール処理
         const closeBtn = document.getElementById('pickupCloseBtn');
         if(closeBtn) closeBtn.style.display = "flex";
-        
         const pickupArea = document.querySelector('.news-pickup');
         if(pickupArea) pickupArea.scrollIntoView({ behavior: 'smooth', block: 'center' });
     }
 
-    // ▼▼▼ 修正版：openNewsModal（いいね・シェアボタン追加版） ▼▼▼
     function openNewsModal(index) { 
         const data = newsData[index]; 
         
@@ -3385,13 +3262,10 @@ function showPage(pageId, detailName = null, pushHistory = true) {
         const tagEl = document.getElementById('modalTag'); 
         tagEl.innerText = data.tag; 
         tagEl.style.background = getTagColor(data.tag); 
-        
         document.getElementById('modalTitle').innerText = data.title; 
         
-        // --- 本文処理 ---
         let modalText = data.detail || data.title || "";
         let modalBtnHtml = "";
-
         if (modalText.includes('[[RECRUIT_LINK]]')) {
             modalText = modalText.replace('[[RECRUIT_LINK]]', '');
             modalBtnHtml = `<div style="text-align:center; margin-top:20px;">
@@ -3400,11 +3274,9 @@ function showPage(pageId, detailName = null, pushHistory = true) {
                             </button>
                           </div>`;
         }
-
         let modalHtml = modalText.replace(/(https?:\/\/[^\s]+)/g, '<a href="$1" target="_blank" style="color:#00aaff; text-decoration:underline; word-break:break-all;">$1</a>');
         modalHtml = modalHtml.replace(/\n/g, '<br>');
 
-        // ★★★ ここから追加：アクションボタンの生成 ★★★
         const isLiked = localStorage.getItem(getNewsLikeKey(index)) ? 'liked' : '';
         const actionHtml = `
             <div class="news-action-bar" style="justify-content:center;">
@@ -3419,43 +3291,28 @@ function showPage(pageId, detailName = null, pushHistory = true) {
                 </button>
             </div>`;
 
-        // 画面に反映
         document.getElementById('modalBody').innerHTML = modalHtml + modalBtnHtml + actionHtml;
-        
-        // --- 画像処理 ---
         const img = document.getElementById('modalImg');
         if (img && data.image && data.image !== "") { 
-            img.src = data.image; 
-            img.style.display = "block"; 
-        } else if (img) { 
-            img.style.display = "none"; 
-        }
-        
+            img.src = data.image; img.style.display = "block"; 
+        } else if (img) { img.style.display = "none"; }
         document.getElementById('newsModal').classList.add('open'); 
     }
 
-function renderSchedule() {
-        // ▼ TOPページ用カード（横スクロール）
+    function renderSchedule() {
         const topScheduleHtml = scheduleData.map((s, i) => {
             let bgHtml = '', boxClass = 'sch-thumb-box no-img';
-            
-            // 画像があれば表示（フィルターなし）
             if (s.img && s.img !== "") { 
                 bgHtml = `<img src="${s.img}" class="sch-bg-img" style="width:100%; height:100%; object-fit:cover; position:absolute; inset:0; z-index:0;">`; 
                 boxClass = 'sch-thumb-box'; 
             }
-            
-            // メンバーアイコン生成
             let memberIconsHtml = '';
             if (s.member) { 
                 s.member.split(',').forEach(mem => { 
                     mem = mem.trim(); 
-                    if(mem) {
-                        memberIconsHtml += `<img src="icon_sch_${mem}.png" class="sch-mini-icon" style="width:30px; height:30px; border-radius:50%; border:2px solid white; object-fit:cover; background:white;" onerror="this.style.display='none'">`;
-                    }
+                    if(mem) memberIconsHtml += `<img src="icon_sch_${mem}.png" class="sch-mini-icon" style="width:30px; height:30px; border-radius:50%; border:2px solid white; object-fit:cover; background:white;" onerror="this.style.display='none'">`;
                 }); 
             }
-            
             return `
             <div class="schedule-card" onclick="openScheduleModal(${i})" style="cursor:pointer;">
                 <div class="${boxClass}" style="position:relative; overflow:hidden;">
@@ -3474,33 +3331,23 @@ function renderSchedule() {
             </div>`;
         }).join('');
 
-        // ▼ 個別ページ用リスト（縦リスト・デザイン変更なし）
         const tlHtml = scheduleData.map((s, i) => {
             let thumbHtml = '';
-            if (s.img && s.img !== "") {
-                thumbHtml = `<img src="${s.img}" class="tl-thumb-img">`;
-            }
-
+            if (s.img && s.img !== "") { thumbHtml = `<img src="${s.img}" class="tl-thumb-img">`; }
             let platformIconsHtml = '';
             if (s.platform) {
                 s.platform.split(',').forEach(pf => {
                     pf = pf.trim();
-                    if (pf) {
-                        platformIconsHtml += `<img src="icon_pf_${pf}.png" class="tl-platform-icon" title="${pf}" style="width:20px; height:20px; object-fit:contain;">`;
-                    }
+                    if (pf) platformIconsHtml += `<img src="icon_pf_${pf}.png" class="tl-platform-icon" title="${pf}" style="width:20px; height:20px; object-fit:contain;">`;
                 });
             }
-            
             let memberIconHtml = '';
             if (s.member) {
                 s.member.split(',').forEach(mem => {
                     mem = mem.trim();
-                    if (mem) {
-                        memberIconHtml += `<img src="icon_sch_${mem}.png" class="tl-member-icon" title="${mem}" style="width:30px; height:30px; border-radius:50%; object-fit:cover;" onerror="this.style.display='none'">`;
-                    }
+                    if (mem) memberIconHtml += `<img src="icon_sch_${mem}.png" class="tl-member-icon" title="${mem}" style="width:30px; height:30px; border-radius:50%; object-fit:cover;" onerror="this.style.display='none'">`;
                 });
             }
-
             return `
             <div class="timeline-item" onclick="openScheduleModal(${i})" style="cursor:pointer;">
                 <div class="tl-icon-box">
@@ -3517,7 +3364,6 @@ function renderSchedule() {
                             ${memberIconHtml}
                         </div>
                     </div>
-                    
                     <div class="tl-body-box" style="margin-top:0; display:flex; align-items:flex-start; gap:15px;">
                         ${thumbHtml}
                         <div class="tl-title">${s.content}</div>
@@ -3569,13 +3415,123 @@ function renderSchedule() {
     function downloadCard() { const card = document.getElementById('digitalCard'); html2canvas(card, { scale: 3, backgroundColor: null, useCORS: true }).then(canvas => { const link = document.createElement('a'); link.download = 'aoharu_card.png'; link.href = canvas.toDataURL('image/png'); link.click(); }); }
     function openGoodsModal(index) { const g = goodsData[index]; document.getElementById('goodsModalImg').src = g.img; document.getElementById('goodsModalTitle').innerText = g.name; document.getElementById('goodsModalPrice').innerText = g.price; document.getElementById('goodsModalDesc').innerText = g.detail || "詳細情報はありません。"; document.getElementById('goodsModalLink').href = g.link || "#"; document.getElementById('goodsModal').classList.add('open'); }
     function closeGoodsModal() { document.getElementById('goodsModal').classList.remove('open'); }
-    function initOmikuji() { const container = document.querySelector('#top .container'); if(container && !document.querySelector('.omikuji-area')) { const omikujiArea = document.createElement('div'); omikujiArea.className = 'omikuji-area'; omikujiArea.innerHTML = ` <div class="omi-deco d-1">✨</div> <div class="omi-deco d-2">💖</div> <div class="omi-title-ribbon">毎日1回運試し！</div> <div class="omi-main-text">あおはるおみくじ</div> <div class="omi-visual-box"><i class="fas fa-box-open"></i></div> <br> <button class="omikuji-btn" onclick="drawOmikuji()">おみくじを引く！</button> <p style="font-size:11px; color:#888; margin-top:15px; font-weight:bold;">※推しメンが出るかも…！？</p> `; const noaSection = document.getElementById('nowOnAirSection'); noaSection.parentNode.insertBefore(omikujiArea, noaSection.nextSibling); } }
-    function drawOmikuji() { if(memberData.length === 0) return; const member = memberData[Math.floor(Math.random() * memberData.length)]; const fortune = fortuneTypes[Math.floor(Math.random() * fortuneTypes.length)]; const item = luckyItems[Math.floor(Math.random() * luckyItems.length)]; const comment = fortuneComments[Math.floor(Math.random() * fortuneComments.length)]; currentOmikujiResult = { member, fortune, item, comment }; const animModal = document.getElementById('omikujiAnimModal'); const box = document.getElementById('omiBox'); const slip = document.getElementById('omiSlip'); const particlesContainer = document.getElementById('omiParticles'); particlesContainer.innerHTML = ''; animModal.classList.add('open'); box.classList.add('shaking'); setTimeout(() => { box.classList.remove('shaking'); box.classList.add('pre-burst'); setTimeout(() => { box.classList.remove('pre-burst'); slip.classList.add('coming-out'); animModal.classList.add('burst'); if(typeof spawnConfetti === 'function') spawnConfetti(particlesContainer); setTimeout(() => { animModal.classList.remove('open'); animModal.classList.remove('burst'); slip.classList.remove('coming-out'); showOmikujiResult(); }, 1500); }, 500); }, 2500); }
+    function initOmikuji() {
+        const container = document.querySelector('#top .container');
+        // もし既にボタンがあっても、作り直さないようにチェック
+        if(container && !document.querySelector('.omikuji-area')) {
+            const omikujiArea = document.createElement('div');
+            omikujiArea.className = 'omikuji-area';
+            // ★ここ重要：onclickの関数名を変更していません（中身だけ変えるのでOK）
+            omikujiArea.innerHTML = `
+                <div class="omi-deco d-1">✨</div>
+                <div class="omi-deco d-2">💖</div>
+                <div class="omi-title-ribbon">毎日1回運試し！</div>
+                <div class="omi-main-text">あおはるおみくじ</div>
+                <div class="omi-visual-box"><i class="fas fa-box-open"></i></div>
+                <br>
+                <button class="omikuji-btn" onclick="drawOmikuji()">おみくじを引く！</button>
+                <p style="font-size:11px; color:#888; margin-top:15px; font-weight:bold;">※推しメンが出るかも…！？</p>
+            `;
+            const noaSection = document.getElementById('nowOnAirSection');
+            noaSection.parentNode.insertBefore(omikujiArea, noaSection.nextSibling);
+        }
+    }
+    function drawOmikuji() {
+        // ▼ データがない場合の安全策
+        let members = memberData;
+        if (!members || members.length === 0) {
+            members = [
+                { name: "あおはる公式", img: "icon.png" },
+                { name: "たく兄ちゃん", img: "icon_sch_taku.png" },
+                { name: "兎神結愛", img: "icon_sch_yua.png" },
+                { name: "鬼神イヨ", img: "icon_sch_iyo.png" },
+                { name: "緋羽アオ", img: "icon_sch_ao.png" }
+            ];
+        }
+
+        const member = members[Math.floor(Math.random() * members.length)];
+        const fortune = fortuneTypes[Math.floor(Math.random() * fortuneTypes.length)];
+        const item = luckyItems[Math.floor(Math.random() * luckyItems.length)];
+        const comment = fortuneComments[Math.floor(Math.random() * fortuneComments.length)];
+        
+        currentOmikujiResult = { member, fortune, item, comment };
+        
+        // ★★★ ここを修正：IDを元の名前に戻しました ★★★
+        const animModal = document.getElementById('omikujiAnimModal');
+        const box = document.getElementById('omiBox');
+        const slip = document.getElementById('omiSlip');
+        const particlesContainer = document.getElementById('omiParticles');
+        
+        // 安全確認：もしHTML要素が見つからなければエラーを出さずに終了
+        if (!animModal || !box || !slip || !particlesContainer) {
+            console.error("おみくじのパーツが見つかりません。HTMLのIDを確認してください。");
+            return;
+        }
+
+        particlesContainer.innerHTML = '';
+        animModal.classList.add('open');
+        box.classList.add('shaking');
+        
+        setTimeout(() => {
+            box.classList.remove('shaking');
+            box.classList.add('pre-burst');
+            setTimeout(() => {
+                box.classList.remove('pre-burst');
+                slip.classList.add('coming-out');
+                animModal.classList.add('burst');
+                
+                if(typeof spawnConfetti === 'function') spawnConfetti(particlesContainer);
+                
+                setTimeout(() => {
+                    animModal.classList.remove('open');
+                    animModal.classList.remove('burst');
+                    slip.classList.remove('coming-out');
+                    showOmikujiResult();
+                }, 1500);
+            }, 500);
+        }, 2500);
+    }
     function spawnConfetti(container) { const colors = ['#FF512F', '#DD2476', '#FFD700', '#27C6F5', '#ffffff']; const icons = ['fa-star', 'fa-heart', 'fa-music', 'fa-bolt']; for (let i = 0; i < 50; i++) { const el = document.createElement('i'); el.className = `fas ${icons[Math.floor(Math.random() * icons.length)]} confetti`; el.style.color = colors[Math.floor(Math.random() * colors.length)]; el.style.left = '50%'; el.style.top = '50%'; const angle = Math.random() * 360; const dist = 150 + Math.random() * 200; el.style.setProperty('--tx', `${Math.cos(angle * Math.PI / 180) * dist}px`); el.style.setProperty('--ty', `${Math.sin(angle * Math.PI / 180) * dist}px`); el.style.setProperty('--r', `${Math.random() * 720 - 360}deg`); container.appendChild(el); } const shockwave = document.createElement('div'); shockwave.className = 'shockwave'; container.appendChild(shockwave); }
-    function showOmikujiResult() { if(!currentOmikujiResult) return; document.getElementById('omiResultImg').src = currentOmikujiResult.member.img; document.getElementById('omiResultRank').innerText = currentOmikujiResult.fortune; document.getElementById('omiResultMsg').innerText = `${currentOmikujiResult.member.name}「${currentOmikujiResult.comment}」`; document.getElementById('omiResultItem').innerText = currentOmikujiResult.item; document.getElementById('omikujiModal').classList.add('open'); }
-    function closeOmikujiModal() { document.getElementById('omikujiModal').classList.remove('open'); }
+    // ▼▼▼ 修正版：showOmikujiResult（画像なし対応） ▼▼▼
+    function showOmikujiResult() {
+        if(!currentOmikujiResult) return;
+        
+        const imgSrc = currentOmikujiResult.member.img || "icon.png";
+        
+        // ★★★ ここも修正：IDを元の名前に戻しました ★★★
+        const resultImg = document.getElementById('omiResultImg');
+        if(resultImg) resultImg.src = imgSrc;
+
+        const rank = document.getElementById('omiResultRank');
+        if(rank) rank.innerText = currentOmikujiResult.fortune;
+
+        const msg = document.getElementById('omiResultMsg');
+        if(msg) msg.innerText = `${currentOmikujiResult.member.name}「${currentOmikujiResult.comment}」`;
+
+        const item = document.getElementById('omiResultItem');
+        if(item) item.innerText = currentOmikujiResult.item;
+        
+        const modal = document.getElementById('omikujiModal');
+        if(modal) modal.classList.add('open');
+    }
+    function closeOmikujiModal() {
+        // ★元の名前に戻しました
+        const modal = document.getElementById('omikujiModal');
+        if(modal) modal.classList.remove('open');
+    }
     function shareOmikuji() { if(!currentOmikujiResult) return; const text = `【あおはるおみくじ】\n今日の運勢は…「${currentOmikujiResult.fortune}」でした！\nラッキーアイテム：${currentOmikujiResult.item}\n${currentOmikujiResult.member.name}「${currentOmikujiResult.comment}」\n#あおはるフレンズ #あおはるおみくじ`; const url = `https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}&url=${encodeURIComponent(location.href)}`; window.open(url, '_blank'); }
-    function saveOmikuji() { const target = document.getElementById('omiCaptureArea'); html2canvas(target, { scale: 3, backgroundColor: null, useCORS: true }).then(canvas => { const link = document.createElement('a'); link.download = 'aoharu_omikuji.png'; link.href = canvas.toDataURL('image/png'); link.click(); }); }
+    function saveOmikuji() {
+        // ★キャプチャ対象も元の名前に戻しました
+        const target = document.getElementById('omiCaptureArea');
+        if(!target) return;
+
+        html2canvas(target, { scale: 3, backgroundColor: null, useCORS: true }).then(canvas => {
+            const link = document.createElement('a');
+            link.download = 'aoharu_omikuji.png';
+            link.href = canvas.toDataURL('image/png');
+            link.click();
+        });
+    }
 
     // --- 会員・非同期処理 ---
     async function registerUser() { const name = document.getElementById('regName').value; const email = document.getElementById('regEmail').value; const pass = document.getElementById('regPass').value; const btn = document.getElementById('regBtn'); if(!name || !email || !pass) { alert("全ての項目を入力してください"); return; } if(pass.length < 4) { alert("パスワードは4文字以上で設定してください"); return; } btn.innerText = "送信中..."; btn.disabled = true; try { const res = await fetch(`${GAS_API_URL}?action=register&name=${encodeURIComponent(name)}&email=${encodeURIComponent(email)}&pass=${encodeURIComponent(pass)}`); const json = await res.json(); if (json.status === 'success') { alert("登録完了！\n会員ID: " + json.id); closeRegisterModal(); } else { alert("登録エラー: " + json.message); } } catch (e) { alert("通信エラー"); } finally { btn.innerText = "会員登録する"; btn.disabled = false; } }
@@ -4083,9 +4039,10 @@ function renderSchedule() {
 
     // ▼▼▼ ニュース機能のユーティリティ（いいね・シェア・コピー） ▼▼▼
 
-    // 記事ごとの「いいね」を保存するキーを作る関数（これが消えていました！）
+    // 記事ごとの「いいね」を保存するキーを作る関数
     function getNewsLikeKey(index) {
-        if (!newsData[index]) return 'news_like_unknown_' + index;
+        // データがない場合の安全策
+        if (!newsData || !newsData[index]) return 'news_like_unknown_' + index;
         return 'news_like_' + (newsData[index].date || 'no_date') + '_' + index;
     }
 
