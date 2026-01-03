@@ -570,7 +570,8 @@
 
         @media (min-width: 768px) {
             .board-container {
-                aspect-ratio: 16 / 9; 
+                aspect-ratio: 16 / 9;
+                /* ★もし「もっと縦に広く！」ならここを 4 / 3 などに変えてください */
             }
         }
 
@@ -1610,7 +1611,7 @@
             <div class="page-title-en" style="color:#e84393;">GRAFFITI</div>
             <div class="page-title-jp">落書き広場</div>
         </div>
-        <div class="container">
+        <div class="container" style="max-width: 1400px;">
             <div style="text-align:center; margin-bottom:20px;">
                 <p style="font-size:14px; font-weight:bold; color:#555;">
                     みんなでイラストを描いて投稿しよう！<br>
@@ -1619,13 +1620,19 @@
             </div>
 
             <div class="board-container">
-                <canvas id="drawCanvas" width="800" height="450" style="width:100%; height:100%; touch-action: none;"></canvas>
+                <canvas id="drawCanvas" width="1920" height="1080" style="width:100%; height:100%; touch-action: none;"></canvas>
+                
                 <div class="paint-tools">
                     <div class="color-btn active" style="background:white;" onclick="changeColor('white', this)"></div>
                     <div class="color-btn" style="background:#ff4757;" onclick="changeColor('#ff4757', this)"></div>
                     <div class="color-btn" style="background:#2ecc71;" onclick="changeColor('#2ecc71', this)"></div>
                     <div class="color-btn" style="background:#f1c40f;" onclick="changeColor('#f1c40f', this)"></div>
                     <div class="color-btn" style="background:#27C6F5;" onclick="changeColor('#27C6F5', this)"></div>
+                    
+                    <label class="color-btn" style="background:linear-gradient(45deg, red, blue); display:flex; align-items:center; justify-content:center; overflow:hidden;" title="自由な色">
+                        <input type="color" onchange="changeColor(this.value, this.parentElement)" style="opacity:0; width:100%; height:100%; cursor:pointer;">
+                    </label>
+
                     <div style="width:1px; height:30px; background:rgba(255,255,255,0.3); margin:0 10px;"></div>
                     <button class="tool-btn" onclick="setTool('pen')"><i class="fas fa-pen"></i> ペン</button>
                     <button class="tool-btn" onclick="setTool('eraser')"><i class="fas fa-eraser"></i> 消しゴム</button>
