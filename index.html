@@ -1105,15 +1105,19 @@
         }
         .horizontal-scroll-list::-webkit-scrollbar { display: none; /* スクロールバーを隠す（Chrome/Safari） */ }
 
-        /* 投稿された画像のカードデザイン */
+        /* 投稿された画像のカードデザイン（修正版） */
         .graffiti-card {
-            min-width: 200px; /* カードの幅 */
+            min-width: 200px; 
             background: white;
             border-radius: 10px;
             box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-            overflow: hidden;
-            flex-shrink: 0;   /* 縮まないようにする */
+            /* overflow: hidden;  ←★重要：削除ボタンがはみ出しても消えないように、これを削除または visible にする */
+            overflow: visible; 
+            flex-shrink: 0;
             border: 2px solid #eee;
+            
+            /* ★最重要：削除ボタンをこのカードの中に留めるための設定 */
+            position: relative;
         }
 
         /* 左右の矢印ボタン */
@@ -2798,48 +2802,211 @@
     function closeForgotModal() { document.getElementById('forgotModal').classList.remove('open'); }
     async function sendForgotRequest() { alert("管理者に問い合わせてください"); }
 
-    // ▼▼▼ 落書き機能（完全復活・削除機能付き） ▼▼▼
+    
+
+
+// ===============================================
+    // ▼▼▼ 落書き閲覧・交流機能（いいね・コメント・削除） ▼▼▼
+    // ===============================================
+
+    // 今見ている作品の番号を覚えておく場所
+    let currentViewingIndex = -1;
+
+    // 1. 削除機能（管理者のみ実行可能）
     async function deleteGraffiti(event, id) {
-        event.stopPropagation();
-        if (!isOfficialAdmin) return;
-        if (!confirm("本当に削除しますか？")) return;
+        event.stopPropagation(); // 画像が開くのを防ぐ
+
+        // 公式メンバー（管理者）かチェック
+        if (!isOfficialAdmin) {
+            alert("削除権限がありません。\n（公式メンバーのみ削除可能です）");
+            return;
+        }
+
+        if (!confirm("本当にこの投稿を削除しますか？\n（削除すると元に戻せません）")) return;
+
         try {
-            await fetch(GAS_API_URL, { method: 'POST', body: JSON.stringify({ type: 'delete', id: id }) });
-            alert("削除しました"); location.reload();
-        } catch (e) { console.error(e); alert("削除に失敗しました"); }
+            await fetch(GAS_API_URL, { 
+                method: 'POST', 
+                headers: { "Content-Type": "text/plain" },
+                body: JSON.stringify({ type: 'delete', id: id }) 
+            });
+            alert("削除しました！\n画面を更新します。");
+            location.reload(); // 画面を更新して反映
+        } catch (e) { 
+            console.error(e); 
+            alert("削除に失敗しました。"); 
+        }
     }
 
+    // 2. 作品リストの表示
     function renderGraffitiList() {
         const list = document.getElementById('graffitiList');
-        if (!list) return; // エラー回避
-        if (!isMemberLoggedIn) { list.innerHTML = "<div style='padding:20px; color:#888; text-align:center;'>ログインするとみんなの作品が見れます！</div>"; return; }
-        if (!graffitiPosts || graffitiPosts.length === 0) { list.innerHTML = "<div style='padding:20px; color:#888; text-align:center;'>まだ投稿はありません</div>"; return; }
+        if (!list) return;
         
+        // ログインしていない場合
+        if (!isMemberLoggedIn) { 
+            list.innerHTML = `
+                <div style="flex:1; min-height:150px; display:flex; flex-direction:column; align-items:center; justify-content:center; text-align:center; color:#888;">
+                    <i class="fas fa-lock" style="font-size:30px; margin-bottom:10px; opacity:0.5;"></i>
+                    <p style="margin:0; font-size:14px;">ログインすると<br>みんなの作品が見れます！</p>
+                </div>`;
+            return; 
+        }
+
+        // 投稿がまだない場合
+        if (!graffitiPosts || graffitiPosts.length === 0) { 
+            list.innerHTML = `
+                <div style="flex:1; min-height:150px; display:flex; flex-direction:column; align-items:center; justify-content:center; text-align:center; color:#aaa;">
+                    <i class="fas fa-paint-brush" style="font-size:30px; margin-bottom:10px; opacity:0.5;"></i>
+                    <p style="margin:0; font-size:14px;">まだ投稿がありません。<br>あなたが最初のクリエイターになりませんか？</p>
+                </div>`;
+            return; 
+        }
+        
+        // リストを表示
         list.innerHTML = graffitiPosts.map((p, i) => {
+            // 公式管理者なら削除ボタンを表示
             const deleteBtn = isOfficialAdmin ? `<div class="delete-btn" onclick="deleteGraffiti(event, '${p.id}')">×</div>` : '';
-            return `<div class="graffiti-card" onclick="openGraffitiDetail(${i})">${deleteBtn}<div class="g-img-box"><img src="${p.image}" class="g-img"></div><div class="g-info"><div class="g-title">${p.title}</div><div class="g-author" style="font-size:10px; color:#888;">by ${p.author}</div></div></div>`;
+            return `
+                <div class="graffiti-card" onclick="openGraffitiDetail(${i})">
+                    ${deleteBtn}
+                    <div class="g-img-box"><img src="${p.image}" class="g-img"></div>
+                    <div class="g-info">
+                        <div class="g-title">${p.title}</div>
+                        <div class="g-author" style="font-size:10px; color:#888;">by ${p.author}</div>
+                        <div style="font-size:10px; color:#ff4757; text-align:right;">
+                            <i class="fas fa-heart"></i> ${p.likes || 0}
+                        </div>
+                    </div>
+                </div>`;
         }).join('');
     }
 
+    // 3. 詳細画面（モーダル）を開く
     function openGraffitiDetail(i) {
-        currentViewingIndex = i;
+        currentViewingIndex = i; // 何番目を見ているか記録
         const p = graffitiPosts[i];
         if(!p) return;
+
+        // 画像やタイトルをセット
         document.getElementById('gDetailImg').src = p.image;
         document.getElementById('gDetailTitle').innerText = p.title;
         document.getElementById('gDetailAuthor').innerText = p.author;
+        
+        // いいね数をセット
         const likeCount = document.getElementById('gDetailLikes');
         if(likeCount) likeCount.innerText = p.likes || 0;
-        const commentList = document.getElementById('gDetailComments');
-        if(p.comments && p.comments.length > 0) {
-            commentList.innerHTML = p.comments.map(c => `<div class="g-comment-item"><div class="g-cmt-icon"></div><div class="g-cmt-body"><div class="g-cmt-name">${c.name}</div><div>${c.text}</div></div></div>`).join('');
-        } else { commentList.innerHTML = '<p style="font-size:12px; color:#999; text-align:center; margin-top:20px;">コメントはまだありません</p>'; }
+        
+        // コメント一覧を表示
+        renderComments(p.comments);
+
+        // 画面を表示
         document.getElementById('graffitiModal').classList.add('open');
     }
 
-    function closeGraffitiModal() { document.getElementById('graffitiModal').classList.remove('open'); }
-    async function toggleGraffitiLike() { alert("いいね機能は準備中です"); }
-    async function submitGraffitiComment() { alert("コメント機能は準備中です"); }
+    // コメントリストを作る機能（アイコン対応版）
+    function renderComments(comments) {
+        const commentList = document.getElementById('gDetailComments');
+        if(comments && comments.length > 0) {
+            commentList.innerHTML = comments.map(c => {
+                // 名前からメンバー情報を探す
+                const member = memberData.find(m => m.name === c.name);
+                // メンバーなら特別なクラスをつける
+                const isMemberClass = member ? 'is-member' : '';
+                
+                // ★アイコン画像の決定ロジック
+                let iconUrl = 'icon.png'; // デフォルト
+                if (member) {
+                    // 英語名からファイル名を生成 (例: Togami Yua -> icon_sch_yua.png)
+                    if (member.enName) {
+                        let name = member.enName.toLowerCase();
+                        if (name.includes(' ')) name = name.split(' ').pop();
+                        if (name.includes('-')) name = name.split('-')[0];
+                        iconUrl = `icon_sch_${name}.png`;
+                    } else if (member.img) {
+                        iconUrl = member.img; // 予備
+                    }
+                }
+
+                return `
+                    <div class="g-comment-item ${isMemberClass}">
+                        <div class="g-cmt-icon" style="background-image:url('${iconUrl}'); background-size:cover; background-position:center;"></div>
+                        <div class="g-cmt-body">
+                            <div class="g-cmt-name">${c.name}</div>
+                            <div>${c.text}</div>
+                        </div>
+                    </div>`;
+            }).join('');
+        } else { 
+            commentList.innerHTML = '<p style="font-size:12px; color:#999; text-align:center; margin-top:20px;">コメントはまだありません。<br>感想を送ってみよう！</p>'; 
+        }
+    }
+
+    // 詳細画面を閉じる
+    function closeGraffitiModal() { 
+        document.getElementById('graffitiModal').classList.remove('open'); 
+    }
+
+    // 4. いいね機能（ハートを押した時）
+    async function toggleGraffitiLike() {
+        if(currentViewingIndex === -1) return;
+        const p = graffitiPosts[currentViewingIndex];
+        
+        // 先に画面の数字を増やす（サクサク動くように）
+        p.likes = (p.likes || 0) + 1;
+        document.getElementById('gDetailLikes').innerText = p.likes;
+
+        // 裏でGASに送信
+        try {
+            await fetch(GAS_API_URL, {
+                method: 'POST',
+                headers: { "Content-Type": "text/plain" },
+                body: JSON.stringify({ type: 'like', id: p.id })
+            });
+        } catch(e) {
+            console.error("Like Error", e);
+        }
+    }
+
+    // 5. コメント送信機能
+    async function submitGraffitiComment() {
+        if(currentViewingIndex === -1) return;
+        const input = document.getElementById('gCommentInput');
+        const text = input.value;
+        if(!text) { alert("コメントを入力してください"); return; }
+
+        const p = graffitiPosts[currentViewingIndex];
+        const myName = (currentUserData && currentUserData.name) ? currentUserData.name : "ゲスト";
+
+        // 送信するデータ
+        const commentData = {
+            name: myName,
+            text: text,
+            date: new Date().toLocaleDateString()
+        };
+
+        // 画面にすぐ反映させる
+        if(!p.comments) p.comments = [];
+        p.comments.push(commentData);
+        renderComments(p.comments); // コメント欄を更新
+        input.value = ""; // 入力欄を空にする
+
+        // 裏でGASに送信
+        try {
+            await fetch(GAS_API_URL, {
+                method: 'POST',
+                headers: { "Content-Type": "text/plain" },
+                body: JSON.stringify({ 
+                    type: 'comment', 
+                    id: p.id, 
+                    commentData: commentData 
+                })
+            });
+        } catch(e) {
+            console.error("Comment Error", e);
+            alert("コメントの送信に失敗しました（通信エラー）");
+        }
+    }
 
     function openScheduleModal(index) {
         const s = scheduleData[index];
@@ -3348,60 +3515,7 @@
     function changeTheme(color) {
         // サイト全体のテーマカラー変数を書き換え
         document.documentElement.style.setProperty('--primary', color);
-    }
-        // ★投稿機能（修正版：ID生成とtype修正）
-    async function postGraffiti() {
-        const title = document.getElementById('graffitiTitle').value || "無題";
-        let author = "匿名";
-        const authorInput = document.getElementById('graffitiAuthor');
-        
-        if (authorInput && authorInput.value) {
-            author = authorInput.value;
-        } else if (currentUserData && currentUserData.name) {
-            author = currentUserData.name;
-        }
-
-        if (!confirm(`「${title}」を投稿しますか？\n（作者：${author}）`)) return;
-
-        const btn = document.querySelector('.post-form-area .radio-btn');
-        const originalText = btn.innerHTML;
-        btn.innerText = "送信中...";
-        btn.disabled = true;
-
-        try {
-            const imgData = canvas.toDataURL('image/png');
-            // ★IDを現在時刻から生成（これで被りません）
-            const uniqueId = 'G-' + Date.now(); 
-
-            const res = await fetch(GAS_API_URL, {
-                method: 'POST',
-                body: JSON.stringify({
-                    type: 'post',       // ★ここを 'graffiti' から 'post' に修正！GAS側と合わせました
-                    id: uniqueId,       // ★ここを追加！IDを送るようにしました
-                    title: title,
-                    author: author,
-                    image: imgData
-                })
-            });
-            
-            const json = await res.json();
-            if (json.status === 'success') {
-                alert("投稿しました！");
-                ctx.clearRect(0, 0, canvas.width, canvas.height);
-                if(authorInput) authorInput.value = "";
-                document.getElementById('graffitiTitle').value = "";
-                // 投稿後、リストを再読み込みする場合はここで renderGraffitiList() を呼んでも良い
-            } else {
-                alert("エラー: " + json.message);
-            }
-        } catch (e) {
-            console.error(e);
-            alert("送信エラーが発生しました。");
-        } finally {
-            btn.innerHTML = originalText;
-            btn.disabled = false;
-        }
-    }
+    }   
     // ==========================================
     // ▼▼▼ 落書き広場（GRAFFITI）専用プログラム（完全版） ▼▼▼
     // ==========================================
@@ -3515,12 +3629,13 @@
         }
     }
 
-    // ★投稿機能
+    // ★投稿機能（修正済み・完全版）
     async function postGraffiti() {
         const title = document.getElementById('graffitiTitle').value || "無題";
         let author = "匿名";
         const authorInput = document.getElementById('graffitiAuthor');
         
+        // 名前の設定
         if (authorInput && authorInput.value) {
             author = authorInput.value;
         } else if (currentUserData && currentUserData.name) {
@@ -3536,10 +3651,17 @@
 
         try {
             const imgData = canvas.toDataURL('image/png');
+            // ID生成（現在時刻を使うので被りません）
+            const uniqueId = 'G-' + Date.now(); 
+
+            // GASへ送信
             const res = await fetch(GAS_API_URL, {
                 method: 'POST',
+                // ★重要：通信エラーを防ぐおまじない
+                headers: { "Content-Type": "text/plain" },
                 body: JSON.stringify({
-                    type: 'graffiti',
+                    type: 'post',       // ★GAS側の受け取り設定に合わせました
+                    id: uniqueId,       // ★IDを送るようにしました
                     title: title,
                     author: author,
                     image: imgData
@@ -3547,22 +3669,29 @@
             });
             
             const json = await res.json();
+            
             if (json.status === 'success') {
                 alert("投稿しました！");
-                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                ctx.clearRect(0, 0, canvas.width, canvas.height); // キャンバスをクリア
                 if(authorInput) authorInput.value = "";
                 document.getElementById('graffitiTitle').value = "";
+                
+                // 投稿したらリストを再読み込み
+                setTimeout(() => {
+                    if(typeof renderGraffitiList === 'function') renderGraffitiList();
+                }, 1000);
             } else {
                 alert("エラー: " + json.message);
             }
         } catch (e) {
             console.error(e);
-            alert("送信エラーが発生しました。");
+            alert("送信エラーが発生しました。\n（GASのデプロイが更新されていない可能性があります）");
         } finally {
             btn.innerHTML = originalText;
             btn.disabled = false;
         }
     }
+    
     // ▼▼▼ 追加：ギャラリーを横にスライドさせる機能 ▼▼▼
     function slideGallery(direction) {
         const list = document.getElementById('graffitiList');
