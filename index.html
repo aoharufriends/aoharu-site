@@ -1245,25 +1245,26 @@
         /* スマホ向けの高さ調整（修正版） */
         @media (max-width: 768px) {
             .hero-section { 
-                /* ★高さ「自動」をやめて、画面の半分(50vh)くらいの高さを強制確保！ */
-                height: 55vh;      
-                min-height: 400px; /* 最低でも400pxは確保 */
+                /* 高さを少し抑えて、横の広がり（見切れ）を減らす */
+                height: 40vh;      
+                
+                /* 最低の高さも少し下げておく */
+                min-height: 250px; 
+                
                 width: 100%;
-                background-color: #27C6F5; /* 黒い線が出ないように背景を水色に変更 */
+                background-color: #27C6F5;
             }
             .hero-main-img {
-                height: 100%;      /* 枠いっぱいに高さを広げる */
+                height: 100%;
                 width: 100%;
+                object-fit: cover;
                 
-                /* ★重要：枠に合わせて「いい感じ」に切り抜く設定 */
-                object-fit: cover; 
-                
-                /* ★重要：顔（上の方）を中心に表示する */
+                /* 顔の位置調整（必要ならここも微調整） */
                 object-position: center top; 
                 
                 position: static;
                 animation: none;
-                display: block;    /* 画像下の謎の隙間（黒い線）を消すおまじない */
+                display: block;
             }
         }
      /* ▼▼▼ 追加：横スクロールギャラリーのデザイン ▼▼▼ */
