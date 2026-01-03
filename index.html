@@ -1437,6 +1437,141 @@
         .scroll-arrow-btn:hover { transform: scale(1.1); }
         .scroll-arrow-btn:active { transform: scale(0.95); }
 /* ▼▼▼ グッズリストのデザイン（ニュースカード風・サイズ統一版） ▼▼▼ */
+/* ▼▼▼ 本格的ECサイト風グッズページのデザイン ▼▼▼ */
+        
+        /* ページ全体のレイアウト枠 */
+        .goods-layout-container {
+            display: flex;
+            align-items: flex-start;
+            gap: 40px;
+            padding-top: 20px;
+        }
+
+        /* 左側のサイドバー（絞り込みメニュー） */
+        .goods-sidebar {
+            width: 250px;
+            flex-shrink: 0;
+            position: sticky;
+            top: 100px; /* スクロールしてもついてくる */
+        }
+
+        .filter-group {
+            margin-bottom: 40px;
+        }
+
+        .filter-title {
+            font-size: 16px;
+            font-weight: 900;
+            color: #333;
+            border-bottom: 2px solid #333;
+            padding-bottom: 10px;
+            margin-bottom: 20px;
+            font-family: 'M PLUS Rounded 1c', sans-serif;
+        }
+
+        .filter-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .filter-item {
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            font-size: 14px;
+            color: #555;
+            cursor: pointer;
+            transition: color 0.2s;
+        }
+        .filter-item:hover { color: var(--primary); }
+        
+        .filter-checkbox, .filter-radio {
+            margin-right: 10px;
+            transform: scale(1.2);
+            cursor: pointer;
+            accent-color: var(--primary);
+        }
+
+        /* 右側の商品エリア */
+        .goods-main-area {
+            flex-grow: 1;
+        }
+
+        /* 検索バー */
+        .goods-search-box {
+            display: flex;
+            align-items: center;
+            background: #f5f5f5;
+            padding: 10px 20px;
+            border-radius: 30px;
+            margin-bottom: 30px;
+            border: 1px solid #ddd;
+        }
+        .goods-search-input {
+            border: none;
+            background: transparent;
+            outline: none;
+            flex-grow: 1;
+            font-size: 14px;
+            padding-left: 10px;
+        }
+
+        /* 商品グリッド（サイズ調整） */
+        .goods-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); /* 少し小さくして数を並べる */
+            gap: 25px;
+        }
+
+        /* 商品カードの微調整（シンプルに） */
+        .goods-card {
+            box-shadow: none; /* 影を消してフラットに（参考画像風） */
+            border: none;
+        }
+        .goods-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.05); /* ホバー時だけ影 */
+        }
+        .goods-thumb-area {
+            border-radius: 8px; /* 角を少し丸く */
+            border: 1px solid #eee;
+        }
+        .goods-content {
+            padding: 15px 5px; /* 横の余白を減らす */
+        }
+        .goods-name {
+            font-size: 14px;
+            margin-bottom: 5px;
+            color: #333;
+        }
+        .goods-price {
+            font-size: 15px;
+            color: #333; /* 黒文字にして落ち着かせる */
+        }
+        .goods-btn {
+            display: none; /* 一覧ではボタンを隠す（画像をクリックさせるスタイル） */
+        }
+
+        /* スマホ対応（サイドバーを上に配置） */
+        @media (max-width: 900px) {
+            .goods-layout-container {
+                flex-direction: column;
+            }
+            .goods-sidebar {
+                width: 100%;
+                position: static;
+                margin-bottom: 30px;
+                background: #f9f9f9;
+                padding: 20px;
+                box-sizing: border-box;
+                border-radius: 10px;
+            }
+            .goods-grid {
+                grid-template-columns: repeat(2, 1fr); /* スマホは2列 */
+                gap: 15px;
+            }
+        }
         .goods-grid {
             display: grid;
             /* スマホでは1列〜2列、PCでは自動調整（ニュースと同じ280px基準） */
@@ -1529,6 +1664,45 @@
             background: var(--primary);
             color: white;
         }
+　　　　/* ▼▼▼ グッズカードのタグ（カテゴリ＆メンバー表示） ▼▼▼ */
+        .goods-tag-row {
+            display: flex;
+            gap: 5px;
+            margin-bottom: 8px;
+            flex-wrap: wrap;
+        }
+        
+        /* カテゴリバッジ */
+        .goods-cat-badge {
+            font-size: 10px;
+            padding: 3px 8px;
+            border-radius: 4px;
+            background: #f0f0f0;
+            color: #666;
+            font-weight: bold;
+            border: 1px solid #ddd;
+        }
+
+        /* メンバーバッジ（共通設定） */
+        .goods-mem-badge {
+            font-size: 10px;
+            padding: 3px 8px;
+            border-radius: 4px;
+            color: white;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        
+        /* メンバーごとの色設定 */
+        .mem-taku { background-color: #a29bfe; } /* たく兄ちゃん（紫系） */
+        .mem-yua  { background-color: #ff9a9e; } /* 兎神結愛（ピンク系） */
+        .mem-iyo  { background-color: #81ecec; } /* 鬼神イヨ（水色系） */
+        .mem-ao   { background-color: #55efc4; } /* 緋羽アオ（緑系） */
+        .mem-group { background: linear-gradient(90deg, #27C6F5, #2ecc71); } /* あおはる☆フレンズ */
+        .mem-other { background-color: #333; }     /* その他 */
         /* ▼▼▼ グッズ詳細モーダルの画像調整（はみ出し防止） ▼▼▼ */
         #goodsModalImg {
             /* 横幅の制限 */
@@ -1973,11 +2147,72 @@
     </div>
 
     <div id="goods" class="page">
-        <div class="page-header"><div class="page-title-en">GOODS</div><div class="page-title-jp">公式グッズ</div></div>
+        <div class="page-header" style="margin-bottom: 20px;">
+            <div class="page-title-en">GOODS</div>
+            <div class="page-title-jp">公式オンラインストア</div>
+        </div>
+
         <div class="container">
-            <div class="goods-hero"><h3>NEW ARRIVAL</h3><p>新作グッズが登場！今すぐチェック！</p></div>
-            <div class="section-title"><span class="ja-title" style="margin:0;">商品一覧</span></div>
-            <div class="goods-grid" id="goodsList"></div>
+            <div class="goods-layout-container">
+                
+                <aside class="goods-sidebar">
+                    <div class="goods-search-box">
+                        <i class="fas fa-search" style="color:#aaa;"></i>
+                        <input type="text" id="goodsSearchInput" class="goods-search-input" placeholder="キーワード検索" oninput="filterGoods()">
+                    </div>
+
+                    <div class="filter-group">
+                        <div class="filter-title">商品カテゴリ</div>
+                        <ul class="filter-list">
+                            <li class="filter-item"><label><input type="radio" name="g_cat" value="all" class="filter-radio" checked onchange="filterGoods()"> すべて</label></li>
+                            <li class="filter-item"><label><input type="radio" name="g_cat" value="ボイス" class="filter-radio" onchange="filterGoods()"> ボイス / 音声</label></li>
+                            <li class="filter-item"><label><input type="radio" name="g_cat" value="グッズ" class="filter-radio" onchange="filterGoods()"> グッズ / 雑貨</label></li>
+                            <li class="filter-item"><label><input type="radio" name="g_cat" value="アパレル" class="filter-radio" onchange="filterGoods()"> アパレル</label></li>
+                            <li class="filter-item"><label><input type="radio" name="g_cat" value="期間限定" class="filter-radio" onchange="filterGoods()"> 期間限定</label></li>
+                        </ul>
+                    </div>
+
+                    <div class="filter-group">
+                        <div class="filter-title">メンバーから探す</div>
+                        <ul class="filter-list">
+                            <li class="filter-item"><label><input type="radio" name="g_member" value="all" class="filter-radio" checked onchange="filterGoods()"> 全員・すべて</label></li>
+                            <li class="filter-item"><label><input type="radio" name="g_member" value="あおはる" class="filter-radio" onchange="filterGoods()"> あおはる☆フレンズ</label></li>
+                            <li class="filter-item"><label><input type="radio" name="g_member" value="たく兄ちゃん" class="filter-radio" onchange="filterGoods()"> たく兄ちゃん</label></li>
+                            <li class="filter-item"><label><input type="radio" name="g_member" value="兎神結愛" class="filter-radio" onchange="filterGoods()"> 兎神結愛</label></li>
+                            <li class="filter-item"><label><input type="radio" name="g_member" value="鬼神イヨ" class="filter-radio" onchange="filterGoods()"> 鬼神イヨ</label></li>
+                            <li class="filter-item"><label><input type="radio" name="g_member" value="緋羽アオ" class="filter-radio" onchange="filterGoods()"> 緋羽アオ</label></li>
+                        </ul>
+                    </div>
+
+                    <div class="filter-group">
+                        <div class="filter-title">価格帯</div>
+                        <ul class="filter-list">
+                            <li class="filter-item"><label><input type="radio" name="g_price" value="all" class="filter-radio" checked onchange="filterGoods()"> 指定なし</label></li>
+                            <li class="filter-item"><label><input type="radio" name="g_price" value="1000" class="filter-radio" onchange="filterGoods()"> 1,000円以下</label></li>
+                            <li class="filter-item"><label><input type="radio" name="g_price" value="3000" class="filter-radio" onchange="filterGoods()"> 1,000円 〜 3,000円</label></li>
+                            <li class="filter-item"><label><input type="radio" name="g_price" value="5000" class="filter-radio" onchange="filterGoods()"> 3,000円 〜 5,000円</label></li>
+                            <li class="filter-item"><label><input type="radio" name="g_price" value="over" class="filter-radio" onchange="filterGoods()"> 5,000円以上</label></li>
+                        </ul>
+                    </div>
+
+                    <div class="filter-group">
+                        <div class="filter-title">オプション</div>
+                        <ul class="filter-list">
+                            <li class="filter-item"><label><input type="checkbox" id="g_stock" class="filter-checkbox" onchange="filterGoods()"> 在庫ありのみ</label></li>
+                        </ul>
+                    </div>
+                </aside>
+
+                <main class="goods-main-area">
+                    <div style="font-size:12px; color:#888; margin-bottom:15px; text-align:right;">
+                        <span id="goodsCount">0</span> 件の商品が見つかりました
+                    </div>
+                    <div class="goods-grid" id="goodsList">
+                        読み込み中...
+                    </div>
+                </main>
+
+            </div>
         </div>
     </div>
 
@@ -2553,7 +2788,7 @@
     // ▼▼▼ JavaScript（全機能修正版） ▼▼▼
     // ==========================================
 
-    const GAS_API_URL = "https://script.google.com/macros/s/AKfycbzq9XQGFQjIDfJ-7R9QOQp1gzxS7dcTlPkfQmS_LtnFJux7eF7HH3wRhHvmoCVCsi6ywQ/exec";
+    const GAS_API_URL = "https://script.google.com/macros/s/AKfycbxlZB1lb9t7OJztkTdSaKq1mL0bOZ1ZKm8GzFFgldsJ9OHxMP_uKSY74ASnUtuyHzUEfA/exec";
     let YOUTUBE_API_KEY = ""; 
     let GROUP_CONFIG = {};
     let memberData = [];
@@ -2737,18 +2972,8 @@
             if (data.radio_diaries) { radioBlogData = data.radio_diaries; } 
             if (data.goods) {
                 goodsData = data.goods;
-                document.getElementById('goodsList').innerHTML = goodsData.map((g, i) => `
-                    <div class="goods-card" onclick="openGoodsModal(${i})">
-                        <div class="goods-thumb-area">
-                            <img src="${g.img}" class="goods-img" alt="${g.name}">
-                        </div>
-                        <div class="goods-content">
-                            <div class="goods-name">${g.name}</div>
-                            <div class="goods-price">${g.price}</div>
-                            <div class="goods-btn">DETAILS</div>
-                        </div>
-                    </div>
-                `).join('');
+                // 初回表示（全件表示）を実行
+                filterGoods(); 
             }
             if (data.graffiti) {
                 graffitiPosts = data.graffiti.map(g => ({
@@ -4268,6 +4493,119 @@
                 behavior: 'smooth'
             });
         }
+    }
+　　// ▼▼▼ グッズ絞り込み機能（F列・G列対応・完全版） ▼▼▼
+    function filterGoods() {
+        // 1. 選択された条件を取得
+        const catInput = document.querySelector('input[name="g_cat"]:checked');
+        const priceInput = document.querySelector('input[name="g_price"]:checked');
+        const memberInput = document.querySelector('input[name="g_member"]:checked'); // ★追加
+        const stockInput = document.getElementById('g_stock');
+        const searchInput = document.getElementById('goodsSearchInput');
+
+        // エラー防止
+        if (!catInput || !priceInput || !memberInput || !stockInput || !searchInput) return;
+
+        const category = catInput.value;
+        const priceRange = priceInput.value;
+        const targetMember = memberInput.value; // ★追加
+        const stockOnly = stockInput.checked;
+        const keyword = searchInput.value.toLowerCase();
+
+        // 2. データをフィルタリング
+        const filtered = goodsData.filter(g => {
+            let match = true;
+
+            // ① カテゴリ判定（スプシの F列 'category' を見る）
+            if (category !== 'all') {
+                // データがない場合は空文字として扱う
+                const gCat = (g.category || "").toLowerCase();
+                // 選択したカテゴリが含まれているかチェック
+                if (!gCat.includes(category.toLowerCase())) match = false;
+            }
+
+            // ② メンバー判定（スプシの G列 'member' を見る）★追加
+            if (targetMember !== 'all') {
+                const gMem = (g.member || "").toLowerCase();
+                // "あおはる"で検索した場合は"あおはる"や"フレンズ"を含むものをヒットさせる
+                if (targetMember === 'あおはる') {
+                    if (!gMem.includes('あおはる') && !gMem.includes('フレンズ') && !gMem.includes('全員')) match = false;
+                } else {
+                    // それ以外（個人名）の場合
+                    if (!gMem.includes(targetMember.toLowerCase())) match = false;
+                }
+            }
+
+            // ③ 価格判定
+            const price = parseInt(String(g.price).replace(/[^0-9]/g, ''));
+            if (!isNaN(price)) {
+                if (priceRange === '1000' && price > 1000) match = false;
+                if (priceRange === '3000' && (price <= 1000 || price > 3000)) match = false;
+                if (priceRange === '5000' && (price <= 3000 || price > 5000)) match = false;
+                if (priceRange === 'over' && price <= 5000) match = false;
+            }
+
+            // ④ キーワード検索（名前・詳細・カテゴリ・メンバー名すべて対象）
+            if (keyword) {
+                const allText = (g.name + (g.detail||"") + (g.category||"") + (g.member||"")).toLowerCase();
+                if (!allText.includes(keyword)) match = false;
+            }
+
+            return match;
+        });
+
+        // 3. 件数表示更新
+        const countEl = document.getElementById('goodsCount');
+        if(countEl) countEl.innerText = filtered.length;
+
+        // 4. グリッドの再描画
+        const list = document.getElementById('goodsList');
+        if (!list) return;
+
+        if (filtered.length === 0) {
+            list.innerHTML = '<div style="grid-column:1/-1; text-align:center; padding:50px; color:#888;">条件に一致する商品は見つかりませんでした。</div>';
+            return;
+        }
+
+        list.innerHTML = filtered.map((g, i) => {
+            // 詳細表示用に、元のデータ内での位置を探す
+            const realIndex = goodsData.indexOf(g);
+            
+            // ▼▼▼ バッジの作成 ▼▼▼
+            
+            // F列: カテゴリバッジ
+            const catLabel = g.category ? `<span class="goods-cat-badge">${g.category}</span>` : '';
+            
+            // G列: メンバーバッジ（色分け処理）
+            let memClass = 'mem-other'; // デフォルト色
+            let memName = g.member || "";
+            let icon = '<i class="fas fa-user"></i>'; // デフォルトアイコン
+
+            if (memName.includes('たく')) { memClass = 'mem-taku'; }
+            else if (memName.includes('結愛') || memName.includes('ゆあ')) { memClass = 'mem-yua'; icon = '<i class="fas fa-heart"></i>'; }
+            else if (memName.includes('イヨ')) { memClass = 'mem-iyo'; icon = '<i class="fas fa-ghost"></i>'; }
+            else if (memName.includes('アオ')) { memClass = 'mem-ao'; icon = '<i class="fas fa-feather"></i>'; }
+            else if (memName.includes('あおはる') || memName.includes('フレンズ') || memName.includes('全員')) { memClass = 'mem-group'; icon = '<i class="fas fa-users"></i>'; }
+            
+            const memLabel = memName ? `<span class="goods-mem-badge ${memClass}">${icon} ${memName}</span>` : '';
+
+            // カードのHTML生成
+            return `
+                <div class="goods-card" onclick="openGoodsModal(${realIndex})">
+                    <div class="goods-thumb-area">
+                        <img src="${g.img}" class="goods-img" alt="${g.name}" onerror="this.src='https://placehold.co/300x300/eee/ccc?text=No+Image'">
+                    </div>
+                    <div class="goods-content">
+                        <div class="goods-tag-row">
+                            ${memLabel}
+                            ${catLabel}
+                        </div>
+                        <div class="goods-name">${g.name}</div>
+                        <div class="goods-price">${g.price}</div>
+                    </div>
+                </div>
+            `;
+        }).join('');
     }
 </script>
 </body>
