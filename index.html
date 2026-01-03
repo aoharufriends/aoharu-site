@@ -1638,12 +1638,12 @@
         <div class="page-header"><div class="page-title-en">NEWS</div><div class="page-title-jp">最新ニュース</div></div>
         <div class="container">
             <div class="news-category-bar" style="flex-wrap:wrap;"> 
-                <div class="news-cat-btn active">ALL</div>
-                <div class="news-cat-btn">INFO</div>
-                <div class="news-cat-btn">VIDEO</div>
-                <div class="news-cat-btn">GOODS</div>
-                <div class="news-cat-btn">MUSIC</div>
-                <div class="news-cat-btn">MEMBER</div>
+                <div class="news-cat-btn active" onclick="filterNews('ALL', this)">ALL</div>
+                <div class="news-cat-btn" onclick="filterNews('INFO', this)">INFO</div>
+                <div class="news-cat-btn" onclick="filterNews('VIDEO', this)">VIDEO</div>
+                <div class="news-cat-btn" onclick="filterNews('GOODS', this)">GOODS</div>
+                <div class="news-cat-btn" onclick="filterNews('MUSIC', this)">MUSIC</div>
+                <div class="news-cat-btn" onclick="filterNews('MEMBER', this)">MEMBER</div>
             </div>
             
             <div class="news-pickup" id="newsDetailAnchor" style="scroll-margin-top: 100px;">
@@ -2634,6 +2634,49 @@
         const img = document.getElementById('modalImg');
         if (img && data.image && data.image !== "") { img.src = data.image; img.style.display = "block"; } else if (img) { img.style.display = "none"; }
         document.getElementById('newsModal').classList.add('open'); 
+    }
+
+    // ▼▼▼ ニュースのカテゴリー切り替え機能 ▼▼▼
+    function filterNews(category, btnElement) {
+        // 1. ボタンの色を切り替える
+        // すべてのボタンから 'active' クラスを外す
+        document.querySelectorAll('.news-cat-btn').forEach(btn => btn.classList.remove('active'));
+        // クリックされたボタンにだけ 'active' をつける
+        if(btnElement) btnElement.classList.add('active');
+
+        // 2. 記事リストをフィルタリングして再表示
+        const fullList = document.getElementById('fullNewsList');
+        if (!fullList) return;
+
+        // カテゴリーが 'ALL' なら全部、それ以外ならタグが一致するものだけ抽出
+        let filteredData = newsData;
+        if (category !== 'ALL') {
+            filteredData = newsData.filter(n => n.tag === category);
+        }
+
+        // 抽出したデータでリストを作り直す
+        if (filteredData.length === 0) {
+            fullList.innerHTML = `<div style="text-align:center; width:100%; padding:40px; color:#888;">「${category}」のニュースはまだありません</div>`;
+        } else {
+            fullList.innerHTML = filteredData.map((n, i) => {
+                // 元のデータ内での本当のインデックスを探す（モーダル表示用）
+                const realIndex = newsData.indexOf(n);
+                const imgSrc = n.image ? n.image : "https://placehold.co/600x400/eee/333?text=NEWS";
+                
+                return `
+                    <div class="news-card" onclick="updatePickupNews(${realIndex})">
+                        <div class="news-thumb-area">
+                            <span class="news-badge" style="background:${getTagColor(n.tag)}">${n.tag}</span>
+                            <img src="${imgSrc}" class="news-img">
+                        </div>
+                        <div class="news-content">
+                            <div class="news-date">${n.date}</div>
+                            <div class="news-title">${n.title}</div>
+                            <div class="news-check-btn">VIEW</div>
+                        </div>
+                    </div>`;
+            }).join('');
+        }
     }
 
     function renderSchedule() {
