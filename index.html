@@ -68,6 +68,78 @@
         .section-title { text-align: center; margin-bottom: 30px; margin-top: 40px; } .en-title { font-family: 'Poppins', sans-serif; font-size: 28px; font-weight: bold; color: var(--primary); letter-spacing: 2px; } .ja-title { display: block; font-size: 12px; color: var(--text-sub); margin-top: 5px; font-weight: bold; }
         .more-btn { background: transparent; border: 1px solid #ccc; padding: 10px 30px; border-radius: 30px; cursor: pointer; color: var(--text-main); font-family: 'Poppins', sans-serif; font-size: 14px; margin-top: 20px; transition: all 0.3s ease; outline: none; } .more-btn:hover { background: var(--primary); color: white; border-color: var(--primary); }
 
+        /* ▼▼▼ ヘッダーのレイアウト設定 ▼▼▼ */
+        .header-left { display: flex; align-items: center; }
+        
+        /* ロゴの設定 */
+        .logo-img { height: 40px; width: auto; margin-left: 20px; cursor: pointer; z-index: 10; /* ロゴが一番前に来るように */ }
+
+        /* ▼ PC用メニューの設定（お洒落版） ▼ */
+        .pc-nav { 
+            display: flex; 
+            gap: 25px;             /* 文字の間隔を少し広めに */
+            align-items: center;
+
+            /* ★重要：強制的に画面の「真ん中」に配置する魔法の記述★ */
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+
+        .pc-nav-link { 
+            /* フォントを変更：少し丸みがあってポップな 'Poppins' に */
+            font-family: 'Poppins', sans-serif; 
+            font-weight: 700; /* 太字 */
+            font-size: 16px; 
+            
+            /* 色を変更：真っ黒ではなく、少し柔らかい濃いグレーに */
+            color: #555555; 
+            
+            text-decoration: none; cursor: pointer; position: relative; transition: all 0.3s;
+            text-transform: uppercase; 
+            letter-spacing: 1.5px; /* 文字の間を少し広げてお洒落に */
+        }
+        
+        /* マウスを乗せた時の色（サイトのメインカラー：水色） */
+        .pc-nav-link:hover { color: var(--primary); }
+        
+        /* 下線のりアニメーション */
+        .pc-nav-link::after {
+            content: ''; position: absolute; width: 0; height: 3px; bottom: -5px; left: 0;
+            background-color: var(--primary); /* 下線も水色に */
+            transition: width 0.3s; border-radius: 2px;
+        }
+        .pc-nav-link:hover::after { width: 100%; }
+        
+        /* 下線のりアニメーション */
+        .pc-nav-link::after {
+            content: ''; position: absolute; width: 0; height: 2px; bottom: -5px; left: 0;
+            background-color: var(--primary); transition: width 0.3s;
+        }
+        .pc-nav-link:hover::after { width: 100%; }
+
+        /* ハンバーガーメニューボタン（基本は隠しておく） */
+        .menu-btn { 
+            width: 40px; height: 40px; 
+            background: var(--primary); 
+            border-radius: 50%; 
+            display: none;       /* ★PCでは隠す */
+            align-items: center; justify-content: center; 
+            color: white; font-size: 20px; cursor: pointer; 
+            box-shadow: 0 4px 10px rgba(39, 198, 245, 0.4); 
+        }
+
+        /* ▼▼▼ 重要：画面サイズによる表示切り替え ▼▼▼ */
+        
+        @media (max-width: 768px) {
+            .pc-nav { display: none !important; }
+            .menu-btn { display: flex !important; }
+        }
+        @media (min-width: 769px) {
+            .menu-btn { display: none !important; }
+            .pc-nav { display: flex !important; }
+        }
+
         /* おみくじ */
         .omikuji-area { text-align: center; margin-bottom: 60px; background: linear-gradient(135deg, #fff5f8 0%, #f0faff 100%); padding: 30px 20px; border-radius: 25px; box-shadow: 0 10px 30px rgba(0,0,0,0.05); border: 4px solid white; outline: 4px dashed #ff9a9e; position: relative; overflow: hidden; max-width: 600px; margin-left: auto; margin-right: auto; }
         .omikuji-area::before { content: ""; position: absolute; inset: 0; opacity: 0.1; background-image: radial-gradient(#ff9a9e 20%, transparent 20%), radial-gradient(#27C6F5 20%, transparent 20%); background-size: 30px 30px; background-position: 0 0, 15px 15px; pointer-events: none; }
@@ -722,18 +794,6 @@
 
     <div id="bgShapes" class="bg-shape-container"></div>
 
-    <header>
-        <img src="logo.png" alt="AOHARU FRIENDS" class="logo-img" onclick="showPage('top')" id="headerLogo">
-        <div class="header-right">
-            <div id="themeColorButtons" class="theme-btn-container"></div>
-            <div class="theme-switch-btn" onclick="toggleDarkMode()" title="昼/夜 切り替え">
-                <i class="fas fa-sun" id="themeIcon"></i>
-            </div>
-            <div id="headerLoginBtn" class="login-btn-header" onclick="openLoginModal()">LOGIN</div>
-            <div class="menu-btn" onclick="toggleMenu()"><span style="margin-top:-2px;">☰</span></div>
-        </div>
-    </header>
-
     <div id="breadcrumbNav" class="breadcrumb-nav"></div>
     <div id="liveContainer" class="live-container"></div>
     
@@ -1035,7 +1095,19 @@
     <div id="bgShapes" class="bg-shape-container"></div>
 
     <header>
-        <img src="logo.png" alt="AOHARU FRIENDS" class="logo-img" onclick="showPage('top')" id="headerLogo">
+        <div class="header-left">
+            <img src="logo.png" alt="AOHARU FRIENDS" class="logo-img" onclick="showPage('top')" id="headerLogo">
+            
+            <nav class="pc-nav">
+                <a class="pc-nav-link" onclick="showPage('news')">NEWS</a>
+                <a class="pc-nav-link" onclick="showPage('member')">MEMBER</a>
+                <a class="pc-nav-link" onclick="showPage('schedule')">SCHEDULE</a>
+                <a class="pc-nav-link" onclick="showPage('goods')">GOODS</a>
+                <a class="pc-nav-link" onclick="showPage('radio')">RADIO</a>
+                <a class="pc-nav-link" onclick="showPage('rakugaki')">GRAFFITI</a>
+                <a class="pc-nav-link" onclick="showPage('studio')">STUDIO</a>
+            </nav>
+        </div>
         <div class="header-right">
             <div id="themeColorButtons" class="theme-btn-container"></div>
             <div class="theme-switch-btn" onclick="toggleDarkMode()" title="昼/夜 切り替え">
@@ -1478,6 +1550,61 @@
                 </div>
             </div>
             <div style="text-align:center;"><button onclick="showPage('top')" class="more-btn">TOPへ戻る</button></div>
+        </div>
+    </div>
+<div id="rakugaki" class="page">
+        <div class="page-header">
+            <div class="page-title-en" style="color:#e84393;">GRAFFITI</div>
+            <div class="page-title-jp">落書き広場</div>
+        </div>
+        <div class="container">
+            <div style="text-align:center; margin-bottom:20px;">
+                <p style="font-size:14px; font-weight:bold; color:#555;">
+                    みんなでイラストを描いて投稿しよう！<br>
+                    黒板に自由に描いてね！
+                </p>
+            </div>
+
+            <div class="board-container">
+                <canvas id="drawCanvas" width="800" height="450" style="width:100%; height:100%; touch-action: none;"></canvas>
+                <div class="paint-tools">
+                    <div class="color-btn active" style="background:white;" onclick="changeColor('white', this)"></div>
+                    <div class="color-btn" style="background:#ff4757;" onclick="changeColor('#ff4757', this)"></div>
+                    <div class="color-btn" style="background:#2ecc71;" onclick="changeColor('#2ecc71', this)"></div>
+                    <div class="color-btn" style="background:#f1c40f;" onclick="changeColor('#f1c40f', this)"></div>
+                    <div class="color-btn" style="background:#27C6F5;" onclick="changeColor('#27C6F5', this)"></div>
+                    <div style="width:1px; height:30px; background:rgba(255,255,255,0.3); margin:0 10px;"></div>
+                    <button class="tool-btn" onclick="setTool('pen')"><i class="fas fa-pen"></i> ペン</button>
+                    <button class="tool-btn" onclick="setTool('eraser')"><i class="fas fa-eraser"></i> 消しゴム</button>
+                    <button class="tool-btn" onclick="clearCanvas()"><i class="fas fa-trash"></i> クリア</button>
+                </div>
+            </div>
+
+            <div class="post-form-area">
+                <div style="font-weight:bold; margin-bottom:10px;">作品を投稿する</div>
+                
+                <label style="font-size:12px; font-weight:bold; color:#888;">ニックネーム</label>
+                <input type="text" id="graffitiAuthor" class="form-input" placeholder="あおはる 太郎">
+                
+                <label style="font-size:12px; font-weight:bold; color:#888;">タイトル</label>
+                <input type="text" id="graffitiTitle" class="form-input" placeholder="タイトル（任意）">
+
+                <button class="radio-btn" onclick="postGraffiti()" style="background:#e84393; margin-top:10px;">
+                    <i class="fas fa-paper-plane"></i> ギャラリーに投稿
+                </button>
+            </div>
+                <p style="font-size:11px; color:#888; margin-top:5px;">※投稿にはログインが必要です。</p>
+            </div>
+
+            <div class="section-title" style="margin-top:50px;"><span class="ja-title">みんなの作品</span></div>
+            
+            <div class="goods-grid" id="graffitiList" style="min-height:200px;">
+                <div style="padding:20px; text-align:center; color:#888;">読み込み中...</div>
+            </div>
+            
+            <div style="text-align:center; margin-top:30px;">
+                <button onclick="showPage('top')" class="more-btn">TOPへ戻る</button>
+            </div>
         </div>
     </div>
 <div id="studio" class="page">
@@ -3157,6 +3284,218 @@
     function changeTheme(color) {
         // サイト全体のテーマカラー変数を書き換え
         document.documentElement.style.setProperty('--primary', color);
+    }
+        // 投稿機能
+    async function postGraffiti() {
+        const title = document.getElementById('graffitiTitle').value || "無題";
+        
+        // 名前欄があればそれを使い、なければログイン情報を使い、それもなければ「匿名」
+        let author = "匿名";
+        const authorInput = document.getElementById('graffitiAuthor');
+        if (authorInput && authorInput.value) {
+            author = authorInput.value;
+        } else if (currentUserData && currentUserData.name) {
+            author = currentUserData.name;
+        }
+
+        if (!confirm(`「${title}」を投稿しますか？`)) return;
+
+        const btn = document.querySelector('.post-form-area .radio-btn');
+        btn.innerText = "送信中...";
+        btn.disabled = true;
+
+        try {
+            // キャンバスを画像データに変換
+            const imgData = canvas.toDataURL('image/png');
+            
+            // GASへ送信
+            const res = await fetch(GAS_API_URL, {
+                method: 'POST',
+                body: JSON.stringify({
+                    type: 'graffiti',
+                    title: title,
+                    author: author,
+                    image: imgData
+                })
+            });
+            
+            const json = await res.json();
+            if (json.status === 'success') {
+                alert("投稿しました！反映されるまで少し時間がかかります。");
+                ctx.clearRect(0, 0, canvas.width, canvas.height); // キャンバスをクリア
+                if(authorInput) authorInput.value = "";
+                document.getElementById('graffitiTitle').value = "";
+            } else {
+                alert("エラー: " + json.message);
+            }
+        } catch (e) {
+            console.error(e);
+            alert("通信エラーが発生しました");
+        } finally {
+            btn.innerHTML = '<i class="fas fa-paper-plane"></i> ギャラリーに投稿';
+            btn.disabled = false;
+        }
+    }
+    // ==========================================
+    // ▼▼▼ 落書き広場（GRAFFITI）専用プログラム（完全版） ▼▼▼
+    // ==========================================
+    
+    // 変数の準備
+    let canvas, ctx, drawing = false;
+    let currentColor = "white"; // 初期カラー
+
+    // ★会員限定ロック機能
+    function checkCanvasLock() {
+        const board = document.querySelector('.board-container');
+        const existingLock = document.getElementById('canvasLockOverlay');
+        if(existingLock) existingLock.remove();
+
+        if (!isMemberLoggedIn) {
+            const overlay = document.createElement('div');
+            overlay.id = 'canvasLockOverlay';
+            overlay.style.cssText = "position:absolute; inset:0; background:rgba(0,0,0,0.6); display:flex; flex-direction:column; align-items:center; justify-content:center; z-index:50; border-radius:10px; color:white; font-weight:bold; backdrop-filter:blur(3px);";
+            overlay.innerHTML = `
+                <i class="fas fa-lock" style="font-size:40px; margin-bottom:15px;"></i>
+                <div style="font-size:16px; margin-bottom:15px; text-shadow:0 2px 4px rgba(0,0,0,0.5);">会員限定機能です</div>
+                <button onclick="openLoginModal()" style="padding:10px 25px; border-radius:30px; border:none; background:#ff4757; color:white; font-weight:bold; cursor:pointer; box-shadow:0 4px 10px rgba(0,0,0,0.3); transition:transform 0.2s;">
+                    <i class="fas fa-sign-in-alt"></i> ログインして描く
+                </button>
+            `;
+            if(board) board.appendChild(overlay);
+        }
+    }
+
+    // 1. キャンバスの初期化
+    function initCanvas() {
+        canvas = document.getElementById('drawCanvas');
+        if(!canvas) return;
+        ctx = canvas.getContext('2d');
+        
+        // ★修正：マウス位置ズレ防止のため getPos を使用
+        const start = (e) => { e.preventDefault(); startDraw(getPos(e)); };
+        const move = (e) => { e.preventDefault(); if(drawing) draw(getPos(e)); };
+        const end = () => { endDraw(); };
+
+        // PC・スマホ両対応イベント
+        canvas.addEventListener('mousedown', (e) => startDraw(getPos(e))); // ★ここ修正済み
+        canvas.addEventListener('mousemove', (e) => { if(drawing) draw(getPos(e)); }); // ★ここ修正済み
+        canvas.addEventListener('mouseup', end);
+        canvas.addEventListener('mouseleave', end);
+
+        canvas.addEventListener('touchstart', start, {passive: false});
+        canvas.addEventListener('touchmove', move, {passive: false});
+        canvas.addEventListener('touchend', end);
+        
+        // ペンの初期設定
+        ctx.lineCap = "round";
+        ctx.lineJoin = "round";
+        ctx.lineWidth = 3;
+        ctx.strokeStyle = "white";
+    }
+
+    // ★座標ズレを直す魔法の計算式
+    function getPos(e) {
+        const rect = canvas.getBoundingClientRect();
+        // スマホ(touch)とマウス(mouse)の座標取得を統一
+        const clientX = (e.touches && e.touches.length > 0) ? e.touches[0].clientX : e.clientX;
+        const clientY = (e.touches && e.touches.length > 0) ? e.touches[0].clientY : e.clientY;
+        
+        // 画面上のサイズとキャンバスの解像度の比率に合わせて補正
+        return {
+            x: (clientX - rect.left) * (canvas.width / rect.width),
+            y: (clientY - rect.top) * (canvas.height / rect.height)
+        };
+    }
+
+    function startDraw(pos) {
+        drawing = true;
+        ctx.beginPath();
+        ctx.moveTo(pos.x, pos.y);
+    }
+
+    function draw(pos) {
+        if (!drawing) return;
+        ctx.lineTo(pos.x, pos.y);
+        ctx.stroke();
+    }
+
+    function endDraw() {
+        drawing = false;
+        ctx.beginPath();
+    }
+
+    function changeColor(color, btn) {
+        currentColor = color;
+        ctx.strokeStyle = color;
+        ctx.lineWidth = 3;
+        ctx.globalCompositeOperation = 'source-over';
+        document.querySelectorAll('.color-btn').forEach(b => b.classList.remove('active'));
+        if(btn) btn.classList.add('active');
+    }
+
+    function setTool(tool) {
+        if (tool === 'eraser') {
+            ctx.globalCompositeOperation = 'destination-out';
+            ctx.lineWidth = 20;
+        } else {
+            ctx.globalCompositeOperation = 'source-over';
+            changeColor(currentColor, null); 
+        }
+    }
+
+    function clearCanvas() {
+        if(confirm("描いた絵を消しますか？")) {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+        }
+    }
+
+    // ★投稿機能
+    async function postGraffiti() {
+        const title = document.getElementById('graffitiTitle').value || "無題";
+        let author = "匿名";
+        const authorInput = document.getElementById('graffitiAuthor');
+        
+        if (authorInput && authorInput.value) {
+            author = authorInput.value;
+        } else if (currentUserData && currentUserData.name) {
+            author = currentUserData.name;
+        }
+
+        if (!confirm(`「${title}」を投稿しますか？\n（作者：${author}）`)) return;
+
+        const btn = document.querySelector('.post-form-area .radio-btn');
+        const originalText = btn.innerHTML;
+        btn.innerText = "送信中...";
+        btn.disabled = true;
+
+        try {
+            const imgData = canvas.toDataURL('image/png');
+            const res = await fetch(GAS_API_URL, {
+                method: 'POST',
+                body: JSON.stringify({
+                    type: 'graffiti',
+                    title: title,
+                    author: author,
+                    image: imgData
+                })
+            });
+            
+            const json = await res.json();
+            if (json.status === 'success') {
+                alert("投稿しました！");
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                if(authorInput) authorInput.value = "";
+                document.getElementById('graffitiTitle').value = "";
+            } else {
+                alert("エラー: " + json.message);
+            }
+        } catch (e) {
+            console.error(e);
+            alert("送信エラーが発生しました。");
+        } finally {
+            btn.innerHTML = originalText;
+            btn.disabled = false;
+        }
     }
 </script>
 </body>
