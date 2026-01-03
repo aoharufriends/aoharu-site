@@ -305,12 +305,23 @@
             opacity: 0.8;
         }
 
-        /* スマホ対応 */
+        /* スマホ対応（修正版：サイズ調整＆ズレ防止） */
         @media (max-width: 480px) {
-            .omikuji-btn { padding: 12px 30px; font-size: 18px; width: 100%; }
-            .omi-logo-text { font-size: 24px; }
-            .gacha-core { width: 100px; height: 100px; }
-            .gacha-ring { width: 180px; height: 180px; }
+            .omikuji-area {
+                width: 90%;             /* 幅を少し控えめに */
+                margin: 30px auto;      /* 上下の隙間を詰める */
+                padding: 20px 10px;     /* 内側の余白を減らしてコンパクトに */
+                box-sizing: border-box; /* ★重要：これを入れないと枠からはみ出します！ */
+            }
+            .omi-logo-text { font-size: 22px; } /* 文字も少し小さく */
+            .omikuji-btn { 
+                padding: 10px 0;        /* ボタンをスリムに */
+                font-size: 16px; 
+                width: 100%; 
+            }
+            /* 演出用のアニメーションサイズ調整 */
+            .gacha-core { width: 80px; height: 80px; }
+            .gacha-ring { width: 150px; height: 150px; }
         }
         
         /* おみくじアニメ・結果 */
@@ -1231,17 +1242,28 @@
             100% { transform: scale(1.1); }
         }
 
-        /* スマホ向けの高さ調整 */
+        /* スマホ向けの高さ調整（修正版） */
         @media (max-width: 768px) {
             .hero-section { 
-                height: auto;      /* 高さを「自動」にする（画像の比率に合わせる） */
-                min-height: auto;  /* 最低高さを解除 */
+                /* ★高さ「自動」をやめて、画面の半分(50vh)くらいの高さを強制確保！ */
+                height: 55vh;      
+                min-height: 400px; /* 最低でも400pxは確保 */
                 width: 100%;
+                background-color: #27C6F5; /* 黒い線が出ないように背景を水色に変更 */
             }
             .hero-main-img {
-                height: auto;      /* 画像の高さを自然な状態にする */
-                position: static;  /* 配置をリセット */
-                animation: none;   /* スマホではズームアニメーションを止める（見やすくするため） */
+                height: 100%;      /* 枠いっぱいに高さを広げる */
+                width: 100%;
+                
+                /* ★重要：枠に合わせて「いい感じ」に切り抜く設定 */
+                object-fit: cover; 
+                
+                /* ★重要：顔（上の方）を中心に表示する */
+                object-position: center top; 
+                
+                position: static;
+                animation: none;
+                display: block;    /* 画像下の謎の隙間（黒い線）を消すおまじない */
             }
         }
      /* ▼▼▼ 追加：横スクロールギャラリーのデザイン ▼▼▼ */
