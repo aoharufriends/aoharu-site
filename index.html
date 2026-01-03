@@ -944,7 +944,7 @@
             </div>
         </div>
     </div>
-/* ニュースページの詳細表示エリア */
+        /* ニュースページの詳細表示エリア */
         .news-detail-box {
             background: #fff; border: 2px solid #eee; border-radius: 15px; padding: 30px; margin-top: 20px; margin-bottom: 50px;
             box-shadow: 0 10px 30px rgba(0,0,0,0.05); font-size: 15px; line-height: 1.8; color: #444; white-space: pre-wrap;
@@ -1084,6 +1084,55 @@
                 animation: none;   /* スマホではズームアニメーションを止める（見やすくするため） */
             }
         }
+     /* ▼▼▼ 追加：横スクロールギャラリーのデザイン ▼▼▼ */
+        .gallery-wrapper {
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-top: 20px;
+        }
+        
+        /* 横並びリスト本体 */
+        .horizontal-scroll-list {
+            display: flex;
+            gap: 15px;
+            overflow-x: auto;     /* 横スクロールを許可 */
+            scroll-behavior: smooth;
+            padding: 10px;
+            width: 100%;
+            scrollbar-width: none; /* スクロールバーを隠す（Firefox） */
+        }
+        .horizontal-scroll-list::-webkit-scrollbar { display: none; /* スクロールバーを隠す（Chrome/Safari） */ }
+
+        /* 投稿された画像のカードデザイン */
+        .graffiti-card {
+            min-width: 200px; /* カードの幅 */
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            overflow: hidden;
+            flex-shrink: 0;   /* 縮まないようにする */
+            border: 2px solid #eee;
+        }
+
+        /* 左右の矢印ボタン */
+        .scroll-arrow-btn {
+            background: rgba(39, 198, 245, 0.8); /* 水色 */
+            color: white;
+            border: none;
+            width: 40px; height: 40px;
+            border-radius: 50%;
+            cursor: pointer;
+            z-index: 10;
+            font-size: 18px;
+            display: flex; align-items: center; justify-content: center;
+            flex-shrink: 0;
+            transition: transform 0.2s;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+        }
+        .scroll-arrow-btn:hover { transform: scale(1.1); }
+        .scroll-arrow-btn:active { transform: scale(0.95); }
     </style>
 </head>
 <body>
@@ -1598,8 +1647,23 @@
 
             <div class="section-title" style="margin-top:50px;"><span class="ja-title">みんなの作品</span></div>
             
-            <div class="goods-grid" id="graffitiList" style="min-height:200px;">
-                <div style="padding:20px; text-align:center; color:#888;">読み込み中...</div>
+            <div class="gallery-wrapper">
+                <button class="scroll-arrow-btn" onclick="slideGallery(-1)">
+                    <i class="fas fa-chevron-left"></i>
+                </button>
+
+                <div class="horizontal-scroll-list" id="graffitiList">
+                    <div style="flex:1; min-height:150px; display:flex; flex-direction:column; align-items:center; justify-content:center; text-align:center; color:#aaa;">
+                        <i class="fas fa-paint-brush" style="font-size:30px; margin-bottom:10px; opacity:0.5;"></i>
+                        <p style="margin:0; font-size:14px;">
+                            まだ投稿がありません。<br>
+                            あなたが最初のクリエイターになりませんか？
+                    </div>
+                </div>
+
+                <button class="scroll-arrow-btn" onclick="slideGallery(1)">
+                    <i class="fas fa-chevron-right"></i>
+                </button>
             </div>
             
             <div style="text-align:center; margin-top:30px;">
@@ -2022,7 +2086,7 @@
     // ▼▼▼ JavaScript（全機能修正版） ▼▼▼
     // ==========================================
 
-    const GAS_API_URL = "https://script.google.com/macros/s/AKfycbwEFBcpEG1lX_MM3gHu_TeCP1Pybm2xFLqNosK4miilbbYZhGqOvCMTpMoBKOePkMeYsQ/exec";
+    const GAS_API_URL = "https://script.google.com/macros/s/AKfycbzq9XQGFQjIDfJ-7R9QOQp1gzxS7dcTlPkfQmS_LtnFJux7eF7HH3wRhHvmoCVCsi6ywQ/exec";
     let YOUTUBE_API_KEY = ""; 
     let GROUP_CONFIG = {};
     let memberData = [];
@@ -3285,34 +3349,35 @@
         // サイト全体のテーマカラー変数を書き換え
         document.documentElement.style.setProperty('--primary', color);
     }
-        // 投稿機能
+        // ★投稿機能（修正版：ID生成とtype修正）
     async function postGraffiti() {
         const title = document.getElementById('graffitiTitle').value || "無題";
-        
-        // 名前欄があればそれを使い、なければログイン情報を使い、それもなければ「匿名」
         let author = "匿名";
         const authorInput = document.getElementById('graffitiAuthor');
+        
         if (authorInput && authorInput.value) {
             author = authorInput.value;
         } else if (currentUserData && currentUserData.name) {
             author = currentUserData.name;
         }
 
-        if (!confirm(`「${title}」を投稿しますか？`)) return;
+        if (!confirm(`「${title}」を投稿しますか？\n（作者：${author}）`)) return;
 
         const btn = document.querySelector('.post-form-area .radio-btn');
+        const originalText = btn.innerHTML;
         btn.innerText = "送信中...";
         btn.disabled = true;
 
         try {
-            // キャンバスを画像データに変換
             const imgData = canvas.toDataURL('image/png');
-            
-            // GASへ送信
+            // ★IDを現在時刻から生成（これで被りません）
+            const uniqueId = 'G-' + Date.now(); 
+
             const res = await fetch(GAS_API_URL, {
                 method: 'POST',
                 body: JSON.stringify({
-                    type: 'graffiti',
+                    type: 'post',       // ★ここを 'graffiti' から 'post' に修正！GAS側と合わせました
+                    id: uniqueId,       // ★ここを追加！IDを送るようにしました
                     title: title,
                     author: author,
                     image: imgData
@@ -3321,18 +3386,19 @@
             
             const json = await res.json();
             if (json.status === 'success') {
-                alert("投稿しました！反映されるまで少し時間がかかります。");
-                ctx.clearRect(0, 0, canvas.width, canvas.height); // キャンバスをクリア
+                alert("投稿しました！");
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
                 if(authorInput) authorInput.value = "";
                 document.getElementById('graffitiTitle').value = "";
+                // 投稿後、リストを再読み込みする場合はここで renderGraffitiList() を呼んでも良い
             } else {
                 alert("エラー: " + json.message);
             }
         } catch (e) {
             console.error(e);
-            alert("通信エラーが発生しました");
+            alert("送信エラーが発生しました。");
         } finally {
-            btn.innerHTML = '<i class="fas fa-paper-plane"></i> ギャラリーに投稿';
+            btn.innerHTML = originalText;
             btn.disabled = false;
         }
     }
@@ -3495,6 +3561,17 @@
         } finally {
             btn.innerHTML = originalText;
             btn.disabled = false;
+        }
+    }
+    // ▼▼▼ 追加：ギャラリーを横にスライドさせる機能 ▼▼▼
+    function slideGallery(direction) {
+        const list = document.getElementById('graffitiList');
+        if(list) {
+            const scrollAmount = 300; // 1回で進む量
+            list.scrollBy({
+                left: direction * scrollAmount,
+                behavior: 'smooth'
+            });
         }
     }
 </script>
