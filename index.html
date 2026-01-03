@@ -1013,7 +1013,16 @@
 
         /* スマホ向けの高さ調整 */
         @media (max-width: 768px) {
-            .hero-section { height: 80vh; } /* スマホは少し短めに */
+            .hero-section { 
+                height: auto;      /* 高さを「自動」にする（画像の比率に合わせる） */
+                min-height: auto;  /* 最低高さを解除 */
+                width: 100%;
+            }
+            .hero-main-img {
+                height: auto;      /* 画像の高さを自然な状態にする */
+                position: static;  /* 配置をリセット */
+                animation: none;   /* スマホではズームアニメーションを止める（見やすくするため） */
+            }
         }
     </style>
 </head>
