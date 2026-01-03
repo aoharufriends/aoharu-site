@@ -1320,6 +1320,99 @@
         }
         .scroll-arrow-btn:hover { transform: scale(1.1); }
         .scroll-arrow-btn:active { transform: scale(0.95); }
+/* ▼▼▼ グッズリストのデザイン（ニュースカード風・サイズ統一版） ▼▼▼ */
+        .goods-grid {
+            display: grid;
+            /* スマホでは1列〜2列、PCでは自動調整（ニュースと同じ280px基準） */
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 20px;
+            padding: 20px 0;
+        }
+
+        .goods-card {
+            background: white;
+            border-radius: 12px;
+            overflow: hidden;
+            border: 1px solid #eee;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+            display: flex;
+            flex-direction: column;
+            height: 100%; /* 高さを揃える */
+        }
+        .goods-card:hover {
+            border-color: var(--primary);
+            box-shadow: 0 5px 15px rgba(39, 198, 245, 0.25);
+            transform: translateY(-5px);
+        }
+
+        /* 画像エリア（正方形に統一！） */
+        .goods-thumb-area {
+            width: 100%;
+            aspect-ratio: 1 / 1; /* 正方形 */
+            background-color: #f9f9f9;
+            position: relative;
+            overflow: hidden;
+            border-bottom: 1px solid #eee;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .goods-img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover; /* 枠いっぱいにトリミングして表示（余白なし） */
+            /* もし「画像全体を見せたい（余白あり）」が良い場合は 'contain' に変えてください */
+            transition: transform 0.3s;
+        }
+        .goods-card:hover .goods-img { transform: scale(1.05); }
+
+        .goods-content {
+            padding: 15px;
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .goods-name {
+            font-size: 15px;
+            font-weight: bold;
+            color: #333;
+            line-height: 1.5;
+            margin-bottom: 10px;
+            /* 2行で省略する設定 */
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+            flex-grow: 1;
+        }
+
+        .goods-price {
+            font-size: 16px;
+            color: #ff4757;
+            font-weight: 900;
+            font-family: 'Poppins', sans-serif;
+            margin-bottom: 10px;
+        }
+
+        .goods-btn {
+            background: #eee;
+            color: #666;
+            text-align: center;
+            padding: 10px;
+            border-radius: 6px;
+            font-weight: bold;
+            font-family: 'Poppins', sans-serif;
+            font-size: 12px;
+            transition: all 0.3s;
+        }
+        .goods-card:hover .goods-btn {
+            background: var(--primary);
+            color: white;
+        }
     </style>
 </head>
 <body>
@@ -2474,7 +2567,18 @@
             if (data.radio_diaries) { radioBlogData = data.radio_diaries; } 
             if (data.goods) {
                 goodsData = data.goods;
-                document.getElementById('goodsList').innerHTML = goodsData.map((g, i) => `<div class="goods-item" onclick="openGoodsModal(${i})"><img src="${g.img}" class="goods-img"><div class="goods-name">${g.name}</div><div class="goods-price">${g.price}</div></div>`).join('');
+                document.getElementById('goodsList').innerHTML = goodsData.map((g, i) => `
+                    <div class="goods-card" onclick="openGoodsModal(${i})">
+                        <div class="goods-thumb-area">
+                            <img src="${g.img}" class="goods-img" alt="${g.name}">
+                        </div>
+                        <div class="goods-content">
+                            <div class="goods-name">${g.name}</div>
+                            <div class="goods-price">${g.price}</div>
+                            <div class="goods-btn">DETAILS</div>
+                        </div>
+                    </div>
+                `).join('');
             }
             if (data.graffiti) {
                 graffitiPosts = data.graffiti.map(g => ({
