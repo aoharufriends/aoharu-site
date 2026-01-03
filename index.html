@@ -1413,6 +1413,23 @@
             background: var(--primary);
             color: white;
         }
+        /* ▼▼▼ グッズ詳細モーダルの画像調整（はみ出し防止） ▼▼▼ */
+        #goodsModalImg {
+            /* 横幅の制限 */
+            max-width: 100%;      /* 親要素（枠）からはみ出さない！ */
+            width: auto;          /* 小さい画像はそのままのサイズで */
+            
+            /* 高さの制限 */
+            height: auto;         /* 比率を維持 */
+            max-height: 50vh;     /* 画面の半分くらいの高さまでに制限（縦長すぎ防止） */
+            
+            /* 表示の調整 */
+            object-fit: contain;  /* 画像全体を切らずに表示 */
+            display: block;       /* ブロック要素にして… */
+            margin: 0 auto 15px;  /* 真ん中に寄せる & 下に隙間を作る */
+            border-radius: 8px;   /* 角を丸く */
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1); /* 軽く影をつける */
+        }
     </style>
 </head>
 <body>
