@@ -24,9 +24,14 @@
 
     <style>
         :root { --primary: #27C6F5; --text-main: #444444; --text-sub: #888888; --bg-color: #ffffff; --light-bg: #f4f8fa; }
-        body { font-family: 'M PLUS Rounded 1c', sans-serif; margin: 0; padding: 0; background-color: var(--bg-color); color: var(--text-main); padding-top: 70px; overflow-x: hidden; display: flex; flex-direction: column; min-height: 100vh; transition: filter 0.5s; cursor: url('cursor_main.png') 4 4, auto; }
+        body { font-family: 'M PLUS Rounded 1c', sans-serif; margin: 0; padding: 0; background-color: var(--bg-color); color: var(--text-main); padding-top: 0; overflow-x: hidden; display: flex; flex-direction: column; min-height: 100vh; transition: filter 0.5s; cursor: url('cursor_main.png') 4 4, auto; }
         a, button, .clickable, .news-card, .video-card, .schedule-card, .member-card-vertical, .menu-btn, .login-btn-header { cursor: url('cursor_hand.png') 10 0, pointer; }
-        .page { display: none !important; animation: fadeInPage 0.4s ease; flex: 1; width: 100%; padding-bottom: 60px; }
+        /* 基本のページ設定（ヘッダーの分だけ下げる） */
+        .page { display: none !important; animation: fadeInPage 0.4s ease; flex: 1; width: 100%; padding-bottom: 60px; padding-top: 70px; }
+        
+        /* ★重要：TOPページだけはヘッダーの裏まで画像を広げるので、上を空けない！ */
+        #top.page { padding-top: 0; }
+        
         .page.active { display: block !important; }
         @keyframes fadeInPage { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
         
@@ -41,7 +46,9 @@
         @keyframes bounce-logo { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-15px); } }
         @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
 
-        header { position: fixed; top: 0; left: 0; width: 100%; height: 70px; background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(5px); display: flex; align-items: center; justify-content: space-between; box-shadow: 0 2px 10px rgba(0,0,0,0.05); z-index: 1000; }
+        /* 背景を半透明（0.6）に変更 */
+        /* 背景をもっと透明（0.3）にして、画像が綺麗に見えるように変更 */
+        header { position: fixed; top: 0; left: 0; width: 100%; height: 70px; background: rgba(255, 255, 255, 0.3); backdrop-filter: blur(8px); display: flex; align-items: center; justify-content: space-between; box-shadow: 0 2px 10px rgba(0,0,0,0.05); z-index: 1000; }
         .logo-img { height: 40px; width: auto; margin-left: 20px; object-fit: contain; cursor: pointer; transition: transform 0.1s; }
         .logo-img:active { transform: scale(0.9); }
         .header-right { display: flex; align-items: center; gap: 15px; margin-right: 20px; }
@@ -965,7 +972,8 @@
         body.dark-mode .letter-form, body.dark-mode .guideline-box, body.dark-mode .maker-container, body.dark-mode .contact-form, body.dark-mode .diary-card {
             background: #16213e; border-color: #0f3460; color: #e0f7ff; box-shadow: 0 0 15px rgba(0, 243, 255, 0.1);
         }
-        body.dark-mode header, body.dark-mode .breadcrumb-nav { background: rgba(5, 5, 16, 0.9); border-bottom: 1px solid #0f3460; }
+        /* ダークモード時も半透明（0.6）に */
+        body.dark-mode header, body.dark-mode .breadcrumb-nav { background: rgba(5, 5, 16, 0.6); border-bottom: 1px solid #0f3460; backdrop-filter: blur(10px); }
         .theme-switch-btn { cursor: pointer; font-size: 20px; margin-right: 15px; width: 40px; height: 40px; border-radius: 50%; background: #eee; display: flex; align-items: center; justify-content: center; transition: 0.3s; box-shadow: inset 0 2px 5px rgba(0,0,0,0.1); }
         body.dark-mode .theme-switch-btn { background: #0f3460; color: #ffeb3b; box-shadow: 0 0 10px #ffeb3b; }
 
