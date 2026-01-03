@@ -983,6 +983,38 @@
         .news-share-btn { background: #f0f0f0; color: #555; }
         .news-share-btn:hover { background: #e0e0e0; transform: translateY(-2px); }
         .news-share-btn.x-btn:hover { background: #000; color: white; }
+        /* ▼▼▼ Neo-Porte風：全画面メインビジュアルの設定 ▼▼▼ */
+        .hero-section { 
+            width: 100%;
+            height: 100vh; /* 画面の高さいっぱいに広げる！ */
+            min-height: 600px; /* 小さい画面でもこれ以上は縮めない */
+            background-color: #000; 
+            position: relative; 
+            margin-bottom: 0; 
+            padding: 0; 
+            overflow: hidden; 
+        } 
+        
+        /* メイン画像の設定 */
+        .hero-main-img { 
+            width: 100%; 
+            height: 100%; 
+            object-fit: cover;   /* 比率を保ったまま画面を埋め尽くす */
+            object-position: center top; /* キャラクターの顔（上の方）を中心に合わせる */
+            
+            /* ↓ おまけ：ゆっくり動くアニメーション（これがあるとプロっぽい！） */
+            animation: heroZoom 20s infinite alternate;
+        }
+        
+        @keyframes heroZoom {
+            0% { transform: scale(1.0); }
+            100% { transform: scale(1.1); }
+        }
+
+        /* スマホ向けの高さ調整 */
+        @media (max-width: 768px) {
+            .hero-section { height: 80vh; } /* スマホは少し短めに */
+        }
     </style>
 </head>
 <body>
@@ -1187,7 +1219,7 @@
 
     <div id="top" class="page active">
         <div class="hero-section">
-            <img src="top_logo.png" alt="AOHARU FRIENDS MAIN VISUAL" class="hero-logo-img">
+            <img src="main_visual.jpg" alt="MAIN VISUAL" class="hero-main-img">
         </div>
         <div class="container">
             <div id="nowOnAirSection">
