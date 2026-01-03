@@ -529,7 +529,8 @@
         .member-card-vertical:hover::before { transform: scale(1.05); } .member-card-vertical:hover .member-img-wrapper { -webkit-mask-image: none; mask-image: none; } .member-card-vertical:hover .member-img-tachie { width: auto; height: 150%; max-width: none; top: auto; bottom: -10%; }
 /* メンバー詳細 */
         .member-bg-layer { position: fixed; top: 70px; left: 0; width: 50vw; height: calc(100vh - 70px); z-index: -1; background-repeat: no-repeat; background-position: center bottom; background-size: contain; opacity: 0.15; pointer-events: none; padding-bottom: 20px; box-sizing: border-box; }
-        .profile-header-bg { background: linear-gradient(135deg, var(--m-color-light) 0%, rgba(255,255,255,0.85) 100%); padding-top: 40px; padding-bottom: 60px; position: relative; overflow: hidden; margin-top: 0; min-height: calc(100vh - 70px); }
+        /* 詳細ページの背景設定（ヘッダー被り防止のため上余白を増やす） */
+        .profile-header-bg { background: linear-gradient(135deg, var(--m-color-light) 0%, rgba(255,255,255,0.85) 100%); padding-top: 120px; padding-bottom: 60px; position: relative; overflow: hidden; margin-top: 0; min-height: calc(100vh - 70px); }
         .profile-wrapper { display: flex; flex-direction: column; align-items: center; max-width: 1000px; margin: 0 auto; padding: 0 20px; } @media (min-width: 768px) { .profile-wrapper { flex-direction: row; align-items: flex-start; justify-content: space-between; } }
         .profile-visual { width: 100%; max-width: 400px; position: relative; margin-bottom: 30px; display: flex; justify-content: center; } .profile-tachie { width: 100%; height: auto; filter: drop-shadow(0 10px 20px rgba(0,0,0,0.2)); animation: slideUpTachie 0.8s cubic-bezier(0.2, 0.8, 0.2, 1); } @keyframes slideUpTachie { from { opacity: 0; transform: translateY(50px); } to { opacity: 1; transform: translateY(0); } }
         .profile-info { width: 100%; max-width: 550px; }
@@ -1795,6 +1796,7 @@
             <div style="text-align:center;">
                 <button onclick="showPage('news')" class="more-btn">MORE VIEW</button>
             </div>
+        </div>
 
 <div class="about-section-wrapper">
             <div class="about-section">
