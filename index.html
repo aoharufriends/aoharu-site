@@ -3571,7 +3571,19 @@
         if(!m) return; 
         const detailPage = document.getElementById('memberDetail'); 
         let snsBtns = ''; 
-        if(m.youtubeId) snsBtns += `<a href="${m.youtubeId.startsWith('http')?m.youtubeId:'https://youtube.com/'+m.youtubeId}" target="_blank" class="p-btn yt"><i class="fab fa-youtube"></i> Channel</a>`; 
+        if(m.youtubeId) {
+            let ytUrl = m.youtubeId;
+            if (!ytUrl.startsWith('http')) {
+                // UCから始まるIDなら 'channel/' をつける
+                if (ytUrl.startsWith('UC')) {
+                    ytUrl = 'https://www.youtube.com/channel/' + ytUrl;
+                } else {
+                    // それ以外（ハンドル名 @user など）なら直後につける
+                    ytUrl = 'https://www.youtube.com/' + ytUrl;
+                }
+            }
+            snsBtns += `<a href="${ytUrl}" target="_blank" class="p-btn yt"><i class="fab fa-youtube"></i> Channel</a>`;
+        } 
         if(m.twitchId) snsBtns += `<a href="${m.twitchId.startsWith('http')?m.twitchId:'https://twitch.tv/'+m.twitchId}" target="_blank" class="p-btn tw"><i class="fab fa-twitch"></i> Twitch</a>`; 
         if(m.twitterId) snsBtns += `<a href="${m.twitterId.startsWith('http')?m.twitterId:'https://twitter.com/'+m.twitterId}" target="_blank" class="p-btn x"><i class="fab fa-x-twitter"></i> X</a>`; 
         let voiceHtml = ''; 
