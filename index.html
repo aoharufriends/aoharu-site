@@ -1072,43 +1072,110 @@
             max-width: 800px;
             padding: 15px;
         }
+        /* 開閉ボタンのデザイン */
+        .tool-toggle-bar {
+            width: 100%;
+            height: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            color: white;
+            background: rgba(255,255,255,0.1);
+            border-radius: 4px;
+            margin-bottom: 5px;
+            transition: 0.2s;
+        }
+        .tool-toggle-bar:hover { background: rgba(255,255,255,0.3); }
+
+        /* PCでの最小化（下に隠す） */
+        @media (min-width: 601px) {
+            .paint-tools {
+                transition: transform 0.3s cubic-bezier(0.25, 1, 0.5, 1);
+            }
+            .paint-tools.minimized {
+                /* ボタンだけ残して下に隠す */
+                transform: translateX(-50%) translateY(calc(100% - 35px)); 
+            }
+        }
+
+        /* スマホでの最小化（中身を消す） */
+        @media (max-width: 600px) {
+            .paint-tools.minimized .pt-content {
+                display: none; /* 中身を非表示 */
+            }
+            .paint-tools.minimized {
+                gap: 0 !important;
+                padding: 5px 15px !important;
+                background: rgba(0,0,0,0.6) !important; /* 閉じた時は少し濃く */
+                border-radius: 0 0 10px 10px !important;
+                width: fit-content !important; /* ボタンサイズに縮める */
+                margin: 0 auto !important;
+            }
+            /* 閉じた時のアイコン調整 */
+            .paint-tools.minimized .tool-toggle-bar {
+                margin: 0;
+                background: transparent;
+            }
+        }
         /* スライダーの色 */
         input[type=range] {
             accent-color: var(--primary); 
             vertical-align: middle;
         }
-        /* ▼▼▼ スマホでの表示調整（ツールをコンパクトにする） ▼▼▼ */
+        /* ▼▼▼ スマホでの表示調整（ツールを黒板の外に出す！） ▼▼▼ */
         @media (max-width: 600px) {
-            .paint-tools { 
-                flex-direction: row !important; /* 横並び（折り返し）を強制 */
-                gap: 5px;      /* 隙間を詰める */
-                padding: 8px;  /* 余白を減らす */
-                bottom: 5px;   /* 画面の下ギリギリに配置 */
-                width: 95%;    /* 幅を確保 */
-            }
-            
-            /* ボタンを小さくする */
-            .tool-btn {
-                font-size: 10px;
-                padding: 5px 8px;
-            }
-            
-            /* カラーパレットを小さくする */
-            .color-btn {
-                width: 25px;
-                height: 25px;
+            /* 1. 黒板の箱：サイズ固定をやめて、中身に合わせて伸びるようにする */
+            .board-container {
+                aspect-ratio: auto !important; /* 比率固定を解除 */
+                height: auto !important;
+                display: flex !important;
+                flex-direction: column !important; /* 縦並びレイアウトにする */
+                overflow: visible !important;  /* はみ出しを許可 */
             }
 
-            /* 仕切り線を短くする */
-            .paint-tools > div[style*="height:30px"] {
-                height: 15px !important;
-                margin: 0 2px !important;
+            /* 2. キャンバス（絵を描く部分）：ここをメインの黒板エリアにする */
+            canvas#drawCanvas {
+                width: 100% !important;
+                aspect-ratio: 3/4; /* スマホ用に縦長（ポートレート）にする */
+                height: auto !important;
+                background: #2b4a3c; /* 念のため背景色を指定 */
+                border-radius: 8px 8px 0 0; /* 上だけ丸く */
+                /* 描画の歪み防止のため、JS側でサイズ調整が必要ですが、まずは見た目を確保 */
+            }
+
+            /* 3. ツールバー：黒板の下に配置する */
+            .paint-tools { 
+                position: relative !important; /* 浮かせるのをやめる */
+                bottom: auto !important;
+                left: auto !important;
+                transform: none !important;
+                
+                width: 100% !important;
+                max-width: 100% !important;
+                margin: 0 !important;
+                
+                /* デザイン調整 */
+                background: rgba(0, 0, 0, 0.2) !important; /* 少し暗くして黒板の一部っぽく */
+                border-top: 1px solid rgba(255,255,255,0.2);
+                border-radius: 0 0 8px 8px; /* 下だけ丸く */
+                padding: 15px 5px !important;
+                
+                /* 中身の並び順 */
+                display: flex !important;
+                flex-direction: column !important; /* パレット・スライダー・ボタンを縦に積む */
+                gap: 15px !important;
             }
             
-            /* スライダー周りの文字を小さく */
-            .paint-tools span {
-                font-size: 9px !important;
+            /* 各段の調整 */
+            .paint-tools > div {
+                justify-content: center !important;
+                margin: 0 !important;
             }
+            
+            /* ボタン類を押しやすく少し大きく */
+            .color-btn { width: 35px; height: 35px; }
+            .tool-btn { padding: 8px 12px; font-size: 11px; }
         }
         /* ▼▼▼ 落書き広場：背景＆スライドショー ▼▼▼ */
         
@@ -2782,45 +2849,50 @@
             <div id="drawingBoard" class="board-container bg-black">
                 <canvas id="drawCanvas" width="1920" height="1080" style="width:100%; height:100%; touch-action: none;"></canvas>
                 
-                <div class="paint-tools">
-                    <div style="display:flex; flex-wrap:wrap; gap:5px; justify-content:center; width:100%; margin-bottom:10px;">
-                        <div class="color-btn active" style="background:white;" onclick="changeColor('white', this)" title="白"></div>
-                        <div class="color-btn" style="background:#444;" onclick="changeColor('#444', this)" title="黒"></div>
-                        <div class="color-btn" style="background:#ff4757;" onclick="changeColor('#ff4757', this)" title="赤"></div>
-                        <div class="color-btn" style="background:#e67e22;" onclick="changeColor('#e67e22', this)" title="オレンジ"></div>
-                        <div class="color-btn" style="background:#f1c40f;" onclick="changeColor('#f1c40f', this)" title="黄色"></div>
-                        <div class="color-btn" style="background:#2ecc71;" onclick="changeColor('#2ecc71', this)" title="緑"></div>
-                        <div class="color-btn" style="background:#27C6F5;" onclick="changeColor('#27C6F5', this)" title="水色"></div>
-                        <div class="color-btn" style="background:#3742fa;" onclick="changeColor('#3742fa', this)" title="青"></div>
-                        <div class="color-btn" style="background:#8e44ad;" onclick="changeColor('#8e44ad', this)" title="紫"></div>
-                        <div class="color-btn" style="background:#ff78cb;" onclick="changeColor('#ff78cb', this)" title="ピンク"></div>
-                        
-                        <label class="color-btn" style="background:linear-gradient(45deg, red, blue); display:flex; align-items:center; justify-content:center; overflow:hidden;" title="自由な色">
-                            <input type="color" onchange="changeColor(this.value, this.parentElement)" style="opacity:0; width:100%; height:100%; cursor:pointer;">
-                        </label>
+                <div id="paintToolsBox" class="paint-tools">
+                    <div class="tool-toggle-bar" onclick="togglePaintTools()">
+                        <i class="fas fa-chevron-down" id="ptToggleIcon"></i>
                     </div>
 
-                    <div style="width:100%; height:1px; background:rgba(255,255,255,0.2); margin:5px 0;"></div>
+                    <div class="pt-content">
+                        <div style="display:flex; flex-wrap:wrap; gap:5px; justify-content:center; width:100%; margin-bottom:10px;">
+                            <div class="color-btn active" style="background:white;" onclick="changeColor('white', this)" title="白"></div>
+                            <div class="color-btn" style="background:#444;" onclick="changeColor('#444', this)" title="黒"></div>
+                            <div class="color-btn" style="background:#ff4757;" onclick="changeColor('#ff4757', this)" title="赤"></div>
+                            <div class="color-btn" style="background:#e67e22;" onclick="changeColor('#e67e22', this)" title="オレンジ"></div>
+                            <div class="color-btn" style="background:#f1c40f;" onclick="changeColor('#f1c40f', this)" title="黄色"></div>
+                            <div class="color-btn" style="background:#2ecc71;" onclick="changeColor('#2ecc71', this)" title="緑"></div>
+                            <div class="color-btn" style="background:#27C6F5;" onclick="changeColor('#27C6F5', this)" title="水色"></div>
+                            <div class="color-btn" style="background:#3742fa;" onclick="changeColor('#3742fa', this)" title="青"></div>
+                            <div class="color-btn" style="background:#8e44ad;" onclick="changeColor('#8e44ad', this)" title="紫"></div>
+                            <div class="color-btn" style="background:#ff78cb;" onclick="changeColor('#ff78cb', this)" title="ピンク"></div>
+                            <label class="color-btn" style="background:linear-gradient(45deg, red, blue); display:flex; align-items:center; justify-content:center; overflow:hidden;">
+                                <input type="color" onchange="changeColor(this.value, this.parentElement)" style="opacity:0; width:100%; height:100%; cursor:pointer;">
+                            </label>
+                        </div>
 
-                    <div style="display:flex; align-items:center; gap:5px; color:white; font-size:10px; font-weight:bold; margin-right:15px;">
-                        <span>細</span>
-                        <input type="range" id="penSizeSlider" min="1" max="100" value="3" step="1" oninput="changeLineWidth(this.value)" style="width:100px; cursor:pointer;">
-                        <span>太</span>
-                        <span id="penSizeValue" style="background:white; color:#333; padding:2px 6px; border-radius:4px; margin-left:5px; min-width:20px; text-align:center;">3</span>
+                        <div style="width:100%; height:1px; background:rgba(255,255,255,0.2); margin:5px 0;"></div>
+
+                        <div style="display:flex; align-items:center; gap:5px; color:white; font-size:10px; font-weight:bold; margin-right:15px; justify-content:center;">
+                            <span>細</span>
+                            <input type="range" id="penSizeSlider" min="1" max="100" value="3" step="1" oninput="changeLineWidth(this.value)" style="width:100px; cursor:pointer;">
+                            <span>太</span>
+                            <span id="penSizeValue" style="background:white; color:#333; padding:2px 6px; border-radius:4px; margin-left:5px; min-width:20px; text-align:center;">3</span>
+                        </div>
+
+                        <div style="width:100%; height:1px; background:rgba(255,255,255,0.2); margin:5px 0;"></div>
+
+                        <div style="display:flex; gap:5px; flex-wrap:wrap; justify-content:center;">
+                            <button class="tool-btn active" onclick="setTool('pen', this)"><i class="fas fa-pen"></i> ペン</button>
+                            <button class="tool-btn" onclick="setTool('marker', this)"><i class="fas fa-highlighter"></i> マーカー</button>
+                            <button class="tool-btn" onclick="setTool('spray', this)"><i class="fas fa-spray-can"></i> スプレー</button>
+                            <button class="tool-btn" onclick="setTool('eraser', this)"><i class="fas fa-eraser"></i> 消しゴム</button>
+                            <button class="tool-btn" onclick="clearCanvas()" style="margin-left:5px; background:#ff4757; color:white;"><i class="fas fa-trash"></i> クリア</button>
+                        </div>
                     </div>
-
-                    <div style="width:1px; height:30px; background:rgba(255,255,255,0.3); margin:0 10px;"></div>
-
-                    <div style="display:flex; gap:5px; flex-wrap:wrap; justify-content:center;">
-                        <button class="tool-btn active" onclick="setTool('pen', this)"><i class="fas fa-pen"></i> ペン</button>
-                        <button class="tool-btn" onclick="setTool('marker', this)"><i class="fas fa-highlighter"></i> マーカー</button>
-                        <button class="tool-btn" onclick="setTool('spray', this)"><i class="fas fa-spray-can"></i> スプレー</button>
-                        <button class="tool-btn" onclick="setTool('eraser', this)"><i class="fas fa-eraser"></i> 消しゴム</button>
-                        <button class="tool-btn" onclick="clearCanvas()" style="margin-left:5px; background:#ff4757; color:white;"><i class="fas fa-trash"></i> クリア</button>
                 </div>
-            </div>
-        </div> 
-            <div class="post-form-area">
+ 
+                 </div><div class="post-form-area">
                 <div style="font-weight:bold; margin-bottom:10px;">作品を投稿する</div>
                 
                 <label style="font-size:12px; font-weight:bold; color:#888;">ニックネーム</label>
@@ -5131,6 +5203,21 @@
     function clearCanvas() {
         if(confirm("描いた絵を消しますか？")) {
             ctx.clearRect(0, 0, canvas.width, canvas.height);
+        }
+    }
+    // ★追加：ツールバーの開閉機能
+    function togglePaintTools() {
+        const box = document.getElementById('paintToolsBox');
+        const icon = document.getElementById('ptToggleIcon');
+        
+        // クラスを付け外し（これでCSSが反応して動く）
+        box.classList.toggle('minimized');
+        
+        // アイコンの向きを変える
+        if(box.classList.contains('minimized')) {
+            icon.className = 'fas fa-chevron-up';   // 閉じてる時は「上」矢印
+        } else {
+            icon.className = 'fas fa-chevron-down'; // 開いてる時は「下」矢印
         }
     }
 
