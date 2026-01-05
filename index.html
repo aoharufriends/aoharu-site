@@ -4936,6 +4936,27 @@
     // 現在の太さは、初期ツール(pen)の太さをセット
     let currentLineWidth = toolWidths['pen'];
 
+    // ★会員限定ロック機能（復活！）
+    function checkCanvasLock() {
+        const board = document.querySelector('.board-container');
+        const existingLock = document.getElementById('canvasLockOverlay');
+        if(existingLock) existingLock.remove();
+
+        if (!isMemberLoggedIn) {
+            const overlay = document.createElement('div');
+            overlay.id = 'canvasLockOverlay';
+            overlay.style.cssText = "position:absolute; inset:0; background:rgba(0,0,0,0.6); display:flex; flex-direction:column; align-items:center; justify-content:center; z-index:50; border-radius:10px; color:white; font-weight:bold; backdrop-filter:blur(3px);";
+            overlay.innerHTML = `
+                <i class="fas fa-lock" style="font-size:40px; margin-bottom:15px;"></i>
+                <div style="font-size:16px; margin-bottom:15px; text-shadow:0 2px 4px rgba(0,0,0,0.5);">会員限定機能です</div>
+                <button onclick="openLoginModal()" style="padding:10px 25px; border-radius:30px; border:none; background:#ff4757; color:white; font-weight:bold; cursor:pointer; box-shadow:0 4px 10px rgba(0,0,0,0.3); transition:transform 0.2s;">
+                    <i class="fas fa-sign-in-alt"></i> ログインして描く
+                </button>
+            `;
+            if(board) board.appendChild(overlay);
+        }
+    }
+
     // 1. キャンバスの初期化
     function initCanvas() {
         canvas = document.getElementById('drawCanvas');
