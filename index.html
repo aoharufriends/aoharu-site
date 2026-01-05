@@ -684,6 +684,90 @@
         .tl-date { font-family: 'Poppins', sans-serif; font-weight: bold; color: var(--primary); font-size: 14px; margin-bottom: 5px; }
         .tl-title { font-weight: bold; font-size: 15px; margin-bottom: 5px; }
         .tl-tag { font-size: 11px; background: #eee; padding: 2px 8px; border-radius: 4px; color: #666; }
+        /* ▼▼▼ 新・週間スケジュール（番組表スタイル） ▼▼▼ */
+        .weekly-schedule-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); /* 横に並べる */
+            gap: 10px;
+            margin-bottom: 40px;
+            overflow-x: auto; /* スマホで横スクロール */
+            padding-bottom: 20px;
+        }
+        
+        /* 1日ごとの列 */
+        .day-column {
+            background: #fdfdfd;
+            border: 1px solid #ddd;
+            border-radius: 10px;
+            overflow: hidden;
+            min-height: 300px;
+            transition: 0.3s;
+        }
+        
+        /* 今日の列を目立たせる */
+        .day-column.is-today {
+            border: 3px solid #ff4757;
+            background: #fff5f5;
+            transform: scale(1.02);
+            box-shadow: 0 10px 20px rgba(255, 71, 87, 0.2);
+            z-index: 2;
+        }
+        .day-column.is-today .day-header {
+            background: #ff4757;
+            color: white;
+        }
+        .day-column.is-today .day-header::after {
+            content: "TODAY";
+            display: block;
+            font-size: 10px;
+            background: white;
+            color: #ff4757;
+            border-radius: 10px;
+            padding: 2px 8px;
+            margin-top: 5px;
+            width: fit-content;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .day-header {
+            background: #e0f7ff;
+            padding: 10px;
+            text-align: center;
+            font-weight: bold;
+            color: #333;
+            border-bottom: 1px solid #eee;
+        }
+        .day-date { font-size: 16px; font-family: 'Oswald', sans-serif; }
+        .day-week { font-size: 12px; }
+
+        /* 番組カード */
+        .prog-card {
+            background: white;
+            margin: 10px;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+            border: 1px solid #eee;
+            overflow: hidden;
+            transition: 0.2s;
+            cursor: pointer;
+        }
+        .prog-card:hover { transform: translateY(-3px); border-color: var(--primary); }
+        
+        .prog-time {
+            background: #333; color: white;
+            font-size: 12px; padding: 2px 8px;
+            font-family: 'Oswald', sans-serif;
+            text-align: center;
+        }
+        .prog-thumb {
+            width: 100%; aspect-ratio: 16/9; object-fit: cover;
+            display: block;
+        }
+        .prog-body { padding: 8px; }
+        .prog-icons { display: flex; gap: 5px; margin-bottom: 5px; }
+        .prog-icon-img { width: 24px; height: 24px; border-radius: 50%; border: 1px solid #ddd; }
+        .prog-title { font-size: 11px; font-weight: bold; line-height: 1.4; color: #444; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
 
         /* 個別ページのサムネイル */
         .tl-body-box { display: flex; align-items: flex-start; gap: 15px; margin-top: 10px; }
@@ -708,15 +792,111 @@
         .sch-info { padding: 8px; } .sch-title { font-size: 10px; font-weight: bold; margin-bottom: 2px; color: var(--text-main); display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; line-height: 1.4; text-align: left; } .sch-badge-mini { font-size: 9px; color: var(--primary); border: 1px solid var(--primary); padding: 1px 4px; border-radius: 3px; display: inline-block; margin-bottom: 3px; }
 
         /* ラジオ */
-        .radio-theme-box { background: #333; color: white; padding: 20px; border-radius: 10px; border: 4px solid #8B4513; margin-bottom: 30px; position: relative; box-shadow: 0 5px 15px rgba(0,0,0,0.2); }
-        .radio-theme-box::before { content: "今週のテーマ"; position: absolute; top: -15px; left: 20px; background: #f1c40f; color: #333; padding: 2px 10px; font-weight: bold; font-size: 12px; border-radius: 4px; transform: rotate(-2deg); box-shadow: 0 2px 5px rgba(0,0,0,0.2); }
-        .radio-theme-text { font-size: 18px; font-weight: bold; text-align: center; font-family: 'M PLUS Rounded 1c', sans-serif; letter-spacing: 1px; }
-        .letter-form { background: white; padding: 20px; border-radius: 15px; border: 2px solid #eee; box-shadow: 0 5px 15px rgba(0,0,0,0.03); }
-        .form-label { display: block; font-weight: bold; font-size: 12px; margin-bottom: 5px; color: var(--text-sub); }
-        .form-input, .form-select, .form-textarea { width: 100%; padding: 10px; border: 2px solid #eee; border-radius: 8px; font-family: inherit; margin-bottom: 15px; box-sizing: border-box; }
-        .form-input:focus, .form-select:focus, .form-textarea:focus { border-color: var(--primary); outline: none; }
-        .radio-btn { width: 100%; background: var(--primary); color: white; padding: 12px; border: none; border-radius: 30px; font-weight: bold; cursor: pointer; transition: 0.2s; box-shadow: 0 4px 10px rgba(39, 198, 245, 0.3); }
-        .radio-btn:hover { transform: translateY(-2px); }
+        /* ▼▼▼ ラジオ（レトロ・ブース風デザイン） ▼▼▼ */
+        
+        /* 全体の黒い筐体 */
+        .radio-booth-wrapper {
+            background: #2c2c2c; /* ダークグレー */
+            border-radius: 20px;
+            padding: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.4), inset 0 0 50px rgba(0,0,0,0.5);
+            border: 5px solid #444;
+            position: relative;
+            max-width: 800px;
+            margin: 0 auto 40px;
+            overflow: hidden;
+        }
+        /* スピーカーのメッシュっぽい背景 */
+        .radio-booth-wrapper::before {
+            content: ""; position: absolute; inset: 0;
+            background-image: radial-gradient(#111 20%, transparent 20%);
+            background-size: 8px 8px;
+            opacity: 0.3; pointer-events: none;
+        }
+
+        /* ヘッダーパネル（周波数とかあるところ） */
+        .radio-header-panel {
+            display: flex; justify-content: space-between; align-items: center;
+            margin-bottom: 20px; padding: 10px 20px;
+            background: #111; border-radius: 10px; border: 1px solid #555;
+            position: relative; z-index: 2;
+        }
+
+        /* ON AIR ランプ */
+        .on-air-lamp {
+            font-family: 'Oswald', sans-serif;
+            font-size: 24px; font-weight: bold;
+            color: #333; background: #550000; /* 消灯時は暗い赤 */
+            padding: 5px 20px; border-radius: 5px;
+            border: 2px solid #220000;
+            transition: 0.3s;
+            text-shadow: none; box-shadow: none;
+        }
+        /* 点灯時のスタイル（JavaScriptでこのクラスがつきます） */
+        .on-air-lamp.active {
+            color: white; background: #ff0000;
+            border-color: #ff4d4d;
+            text-shadow: 0 0 10px white;
+            box-shadow: 0 0 20px #ff0000, 0 0 40px #ff0000;
+            animation: pulse-lamp 0.5s infinite alternate;
+        }
+        @keyframes pulse-lamp { from { opacity: 0.8; } to { opacity: 1; } }
+
+        /* お便りフォーム（紙っぽいクリーム色の紙） */
+        .radio-paper-form {
+            background: #fdf6e3; 
+            padding: 30px;
+            border-radius: 5px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+            position: relative;
+            z-index: 2;
+            transform: rotate(-1deg); /* 少し傾けて手書き感を出す */
+        }
+        /* マスキングテープ */
+        .radio-paper-form::before {
+            content: ""; position: absolute; top: -15px; left: 50%; transform: translateX(-50%);
+            width: 100px; height: 30px; background: rgba(255,255,255,0.3);
+            border-radius: 2px;
+        }
+
+        /* 共通ラベル */
+        .form-label { display: block; font-weight: bold; font-size: 12px; margin-bottom: 5px; color: #666; }
+
+        /* ▼▼▼ 共通フォームスタイル（ビジネス・お問い合わせ用） ▼▼▼ */
+        .form-input, .form-select, .form-textarea { 
+            width: 100%; 
+            padding: 10px; 
+            border: 2px solid #eee; 
+            border-radius: 8px; 
+            font-family: inherit; 
+            margin-bottom: 15px; 
+            box-sizing: border-box; 
+            font-size: 16px;
+            background: #fff; /* 背景色を追加 */
+        }
+        .form-input:focus, .form-select:focus, .form-textarea:focus { 
+            border-color: var(--primary); 
+            outline: none; 
+        }
+
+        /* ラジオ専用の入力欄デザイン（下線のみ） */
+        .radio-input {
+            background: transparent;
+            border: none;
+            border-bottom: 2px dashed #aaa;
+            width: 100%; padding: 10px;
+            font-family: 'M PLUS Rounded 1c', sans-serif;
+            font-size: 16px; margin-bottom: 15px;
+            transition: 0.3s;
+            box-sizing: border-box;
+        }
+        .radio-input:focus { outline: none; border-color: #ff9f43; background: rgba(255, 159, 67, 0.1); }
+
+        /* 送信ボタン */
+        .radio-btn { width: 100%; background: #333; color: white; padding: 12px; border: 2px solid #555; border-radius: 30px; font-weight: bold; cursor: pointer; transition: 0.2s; box-shadow: 0 4px 10px rgba(0,0,0,0.3); }
+        .radio-btn:hover { transform: translateY(-2px); background: #000; }
+        .radio-btn:disabled { opacity: 0.7; cursor: not-allowed; }
+
         .diary-section { margin-top: 50px; }
         .diary-card { background: white; border-radius: 15px; padding: 15px; margin-bottom: 20px; border: 1px solid #eee; display: flex; gap: 15px; box-shadow: 0 2px 8px rgba(0,0,0,0.03); position: relative; }
         .diary-icon { 
@@ -879,6 +1059,47 @@
 
         canvas#drawCanvas {
             border-radius: 4px; 
+        }
+        /* ▼▼▼ 落書き広場：背景＆スライドショー ▼▼▼ */
+        
+        /* 背景切り替えボタン */
+        .bg-switch-bar {
+            display: flex; gap: 10px; justify-content: center; margin-bottom: 10px;
+        }
+        .bg-switch-btn {
+            border: 2px solid #fff; border-radius: 20px; padding: 5px 15px;
+            font-size: 12px; font-weight:bold; cursor: pointer;
+            box-shadow: 0 3px 5px rgba(0,0,0,0.2); transition: 0.2s;
+        }
+        .bg-switch-btn:hover { transform: translateY(-2px); }
+        .bg-switch-btn.black { background: #2b4a3c; color: white; }
+        .bg-switch-btn.white { background: #ffffff; color: #333; }
+        .bg-switch-btn.paper { background: #fdf5e6; color: #550000; }
+
+        /* 背景ごとのスタイル定義 */
+        .board-container.bg-black { background: #2b4a3c; } /* 黒板 */
+        .board-container.bg-white { background: #ffffff; border-color:#ccc; } /* ホワイトボード */
+        .board-container.bg-paper { background: #fdf5e6; border-color:#d35400; } /* スケッチブック */
+
+        /* スライドショーエリア */
+        .graffiti-slideshow-box {
+            width: 100%; max-width: 600px; height: 300px;
+            margin: 0 auto 40px;
+            background: #333; border: 10px solid white;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            border-radius: 10px; position: relative; overflow: hidden;
+            transform: rotate(2deg); /* 写真っぽく傾ける */
+        }
+        .slide-img {
+            width: 100%; height: 100%; object-fit: contain;
+            position: absolute; top: 0; left: 0;
+            opacity: 0; transition: opacity 1s ease-in-out;
+        }
+        .slide-img.active { opacity: 1; }
+        .slide-caption {
+            position: absolute; bottom: 0; left: 0; width: 100%;
+            background: rgba(0,0,0,0.7); color: white;
+            padding: 10px; text-align: center; font-size: 14px;
         }
         .paint-tools { display: flex; flex-wrap: wrap; gap: 10px; justify-content: center; background: rgba(255,255,255,0.1); padding: 10px; border-radius: 8px; position: absolute; bottom: 10px; left: 50%; transform: translateX(-50%); width: 90%; box-sizing: border-box; z-index: 10; pointer-events: auto; }
         .color-btn { width: 30px; height: 30px; border-radius: 50%; border: 2px solid white; cursor: pointer; transition: transform 0.2s; box-shadow: 0 2px 5px rgba(0,0,0,0.3); }
@@ -1100,21 +1321,6 @@
     <div id="overlay" class="overlay" onclick="toggleMenu()"></div>
 
     <div id="copyToast">コピーしました✨</div>
-
-    <div id="scheduleModal" class="modal" onclick="closeScheduleModal()">
-        <div class="modal-content news-modal-content" onclick="event.stopPropagation()">
-            <span class="modal-close-btn" onclick="closeScheduleModal()">×</span>
-            <img id="schModalImg" src="" style="width:100%; aspect-ratio:16/9; object-fit:cover; border-radius:8px; margin-bottom:15px; display:none;">
-            <div>
-                <span id="schModalDate" class="modal-date" style="font-size:16px; color:#27C6F5; font-weight:bold;"></span>
-                <span class="modal-tag" style="background:#27C6F5;">配信</span>
-            </div>
-            <div id="schModalTitle" class="modal-title" style="font-size:20px; margin-top:10px;"></div>
-            <div style="margin-top: 30px; text-align: center;">
-                <button onclick="closeScheduleModal()" class="contact-btn" style="background:#888; width:auto; padding:10px 40px;">閉じる</button>
-            </div>
-        </div>
-    </div>
 
     <div id="newsModal" class="modal" onclick="closeNewsModal()">
         <div class="modal-content news-modal-content" onclick="event.stopPropagation()">
@@ -2030,21 +2236,6 @@
         </div>
     </div>
 
-<div id="scheduleModal" class="modal" onclick="closeScheduleModal()">
-        <div class="modal-content news-modal-content" onclick="event.stopPropagation()">
-            <span class="modal-close-btn" onclick="closeScheduleModal()">×</span>
-            <img id="schModalImg" src="" style="width:100%; aspect-ratio:16/9; object-fit:cover; border-radius:8px; margin-bottom:15px; display:none;">
-            <div>
-                <span id="schModalDate" class="modal-date" style="font-size:16px; color:#27C6F5; font-weight:bold;"></span>
-                <span class="modal-tag" style="background:#27C6F5;">配信</span>
-            </div>
-            <div id="schModalTitle" class="modal-title" style="font-size:20px; margin-top:10px;"></div>
-            <div style="margin-top: 30px; text-align: center;">
-                <button onclick="closeScheduleModal()" class="contact-btn" style="background:#888; width:auto; padding:10px 40px;">閉じる</button>
-            </div>
-        </div>
-    </div>
-
     <div id="newsModal" class="modal" onclick="closeNewsModal()">
         <div class="modal-content news-modal-content" onclick="event.stopPropagation()">
             <span class="modal-close-btn" onclick="closeNewsModal()">×</span>
@@ -2329,8 +2520,19 @@
     <div id="memberDetail" class="page" style="padding:0; min-height: 100vh;"></div>
 
     <div id="schedule" class="page">
-        <div class="page-header"><div class="page-title-en">SCHEDULE</div><div class="page-title-jp">配信スケジュール</div></div>
-        <div class="container"><div class="timeline-container" id="scheduleList"></div></div>
+        <div class="page-header">
+            <div class="page-title-en">SCHEDULE</div>
+            <div class="page-title-jp">週間番組表</div>
+        </div>
+        <div class="container">
+            <div id="weeklySchedule" class="weekly-schedule-container">
+                読み込み中...
+            </div>
+            
+            <div style="text-align:center; font-size:12px; color:#888; margin-top:20px;">
+                ※予定は変更になる場合があります。最新情報はXをご確認ください。
+            </div>
+        </div>
     </div>
 
     <div id="goods" class="page">
@@ -2404,30 +2606,50 @@
     </div>
 
     <div id="radio" class="page">
-        <div class="page-header"><div class="page-title-en" style="color:#ff9f43;">RADIO</div><div class="page-title-jp">お便り＆アフタートーク</div></div>
+        <div class="page-header">
+            <div class="page-title-en">RADIO</div>
+            <div class="page-title-jp">ラジオ＆お便り</div>
+        </div>
+        
         <div class="container">
-            <div class="radio-theme-box">
-                <div class="radio-theme-text" id="radioThemeDisplay">読み込み中...</div>
-                <div style="text-align:center; font-size:12px; margin-top:5px; color:#ccc;" id="radioThemeNote"></div>
+            <div class="radio-booth-wrapper">
+                <div class="radio-header-panel">
+                    <div style="color:#888; font-size:12px; font-weight:bold;">
+                        <i class="fas fa-broadcast-tower"></i> FM AOHARU 77.7MHz
+                    </div>
+                    <div id="onAirLamp" class="on-air-lamp">ON AIR</div>
+                </div>
+
+                <div class="radio-paper-form">
+                    <div style="text-align:center; margin-bottom:20px; color:#555; font-weight:bold; font-size:18px;">
+                        <i class="fas fa-microphone-alt"></i> お便り募集中
+                    </div>
+                    
+                    <label class="form-label">ラジオネーム</label>
+                    <input type="text" class="radio-input" id="radioName" placeholder="あおはる 太郎">
+                    
+                    <label class="form-label">コーナー選択</label>
+                    <select class="radio-input" id="radioCorner">
+                        <option value="ふつおた">ふつおた（普通のお便り）</option>
+                        <option value="テーマメール">今週のテーマ</option>
+                        <option value="無茶振り">メンバーへの無茶振り</option>
+                        <option value="お悩み相談">お悩み相談室</option>
+                    </select>
+                    
+                    <label class="form-label">メッセージ</label>
+                    <textarea class="radio-input" id="radioMessage" rows="5" placeholder="ここに熱いメッセージを書いてね！"></textarea>
+                    
+                    <button class="radio-btn" onclick="submitRadio()" style="background:#333; border:2px solid #555;">
+                        <i class="fas fa-paper-plane"></i> ON AIR (送信)
+                    </button>
+                </div>
             </div>
-            <div class="letter-form">
-                <div class="section-title" style="margin-top:0;"><span class="ja-title">お便りを送る</span></div>
-                <label class="form-label">ラジオネーム（必須）</label>
-                <input type="text" class="form-input" id="radioName" placeholder="あおはる 太郎">
-                <label class="form-label">コーナー選択</label>
-                <select class="form-select" id="radioCorner">
-                    <option value="ふつおた">ふつおた（普通のお便り）</option>
-                    <option value="テーマメール">今週のテーマ</option>
-                    <option value="無茶振り">メンバーへの無茶振り</option>
-                    <option value="お悩み相談">お悩み相談室</option>
-                </select>
-                <label class="form-label">メッセージ</label>
-                <textarea class="form-textarea" id="radioMessage" rows="5" placeholder="ここにメッセージを書いてね！"></textarea>
-                <button class="radio-btn" onclick="submitRadio()">送信する</button>
+
+            <div class="section-title" style="margin-top:50px;">
+                <span class="ja-title">VOICE DIARY</span>
             </div>
-            <div class="diary-section">
-                <div class="section-title"><span class="ja-title">放送後記＆裏話</span></div>
-                <div id="radioDiaryList"></div>
+            <div id="radioDiaryList" class="diary-section">
+                読み込み中...
             </div>
         </div>
     </div>
@@ -2489,7 +2711,13 @@
                 </p>
             </div>
 
-            <div class="board-container">
+            <div class="bg-switch-bar">
+                <button class="bg-switch-btn black" onclick="changeBoardBg('bg-black')">黒板</button>
+                <button class="bg-switch-btn white" onclick="changeBoardBg('bg-white')">ホワイトボード</button>
+                <button class="bg-switch-btn paper" onclick="changeBoardBg('bg-paper')">スケッチブック</button>
+            </div>
+
+            <div id="drawingBoard" class="board-container bg-black">
                 <canvas id="drawCanvas" width="1920" height="1080" style="width:100%; height:100%; touch-action: none;"></canvas>
                 
                 <div class="paint-tools">
@@ -2522,8 +2750,14 @@
                 <button class="radio-btn" onclick="postGraffiti()" style="background:#e84393; margin-top:10px;">
                     <i class="fas fa-paper-plane"></i> ギャラリーに投稿
                 </button>
-            </div>
                 <p style="font-size:11px; color:#888; margin-top:5px;">※投稿にはログインが必要です。</p>
+            </div>
+
+            <div class="section-title" style="margin-top:50px; margin-bottom:20px;">
+                <span class="ja-title" style="color:#e84393;">PICK UP GALLERY</span>
+            </div>
+            <div id="graffitiSlideshow" class="graffiti-slideshow-box">
+                <div style="color:white; text-align:center; padding-top:130px;">Loading...</div>
             </div>
 
             <div class="section-title" style="margin-top:50px;"><span class="ja-title">みんなの作品</span></div>
@@ -3143,8 +3377,12 @@
                 const conf = {};
                 data.config.forEach(row => { conf[row.key] = row.value; });
                 if(conf.youtube_api_key) YOUTUBE_API_KEY = conf.youtube_api_key;
-                if(conf.radio_theme_main) document.getElementById('radioThemeDisplay').innerText = conf.radio_theme_main;
-                if(conf.radio_theme_sub) document.getElementById('radioThemeNote').innerText = conf.radio_theme_sub;
+                // 要素がある場合だけセットする（エラー防止）
+                const themeDisplay = document.getElementById('radioThemeDisplay');
+                if(conf.radio_theme_main && themeDisplay) themeDisplay.innerText = conf.radio_theme_main;
+                
+                const themeNote = document.getElementById('radioThemeNote');
+                if(conf.radio_theme_sub && themeNote) themeNote.innerText = conf.radio_theme_sub;
                 GROUP_CONFIG.name = "あおはる⭐︎フレンズ";
                 if(conf.group_logo_img) GROUP_CONFIG.img = conf.group_logo_img;
                 if(conf.group_youtube_id) GROUP_CONFIG.youtubeChannelId = conf.group_youtube_id;
@@ -3366,6 +3604,7 @@
     }
 
     function renderSchedule() {
+        // 1. TOPページ用（横スクロール）の描画
         const topScheduleHtml = scheduleData.map((s, i) => {
             let bgHtml = '', boxClass = 'sch-thumb-box no-img';
             if (s.img && s.img !== "") { bgHtml = `<img src="${s.img}" class="sch-bg-img" style="width:100%; height:100%; object-fit:cover; position:absolute; inset:0; z-index:0;">`; boxClass = 'sch-thumb-box'; }
@@ -3373,14 +3612,67 @@
             if (s.member) { s.member.split(',').forEach(mem => { mem = mem.trim(); if(mem) memberIconsHtml += `<img src="icon_sch_${mem}.png" class="sch-mini-icon" style="width:30px; height:30px; border-radius:50%; border:2px solid white; object-fit:cover; background:white;" onerror="this.style.display='none'">`; }); }
             return `<div class="schedule-card" onclick="openScheduleModal(${i})" style="cursor:pointer;"><div class="${boxClass}" style="position:relative; overflow:hidden;">${bgHtml}<div class="sch-icons-overlay" style="position:absolute; bottom:5px; right:5px; z-index:3; display:flex; gap:3px;">${memberIconsHtml}</div></div><div class="sch-info" style="text-align:left; padding:10px;"><div style="display:flex; align-items:center; margin-bottom:5px;"><span class="sch-badge-mini" style="margin-bottom:0; margin-right:8px; flex-shrink:0;">配信</span><span style="font-size:13px; font-weight:bold; color:#27C6F5; font-family:'Poppins', sans-serif;">${s.date} ${s.time}</span></div><div class="sch-title" style="margin:0;">${s.content}</div></div></div>`;
         }).join('');
-        const tlHtml = scheduleData.map((s, i) => {
-            let thumbHtml = ''; if (s.img && s.img !== "") { thumbHtml = `<img src="${s.img}" class="tl-thumb-img">`; }
-            let platformIconsHtml = ''; if (s.platform) { s.platform.split(',').forEach(pf => { pf = pf.trim(); if (pf) platformIconsHtml += `<img src="icon_pf_${pf}.png" class="tl-platform-icon" title="${pf}" style="width:20px; height:20px; object-fit:contain;">`; }); }
-            let memberIconHtml = ''; if (s.member) { s.member.split(',').forEach(mem => { mem = mem.trim(); if (mem) memberIconHtml += `<img src="icon_sch_${mem}.png" class="tl-member-icon" title="${mem}" style="width:30px; height:30px; border-radius:50%; object-fit:cover;" onerror="this.style.display='none'">`; }); }
-            return `<div class="timeline-item" onclick="openScheduleModal(${i})" style="cursor:pointer;"><div class="tl-icon-box"><div class="tl-icon"><i class="fas fa-video"></i></div></div><div class="tl-content"><div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;"><div style="display:flex; align-items:center; gap:10px;"><span class="tl-tag">配信</span><div class="tl-date">${s.date} <span style="font-size:14px; color:#888; margin-left:5px;">${s.time}</span></div></div><div class="tl-icons-row" style="margin-top:0; display:flex; align-items:center; gap:5px;">${platformIconsHtml}${memberIconHtml}</div></div><div class="tl-body-box" style="margin-top:0; display:flex; align-items:flex-start; gap:15px;">${thumbHtml}<div class="tl-title">${s.content}</div></div></div></div>`;
-        }).join('');
-        const topList = document.getElementById('topScheduleList'); if(topList) topList.innerHTML = topScheduleHtml || "予定はありません";
-        const schList = document.getElementById('scheduleList'); if(schList) schList.innerHTML = tlHtml;
+        const topList = document.getElementById('topScheduleList'); 
+        if(topList) topList.innerHTML = topScheduleHtml || "予定はありません";
+
+        // 2. SCHEDULEページ用（週間番組表）の描画
+        const container = document.getElementById('weeklySchedule');
+        if (!container) return; // ページ内に要素がなければ終了
+
+        // データを日付ごとにまとめる
+        const grouped = {};
+        scheduleData.forEach((s, index) => {
+            const dateKey = s.date; // "1/1" など
+            if (!grouped[dateKey]) grouped[dateKey] = [];
+            s.originalIndex = index; // モーダル用
+            grouped[dateKey].push(s);
+        });
+
+        // 今日の日付を取得 (例: 1/5)
+        const today = new Date();
+        const todayStr = (today.getMonth()+1) + "/" + today.getDate();
+
+        let html = "";
+        
+        // 日付ごとの列（カラム）を作成
+        for (const [date, items] of Object.entries(grouped)) {
+            const isToday = (date === todayStr);
+            const todayClass = isToday ? 'is-today' : '';
+            
+            let cardsHtml = items.map(s => {
+                let imgHtml = s.img ? `<img src="${s.img}" class="prog-thumb">` : `<div style="height:80px; background:#eee; display:flex; align-items:center; justify-content:center; color:#ccc; font-size:20px;"><i class="fas fa-image"></i></div>`;
+                
+                let iconsHtml = '';
+                if(s.member) {
+                    s.member.split(',').forEach(mem => {
+                        mem = mem.trim();
+                        if(mem) iconsHtml += `<img src="icon_sch_${mem}.png" class="prog-icon-img" onerror="this.style.display='none'">`;
+                    });
+                }
+
+                return `
+                <div class="prog-card" onclick="openScheduleModal(${s.originalIndex})">
+                    <div class="prog-time">${s.time}</div>
+                    ${imgHtml}
+                    <div class="prog-body">
+                        <div class="prog-icons">${iconsHtml}</div>
+                        <div class="prog-title">${s.content}</div>
+                    </div>
+                </div>`;
+            }).join('');
+
+            html += `
+            <div class="day-column ${todayClass}">
+                <div class="day-header">
+                    <div class="day-date">${date}</div>
+                </div>
+                <div class="day-body">
+                    ${cardsHtml}
+                </div>
+            </div>`;
+        }
+
+        container.innerHTML = html || "<p style='text-align:center; padding:20px;'>スケジュールデータがありません</p>";
     }
     function renderVideos() { const videoHtml = videoData.map(v => `<div class="video-card" onclick="window.open('https://www.youtube.com/watch?v=${v.id}', '_blank')"><div class="video-thumb-box"><img src="https://img.youtube.com/vi/${v.id}/mqdefault.jpg" class="video-thumb"><div class="play-icon">▶</div></div><div class="video-info"><div class="video-title">${v.title}</div><div class="video-date">${v.date}</div></div></div>`).join(''); const list = document.getElementById('topVideoList'); if(list) list.innerHTML = videoHtml || "動画はまだありません"; }
     function renderMemberVideos() { const container = document.getElementById('memberVideoList'); if(!memberVideoData.length) { container.innerHTML = "限定動画はまだありません"; return; } const html = memberVideoData.map(v => { const clickAction = isMemberLoggedIn ? `window.open('https://www.youtube.com/watch?v=${v.id}', '_blank')` : `openLoginModal()`; const lockedClass = isMemberLoggedIn ? 'unlocked' : 'mv-blur'; const lockOverlay = isMemberLoggedIn ? '' : `<div class="mv-lock-overlay"><div class="mv-lock-icon"><i class="fas fa-lock"></i></div><div class="mv-lock-text">MEMBER ONLY</div></div>`; return `<div class="member-video-card ${lockedClass}" onclick="${clickAction}">${lockOverlay}<div class="news-thumb-area"><img src="https://img.youtube.com/vi/${v.id}/mqdefault.jpg" class="news-img"></div><div class="news-content"><div class="news-date">${v.date}</div><div class="news-title">${v.title}</div><div class="news-check-btn">${isMemberLoggedIn ? 'PLAY' : 'LOCKED'}</div></div></div>`; }).join(''); container.innerHTML = html; }
@@ -3438,6 +3730,42 @@
                 </div> 
             </div> `; 
         }).join(''); 
+    }
+    // ▼▼▼ ラジオお便り送信（ON AIRランプ演出付き） ▼▼▼
+    function submitRadio() {
+        const name = document.getElementById('radioName').value;
+        const corner = document.getElementById('radioCorner').value;
+        const msg = document.getElementById('radioMessage').value;
+        
+        if(!name || !msg) { alert("ラジオネームとメッセージを入力してください！"); return; }
+
+        // ★演出：ON AIRランプを点灯させる
+        const lamp = document.getElementById('onAirLamp');
+        if(lamp) lamp.classList.add('active');
+
+        const btn = document.querySelector('.radio-btn');
+        const originalText = btn.innerHTML;
+        btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> 送信中...';
+        btn.disabled = true;
+
+        // 送信処理
+        fetch(`${GAS_API_URL}?action=submit_radio&name=${encodeURIComponent(name)}&corner=${encodeURIComponent(corner)}&message=${encodeURIComponent(msg)}`)
+        .then(res => res.json())
+        .then(json => {
+            if(json.status === 'success') {
+                alert("お便りを送信しました！\n採用されるといいですね！");
+                document.getElementById('radioMessage').value = "";
+            } else {
+                alert("送信エラー: " + json.message);
+            }
+        })
+        .catch(e => { console.error(e); alert("通信エラー"); })
+        .finally(() => {
+            btn.innerHTML = originalText;
+            btn.disabled = false;
+            // 演出終了（2秒後に消灯）
+            if(lamp) setTimeout(() => lamp.classList.remove('active'), 2000);
+        });
     }
     function renderStaticParts() { const twLink = document.getElementById('groupTwitterLink'); const ytLink = document.getElementById('groupYoutubeLink'); const footerTwLink = document.getElementById('footerTwitterLink'); const footerYtLink = document.getElementById('footerYoutubeLink'); if(GROUP_CONFIG.twitterUrl) { twLink.href = GROUP_CONFIG.twitterUrl; footerTwLink.href = GROUP_CONFIG.twitterUrl; } if(GROUP_CONFIG.youtubeChannelId) { const ytUrl = `https://www.youtube.com/channel/${GROUP_CONFIG.youtubeChannelId}`; ytLink.href = ytUrl; footerYtLink.href = ytUrl; } if(memberData.length > 0) { const memberHtml = memberData.map((m, i) => `<div class="member-card-vertical" onclick="openMemberDetail(${i})" style="--member-color: ${m.color}; --member-bg: url('${m.bgImg}');"><div class="member-img-wrapper"><img src="${m.img}" class="member-img-tachie"></div><a href="javascript:void(0)" class="member-link-overlay"></a></div>`).join(''); document.getElementById('topMemberList').innerHTML = memberHtml; document.getElementById('memberGrid').innerHTML = memberHtml; } }
 
@@ -3870,6 +4198,7 @@
                     </div>
                 </div>`;
         }).join('');
+        startGraffitiSlideshow();
     }
 
     // 3. 詳細画面（モーダル）を開く
@@ -4806,6 +5135,65 @@
             `;
         }).join('');
     }
+    // ▼▼▼ 落書き広場の新機能 ▼▼▼
+
+    // 1. 背景切り替え機能
+    function changeBoardBg(bgClass) {
+        const board = document.getElementById('drawingBoard');
+        // クラスをリセットしてから新しいのを追加
+        board.classList.remove('bg-black', 'bg-white', 'bg-paper');
+        board.classList.add(bgClass);
+        
+        // 背景に合わせてペンのデフォルト色を変えると親切（オプション）
+        if(bgClass === 'bg-white' || bgClass === 'bg-paper') {
+            changeColor('black', null); // 白背景なら黒ペンに
+        } else {
+            changeColor('white', null); // 黒背景なら白ペンに
+        }
+    }
+
+    // 2. スライドショー機能
+    let slideInterval;
+    function startGraffitiSlideshow() {
+        const container = document.getElementById('graffitiSlideshow');
+        if (!container || !graffitiPosts || graffitiPosts.length === 0) return;
+
+        // 最近の5件を表示
+        const recentPosts = graffitiPosts.slice(0, 5); 
+        
+        let html = '';
+        recentPosts.forEach((p, i) => {
+            const activeClass = i === 0 ? 'active' : '';
+            html += `
+                <img src="${p.image}" class="slide-img ${activeClass}" id="slide-${i}">
+                <div class="slide-caption" id="caption-${i}" style="display:${i===0?'block':'none'}">
+                    ${p.title} by ${p.author}
+                </div>
+            `;
+        });
+        container.innerHTML = html;
+
+        let currentSlide = 0;
+        clearInterval(slideInterval);
+        
+        // 3秒ごとに切り替え
+        slideInterval = setInterval(() => {
+            // 今のを消す
+            document.getElementById(`slide-${currentSlide}`).classList.remove('active');
+            document.getElementById(`caption-${currentSlide}`).style.display = 'none';
+            
+            // 次へ
+            currentSlide = (currentSlide + 1) % recentPosts.length;
+            
+            // 次のを出す
+            document.getElementById(`slide-${currentSlide}`).classList.add('active');
+            document.getElementById(`caption-${currentSlide}`).style.display = 'block';
+        }, 3000);
+    }
+
+    // データの読み込み完了後にスライドショーを開始するように追加
+    // fetchSheetData の最後の方にある if(data.graffiti) ブロックの中に
+    // startGraffitiSlideshow(); を追加してください（または renderGraffitiList の中で呼ぶ）
 </script>
 </body>
 </html>
