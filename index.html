@@ -15,7 +15,7 @@
     <meta property="og:image" content="https://aoharu-site.vercel.app/ogp.png">
     <meta name="twitter:card" content="summary_large_image">
     
-    <link href="https://fonts.googleapis.com/css2?family=M+PLUS+Rounded+1c:wght@400;700;900&family=Oswald:wght@500;700&family=Poppins:wght@600;700;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=M+PLUS+Rounded+1c:wght@400;700;900&family=Oswald:wght@500;700&family=Poppins:wght@600;700;900&family=Rock+Salt&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
     <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
@@ -128,6 +128,62 @@
             /* 透過イラストの場合は影を落とす */
             filter: drop-shadow(0 15px 30px rgba(0,0,0,0.2));
             transition: transform 0.5s ease;
+        }
+
+        /* ▼▼▼ 追加：ABOUT用 筆記体装飾（黒・配置修正版） ▼▼▼ */
+        .about-script-text {
+            /* フォント設定 */
+            font-family: 'Rock Salt', cursive; 
+            font-size: 40px; /* サイズ調整 */
+            
+            /* 色設定（黒で少し透けさせる） */
+            color: rgba(0, 0, 0, 0.15); 
+            background: none; /* グラデーション解除 */
+            -webkit-text-fill-color: initial; /* グラデーション解除 */
+            
+            /* 配置設定（右上に寄せる） */
+            position: absolute;
+            top: -50px;      /* 上に少しはみ出す */
+            right: 0;        /* 右端に寄せる */
+            left: auto;      /* 左指定を解除 */
+            z-index: 0;      /* 文字の後ろに配置 */
+            
+            white-space: nowrap;
+            transform: rotate(-5deg); /* 少し傾ける */
+            pointer-events: none;
+            line-height: 1;
+        }
+
+        /* スマホでの調整 */
+        @media (max-width: 900px) {
+            .about-script-text {
+                font-size: 24px;
+                top: -30px;
+                right: auto;
+                left: 50%;
+                transform: translateX(-50%) rotate(-3deg);
+                width: 100%;
+                text-align: center;
+            }
+        }
+
+        /* スマホでの調整 */
+        @media (max-width: 900px) {
+            .about-script-text {
+                font-size: 32px;
+                top: -40px;
+                left: 50%;
+                transform: translateX(-50%) rotate(-5deg);
+                width: 100%;
+                text-align: center;
+            }
+        }
+        
+        /* 文章を少しリッチに */
+        .about-desc strong {
+            background: linear-gradient(transparent 70%, #e0f7ff 70%);
+            font-weight: 900;
+            color: #333;
         }
         .about-section-wrapper:hover .about-img {
             transform: scale(1.03) translateY(-10px);
@@ -2431,22 +2487,27 @@
                         <img src="about_visual.png" alt="About Visual" class="about-img">
                     </div>
                     
-                    <div class="about-text-box">
+                    <div class="about-text-box" style="position:relative;">
+                        <div class="about-script-text">Minecraft × Aoharu Project</div>
+
                         <div class="about-catch">
-                            青春（あおはる）は、<br>
-                            ここからクラフトする。
+                            教室はサーバー。<br>
+                            ツルハシが、僕らのペンだ。
                         </div>
                         <p class="about-desc">
-                            2026年、あおはる学園に集った4人の転校生。<br>
-                            マインクラフト実況を中心に、歌、雑談、バラエティ企画など、<br>
-                            放課後の教室から世界中に「楽しい」を届けます！<br>
+                            「ねぇ、放課後あそぼ？」<br>
+                            そんな何気ない一言から始まった、4人の物語。<br>
                             <br>
-                            個性豊かなメンバーが織りなすドタバタな日常。<br>
-                            さあ、私たちと一緒に新しい青春を始めよう！
+                            舞台は無限に広がるブロックの世界。<br>
+                            私たちはここで、笑い合い、時にはぶつかり合いながら、<br>
+                            <strong>"最高の青春（ストーリー）"</strong> をクラフトしていく。<br>
+                            <br>
+                            予測不能なドタバタ劇と、奇跡のような瞬間。<br>
+                            あなたも、このクラスの「5人目の仲間」になりませんか？
                         </p>
-                        <div style="text-align: center; width: 100%;">
-                            <button onclick="showPage('member')" class="goods-btn" style="padding: 12px 40px; font-size: 14px; background: #333; color: white;">
-                                MEMBER LIST <i class="fas fa-arrow-right"></i>
+                        <div style="text-align: center; width: 100%; position:relative; z-index:1;">
+                            <button onclick="showPage('member')" class="goods-btn" style="padding: 15px 50px; font-size: 16px; background: #333; color: white; border-radius:50px; box-shadow:0 10px 20px rgba(0,0,0,0.2);">
+                                メンバーに会いに行く <i class="fas fa-arrow-right" style="margin-left:10px;"></i>
                             </button>
                         </div>
                     </div>
