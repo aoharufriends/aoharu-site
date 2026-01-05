@@ -1077,11 +1077,37 @@
             accent-color: var(--primary); 
             vertical-align: middle;
         }
-        /* スマホでの表示調整 */
+        /* ▼▼▼ スマホでの表示調整（ツールをコンパクトにする） ▼▼▼ */
         @media (max-width: 600px) {
             .paint-tools { 
-                flex-direction: column; /* スマホなら縦並び気味に */
-                gap: 15px;
+                flex-direction: row !important; /* 横並び（折り返し）を強制 */
+                gap: 5px;      /* 隙間を詰める */
+                padding: 8px;  /* 余白を減らす */
+                bottom: 5px;   /* 画面の下ギリギリに配置 */
+                width: 95%;    /* 幅を確保 */
+            }
+            
+            /* ボタンを小さくする */
+            .tool-btn {
+                font-size: 10px;
+                padding: 5px 8px;
+            }
+            
+            /* カラーパレットを小さくする */
+            .color-btn {
+                width: 25px;
+                height: 25px;
+            }
+
+            /* 仕切り線を短くする */
+            .paint-tools > div[style*="height:30px"] {
+                height: 15px !important;
+                margin: 0 2px !important;
+            }
+            
+            /* スライダー周りの文字を小さく */
+            .paint-tools span {
+                font-size: 9px !important;
             }
         }
         /* ▼▼▼ 落書き広場：背景＆スライドショー ▼▼▼ */
