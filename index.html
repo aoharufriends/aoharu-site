@@ -1060,6 +1060,30 @@
         canvas#drawCanvas {
             border-radius: 4px; 
         }
+        /* ▼▼▼ お絵描きツールバーの追加スタイル ▼▼▼ */
+        .paint-tools {
+            display: flex; 
+            flex-wrap: wrap; /* 折り返しを許可 */
+            align-items: center; 
+            justify-content: center; /* 中央寄せ */
+            gap: 10px;
+            /* 以前のスタイルを上書きして調整 */
+            width: 95%;
+            max-width: 800px;
+            padding: 15px;
+        }
+        /* スライダーの色 */
+        input[type=range] {
+            accent-color: var(--primary); 
+            vertical-align: middle;
+        }
+        /* スマホでの表示調整 */
+        @media (max-width: 600px) {
+            .paint-tools { 
+                flex-direction: column; /* スマホなら縦並び気味に */
+                gap: 15px;
+            }
+        }
         /* ▼▼▼ 落書き広場：背景＆スライドショー ▼▼▼ */
         
         /* 背景切り替えボタン */
@@ -2733,23 +2757,43 @@
                 <canvas id="drawCanvas" width="1920" height="1080" style="width:100%; height:100%; touch-action: none;"></canvas>
                 
                 <div class="paint-tools">
-                    <div class="color-btn active" style="background:white;" onclick="changeColor('white', this)"></div>
-                    <div class="color-btn" style="background:#ff4757;" onclick="changeColor('#ff4757', this)"></div>
-                    <div class="color-btn" style="background:#2ecc71;" onclick="changeColor('#2ecc71', this)"></div>
-                    <div class="color-btn" style="background:#f1c40f;" onclick="changeColor('#f1c40f', this)"></div>
-                    <div class="color-btn" style="background:#27C6F5;" onclick="changeColor('#27C6F5', this)"></div>
-                    
-                    <label class="color-btn" style="background:linear-gradient(45deg, red, blue); display:flex; align-items:center; justify-content:center; overflow:hidden;" title="自由な色">
-                        <input type="color" onchange="changeColor(this.value, this.parentElement)" style="opacity:0; width:100%; height:100%; cursor:pointer;">
-                    </label>
+                    <div style="display:flex; flex-wrap:wrap; gap:5px; justify-content:center; width:100%; margin-bottom:10px;">
+                        <div class="color-btn active" style="background:white;" onclick="changeColor('white', this)" title="白"></div>
+                        <div class="color-btn" style="background:#444;" onclick="changeColor('#444', this)" title="黒"></div>
+                        <div class="color-btn" style="background:#ff4757;" onclick="changeColor('#ff4757', this)" title="赤"></div>
+                        <div class="color-btn" style="background:#e67e22;" onclick="changeColor('#e67e22', this)" title="オレンジ"></div>
+                        <div class="color-btn" style="background:#f1c40f;" onclick="changeColor('#f1c40f', this)" title="黄色"></div>
+                        <div class="color-btn" style="background:#2ecc71;" onclick="changeColor('#2ecc71', this)" title="緑"></div>
+                        <div class="color-btn" style="background:#27C6F5;" onclick="changeColor('#27C6F5', this)" title="水色"></div>
+                        <div class="color-btn" style="background:#3742fa;" onclick="changeColor('#3742fa', this)" title="青"></div>
+                        <div class="color-btn" style="background:#8e44ad;" onclick="changeColor('#8e44ad', this)" title="紫"></div>
+                        <div class="color-btn" style="background:#ff78cb;" onclick="changeColor('#ff78cb', this)" title="ピンク"></div>
+                        
+                        <label class="color-btn" style="background:linear-gradient(45deg, red, blue); display:flex; align-items:center; justify-content:center; overflow:hidden;" title="自由な色">
+                            <input type="color" onchange="changeColor(this.value, this.parentElement)" style="opacity:0; width:100%; height:100%; cursor:pointer;">
+                        </label>
+                    </div>
+
+                    <div style="width:100%; height:1px; background:rgba(255,255,255,0.2); margin:5px 0;"></div>
+
+                    <div style="display:flex; align-items:center; gap:5px; color:white; font-size:10px; font-weight:bold; margin-right:15px;">
+                        <span>細</span>
+                        <input type="range" id="penSizeSlider" min="1" max="100" value="3" step="1" oninput="changeLineWidth(this.value)" style="width:100px; cursor:pointer;">
+                        <span>太</span>
+                        <span id="penSizeValue" style="background:white; color:#333; padding:2px 6px; border-radius:4px; margin-left:5px; min-width:20px; text-align:center;">3</span>
+                    </div>
 
                     <div style="width:1px; height:30px; background:rgba(255,255,255,0.3); margin:0 10px;"></div>
-                    <button class="tool-btn" onclick="setTool('pen')"><i class="fas fa-pen"></i> ペン</button>
-                    <button class="tool-btn" onclick="setTool('eraser')"><i class="fas fa-eraser"></i> 消しゴム</button>
-                    <button class="tool-btn" onclick="clearCanvas()"><i class="fas fa-trash"></i> クリア</button>
+
+                    <div style="display:flex; gap:5px; flex-wrap:wrap; justify-content:center;">
+                        <button class="tool-btn active" onclick="setTool('pen', this)"><i class="fas fa-pen"></i> ペン</button>
+                        <button class="tool-btn" onclick="setTool('marker', this)"><i class="fas fa-highlighter"></i> マーカー</button>
+                        <button class="tool-btn" onclick="setTool('spray', this)"><i class="fas fa-spray-can"></i> スプレー</button>
+                        <button class="tool-btn" onclick="setTool('eraser', this)"><i class="fas fa-eraser"></i> 消しゴム</button>
+                        <button class="tool-btn" onclick="clearCanvas()" style="margin-left:5px; background:#ff4757; color:white;"><i class="fas fa-trash"></i> クリア</button>
                 </div>
             </div>
-
+        </div> 
             <div class="post-form-area">
                 <div style="font-weight:bold; margin-bottom:10px;">作品を投稿する</div>
                 
@@ -4848,33 +4892,23 @@
         document.documentElement.style.setProperty('--primary', color);
     }   
     // ==========================================
-    // ▼▼▼ 落書き広場（GRAFFITI）専用プログラム（完全版） ▼▼▼
+    // ▼▼▼ 落書き機能（高機能・完全版） ▼▼▼
     // ==========================================
-    
+
     // 変数の準備
     let canvas, ctx, drawing = false;
-    let currentColor = "white"; // 初期カラー
-
-    // ★会員限定ロック機能
-    function checkCanvasLock() {
-        const board = document.querySelector('.board-container');
-        const existingLock = document.getElementById('canvasLockOverlay');
-        if(existingLock) existingLock.remove();
-
-        if (!isMemberLoggedIn) {
-            const overlay = document.createElement('div');
-            overlay.id = 'canvasLockOverlay';
-            overlay.style.cssText = "position:absolute; inset:0; background:rgba(0,0,0,0.6); display:flex; flex-direction:column; align-items:center; justify-content:center; z-index:50; border-radius:10px; color:white; font-weight:bold; backdrop-filter:blur(3px);";
-            overlay.innerHTML = `
-                <i class="fas fa-lock" style="font-size:40px; margin-bottom:15px;"></i>
-                <div style="font-size:16px; margin-bottom:15px; text-shadow:0 2px 4px rgba(0,0,0,0.5);">会員限定機能です</div>
-                <button onclick="openLoginModal()" style="padding:10px 25px; border-radius:30px; border:none; background:#ff4757; color:white; font-weight:bold; cursor:pointer; box-shadow:0 4px 10px rgba(0,0,0,0.3); transition:transform 0.2s;">
-                    <i class="fas fa-sign-in-alt"></i> ログインして描く
-                </button>
-            `;
-            if(board) board.appendChild(overlay);
-        }
-    }
+    let currentColor = "white"; // 現在の色
+    let currentTool = "pen";    // 現在のツール（pen, marker, spray, eraser）
+    
+    // ★各ツールの太さを記憶しておく設定（初期値）
+    let toolWidths = {
+        pen: 3,       // ペンは細く
+        marker: 20,   // マーカーは太く
+        spray: 40,    // スプレーは広範囲に
+        eraser: 30    // 消しゴムは大きく
+    };
+    // 現在の太さは、初期ツール(pen)の太さをセット
+    let currentLineWidth = toolWidths['pen'];
 
     // 1. キャンバスの初期化
     function initCanvas() {
@@ -4882,14 +4916,14 @@
         if(!canvas) return;
         ctx = canvas.getContext('2d');
         
-        // ★修正：マウス位置ズレ防止のため getPos を使用
+        // 座標補正用の関数を使用
         const start = (e) => { e.preventDefault(); startDraw(getPos(e)); };
         const move = (e) => { e.preventDefault(); if(drawing) draw(getPos(e)); };
         const end = () => { endDraw(); };
 
-        // PC・スマホ両対応イベント
-        canvas.addEventListener('mousedown', (e) => startDraw(getPos(e))); // ★ここ修正済み
-        canvas.addEventListener('mousemove', (e) => { if(drawing) draw(getPos(e)); }); // ★ここ修正済み
+        // イベントリスナー設定
+        canvas.addEventListener('mousedown', (e) => startDraw(getPos(e)));
+        canvas.addEventListener('mousemove', (e) => { if(drawing) draw(getPos(e)); });
         canvas.addEventListener('mouseup', end);
         canvas.addEventListener('mouseleave', end);
 
@@ -4897,63 +4931,156 @@
         canvas.addEventListener('touchmove', move, {passive: false});
         canvas.addEventListener('touchend', end);
         
-        // ペンの初期設定
-        ctx.lineCap = "round";
-        ctx.lineJoin = "round";
-        ctx.lineWidth = 3;
-        ctx.strokeStyle = "white";
+        // 初期の描画設定を適用
+        updateToolSettings();
     }
 
-    // ★座標ズレを直す魔法の計算式
+    // 座標取得（ズレ防止）
     function getPos(e) {
         const rect = canvas.getBoundingClientRect();
-        // スマホ(touch)とマウス(mouse)の座標取得を統一
         const clientX = (e.touches && e.touches.length > 0) ? e.touches[0].clientX : e.clientX;
         const clientY = (e.touches && e.touches.length > 0) ? e.touches[0].clientY : e.clientY;
-        
-        // 画面上のサイズとキャンバスの解像度の比率に合わせて補正
         return {
             x: (clientX - rect.left) * (canvas.width / rect.width),
             y: (clientY - rect.top) * (canvas.height / rect.height)
         };
     }
 
+    // 描き始め
     function startDraw(pos) {
         drawing = true;
         ctx.beginPath();
         ctx.moveTo(pos.x, pos.y);
+        
+        // スプレーの場合はクリックした瞬間（点）も描画する
+        if (currentTool === 'spray') {
+            drawSpray(pos.x, pos.y);
+        }
     }
 
+    // 描画中
     function draw(pos) {
         if (!drawing) return;
-        ctx.lineTo(pos.x, pos.y);
-        ctx.stroke();
+
+        if (currentTool === 'spray') {
+            // ★スプレーの処理（点を散らす）
+            drawSpray(pos.x, pos.y);
+        } else {
+            // ★ペン・マーカー・消しゴムの処理（線を引く）
+            ctx.lineTo(pos.x, pos.y);
+            ctx.stroke();
+        }
     }
 
+    // スプレー描画のロジック
+    function drawSpray(x, y) {
+        const radius = currentLineWidth; // 太さがそのまま半径になる
+        const density = currentLineWidth * 1.5; // 太いほど粒子を多くする
+        
+        ctx.fillStyle = currentColor;
+        
+        for (let i = 0; i < density; i++) {
+            // 円の中にランダムに点を打つ計算
+            const angle = Math.random() * Math.PI * 2;
+            const dist = Math.random() * radius;
+            const offsetX = Math.cos(angle) * dist;
+            const offsetY = Math.sin(angle) * dist;
+            
+            ctx.fillRect(x + offsetX, y + offsetY, 1, 1);
+        }
+    }
+
+    // 描き終わり
     function endDraw() {
         drawing = false;
         ctx.beginPath();
     }
 
+    // ツールの切り替え
+    function setTool(tool, btn) {
+        currentTool = tool;
+        
+        // ボタンの見た目を更新
+        if (btn) {
+            document.querySelectorAll('.tool-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+        }
+
+        // ★切り替えたツールの「前回の太さ」を思い出してセット
+        const savedWidth = toolWidths[tool];
+        currentLineWidth = savedWidth;
+
+        // スライダーの位置と数字も更新
+        const slider = document.getElementById('penSizeSlider');
+        const display = document.getElementById('penSizeValue');
+        if(slider) slider.value = savedWidth;
+        if(display) display.innerText = savedWidth;
+        
+        updateToolSettings(); // 設定を反映
+    }
+
+    // 色変更
     function changeColor(color, btn) {
         currentColor = color;
-        ctx.strokeStyle = color;
-        ctx.lineWidth = 3;
-        ctx.globalCompositeOperation = 'source-over';
+        // マーカーモード中に色を変えたら設定を再適用（透明度など）
+        if(currentTool === 'eraser') {
+            // 消しゴム中に色を変えたらペンに戻す
+            setTool('pen', document.querySelector('.tool-btn:first-child'));
+        } else {
+            updateToolSettings();
+        }
+        
         document.querySelectorAll('.color-btn').forEach(b => b.classList.remove('active'));
         if(btn) btn.classList.add('active');
     }
+    
+    // 太さ変更（スライダー操作時）
+    function changeLineWidth(val) {
+        val = parseInt(val);
+        currentLineWidth = val;
+        
+        // ★今のツールの太さを記憶させる！
+        toolWidths[currentTool] = val;
 
-    function setTool(tool) {
-        if (tool === 'eraser') {
-            ctx.globalCompositeOperation = 'destination-out';
-            ctx.lineWidth = 20;
-        } else {
-            ctx.globalCompositeOperation = 'source-over';
-            changeColor(currentColor, null); 
-        }
+        // 画面の数字を更新
+        const display = document.getElementById('penSizeValue');
+        if(display) display.innerText = val;
+        
+        updateToolSettings();
     }
 
+    // ツールごとの描画設定を適用する関数
+    function updateToolSettings() {
+        if(!ctx) return;
+        
+        // いったん標準にリセット
+        ctx.globalAlpha = 1.0;
+        ctx.globalCompositeOperation = 'source-over';
+        ctx.lineCap = "round";
+        ctx.lineJoin = "round";
+
+        if (currentTool === 'eraser') {
+            // 消しゴム設定
+            ctx.globalCompositeOperation = 'destination-out';
+            ctx.lineWidth = currentLineWidth;
+        
+        } else if (currentTool === 'marker') {
+            // マーカー設定（半透明・四角いペン先）
+            ctx.globalAlpha = 0.3; // 30%の透明度
+            ctx.lineWidth = currentLineWidth;
+            ctx.strokeStyle = currentColor;
+            ctx.lineCap = "butt"; // 四角いペン先
+            
+        } else if (currentTool === 'spray') {
+            // スプレー設定（描画ロジック側で処理するのでここは標準でOK）
+            
+        } else {
+            // 通常ペン設定
+            ctx.lineWidth = currentLineWidth;
+            ctx.strokeStyle = currentColor;
+        }
+    }
+    
     function clearCanvas() {
         if(confirm("描いた絵を消しますか？")) {
             ctx.clearRect(0, 0, canvas.width, canvas.height);
