@@ -1720,6 +1720,133 @@
             border-radius: 8px;   /* 角を丸く */
             box-shadow: 0 4px 10px rgba(0,0,0,0.1); /* 軽く影をつける */
         }
+        /* ▼▼▼ メンバーシップ（生徒会）セクションのデザイン ▼▼▼ */
+        .membership-section {
+            background: #fff;
+            padding: 60px 20px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+            border-bottom: 10px solid #f0f0f0;
+        }
+        /* 背景の装飾（薄い方眼紙模様で学校感を出す） */
+        .membership-section::before {
+            content: ""; position: absolute; inset: 0;
+            background-image: linear-gradient(#e0f7ff 1px, transparent 1px), linear-gradient(90deg, #e0f7ff 1px, transparent 1px);
+            background-size: 20px 20px;
+            opacity: 0.5; z-index: 0; pointer-events: none;
+        }
+
+        .mem-intro-text {
+            font-size: 16px; font-weight: bold; color: #555; margin-bottom: 40px; line-height: 1.8; position: relative; z-index: 1;
+        }
+        
+        /* 特典グリッド（カードを並べる） */
+        /* 特典グリッド（横一列に修正版） */
+        .benefits-grid {
+            display: grid;
+            /* PCでは強制的に「4列」にする */
+            grid-template-columns: repeat(4, 1fr);
+            gap: 20px;
+            /* 4枚並んでも窮屈にならないように、最大幅を広げる */
+            max-width: 1250px; 
+            width: 95%;
+            margin: 0 auto 50px;
+            position: relative; z-index: 1;
+        }
+
+        /* ★重要：スマホやタブレットでは見づらくなるので折り返す設定を追加 */
+        @media (max-width: 1024px) {
+            .benefits-grid {
+                grid-template-columns: repeat(2, 1fr); /* タブレットは2列 */
+                max-width: 800px;
+            }
+        }
+        @media (max-width: 600px) {
+            .benefits-grid {
+                grid-template-columns: 1fr; /* スマホは1列 */
+            }
+        }
+
+        .benefit-card {
+            background: white;
+            border: 2px solid #eee;
+            border-radius: 15px;
+            padding: 25px;
+            text-align: left;
+            transition: transform 0.3s, box-shadow 0.3s;
+            position: relative;
+            overflow: hidden;
+        }
+        .benefit-card:hover {
+            transform: translateY(-5px);
+            border-color: var(--primary);
+            box-shadow: 0 10px 25px rgba(39, 198, 245, 0.2);
+        }
+        
+        /* カード番号（01, 02...） */
+        .b-num {
+            position: absolute; top: -10px; right: -10px;
+            font-size: 60px; font-weight: 900; color: #f0f8ff;
+            font-family: 'Oswald', sans-serif; z-index: 0;
+        }
+
+        .b-icon {
+            font-size: 32px; color: var(--primary); margin-bottom: 15px;
+            background: #e0f7ff; width: 60px; height: 60px;
+            border-radius: 50%; display: flex; align-items: center; justify-content: center;
+            position: relative; z-index: 1;
+        }
+        .b-title {
+            font-size: 18px; font-weight: 900; color: #333; margin-bottom: 10px;
+            font-family: 'M PLUS Rounded 1c', sans-serif; position: relative; z-index: 1;
+        }
+        .b-desc {
+            font-size: 13px; color: #666; line-height: 1.6; font-weight: 500; position: relative; z-index: 1;
+        }
+
+        /* 登録ボタンエリア */
+        .join-area {
+            background: linear-gradient(135deg, #fffbf0, #fff);
+            border: 2px solid #f1c40f;
+            border-radius: 20px;
+            padding: 40px;
+            max-width: 800px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 1;
+            box-shadow: 0 10px 30px rgba(241, 196, 15, 0.15);
+        }
+        .join-area::after {
+            content: "FREE";
+            position: absolute; top: -15px; right: -15px;
+            background: #ff4757; color: white; font-weight: 900;
+            padding: 10px 20px; border-radius: 30px; transform: rotate(10deg);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2); font-family: 'Oswald', sans-serif;
+        }
+
+        .join-btn-large {
+            background: linear-gradient(135deg, var(--primary), #2ecc71);
+            color: white; font-size: 24px; font-weight: 900;
+            padding: 15px 60px; border-radius: 50px; border: none;
+            cursor: pointer; box-shadow: 0 10px 20px rgba(39, 198, 245, 0.4);
+            transition: transform 0.2s; display: inline-flex; align-items: center; gap: 15px;
+            animation: pulse-join 2s infinite;
+        }
+        .join-btn-large:hover { transform: scale(1.05); }
+        @keyframes pulse-join { 0% { box-shadow: 0 0 0 0 rgba(39, 198, 245, 0.7); } 70% { box-shadow: 0 0 0 15px rgba(39, 198, 245, 0); } 100% { box-shadow: 0 0 0 0 rgba(39, 198, 245, 0); } }
+
+        /* スマホ調整 */
+        @media (max-width: 768px) {
+            .benefit-card { text-align: center; }
+            .b-icon { margin: 0 auto 15px; }
+            .join-btn-large { font-size: 18px; padding: 15px 30px; width: 100%; justify-content: center; box-sizing: border-box; }
+        }
+        /* メンバーシップセクションのタイトルを手前に出す設定 */
+        .membership-section .section-title {
+            position: relative;
+            z-index: 2;
+        }
     </style>
 </head>
 <body>
@@ -2004,6 +2131,66 @@
                         </div>
                     </div>
                 </div>
+            </div>
+        </div>
+<div class="membership-section">
+            <div class="section-title" style="margin-top: 0;">
+                <div class="en-title" style="color:#f1c40f; text-shadow:1px 1px 0 #ddd;">MEMBERSHIP</div>
+                <span class="ja-title">あおはる学園 生徒会（FC）</span>
+            </div>
+
+            <p class="mem-intro-text">
+                あおはる学園に入学して、メンバーともっと青春しよう！<br>
+                登録費・年会費は一切無料。<br class="sp-br">今すぐ「転校生」になれる豪華特典をご用意しました。
+            </p>
+
+            <div class="benefits-grid">
+                <div class="benefit-card">
+                    <div class="b-num">01</div>
+                    <div class="b-icon"><i class="fas fa-id-card"></i></div>
+                    <div class="b-title">デジタル学生証発行</div>
+                    <div class="b-desc">
+                        あなたのお名前と会員番号が入った、世界に一つだけの「あおはる学園 学生証」を即時発行！推しメンデザインに着せ替えも可能です。
+                    </div>
+                </div>
+
+                <div class="benefit-card">
+                    <div class="b-num">02</div>
+                    <div class="b-icon"><i class="fas fa-lock"></i></div>
+                    <div class="b-title">限定動画が見放題</div>
+                    <div class="b-desc">
+                        YouTubeには公開されない「未公開シーン」「NG集」「限定歌枠」など、生徒会メンバーだけが見られる秘密のコンテンツを配信中！
+                    </div>
+                </div>
+
+                <div class="benefit-card">
+                    <div class="b-num">03</div>
+                    <div class="b-icon"><i class="fas fa-palette"></i></div>
+                    <div class="b-title">落書き広場に参加</div>
+                    <div class="b-desc">
+                        公式サイト内の「黒板アート」に参加可能に！イラストを描いて投稿したり、みんなの作品に「いいね」して交流を深めよう。
+                    </div>
+                </div>
+
+                <div class="benefit-card">
+                    <div class="b-num">04</div>
+                    <div class="b-icon"><i class="fas fa-file-audio"></i></div>
+                    <div class="b-title">放課後ボイス日記</div>
+                    <div class="b-desc">
+                        ラジオ配信の収録後トークや、メンバーの日常がつぶやかれる「ボイス日記」を視聴可能。ここだけの裏話が聞けるかも…？
+                    </div>
+                </div>
+            </div>
+
+            <div class="join-area">
+                <h3 style="margin-top:0; color:#333; font-size:20px;">🌸 新入生（転校生）募集中！</h3>
+                <p style="font-size:14px; color:#666; margin-bottom:20px;">
+                    メールアドレスだけで簡単30秒登録。<br>
+                    あなたも今日から「あおはる学園」の一員になりませんか？
+                </p>
+                <button class="join-btn-large" onclick="openRegisterModal()">
+                    <i class="fas fa-sign-in-alt"></i> 今すぐ無料で入学する
+                </button>
             </div>
         </div>
         <div class="container">
