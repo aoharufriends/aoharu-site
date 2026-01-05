@@ -1108,8 +1108,20 @@
         .tool-btn:hover { background: var(--primary); color: white; }
         .post-form-area { background: white; padding: 20px; border-radius: 15px; border: 2px solid #eee; margin-top: 20px; }
         .graffiti-card { flex: 0 0 220px; background: white; border-radius: 10px; overflow: hidden; box-shadow: 0 5px 10px rgba(0,0,0,0.1); border: 1px solid #eee; display: flex; flex-direction: column; }
-        .g-img-box { width: 100%; aspect-ratio: 4/3; background: #eee; border-bottom: 1px dashed #ccc; }
-        .g-img { width: 100%; height: 100%; object-fit: contain; background: #2b4a3c; }
+        /* 画像の箱の比率をキャンバスと同じ16:9にする */
+        .g-img-box { 
+            width: 100%; 
+            aspect-ratio: 16/9; 
+            background: #2b4a3c; /* 昔の投稿用にデフォルトは黒板色にしておく */
+            border-bottom: 1px solid #eee; 
+        }
+        /* 画像自体は隙間なく埋める */
+        .g-img { 
+            width: 100%; 
+            height: 100%; 
+            object-fit: cover; 
+            /* 背景色は画像に含まれるようになるので、ここは指定しなくてOK（透過画像の保険で親のg-img-boxの色が出る） */
+        }
         .g-info { padding: 10px; }
         .g-title { font-weight: bold; font-size: 14px; margin-bottom: 5px; color: #333; }
         .g-author { font-size: 12px; color: #888; text-align: right; }
@@ -4949,6 +4961,7 @@
     }
 
     // ★投稿機能（修正済み・完全版）
+    // ★投稿機能（背景色合成・完全版）
     async function postGraffiti() {
         const title = document.getElementById('graffitiTitle').value || "無題";
         let author = "匿名";
@@ -4969,18 +4982,41 @@
         btn.disabled = true;
 
         try {
-            const imgData = canvas.toDataURL('image/png');
-            // ID生成（現在時刻を使うので被りません）
+            // ▼▼▼ ここが変更点！背景色を合成する処理 ▼▼▼
+            const board = document.getElementById('drawingBoard');
+            let bgColor = '#2b4a3c'; // デフォルト：黒板（深緑）
+
+            // 現在のモード判定
+            if (board.classList.contains('bg-white')) bgColor = '#ffffff'; // ホワイトボード
+            if (board.classList.contains('bg-paper')) bgColor = '#fdf5e6'; // スケッチブック
+
+            // 一時的なキャンバスを作って、背景色＋絵を合成する
+            const tempCanvas = document.createElement('canvas');
+            tempCanvas.width = canvas.width;
+            tempCanvas.height = canvas.height;
+            const tCtx = tempCanvas.getContext('2d');
+
+            // 1. 背景色で塗りつぶす
+            tCtx.fillStyle = bgColor;
+            tCtx.fillRect(0, 0, tempCanvas.width, tempCanvas.height);
+
+            // 2. その上に描いた絵を重ねる
+            tCtx.drawImage(canvas, 0, 0);
+
+            // 3. 合成した画像をデータ化
+            const imgData = tempCanvas.toDataURL('image/png');
+            // ▲▲▲ 変更点ここまで ▲▲▲
+
+            // ID生成
             const uniqueId = 'G-' + Date.now(); 
 
             // GASへ送信
             const res = await fetch(GAS_API_URL, {
                 method: 'POST',
-                // ★重要：通信エラーを防ぐおまじない
                 headers: { "Content-Type": "text/plain" },
                 body: JSON.stringify({
-                    type: 'post',       // ★GAS側の受け取り設定に合わせました
-                    id: uniqueId,       // ★IDを送るようにしました
+                    type: 'post',
+                    id: uniqueId,
                     title: title,
                     author: author,
                     image: imgData
