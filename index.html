@@ -128,28 +128,25 @@
             /* 透過イラストの場合は影を落とす */
             filter: drop-shadow(0 15px 30px rgba(0,0,0,0.2));
             transition: transform 0.5s ease;
-        }
+        } /* ← ★この閉じカッコが復活しました！ */
 
-        /* ▼▼▼ 追加：ABOUT用 筆記体装飾（黒・配置修正版） ▼▼▼ */
+        /* ▼▼▼ 追加：ABOUT用 筆記体装飾（位置修正版） ▼▼▼ */
         .about-script-text {
-            /* フォント設定 */
             font-family: 'Rock Salt', cursive; 
-            font-size: 40px; /* サイズ調整 */
-            
-            /* 色設定（黒で少し透けさせる） */
+            font-size: 40px; 
             color: rgba(0, 0, 0, 0.15); 
-            background: none; /* グラデーション解除 */
-            -webkit-text-fill-color: initial; /* グラデーション解除 */
+            background: none; 
+            -webkit-text-fill-color: initial; 
             
-            /* 配置設定（右上に寄せる） */
             position: absolute;
-            top: -50px;      /* 上に少しはみ出す */
-            right: 0;        /* 右端に寄せる */
-            left: auto;      /* 左指定を解除 */
-            z-index: 0;      /* 文字の後ろに配置 */
+            /* ★修正1：もっと上に移動して重なりを回避 */
+            top: -80px;      
+            right: 0;
+            left: auto;
+            z-index: 0;
             
-            white-space: nowrap;
-            transform: rotate(-5deg); /* 少し傾ける */
+            white-space: nowrap; 
+            transform: rotate(-5deg);
             pointer-events: none;
             line-height: 1;
         }
@@ -157,13 +154,21 @@
         /* スマホでの調整 */
         @media (max-width: 900px) {
             .about-script-text {
-                font-size: 24px;
-                top: -30px;
+                font-size: 24px;       
+                white-space: normal;   
+                /* ★修正2：スマホでもしっかり上に逃がす */
+                top: -60px;
                 right: auto;
                 left: 50%;
                 transform: translateX(-50%) rotate(-3deg);
-                width: 100%;
+                width: 100%;            
                 text-align: center;
+                line-height: 1.4;      
+            }
+            
+            /* ★修正3：スマホの時、下の文章を少し下げてスペースを作る */
+            .about-catch {
+                margin-top: 40px !important;
             }
         }
 
