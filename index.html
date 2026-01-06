@@ -130,17 +130,22 @@
             transition: transform 0.5s ease;
         } /* ← ★この閉じカッコが復活しました！ */
 
-        /* ▼▼▼ 追加：ABOUT用 筆記体装飾（位置修正版） ▼▼▼ */
+        /* ▼▼▼ 追加：ABOUT用 筆記体装飾（真っ黒・位置修正完全版） ▼▼▼ */
         .about-script-text {
+            /* フォント設定 */
             font-family: 'Rock Salt', cursive; 
-            font-size: 40px; 
-            color: rgba(0, 0, 0, 0.15); 
+            font-size: 30px; 
+            
+            /* ★修正1: 色を「真っ黒」に変更 */
+            color: #000000; 
             background: none; 
             -webkit-text-fill-color: initial; 
+            opacity: 1; /* 透明度もなくしてクッキリさせる */
             
+            /* 配置設定（右上に寄せる） */
             position: absolute;
-            /* ★修正1：もっと上に移動して重なりを回避 */
-            top: -80px;      
+            /* ★修正2: PCでもっと上に移動 */
+            top: -70px;      
             right: 0;
             left: auto;
             z-index: 0;
@@ -156,8 +161,8 @@
             .about-script-text {
                 font-size: 24px;       
                 white-space: normal;   
-                /* ★修正2：スマホでもしっかり上に逃がす */
-                top: -60px;
+                /* ★修正3: スマホでもっと上に逃がす */
+                top: -40px;
                 right: auto;
                 left: 50%;
                 transform: translateX(-50%) rotate(-3deg);
@@ -166,21 +171,9 @@
                 line-height: 1.4;      
             }
             
-            /* ★修正3：スマホの時、下の文章を少し下げてスペースを作る */
-            .about-catch {
+            /* ★修正4: スマホの時、下の文章をガッツリ下げてスペースを作る */
+            .about-text-box .about-catch {
                 margin-top: 60px !important;
-            }
-        }
-
-        /* スマホでの調整 */
-        @media (max-width: 900px) {
-            .about-script-text {
-                font-size: 32px;
-                top: -40px;
-                left: 50%;
-                transform: translateX(-50%) rotate(-5deg);
-                width: 100%;
-                text-align: center;
             }
         }
         
