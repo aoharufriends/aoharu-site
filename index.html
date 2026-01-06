@@ -3,17 +3,47 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>あおはる⭐︎フレンズ 公式サイト | 2026年デビューの新人VTuberグループ</title>
-    <meta name="description" content="2026年デビュー予定！マインクラフト実況を中心に活動する4人組VTuberグループ「あおはる⭐︎フレンズ」の公式サイト。">
-    <meta name="keywords" content="あおはるフレンズ,あおはる,VTuber,新人VTuber,マインクラフト,マイクラ実況,推し活">
-    <meta name="google-site-verification" content="SaUIbh01TFhfAeSRGwS5UJhxy5SsbH2Jn6Gln9bcgrA" />
-    <link rel="icon" href="icon.png">
-    <link rel="apple-touch-icon" href="icon.png">
-    <meta property="og:title" content="あおはる⭐︎フレンズ 公式サイト">
+    <title>あおはる⭐︎フレンズ 公式サイト | 青春系マイクラVTuberグループ</title>
+    
+    <meta name="description" content="2026年デビュー！「教室はサーバー、ツルハシがペン」をテーマに活動する4人組VTuberグループ『あおはる⭐︎フレンズ』公式サイト。マインクラフト実況、歌ってみた、配信スケジュール、限定コンテンツなど最新情報を発信中！">
+    <meta name="keywords" content="あおはるフレンズ,あおはる,VTuber,新人VTuber,マインクラフト,マイクラ実況,推し活,たく兄ちゃん,兎神結愛,鬼神イヨ,緋羽アオ">
+    <meta name="author" content="あおはる⭐︎フレンズ運営">
+    <meta name="robots" content="index, follow">
+    
+    <meta property="og:site_name" content="あおはる⭐︎フレンズ 公式サイト">
+    <meta property="og:title" content="あおはる⭐︎フレンズ | 青春系マイクラVTuber">
+    <meta property="og:description" content="2026年デビュー！マイクラ実況を中心に活動する4人組VTuberグループ。ここから始まる最高の青春ストーリーを一緒に楽しもう！">
     <meta property="og:type" content="website">
     <meta property="og:url" content="https://aoharu-site.vercel.app/">
     <meta property="og:image" content="https://aoharu-site.vercel.app/ogp.png">
+    <meta property="og:locale" content="ja_JP">
+    
     <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:site" content="@AO_FURE">
+    <meta name="twitter:creator" content="@AO_FURE">
+    
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "PerformingGroup",
+      "name": "あおはる⭐︎フレンズ",
+      "alternateName": "Aoharu Friends",
+      "url": "https://aoharu-site.vercel.app/",
+      "logo": "https://aoharu-site.vercel.app/logo.png",
+      "image": "https://aoharu-site.vercel.app/main_visual.jpg",
+      "description": "2026年デビューの4人組VTuberグループ。マインクラフト実況を中心に活動中。",
+      "sameAs": [
+        "https://twitter.com/AO_FURE",
+        "https://www.youtube.com/@あおはるフレンズ"
+      ],
+      "member": [
+        { "@type": "Person", "name": "たく兄ちゃん" },
+        { "@type": "Person", "name": "兎神結愛" },
+        { "@type": "Person", "name": "鬼神イヨ" },
+        { "@type": "Person", "name": "緋羽アオ" }
+      ]
+    }
+    </script>
     
     <link href="https://fonts.googleapis.com/css2?family=M+PLUS+Rounded+1c:wght@400;700;900&family=Oswald:wght@500;700&family=Poppins:wght@600;700;900&family=Rock+Salt&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -23,6 +53,16 @@
     <script src="https://bs-community.github.io/skinview3d/js/skinview3d.bundle.js"></script>
 
     <style>
+        /* ▼▼▼ スクロール演出用（フワッと浮き上がる） ▼▼▼ */
+        .scroll-fade-up {
+            opacity: 0;
+            transform: translateY(40px);
+            transition: opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1), transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        .scroll-fade-up.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
         :root { --primary: #27C6F5; --text-main: #444444; --text-sub: #888888; --bg-color: #ffffff; --light-bg: #f4f8fa; }
         body { font-family: 'M PLUS Rounded 1c', sans-serif; margin: 0; padding: 0; background-color: var(--bg-color); color: var(--text-main); padding-top: 0; overflow-x: hidden; display: flex; flex-direction: column; min-height: 100vh; transition: filter 0.5s; cursor: url('cursor_main.png') 4 4, auto; }
         a, button, .clickable, .news-card, .video-card, .schedule-card, .member-card-vertical, .menu-btn, .login-btn-header { cursor: url('cursor_hand.png') 10 0, pointer; }
@@ -3474,7 +3514,6 @@
                  if (matchedMember) { isOfficialAdmin = true; }
             }
             renderStaticParts(); 
-            setTimeout(checkLiveStatus, 500); 
             initCardMaker(); 
             renderRadioDiary(); 
             fetchLikes(); 
@@ -3484,6 +3523,8 @@
             renderGraffitiList(); 
             initBackgroundShapes();
             renderThemeButtons();
+            setTimeout(checkLiveStatus, 500); 
+            setTimeout(initScrollAnim, 500);
             
             // 通常の読み込み完了処理
             const loader = document.getElementById('loadingScreen');
@@ -5550,6 +5591,31 @@
     // データの読み込み完了後にスライドショーを開始するように追加
     // fetchSheetData の最後の方にある if(data.graffiti) ブロックの中に
     // startGraffitiSlideshow(); を追加してください（または renderGraffitiList の中で呼ぶ）
+    // ==========================================
+    // ▼▼▼ スクロール演出機能（フワッと表示） ▼▼▼
+    // ==========================================
+    
+    const scrollObserver = new IntersectionObserver((entries, observer) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.classList.add('visible');
+                observer.unobserve(entry.target); 
+            }
+        });
+    }, { root: null, rootMargin: '0px 0px -10% 0px', threshold: 0.1 });
+
+    function initScrollAnim() {
+        const targets = document.querySelectorAll(
+            '.section-title, .news-card, .schedule-card, .video-card, ' +
+            '.member-card-vertical, .recruit-section, .biz-card, ' +
+            '.benefit-card, .diary-card, .radio-paper-form, .about-content'
+        );
+        targets.forEach(el => {
+            if(el.classList.contains('scroll-fade-up')) return;
+            el.classList.add('scroll-fade-up');
+            scrollObserver.observe(el);
+        });
+    }
 </script>
 </body>
 </html>
