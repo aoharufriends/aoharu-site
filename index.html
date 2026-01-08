@@ -3936,7 +3936,27 @@
 
         container.innerHTML = html || "<p style='text-align:center; padding:20px;'>スケジュールデータがありません</p>";
     }
-    function renderVideos() { const videoHtml = videoData.map(v => `<div class="video-card" onclick="window.open('https://www.youtube.com/watch?v=${v.id}', '_blank')"><div class="video-thumb-box"><img src="https://img.youtube.com/vi/${v.id}/mqdefault.jpg" class="video-thumb"><div class="play-icon">▶</div></div><div class="video-info"><div class="video-title">${v.title}</div><div class="video-date">${v.date}</div></div></div>`).join(''); const list = document.getElementById('topVideoList'); if(list) list.innerHTML = videoHtml || "動画はまだありません"; }
+    function renderVideos() { 
+        const videoHtml = videoData.map(v => { 
+            // ▼▼▼ 修正：URLから動画IDを自動で取り出す処理を追加 ▼▼▼
+            let vId = v.id; // 元のデータ（ID または URL）
+
+            // URLが入力されていた場合、ID部分だけを抜き出す
+            if (vId.includes('v=')) {
+                vId = vId.split('v=')[1].split('&')[0];
+            } else if (vId.includes('youtu.be/')) {
+                vId = vId.split('youtu.be/')[1].split('?')[0];
+            }
+            // ▲▲▲ 修正ここまで ▲▲▲
+
+            const imgSrc = `https://img.youtube.com/vi/${vId}/mqdefault.jpg`; 
+            
+            return `<div class="video-card" onclick="window.open('https://www.youtube.com/watch?v=${vId}', '_blank')"><div class="video-thumb-box"><img src="${imgSrc}" class="video-thumb"><div class="play-icon">▶</div></div><div class="video-info"><div class="video-title">${v.title}</div><div class="video-date">${v.date}</div></div></div>`; 
+        }).join(''); 
+        
+        const list = document.getElementById('topVideoList'); 
+        if(list) list.innerHTML = videoHtml || "動画はまだありません"; 
+    }
     function renderMemberVideos() { const container = document.getElementById('memberVideoList'); if(!memberVideoData.length) { container.innerHTML = "限定動画はまだありません"; return; } const html = memberVideoData.map(v => { const clickAction = isMemberLoggedIn ? `window.open('https://www.youtube.com/watch?v=${v.id}', '_blank')` : `openLoginModal()`; const lockedClass = isMemberLoggedIn ? 'unlocked' : 'mv-blur'; const lockOverlay = isMemberLoggedIn ? '' : `<div class="mv-lock-overlay"><div class="mv-lock-icon"><i class="fas fa-lock"></i></div><div class="mv-lock-text">MEMBER ONLY</div></div>`; return `<div class="member-video-card ${lockedClass}" onclick="${clickAction}">${lockOverlay}<div class="news-thumb-area"><img src="https://img.youtube.com/vi/${v.id}/mqdefault.jpg" class="news-img"></div><div class="news-content"><div class="news-date">${v.date}</div><div class="news-title">${v.title}</div><div class="news-check-btn">${isMemberLoggedIn ? 'PLAY' : 'LOCKED'}</div></div></div>`; }).join(''); container.innerHTML = html; }
     
 // ▼▼▼ RADIO日記の描画（名前・アイコン修正版） ▼▼▼
