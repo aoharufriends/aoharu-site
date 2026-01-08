@@ -2315,6 +2315,20 @@
             transform: scale(1.1);
             box-shadow: 0 4px 10px rgba(39, 198, 245, 0.4);
         }
+        /* ▼▼▼ VIDEOページ用スタイル ▼▼▼ */
+        .video-page-grid {
+            display: grid;
+            /* PCでは3列、スマホでは1〜2列に自動調整 */
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+        }
+        
+        /* スマホ調整 */
+        @media (max-width: 600px) {
+            .video-page-grid {
+                grid-template-columns: 1fr; /* スマホは大きく1列で見やすく */
+            }
+        }
     </style>
 </head>
 <body>
@@ -2333,6 +2347,7 @@
                 <a class="pc-nav-link" onclick="showPage('news')">NEWS</a>
                 <a class="pc-nav-link" onclick="showPage('member')">MEMBER</a>
                 <a class="pc-nav-link" onclick="showPage('schedule')">SCHEDULE</a>
+                <a class="pc-nav-link" onclick="showPage('video')">VIDEO</a>
                 <a class="pc-nav-link" onclick="showPage('goods')">GOODS</a>
                 <a class="pc-nav-link" onclick="showPage('radio')">RADIO</a>
                 <a class="pc-nav-link" onclick="showPage('rakugaki')">GRAFFITI</a>
@@ -2358,6 +2373,7 @@
         <a href="javascript:void(0)" class="menu-link" onclick="showPage('news')">NEWS</a>
         <a href="javascript:void(0)" class="menu-link" onclick="showPage('member')">MEMBER</a>
         <a href="javascript:void(0)" class="menu-link" onclick="showPage('schedule')">SCHEDULE</a>
+        <a href="javascript:void(0)" class="menu-link" onclick="showPage('video')">VIDEO</a>
         <a href="javascript:void(0)" class="menu-link" onclick="showPage('goods')">GOODS</a>
         <a href="javascript:void(0)" class="menu-link" onclick="showPage('radio')">RADIO</a>
         <a href="javascript:void(0)" class="menu-link" onclick="showPage('guideline')">GUIDELINE</a> 
@@ -2516,7 +2532,11 @@
 
     <div id="top" class="page active">
         <div class="hero-section">
-            <img src="main_visual.jpg" alt="MAIN VISUAL" class="hero-main-img">
+            <img 
+                src="logo_high.png" 
+                alt="MAIN VISUAL" 
+                class="hero-main-img"
+            >
         </div>
         <div class="container">
             <div id="nowOnAirSection">
@@ -2687,7 +2707,7 @@
                 <div class="scroll-grid" id="topVideoList">読み込み中...</div>
                 <button class="scroll-btn right" onclick="scrollContent('topVideoList', 'right')">▶</button>
             </div>
-            <div style="text-align:center;"><button class="more-btn" onclick="window.open('https://youtube.com', '_blank')">CHANNEL</button></div>
+            <div style="text-align:center;"><button class="more-btn" onclick="showPage('video')">MORE VIEW</button></div>
 
             <div class="sns-container" style="margin-top: 50px;">
                 <div class="section-title"><div class="en-title" style="letter-spacing: 5px;">OFFICIAL SNS</div><span class="ja-title">あおはる⭐︎フレンズ公式SNS</span></div>
@@ -2874,6 +2894,39 @@
             </div>
         </div>
     </div>
+
+<div id="video" class="page">
+            <div class="page-header">
+                <div class="page-title-en" style="color:#ff0000;">VIDEO</div>
+                <div class="page-title-jp">動画一覧</div>
+            </div>
+
+            <div class="container">
+                <div style="background:white; padding:20px; border-radius:15px; border:1px solid #eee; margin-bottom:30px; box-shadow:0 5px 15px rgba(0,0,0,0.03);">
+                    
+                    <div class="goods-search-box" style="margin-bottom:20px;">
+                        <i class="fas fa-search" style="color:#aaa;"></i>
+                        <input type="text" id="videoPageSearchInput" class="goods-search-input" placeholder="動画タイトルで検索..." oninput="updateVideoPage()">
+                    </div>
+
+                    <div style="text-align:center; font-size:12px; font-weight:bold; color:#888; margin-bottom:10px;">MEMBER FILTER</div>
+                    <div id="videoPageFilterIcons" class="video-filter-container">
+                        </div>
+                </div>
+
+                <div style="text-align:right; font-size:12px; color:#888; margin-bottom:10px;">
+                    <span id="videoPageCount">0</span> 件の動画
+                </div>
+
+                <div id="fullVideoGrid" class="video-page-grid">
+                    読み込み中...
+                </div>
+                
+                <div style="text-align:center; margin-top:40px;">
+                    <button onclick="showPage('top')" class="more-btn">TOPへ戻る</button>
+                </div>
+            </div>
+        </div>
 
     <div id="radio" class="page">
         <div class="page-header">
@@ -3358,6 +3411,7 @@
                     <li><a href="javascript:void(0)" onclick="showPage('news')">NEWS<span class="footer-menu-ja">お知らせ</span></a></li>
                     <li><a href="javascript:void(0)" onclick="showPage('member')">MEMBER<span class="footer-menu-ja">メンバー</span></a></li>
                     <li><a href="javascript:void(0)" onclick="showPage('schedule')">SCHEDULE<span class="footer-menu-ja">スケジュール</span></a></li>
+                    <li><a href="javascript:void(0)" onclick="showPage('video')">VIDEO<span class="footer-menu-ja">動画一覧</span></a></li>
                     <li><a href="javascript:void(0)" onclick="showPage('goods')">GOODS<span class="footer-menu-ja">グッズ</span></a></li>
                     <li><a href="javascript:void(0)" onclick="showPage('radio')">RADIO<span class="footer-menu-ja">ラジオ</span></a></li>
                     <li><a href="javascript:void(0)" onclick="showPage('guideline')">GUIDELINE<span class="footer-menu-ja">ガイドライン</span></a></li> 
@@ -3504,7 +3558,7 @@
     // ▼▼▼ JavaScript（全機能修正版） ▼▼▼
     // ==========================================
 
-    const GAS_API_URL = "https://script.google.com/macros/s/AKfycbxlZB1lb9t7OJztkTdSaKq1mL0bOZ1ZKm8GzFFgldsJ9OHxMP_uKSY74ASnUtuyHzUEfA/exec";
+    const GAS_API_URL = "https://script.google.com/macros/s/AKfycbxylJLT0sLlW3bXM73DTl3MsB7FBhKSveOdS5svbeizfyZXP7PnLp60IWZTxP0-41YCrw/exec";
     let YOUTUBE_API_KEY = ""; 
     let GROUP_CONFIG = {};
     let memberData = [];
@@ -3566,6 +3620,7 @@
             initBackgroundShapes();
             renderThemeButtons();
             initVideoFilters();
+            initVideoPage();
             setTimeout(checkLiveStatus, 500); 
             setTimeout(initScrollAnim, 500);
             
@@ -3632,7 +3687,7 @@
         window.scrollTo(0,0);
 
         const pageTitles = {
-            'top': '公式サイトTOP', 'news': '最新ニュース', 'member': 'メンバー紹介',
+            'top': '公式サイトTOP', 'news': '最新ニュース', 'member': 'メンバー紹介', 'video': '動画一覧',
             'schedule': '配信スケジュール', 'goods': '公式グッズ', 'radio': 'ラジオ＆お便り',
             'guideline': 'ガイドライン', 'rakugaki': '落書き広場', 'studio': 'スタジオ機能',
             'business': '法人・企業様向け窓口', 'recruitment': '新メンバー募集', 'mypage': 'マイページ'
@@ -4084,6 +4139,122 @@
 
         // 動画を再描画
         renderVideos(name);
+    }
+
+    // ==========================================
+    // ▼▼▼ VIDEOページ専用機能 ▼▼▼
+    // ==========================================
+    
+    let currentVideoPageFilter = 'ALL'; // 現在選択中のメンバー
+
+    // 1. VIDEOページの初期化（アイコン生成など）
+    function initVideoPage() {
+        const container = document.getElementById('videoPageFilterIcons');
+        if (!container) return;
+
+        // フィルタボタンの生成（TOPページと同じロジック）
+        let filters = [{ name: 'ALL', label: 'ALL', img: 'icon.png' }];
+        
+        if (memberData && memberData.length > 0) {
+            memberData.forEach(m => {
+                let iconUrl = m.img;
+                if (m.enName) {
+                    let name = m.enName.toLowerCase();
+                    if (name.includes(' ')) name = name.split(' ').pop();
+                    if (name.includes('-')) name = name.split('-')[0];
+                    iconUrl = `icon_sch_${name}.png`;
+                }
+                filters.push({ name: m.name, label: m.name, img: iconUrl });
+            });
+        }
+
+        container.innerHTML = filters.map((f, i) => {
+            const activeClass = i === 0 ? 'active' : '';
+            return `<div class="v-filter-btn ${activeClass}" style="background-image:url('${f.img}');" onclick="switchVideoPageFilter('${f.name}', this)" title="${f.label}"></div>`;
+        }).join('');
+
+        // 初回描画
+        updateVideoPage();
+    }
+
+    // 2. フィルター切り替え処理
+    function switchVideoPageFilter(name, btn) {
+        currentVideoPageFilter = name;
+        
+        // ボタンの見た目更新
+        const container = document.getElementById('videoPageFilterIcons');
+        container.querySelectorAll('.v-filter-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        
+        updateVideoPage();
+    }
+
+    // 3. 動画リストの描画（検索＆フィルタ反映）
+    function updateVideoPage() {
+        const list = document.getElementById('fullVideoGrid');
+        const countEl = document.getElementById('videoPageCount');
+        const searchInput = document.getElementById('videoPageSearchInput');
+        if(!list) return;
+
+        const keyword = searchInput ? searchInput.value.toLowerCase() : "";
+
+        // フィルタリング実行
+        const filtered = videoData.filter(v => {
+            let matchMember = true;
+            let matchWord = true;
+
+            // メンバー絞り込み
+            if (currentVideoPageFilter !== 'ALL') {
+                const mem = (v.member || "").toLowerCase();
+                const title = (v.title || "").toLowerCase();
+                const target = currentVideoPageFilter.toLowerCase();
+                if (!mem.includes(target) && !title.includes(target)) {
+                    matchMember = false;
+                }
+            }
+
+            // キーワード検索
+            if (keyword) {
+                const fullText = (v.title + (v.member||"") + (v.date||"")).toLowerCase();
+                if (!fullText.includes(keyword)) {
+                    matchWord = false;
+                }
+            }
+
+            return matchMember && matchWord;
+        });
+
+        // 件数更新
+        if(countEl) countEl.innerText = filtered.length;
+
+        // HTML生成
+        if (filtered.length === 0) {
+            list.innerHTML = `<div style="grid-column:1/-1; text-align:center; padding:50px; color:#888;">動画が見つかりませんでした</div>`;
+            return;
+        }
+
+        list.innerHTML = filtered.map(v => {
+            // URLからID抽出（共通ロジック）
+            let vId = v.id;
+            if (vId.includes('v=')) vId = vId.split('v=')[1].split('&')[0];
+            else if (vId.includes('youtu.be/')) vId = vId.split('youtu.be/')[1].split('?')[0];
+
+            const imgSrc = `https://img.youtube.com/vi/${vId}/mqdefault.jpg`;
+
+            // カードのHTML（Topページより少し情報をリッチにしてもOK）
+            return `
+                <div class="video-card" onclick="window.open('https://www.youtube.com/watch?v=${vId}', '_blank')" style="flex:none; width:auto;">
+                    <div class="video-thumb-box">
+                        <img src="${imgSrc}" class="video-thumb">
+                        <div class="play-icon">▶</div>
+                    </div>
+                    <div class="video-info" style="padding:15px;">
+                        <div class="video-date" style="margin-bottom:5px;">${v.date}</div>
+                        <div class="video-title" style="font-size:14px; -webkit-line-clamp: 2;">${v.title}</div>
+                    </div>
+                </div>
+            `;
+        }).join('');
     }
     
 // ▼▼▼ RADIO日記の描画（名前・アイコン修正版） ▼▼▼
