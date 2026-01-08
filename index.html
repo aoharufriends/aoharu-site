@@ -85,14 +85,148 @@
         
         .bg-shape-container { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1; overflow: hidden; pointer-events: none; }
         .bg-shape { position: absolute; opacity: 0.1; animation: floatShape linear infinite; }
-        @keyframes floatShape { 0% { transform: translateY(100vh) rotate(0deg); } 100% { transform: translateY(-20vh) rotate(360deg); } }
+        /* =========================================
+           ▼▼▼ 超豪華ロード画面：あおはるスペシャル ▼▼▼
+           ========================================= */
+        
+        #loadingScreen {
+            position: fixed !important;
+            top: -10vh !important;
+            left: 0 !important;
+            width: 100vw !important;
+            height: 120vh !important;
+            z-index: 2147483647 !important;
+            display: flex !important;
+            align-items: center;
+            justify-content: center;
+            pointer-events: all;
+            /* 背景透過（カーテンが見えるように） */
+            background: transparent !important; 
+        }
 
-        #loadingScreen { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #e0f7ff; z-index: 9999; display: flex; flex-direction: column; align-items: center; justify-content: center; transition: opacity 0.5s, visibility 0.5s; }
-        #loadingScreen.loaded { opacity: 0; visibility: hidden; pointer-events: none; }
-        .loading-logo { width: 120px; height: auto; margin-bottom: 20px; animation: bounce-logo 1s infinite; }
-        .loading-text { font-family: 'Poppins', sans-serif; font-weight: bold; color: var(--primary); font-size: 18px; letter-spacing: 2px; animation: blink 1.5s infinite; }
-        @keyframes bounce-logo { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-15px); } }
-        @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
+        /* 左右のカーテン（方眼紙パターンで「クラフト感」を演出） */
+        .loading-curtain {
+            position: absolute !important;
+            top: 0 !important;
+            width: 51% !important;
+            height: 100% !important;
+            z-index: 10;
+            background-color: #f0fbff !important; /* ベースの水色 */
+            
+            /* 方眼紙模様を作成 */
+            background-image: 
+                linear-gradient(#27C6F5 1px, transparent 1px),
+                linear-gradient(90deg, #27C6F5 1px, transparent 1px) !important;
+            background-size: 40px 40px !important; /* グリッドのサイズ */
+            background-position: center center !important;
+            
+            transition: transform 1.0s cubic-bezier(0.8, 0, 0.2, 1);
+            will-change: transform;
+        }
+
+        /* カーテンが開く時の「影」を追加（立体感アップ） */
+        .curtain-left { 
+            left: 0 !important; 
+            border-right: 2px solid var(--primary); 
+            /* 影をつけて重なりを表現 */
+            box-shadow: 5px 0 20px rgba(0,0,0,0.1); 
+        }
+        .curtain-right { 
+            right: 0 !important; 
+            border-left: 2px solid var(--primary); 
+            box-shadow: -5px 0 20px rgba(0,0,0,0.1);
+        }
+
+        /* ロード完了時の動き */
+        #loadingScreen.loaded .curtain-left { transform: translateX(-100%); }
+        #loadingScreen.loaded .curtain-right { transform: translateX(100%); }
+        #loadingScreen.loaded { pointer-events: none; }
+
+        /* ▼▼▼ 追加：浮遊アイコンのアニメーション ▼▼▼ */
+        .loading-deco-layer {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            z-index: 15; /* カーテンより手前、ロゴより奥 */
+            pointer-events: none;
+        }
+        .deco-icon {
+            position: absolute;
+            color: var(--primary);
+            opacity: 0.3;
+            font-size: 40px;
+            animation: floatIcon infinite ease-in-out;
+        }
+        
+        /* アイコンごとの配置と動き */
+        .d1 { top: 30%; left: 20%; animation-duration: 4s; font-size: 50px; color: #ff4757; } /* ゲーム */
+        .d2 { top: 70%; left: 15%; animation-duration: 5s; font-size: 40px; color: #f1c40f; } /* 音符 */
+        .d3 { top: 20%; right: 25%; animation-duration: 4.5s; font-size: 60px; color: #2ecc71; } /* 星 */
+        .d4 { top: 60%; right: 20%; animation-duration: 3.5s; font-size: 45px; color: #a29bfe; } /* 吹き出し */
+        .d5 { top: 40%; left: 50%; margin-left: -200px; animation-duration: 6s; opacity: 0.1; font-size: 100px; } /* 背景の大きなハート */
+        .d6 { bottom: 20%; left: 50%; margin-left: 150px; animation-duration: 5.5s; font-size: 50px; color: #27C6F5; } /* キューブ */
+
+        /* アイコンがふわふわ動くアニメ */
+        @keyframes floatIcon {
+            0%, 100% { transform: translateY(0) rotate(0deg); }
+            50% { transform: translateY(-20px) rotate(10deg); }
+        }
+        
+        /* ロード完了時にアイコンも一緒に消える */
+        #loadingScreen.loaded .deco-icon {
+            opacity: 0;
+            transition: opacity 0.5s;
+        }
+
+        /* ロゴ周り（変更なし、そのままキープ） */
+        .opening-content {
+            position: relative;
+            z-index: 20;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            transition: opacity 0.5s ease;
+        }
+        #loadingScreen.loaded .opening-content { opacity: 0; }
+
+        .opening-logo {
+            width: 180px !important; /* 少し大きく */
+            height: auto;
+            margin-bottom: 20px;
+            animation: logo-heartbeat 1.5s infinite ease-in-out;
+            filter: drop-shadow(0 0 15px rgba(255, 255, 255, 0.8)); /* 白い光彩でリッチに */
+        }
+        /* ...以下、文字のアニメーションなどはそのままでOK... */
+        @keyframes logo-heartbeat {
+            0% { transform: scale(1); filter: drop-shadow(0 0 5px rgba(39, 198, 245, 0.2)); }
+            50% { transform: scale(1.05); filter: drop-shadow(0 0 15px rgba(39, 198, 245, 0.6)); }
+            100% { transform: scale(1); filter: drop-shadow(0 0 5px rgba(39, 198, 245, 0.2)); }
+        }
+
+        /* ローディング文字（一文字ずつ跳ねる） */
+        .loading-text-box {
+            display: flex;
+            gap: 5px;
+        }
+        .loading-char {
+            font-family: 'Oswald', sans-serif;
+            font-weight: bold;
+            font-size: 18px;
+            color: var(--primary);
+            animation: text-jump 1s infinite;
+        }
+        /* 文字をずらして動かす */
+        .loading-char:nth-child(1) { animation-delay: 0.0s; }
+        .loading-char:nth-child(2) { animation-delay: 0.1s; }
+        .loading-char:nth-child(3) { animation-delay: 0.2s; }
+        .loading-char:nth-child(4) { animation-delay: 0.3s; }
+        .loading-char:nth-child(5) { animation-delay: 0.4s; }
+        .loading-char:nth-child(6) { animation-delay: 0.5s; }
+        .loading-char:nth-child(7) { animation-delay: 0.6s; }
+
+        @keyframes text-jump {
+            0%, 40%, 100% { transform: translateY(0); opacity: 0.5; }
+            20% { transform: translateY(-10px); opacity: 1; text-shadow: 0 5px 10px rgba(39, 198, 245, 0.5); }
+        }
 
         /* 背景を半透明（0.6）に変更 */
         /* 背景をもっと透明（0.3）にして、画像が綺麗に見えるように変更 */
@@ -1526,8 +1660,29 @@
 </head>
 <body>
     <div id="loadingScreen">
-        <img src="logo.png" class="loading-logo" alt="Loading...">
-        <div class="loading-text">LOADING...</div>
+        <div class="loading-curtain curtain-left"></div>
+        <div class="loading-curtain curtain-right"></div>
+        
+        <div class="loading-deco-layer">
+            <i class="fas fa-gamepad deco-icon d1"></i>
+            <i class="fas fa-music deco-icon d2"></i>
+            <i class="fas fa-star deco-icon d3"></i>
+            <i class="fas fa-comment-dots deco-icon d4"></i>
+            <i class="fas fa-heart deco-icon d5"></i>
+            <i class="fas fa-cube deco-icon d6"></i> </div>
+
+        <div class="opening-content">
+            <img src="logo.png" class="opening-logo" alt="AOHARU FRIENDS">
+            <div class="loading-text-box">
+                <span class="loading-char">L</span>
+                <span class="loading-char">O</span>
+                <span class="loading-char">A</span>
+                <span class="loading-char">D</span>
+                <span class="loading-char">I</span>
+                <span class="loading-char">N</span>
+                <span class="loading-char">G</span>
+            </div>
+        </div>
     </div>
 
     <div id="bgShapes" class="bg-shape-container"></div>
@@ -2329,12 +2484,43 @@
                 grid-template-columns: 1fr; /* スマホは大きく1列で見やすく */
             }
         }
+        /* ▼▼▼ 追加：ロード完了時のズームイン演出 ▼▼▼ */
+        .zoom-in-effect {
+            animation: heroZoomIn 1.5s cubic-bezier(0.2, 1, 0.3, 1) forwards;
+            transform-origin: center top;
+        }
+        
+        @keyframes heroZoomIn {
+            0% { transform: scale(1.1); filter: blur(5px); } /* 最初は少し拡大＆ぼかし */
+            100% { transform: scale(1); filter: blur(0); }   /* 定位置に戻る */
+        }
     </style>
 </head>
 <body>
     <div id="loadingScreen">
-        <img src="logo.png" class="loading-logo" alt="Loading...">
-        <div class="loading-text">LOADING...</div>
+        <div class="loading-curtain curtain-left"></div>
+        <div class="loading-curtain curtain-right"></div>
+        
+        <div class="loading-deco-layer">
+            <i class="fas fa-gamepad deco-icon d1"></i>
+            <i class="fas fa-music deco-icon d2"></i>
+            <i class="fas fa-star deco-icon d3"></i>
+            <i class="fas fa-comment-dots deco-icon d4"></i>
+            <i class="fas fa-heart deco-icon d5"></i>
+            <i class="fas fa-cube deco-icon d6"></i> </div>
+
+        <div class="opening-content">
+            <img src="logo.png" class="opening-logo" alt="AOHARU FRIENDS">
+            <div class="loading-text-box">
+                <span class="loading-char">L</span>
+                <span class="loading-char">O</span>
+                <span class="loading-char">A</span>
+                <span class="loading-char">D</span>
+                <span class="loading-char">I</span>
+                <span class="loading-char">N</span>
+                <span class="loading-char">G</span>
+            </div>
+        </div>
     </div>
 
     <div id="bgShapes" class="bg-shape-container"></div>
@@ -2530,7 +2716,7 @@
 
     <div id="copyToast">コピーしました✨</div>
 
-    <div id="top" class="page active">
+    <div id="top" class="page active zoom-in-effect">
         <div class="hero-section">
             <img 
                 src="logo_high.png" 
@@ -3624,11 +3810,16 @@
             setTimeout(checkLiveStatus, 500); 
             setTimeout(initScrollAnim, 500);
             
-            // 通常の読み込み完了処理
+            // ▼ 新・読み込み完了処理（カーテンを開く） ▼
             const loader = document.getElementById('loadingScreen');
             if(loader && !loader.classList.contains('loaded')) {
-                loader.classList.add('loaded');
-                setTimeout(() => loader.remove(), 500); 
+                // データの読み込みが終わっても、0.8秒だけロゴを見せ続ける（余韻）
+                setTimeout(() => {
+                    loader.classList.add('loaded'); // カーテンを開く
+                    
+                    // アニメーションが終わった頃（1秒後）に要素自体を削除
+                    setTimeout(() => loader.remove(), 1000); 
+                }, 800);
             }
         });
     };
