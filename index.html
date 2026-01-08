@@ -1685,6 +1685,12 @@
         </div>
     </div>
 
+        <div id="pageTransition">
+        <div class="tr-layer l1"></div>
+        <div class="tr-layer l2"></div>
+        <div class="tr-layer l3"></div>
+    </div>
+
     <div id="bgShapes" class="bg-shape-container"></div>
 
     <div id="breadcrumbNav" class="breadcrumb-nav"></div>
@@ -2494,6 +2500,144 @@
             0% { transform: scale(1.1); filter: blur(5px); } /* 最初は少し拡大＆ぼかし */
             100% { transform: scale(1); filter: blur(0); }   /* 定位置に戻る */
         }
+        /* ▼▼▼ VSPO風：立体感のあるヒーローセクション ▼▼▼ */
+        .hero-section {
+            width: 100%;
+            height: 100vh;
+            min-height: 600px;
+            background-color: #000;
+            position: relative;
+            overflow: hidden;
+            /* 3D空間の定義 */
+            perspective: 1000px;
+        }
+
+        /* 画像を包む箱（ブレスアニメーション用） */
+        .hero-bg-wrapper {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            z-index: 0;
+            /* 少し拡大しておく（マウスで動いた時に端が見えないように） */
+            transform: scale(1.1); 
+            transition: transform 0.1s ease-out; /* 滑らかに動かす */
+        }
+
+        /* メイン画像（呼吸する動き） */
+        .hero-main-img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            object-position: center top;
+            /* ゆっくり呼吸するアニメーション */
+            animation: hero-breathing 6s ease-in-out infinite; 
+        }
+
+        @keyframes hero-breathing {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.02); }
+            100% { transform: scale(1); }
+        }
+
+        /* 画面の四隅を暗くして、中央のキャラを引き立てる影 */
+        .hero-vignette {
+            position: absolute;
+            inset: 0;
+            background: radial-gradient(circle at center, transparent 50%, rgba(0,0,0,0.6) 100%);
+            z-index: 1;
+            pointer-events: none;
+        }
+
+        /* パーティクル（キラキラ）のコンテナ */
+        .hero-particles-container {
+            position: absolute;
+            inset: 0;
+            z-index: 2;
+            pointer-events: none;
+        }
+
+        /* 個別のパーティクル */
+        .h-particle {
+            position: absolute;
+            background: white;
+            border-radius: 50%;
+            opacity: 0.6;
+            box-shadow: 0 0 10px rgba(255, 255, 255, 0.8);
+            animation: float-particle infinite linear;
+        }
+        /* 四角いデジタルっぽいパーティクルも混ぜる */
+        .h-particle.square {
+            border-radius: 0;
+            background: var(--primary);
+            opacity: 0.4;
+        }
+
+        @keyframes float-particle {
+            0% { transform: translateY(0) rotate(0deg); opacity: 0; }
+            10% { opacity: 0.8; }
+            90% { opacity: 0.8; }
+            100% { transform: translateY(-100px) rotate(180deg); opacity: 0; }
+        }
+
+        /* 手前に浮く文字（装飾） */
+        .hero-floating-text {
+            position: absolute;
+            bottom: 100px;
+            right: 50px;
+            font-family: 'Oswald', sans-serif;
+            font-size: 80px;
+            font-weight: 900;
+            color: rgba(255,255,255,0.1); /* 半透明でさりげなく */
+            z-index: 3;
+            letter-spacing: 10px;
+            pointer-events: none;
+            /* 文字の縁取り */
+            -webkit-text-stroke: 1px rgba(255,255,255,0.3);
+            transition: transform 0.1s ease-out;
+        }
+
+        @media (max-width: 768px) {
+            .hero-floating-text { display: none; } /* スマホでは文字は消す */
+        }
+        /* ▼▼▼ 追加：ページ切り替え演出（シーンチェンジ） ▼▼▼ */
+        #pageTransition {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            z-index: 99999; /* ロード画面より下、ヘッダーより上 */
+            pointer-events: none; /* 普段はクリックを通す */
+            display: flex;
+            flex-direction: column;
+        }
+
+        .tr-layer {
+            width: 100%;
+            height: 34%; /* 3分割 */
+            transform: translateX(100%); /* 最初は右に隠しておく */
+            will-change: transform;
+        }
+
+        /* 3色の帯（ブランドカラー） */
+        .tr-layer.l1 { background: #27C6F5; top: 0; }
+        .tr-layer.l2 { background: #f1c40f; top: 33%; height: 34%; transition-delay: 0.05s; } /* 少し遅らせる */
+        .tr-layer.l3 { background: #ff4757; bottom: 0; transition-delay: 0.1s; } /* さらに遅らせる */
+
+        /* アニメーション：右から来て左へ去る */
+        #pageTransition.active .tr-layer {
+            animation: wipe-transition 1.2s cubic-bezier(0.8, 0, 0.2, 1) forwards;
+        }
+
+        @keyframes wipe-transition {
+            0% { transform: translateX(100%); }   /* 右から登場 */
+            40% { transform: translateX(0%); }    /* 画面を覆う（ここでページ切り替え） */
+            60% { transform: translateX(0%); }    /* 一瞬タメる */
+            100% { transform: translateX(-100%); } /* 左へ退場 */
+        }
+
+        /* ▼▼▼ ついでに追加：カスタムスクロールバー ▼▼▼ */
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #f0f0f0; }
+        ::-webkit-scrollbar-thumb { background: var(--primary); border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #00aaff; }
     </style>
 </head>
 <body>
@@ -2717,13 +2861,20 @@
     <div id="copyToast">コピーしました✨</div>
 
     <div id="top" class="page active zoom-in-effect">
-        <div class="hero-section">
-            <img 
-                src="logo_high.png" 
-                alt="MAIN VISUAL" 
-                class="hero-main-img"
-            >
+        <div class="hero-section" id="heroSection">
+        <div class="hero-bg-wrapper">
+            <img src="logo_high.png" alt="MAIN VISUAL" class="hero-main-img" id="heroImg">
         </div>
+
+        <div class="hero-vignette"></div>
+
+        <div class="hero-particles-container" id="heroParticles">
+            </div>
+        
+        <div class="hero-floating-text" id="heroText">
+            AOHARU FRIENDS
+        </div>
+    </div>
         <div class="container">
             <div id="nowOnAirSection">
                 <div class="noa-title">NOW ON AIR</div>
@@ -3840,52 +3991,89 @@
         }
     }
 
+    // ▼▼▼ 新・ページ切り替え関数（トランジション演出付き） ▼▼▼
+    let isTransitioning = false;
+
     function showPage(pageId, detailName = null, pushHistory = true) {
-        document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-        const target = document.getElementById(pageId);
+        // 現在のページと同じなら何もしない（連打防止）
+        const currentPage = document.querySelector('.page.active');
+        if(currentPage && currentPage.id === pageId) return;
         
-        if(target) {
-            target.classList.add('active');
+        // トランジション中は操作を受け付けない
+        if(isTransitioning) return;
+        isTransitioning = true;
+
+        // 1. 演出開始（帯を走らせる）
+        const transition = document.getElementById('pageTransition');
+        if(transition) transition.classList.add('active');
+
+        // 2. 画面が隠れたタイミング（0.5秒後）で中身を入れ替える
+        setTimeout(() => {
+            // --- ここから下が、元の showPage の中身と同じ処理です ---
             
-            if (pageId === 'mypage' && currentUserData) {
-                document.getElementById('myIconDisplay').src = currentUserData.icon || 'icon.png';
-                document.getElementById('myNameDisplay').innerText = currentUserData.name;
-                document.getElementById('myIdDisplay').innerText = 'ID: ' + currentUserData.id;
-                document.getElementById('myNameInput').value = currentUserData.name;
-                document.getElementById('myIconInput').value = currentUserData.icon;
-                document.getElementById('myBioInput').value = currentUserData.bio;
-                document.getElementById('myXInput').value = currentUserData.x;
-                document.getElementById('myYtInput').value = currentUserData.yt;
+            document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+            const target = document.getElementById(pageId);
+            
+            if(target) {
+                target.classList.add('active');
+                
+                // 各ページの初期化処理
+                if (pageId === 'mypage' && currentUserData) {
+                    document.getElementById('myIconDisplay').src = currentUserData.icon || 'icon.png';
+                    document.getElementById('myNameDisplay').innerText = currentUserData.name;
+                    document.getElementById('myIdDisplay').innerText = 'ID: ' + currentUserData.id;
+                    document.getElementById('myNameInput').value = currentUserData.name;
+                    document.getElementById('myIconInput').value = currentUserData.icon;
+                    document.getElementById('myBioInput').value = currentUserData.bio;
+                    document.getElementById('myXInput').value = currentUserData.x;
+                    document.getElementById('myYtInput').value = currentUserData.yt;
+                }
+                
+                // 落書き広場の初期化
+                if(pageId === 'rakugaki') { 
+                    setTimeout(() => {
+                        if(typeof initCanvas === 'function') initCanvas();
+                        if(typeof checkCanvasLock === 'function') checkCanvasLock();    
+                        if(typeof renderGraffitiList === 'function') renderGraffitiList(); 
+                    }, 100); 
+                }
+                if(pageId === 'studio') {
+                    setTimeout(() => { if(typeof initStudio === 'function') initStudio(); }, 100);
+                } 
+                if(pageId === 'skinviewer') {
+                    setTimeout(() => { if(typeof initSkinViewer === 'function') initSkinViewer(); }, 100);
+                }
             }
-            if(pageId === 'rakugaki') { 
-                setTimeout(() => {
-                    initCanvas();
-                    checkCanvasLock();    
-                    renderGraffitiList(); 
-                }, 300); 
-            }
-            if(pageId === 'studio') {
-                setTimeout(initStudio, 100);
-            } 
-            if(pageId === 'skinviewer') {
-                setTimeout(initSkinViewer, 100);
-            }
-        }
 
-        if(document.getElementById('sideMenu').classList.contains('open')) toggleMenu(); 
-        if(pushHistory) history.pushState(null, null, '#' + pageId);
-        updateBreadcrumbs(pageId, detailName);
-        window.scrollTo(0,0);
+            // メニューが開いていれば閉じる
+            if(document.getElementById('sideMenu').classList.contains('open')) toggleMenu(); 
+            
+            // 履歴の更新
+            if(pushHistory) history.pushState(null, null, '#' + pageId);
+            if(typeof updateBreadcrumbs === 'function') updateBreadcrumbs(pageId, detailName);
+            
+            // ページトップへ戻る
+            window.scrollTo(0,0);
 
-        const pageTitles = {
-            'top': '公式サイトTOP', 'news': '最新ニュース', 'member': 'メンバー紹介', 'video': '動画一覧',
-            'schedule': '配信スケジュール', 'goods': '公式グッズ', 'radio': 'ラジオ＆お便り',
-            'guideline': 'ガイドライン', 'rakugaki': '落書き広場', 'studio': 'スタジオ機能',
-            'business': '法人・企業様向け窓口', 'recruitment': '新メンバー募集', 'mypage': 'マイページ'
-        };
-        let titleText = pageTitles[pageId] || 'Official Site';
-        if (detailName) titleText = detailName;
-        document.title = `あおはる⭐︎フレンズ | ${titleText}`;
+            // タイトルの更新
+            const pageTitles = {
+                'top': '公式サイトTOP', 'news': '最新ニュース', 'member': 'メンバー紹介', 'video': '動画一覧',
+                'schedule': '配信スケジュール', 'goods': '公式グッズ', 'radio': 'ラジオ＆お便り',
+                'guideline': 'ガイドライン', 'rakugaki': '落書き広場', 'studio': 'スタジオ機能',
+                'business': '法人・企業様向け窓口', 'recruitment': '新メンバー募集', 'mypage': 'マイページ'
+            };
+            let titleText = pageTitles[pageId] || 'Official Site';
+            if (detailName) titleText = detailName;
+            document.title = `あおはる⭐︎フレンズ | ${titleText}`;
+            // --- ここまでが中身の入れ替え ---
+
+        }, 500); // アニメーションが画面を覆うまでの時間（0.5秒）
+
+        // 3. 演出終了（1.2秒後）
+        setTimeout(() => {
+            if(transition) transition.classList.remove('active');
+            isTransitioning = false;
+        }, 1200);
     }
 
     function updateBreadcrumbs(pageId, detailName) { 
@@ -6133,6 +6321,72 @@
             scrollObserver.observe(el);
         });
     }
+    // ==========================================
+    // ▼▼▼ VSPO風：立体的マウスパララックス ▼▼▼
+    // ==========================================
+    
+    // 1. パーティクル（キラキラ）を生成
+    function initHeroParticles() {
+        const container = document.getElementById('heroParticles');
+        if(!container) return;
+        
+        // 30個の粒子を作る
+        for(let i=0; i<30; i++) {
+            const p = document.createElement('div');
+            p.className = Math.random() > 0.5 ? 'h-particle' : 'h-particle square'; // 丸と四角を混ぜる
+            
+            // サイズと位置をランダムに
+            const size = Math.random() * 6 + 2; // 2px〜8px
+            p.style.width = size + 'px';
+            p.style.height = size + 'px';
+            p.style.left = Math.random() * 100 + '%';
+            p.style.top = Math.random() * 100 + '%';
+            
+            // アニメーション時間をバラバラに（自然に見せるコツ）
+            p.style.animationDuration = (Math.random() * 10 + 5) + 's';
+            p.style.animationDelay = (Math.random() * 5) + 's';
+            
+            // 奥行き係数（data-depth）を持たせる（手前のものほど大きく動く）
+            p.dataset.depth = Math.random() * 3 + 1; // 1〜4倍の動き
+            
+            container.appendChild(p);
+        }
+    }
+
+    // 2. マウスの動きに合わせて動かす処理
+    document.addEventListener('mousemove', (e) => {
+        const heroSection = document.getElementById('heroSection');
+        if(!heroSection) return;
+
+        // 画面の中心からのマウスの距離を計算（-0.5 〜 0.5）
+        const x = (e.clientX / window.innerWidth) - 0.5;
+        const y = (e.clientY / window.innerHeight) - 0.5;
+
+        // A. 背景画像（逆方向に少しだけ動く＝奥にある感じ）
+        const bg = document.getElementById('heroImg');
+        if(bg) {
+            // scale(1.1)は維持しつつ、位置をずらす
+            bg.style.transform = `scale(1.1) translate(${x * -20}px, ${y * -20}px)`;
+        }
+
+        // B. 手前の文字（背景より少し大きく動く＝手前にある感じ）
+        const text = document.getElementById('heroText');
+        if(text) {
+            text.style.transform = `translate(${x * -40}px, ${y * -40}px)`;
+        }
+
+        // C. パーティクル（それぞれ違うスピードで動く＝空間の広がり）
+        const particles = document.querySelectorAll('.h-particle');
+        particles.forEach(p => {
+            const depth = parseFloat(p.dataset.depth || 1);
+            const moveX = x * 50 * depth; // かなり大きく動かす
+            const moveY = y * 50 * depth;
+            p.style.transform = `translate(${moveX}px, ${moveY}px)`;
+        });
+    });
+
+    // 初期化実行（忘れずに！）
+    window.addEventListener('load', initHeroParticles);
 </script>
 </body>
 </html>
