@@ -2284,6 +2284,37 @@
             position: relative;
             z-index: 2;
         }
+        /* ▼▼▼ 追加：動画フィルタリング用アイコンのデザイン ▼▼▼ */
+        .video-filter-container {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+        .v-filter-btn {
+            width: 50px; 
+            height: 50px;
+            border-radius: 50%;
+            border: 3px solid transparent;
+            cursor: pointer;
+            background-size: cover;
+            background-position: center;
+            background-color: #fff;
+            transition: all 0.2s;
+            opacity: 0.6;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        .v-filter-btn:hover {
+            opacity: 1;
+            transform: translateY(-2px);
+        }
+        .v-filter-btn.active {
+            border-color: var(--primary); /* 選択中は枠線がつく */
+            opacity: 1;
+            transform: scale(1.1);
+            box-shadow: 0 4px 10px rgba(39, 198, 245, 0.4);
+        }
     </style>
 </head>
 <body>
@@ -2648,6 +2679,9 @@
             <div style="text-align:center;"><button onclick="showPage('member')" class="more-btn">MORE VIEW</button></div>
 
             <div class="section-title"><div class="en-title">VIDEOS</div><span class="ja-title">最新動画</span></div>
+            
+            <div id="videoFilterArea" class="video-filter-container"></div>
+
             <div class="scroll-wrapper">
                 <button class="scroll-btn left" onclick="scrollContent('topVideoList', 'left')">◀</button>
                 <div class="scroll-grid" id="topVideoList">読み込み中...</div>
@@ -3531,6 +3565,7 @@
             renderGraffitiList(); 
             initBackgroundShapes();
             renderThemeButtons();
+            initVideoFilters();
             setTimeout(checkLiveStatus, 500); 
             setTimeout(initScrollAnim, 500);
             
@@ -3936,58 +3971,119 @@
 
         container.innerHTML = html || "<p style='text-align:center; padding:20px;'>スケジュールデータがありません</p>";
     }
-    function renderVideos() { 
-        const videoHtml = videoData.map(v => { 
-            // ▼▼▼ 修正：URLから動画IDを自動で取り出す処理を追加 ▼▼▼
-            let vId = v.id; // 元のデータ（ID または URL）
+    // ▼▼▼ 修正版：動画描画関数（フィルタリング対応） ▼▼▼
+    function renderVideos(filterName = 'ALL') { 
+        const list = document.getElementById('topVideoList'); 
+        if(!list) return;
 
-            // URLが入力されていた場合、ID部分だけを抜き出す
+        // 1. データをフィルタリング
+        let filteredVideos = videoData;
+        
+        if (filterName !== 'ALL') {
+            filteredVideos = videoData.filter(v => {
+                // データに 'member' 列があればそれで判定、なければタイトルで判定
+                const mem = (v.member || "").toLowerCase();
+                const title = (v.title || "").toLowerCase();
+                const target = filterName.toLowerCase();
+                
+                // メンバー名が含まれているかチェック
+                return mem.includes(target) || title.includes(target);
+            });
+        }
+
+        // 2. 該当なしの場合
+        if (filteredVideos.length === 0) {
+            list.innerHTML = `<div style="padding:20px; width:100%; text-align:center; color:#888;">「${filterName}」の動画は見つかりませんでした</div>`;
+            return;
+        }
+
+        // 3. HTML生成
+        const videoHtml = filteredVideos.map(v => { 
+            let vId = v.id; 
+            // URLからIDを抽出
             if (vId.includes('v=')) {
                 vId = vId.split('v=')[1].split('&')[0];
             } else if (vId.includes('youtu.be/')) {
                 vId = vId.split('youtu.be/')[1].split('?')[0];
             }
-            // ▲▲▲ 修正ここまで ▲▲▲
 
             const imgSrc = `https://img.youtube.com/vi/${vId}/mqdefault.jpg`; 
             
             return `<div class="video-card" onclick="window.open('https://www.youtube.com/watch?v=${vId}', '_blank')"><div class="video-thumb-box"><img src="${imgSrc}" class="video-thumb"><div class="play-icon">▶</div></div><div class="video-info"><div class="video-title">${v.title}</div><div class="video-date">${v.date}</div></div></div>`; 
         }).join(''); 
         
-        const list = document.getElementById('topVideoList'); 
-        if(list) list.innerHTML = videoHtml || "動画はまだありません"; 
+        list.innerHTML = videoHtml; 
     }
+
+     // ▼▼▼ 会員限定動画の表示機能（ここがないとエラーになります！） ▼▼▼
     function renderMemberVideos() { 
         const container = document.getElementById('memberVideoList'); 
         
-        if(!memberVideoData.length) { 
-            container.innerHTML = "限定動画はまだありません"; 
+        if(!memberVideoData || memberVideoData.length === 0) { 
+            if(container) container.innerHTML = "限定動画はまだありません"; 
             return; 
         } 
         
         const html = memberVideoData.map(v => { 
-            // ▼▼▼ 修正：URLから動画IDを自動で取り出す処理を追加 ▼▼▼
-            let vId = v.id; // 元のデータ（ID または URL）
-
-            // URLが入力されていた場合、ID部分だけを抜き出す
+            // URLから動画IDを抽出
+            let vId = v.id; 
             if (vId.includes('v=')) {
                 vId = vId.split('v=')[1].split('&')[0];
             } else if (vId.includes('youtu.be/')) {
                 vId = vId.split('youtu.be/')[1].split('?')[0];
             }
-            // ▲▲▲ 修正ここまで ▲▲▲
 
             const clickAction = isMemberLoggedIn ? `window.open('https://www.youtube.com/watch?v=${vId}', '_blank')` : `openLoginModal()`; 
             const lockedClass = isMemberLoggedIn ? 'unlocked' : 'mv-blur'; 
             const lockOverlay = isMemberLoggedIn ? '' : `<div class="mv-lock-overlay"><div class="mv-lock-icon"><i class="fas fa-lock"></i></div><div class="mv-lock-text">MEMBER ONLY</div></div>`; 
-            
-            // サムネイル画像も抽出したID（vId）を使うように修正
             const imgSrc = `https://img.youtube.com/vi/${vId}/mqdefault.jpg`;
 
             return `<div class="member-video-card ${lockedClass}" onclick="${clickAction}">${lockOverlay}<div class="news-thumb-area"><img src="${imgSrc}" class="news-img"></div><div class="news-content"><div class="news-date">${v.date}</div><div class="news-title">${v.title}</div><div class="news-check-btn">${isMemberLoggedIn ? 'PLAY' : 'LOCKED'}</div></div></div>`; 
         }).join(''); 
         
-        container.innerHTML = html; 
+        if(container) container.innerHTML = html; 
+    }
+
+     // ▼▼▼ 新規追加：フィルタボタンを生成する関数 ▼▼▼
+    function initVideoFilters() {
+        const container = document.getElementById('videoFilterArea');
+        if (!container) return;
+
+        // ボタンのリスト（最初は「あおはる（全員）」、その後にメンバー）
+        let filters = [
+            { name: 'ALL', label: 'あおはる', img: 'icon.png' } // グループアイコン
+        ];
+
+        // メンバーデータがあれば追加
+        if (memberData && memberData.length > 0) {
+            memberData.forEach(m => {
+                // アイコン画像の決定ロジック（おみくじ等と同じ）
+                let iconUrl = m.img;
+                if (m.enName) {
+                    let name = m.enName.toLowerCase();
+                    if (name.includes(' ')) name = name.split(' ').pop();
+                    if (name.includes('-')) name = name.split('-')[0];
+                    iconUrl = `icon_sch_${name}.png`;
+                }
+                filters.push({ name: m.name, label: m.name, img: iconUrl });
+            });
+        }
+
+        // HTML生成
+        container.innerHTML = filters.map((f, i) => {
+            const activeClass = i === 0 ? 'active' : ''; // 最初だけactive
+            return `<div class="v-filter-btn ${activeClass}" style="background-image:url('${f.img}');" onclick="applyVideoFilter('${f.name}', this)" title="${f.label}"></div>`;
+        }).join('');
+    }
+
+    // フィルタ適用時の処理
+    function applyVideoFilter(name, btn) {
+        // ボタンの見た目切り替え
+        document.querySelectorAll('.v-filter-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+
+        // 動画を再描画
+        renderVideos(name);
     }
     
 // ▼▼▼ RADIO日記の描画（名前・アイコン修正版） ▼▼▼
