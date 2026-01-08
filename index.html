@@ -1686,9 +1686,18 @@
     </div>
 
         <div id="pageTransition">
-        <div class="tr-layer l1"></div>
-        <div class="tr-layer l2"></div>
-        <div class="tr-layer l3"></div>
+        <div class="pt-slash slash-1"></div>
+        <div class="pt-slash slash-2"></div>
+        <div class="pt-slash slash-white"></div>
+        
+        <div class="pt-logo-container">
+            </div>
+    </div>
+        
+        <div class="pt-logo-container">
+            <img src="logo_high.png" alt="Loading" class="pt-logo-img">
+            <div class="pt-loading-text">NOW LOADING...</div>
+        </div>
     </div>
 
     <div id="bgShapes" class="bg-shape-container"></div>
@@ -2598,39 +2607,127 @@
         @media (max-width: 768px) {
             .hero-floating-text { display: none; } /* スマホでは文字は消す */
         }
-        /* ▼▼▼ 追加：ページ切り替え演出（シーンチェンジ） ▼▼▼ */
+        /* ▼▼▼ 【改】アニメ仕様・ハイスピードトランジション ▼▼▼ */
         #pageTransition {
             position: fixed;
-            top: 0; left: 0;
-            width: 100%; height: 100%;
-            z-index: 99999; /* ロード画面より下、ヘッダーより上 */
-            pointer-events: none; /* 普段はクリックを通す */
+            inset: 0;
+            z-index: 99999;
+            pointer-events: none;
             display: flex;
-            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden; /* 画面外のハミ出しを隠す */
         }
 
-        .tr-layer {
-            width: 100%;
-            height: 34%; /* 3分割 */
-            transform: translateX(100%); /* 最初は右に隠しておく */
+        /* 斜めのスラッシュ（基本設定） */
+        .pt-slash {
+            position: absolute;
+            top: -50%; left: -50%;
+            width: 200%; height: 200%; /* 画面より大きくして斜めにする */
+            transform: translateX(100%) skewX(-20deg); /* 右に隠して、斜めにする */
             will-change: transform;
         }
 
-        /* 3色の帯（ブランドカラー） */
-        .tr-layer.l1 { background: #27C6F5; top: 0; }
-        .tr-layer.l2 { background: #f1c40f; top: 33%; height: 34%; transition-delay: 0.05s; } /* 少し遅らせる */
-        .tr-layer.l3 { background: #ff4757; bottom: 0; transition-delay: 0.1s; } /* さらに遅らせる */
-
-        /* アニメーション：右から来て左へ去る */
-        #pageTransition.active .tr-layer {
-            animation: wipe-transition 1.2s cubic-bezier(0.8, 0, 0.2, 1) forwards;
+        /* 1枚目：メインカラー（水色） */
+        .pt-slash.slash-1 {
+            background: #27C6F5;
+            z-index: 3;
         }
 
-        @keyframes wipe-transition {
-            0% { transform: translateX(100%); }   /* 右から登場 */
-            40% { transform: translateX(0%); }    /* 画面を覆う（ここでページ切り替え） */
-            60% { transform: translateX(0%); }    /* 一瞬タメる */
-            100% { transform: translateX(-100%); } /* 左へ退場 */
+        /* 2枚目：アクセントカラー（黄色） */
+        .pt-slash.slash-2 {
+            background: #f1c40f;
+            z-index: 2;
+        }
+
+        /* 3枚目：衝撃の白フラッシュ（残像） */
+        .pt-slash.slash-white {
+            background: #ffffff;
+            z-index: 4; /* 一番手前 */
+        }
+
+        /* 中央のロゴ（最初は見えない） */
+        .pt-logo-container {
+            z-index: 5;
+            opacity: 0;
+            transform: scale(0.8);
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .pt-logo-img {
+            max-width: 300px;
+            width: 60vw;
+            filter: drop-shadow(0 0 20px rgba(255,255,255,0.8));
+        }
+
+        .pt-loading-text {
+            color: #fff;
+            font-family: 'Oswald', sans-serif;
+            font-weight: bold;
+            font-size: 24px;
+            margin-top: 10px;
+            letter-spacing: 4px;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+        }
+
+        /* ▼▼▼ アニメーション発動時の動き（タイムライン） ▼▼▼ */
+        
+        /* 1. 水色の壁が猛スピードで閉じる */
+        #pageTransition.active .slash-1 {
+            animation: slash-in-out 1.2s cubic-bezier(0.8, 0, 0.1, 1) forwards;
+        }
+        
+        /* 2. 黄色の壁が少し遅れて追撃 */
+        #pageTransition.active .slash-2 {
+            animation: slash-in-out 1.2s cubic-bezier(0.8, 0, 0.1, 1) forwards;
+            animation-delay: 0.05s;
+        }
+
+        /* 3. 白い閃光が一瞬走る（インパクト） */
+        #pageTransition.active .slash-white {
+            animation: flash-slash 1.2s cubic-bezier(0.8, 0, 0.1, 1) forwards;
+        }
+
+        /* 4. ロゴが真ん中で「ドン！」と出る */
+        #pageTransition.active .pt-logo-container {
+            animation: logo-pop 1.2s ease forwards;
+        }
+
+        /* --- キーフレーム設定 --- */
+
+        /* スラッシュの動き：右から来て、一瞬止まって、左へ抜ける */
+        @keyframes slash-in-out {
+            0% { transform: translateX(100%) skewX(-20deg); }
+            45% { transform: translateX(0%) skewX(-20deg); }  /* 閉じた状態 */
+            55% { transform: translateX(0%) skewX(-20deg); }  /* タメる */
+            100% { transform: translateX(-120%) skewX(-20deg); } /* 画面左へ退場 */
+        }
+
+        /* 白フラッシュの動き：高速で通り過ぎる */
+        @keyframes flash-slash {
+            0% { transform: translateX(100%) skewX(-20deg); opacity: 0.8; }
+            40% { transform: translateX(0%) skewX(-20deg); opacity: 1; }
+            60% { transform: translateX(-50%) skewX(-20deg); opacity: 0; } /* 途中で消える */
+            100% { transform: translateX(-120%) skewX(-20deg); opacity: 0; }
+        }
+
+        /* ロゴの動き：現れて、少し拡大して、消える */
+        @keyframes logo-pop {
+            0% { opacity: 0; transform: scale(0.5); }
+            40% { opacity: 1; transform: scale(1.1); } /* バウンドして登場 */
+            50% { transform: scale(1); }
+            90% { opacity: 1; transform: scale(1); }
+            100% { opacity: 0; transform: scale(1.2); } /* フェードアウト */
+        }
+
+        /* スマホ調整 */
+        @media (max-width: 768px) {
+            .pt-logo-img { max-width: 200px; }
+            .pt-slash { width: 300%; left: -100%; skewX(-10deg); } /* 角度を緩める */
         }
 
         /* ▼▼▼ ついでに追加：カスタムスクロールバー ▼▼▼ */
@@ -2665,6 +2762,14 @@
                 <span class="loading-char">G</span>
             </div>
         </div>
+    </div>
+    <div id="pageTransition">
+        <div class="pt-slash slash-1"></div>
+        <div class="pt-slash slash-2"></div>
+        <div class="pt-slash slash-white"></div>
+        
+        <div class="pt-logo-container">
+            </div>
     </div>
 
     <div id="bgShapes" class="bg-shape-container"></div>
@@ -4067,7 +4172,7 @@
             document.title = `あおはる⭐︎フレンズ | ${titleText}`;
             // --- ここまでが中身の入れ替え ---
 
-        }, 500); // アニメーションが画面を覆うまでの時間（0.5秒）
+        }, 600); // 0.6秒（少しタメを作る） // アニメーションが画面を覆うまでの時間（0.5秒）
 
         // 3. 演出終了（1.2秒後）
         setTimeout(() => {
