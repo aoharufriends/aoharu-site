@@ -1968,11 +1968,14 @@
         /* ▼▼▼ スマホ調整：画像を全体表示＆高さを自動調整 ▼▼▼ */
         @media (max-width: 768px) {
             .hero-section {
-                /* 高さを固定せず、画像の高さに合わせる */
                 height: auto !important;
                 min-height: auto !important;
-                background-color: #000; /* 余白が出たときの色 */
-                overflow: visible;
+                
+                /* ★修正：背景を「白」にする（これでバーが明るくなります！） */
+                background-color: #e0f7ff; 
+                
+                overflow: visible !important;
+                padding-top: 70px !important;
             }
 
             .hero-bg-wrapper {
