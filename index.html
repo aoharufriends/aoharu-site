@@ -2744,6 +2744,44 @@
         ::-webkit-scrollbar-track { background: #f0f0f0; }
         ::-webkit-scrollbar-thumb { background: var(--primary); border-radius: 4px; }
         ::-webkit-scrollbar-thumb:hover { background: #00aaff; }
+
+        /* ▼▼▼ 【重要】スマホ表示の緊急修正（最優先適用） ▼▼▼ */
+        @media (max-width: 768px) {
+            .hero-section {
+                /* 高さを中身に合わせる（強制） */
+                height: auto !important;
+                min-height: auto !important;
+                background-color: #000;
+                overflow: visible !important;
+            }
+
+            .hero-bg-wrapper {
+                /* 立体演出の絶対配置を解除し、普通に配置する（強制） */
+                position: relative !important;
+                width: 100% !important;
+                height: auto !important;
+                transform: none !important;
+                top: auto !important;
+                left: auto !important;
+            }
+
+            .hero-main-img {
+                /* 画像を横幅いっぱいに表示し、高さを自動調整（強制） */
+                width: 100% !important;
+                height: auto !important;
+                object-fit: contain !important; /* 画像全体が見えるように */
+                position: static !important;
+                display: block !important;
+                animation: none !important; /* 動きを止める */
+            }
+            
+            /* スマホでは重たい演出系を非表示 */
+            .hero-vignette, 
+            .hero-particles-container, 
+            .hero-floating-text {
+                display: none !important;
+            }
+        }
     </style>
 </head>
 <body>
