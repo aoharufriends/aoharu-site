@@ -2751,14 +2751,14 @@
         /* ▼▼▼ 【重要】スマホ表示の緊急修正（最優先適用） ▼▼▼ */
         @media (max-width: 768px) {
             .hero-section {
-                /* 高さを中身に合わせる（強制） */
                 height: auto !important;
                 min-height: auto !important;
-                background-color: #000;
+                
+                /* ★修正：背景を「白」にする（これでバーが明るくなります！） */
+                background-color: #e0f7ff;; 
+                
                 overflow: visible !important;
-
-                /* ★追加：ヘッダーの高さ分（70px）だけ、中身を下に下げる！ */
-                padding-top: 70px !important; 
+                padding-top: 70px !important;
             }
 
             .hero-bg-wrapper {
