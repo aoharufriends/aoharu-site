@@ -1965,29 +1965,38 @@
             100% { transform: scale(1.1); }
         }
 
-        /* スマホ向けの高さ調整（修正版） */
+        /* ▼▼▼ スマホ調整：画像を全体表示＆高さを自動調整 ▼▼▼ */
         @media (max-width: 768px) {
-            .hero-section { 
-                /* 高さを少し抑えて、横の広がり（見切れ）を減らす */
-                height: 40vh;      
-                
-                /* 最低の高さも少し下げておく */
-                min-height: 250px; 
-                
-                width: 100%;
-                background-color: #27C6F5;
+            .hero-section {
+                /* 高さを固定せず、画像の高さに合わせる */
+                height: auto !important;
+                min-height: auto !important;
+                background-color: #000; /* 余白が出たときの色 */
+                overflow: visible;
             }
-            .hero-main-img {
-                height: 100%;
+
+            .hero-bg-wrapper {
+                /* 絶対配置をやめて、高さを持つようにする */
+                position: relative;
                 width: 100%;
-                object-fit: cover;
-                
-                /* 顔の位置調整（必要ならここも微調整） */
-                object-position: center top; 
-                
+                height: auto;
+                transform: none !important; /* PC用の拡大などをリセット */
+            }
+
+            .hero-main-img {
+                width: 100%;
+                height: auto; /* 横幅に合わせて高さを自動調整 */
+                object-fit: contain; /* 画像全体をきれいに表示 */
                 position: static;
-                animation: none;
                 display: block;
+                animation: none; /* 動きも止める（見やすさ優先） */
+            }
+            
+            /* スマホでは演出系（影・パーティクル・文字）を非表示にしてスッキリさせる */
+            .hero-vignette, 
+            .hero-particles-container, 
+            .hero-floating-text {
+                display: none !important;
             }
         }
      /* ▼▼▼ 追加：横スクロールギャラリーのデザイン ▼▼▼ */
