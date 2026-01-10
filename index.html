@@ -1207,20 +1207,146 @@
         .modal.open .modal-content { transform: translateY(0); } .modal-close-btn { position: absolute; top: 15px; right: 20px; font-size: 28px; color: #aaa; cursor: pointer; } .news-modal-content { max-width: 500px; text-align: left; } .news-modal-content .modal-title { font-size: 18px; font-weight: bold; margin: 15px 0; border-bottom: 2px solid #f0f0f0; padding-bottom: 15px; } .news-modal-content .modal-body { font-size: 15px; line-height: 1.8; color: #444; white-space: pre-wrap; }
         .auth-title { font-size: 20px; font-weight: bold; margin-bottom: 20px; color: var(--text-main); font-family: 'Poppins', sans-serif; } .auth-input { width: 100%; padding: 12px; margin-bottom: 15px; box-sizing: border-box; border: 1px solid #ddd; border-radius: 8px; background: #f9f9f9; font-size: 16px; } .auth-input:focus { border-color: var(--primary); outline: none; background: white; } .auth-btn { width: 100%; padding: 12px; background: var(--primary); color: white; border: none; border-radius: 25px; font-weight: bold; font-size: 16px; cursor: pointer; margin-top: 10px; box-shadow: 0 4px 10px rgba(39, 198, 245, 0.3); } .auth-btn:hover { background: var(--primary-dark); } .auth-link { margin-top: 20px; font-size: 14px; color: #888; } .auth-link a { color: var(--primary); text-decoration: none; font-weight: bold; cursor: pointer; } .auth-link a:hover { text-decoration: underline; } .social-login-area { margin-top: 20px; border-top: 1px solid #eee; padding-top: 20px; } .social-login-label { font-size: 12px; color: #888; margin-bottom: 10px; } .social-login-btn { width: 100%; padding: 10px; border-radius: 25px; font-weight: bold; font-size: 14px; margin-bottom: 10px; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 10px; border: 1px solid #ddd; background: white; transition: background 0.2s; } .social-login-btn:hover { background: #f5f5f5; }
 
-        footer { background: linear-gradient(135deg, #27C6F5, #89CFF0); color: white; padding: 50px 20px 30px; margin-top: auto; }
-        .footer-container { max-width: 1000px; margin: 0 auto; display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 30px; }
-        .footer-left, .footer-right { flex: 1; min-width: 250px; }
-        .footer-right { display: flex; flex-direction: column; align-items: flex-end; }
-        .footer-menu { list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 15px; }
-        .footer-menu li a { color: white; text-decoration: none; font-family: 'Oswald', sans-serif; font-weight: 500; font-size: 36px; letter-spacing: 1px; transition: opacity 0.2s; display: flex; align-items: baseline; cursor: pointer; }
-        .footer-menu-ja { font-family: 'M PLUS Rounded 1c', sans-serif; font-weight: 400; font-size: 14px; margin-left: 20px; opacity: 0.8; letter-spacing: 0.05em; } .footer-menu li a:hover { opacity: 0.7; }
-        .footer-logo { height: 240px; width: auto; margin-bottom: 30px; }
-        .footer-sns { display: flex; gap: 15px; }
-        .footer-sns-btn { width: 50px; height: 50px; border-radius: 50%; display: flex; align-items: center; justify-content: center; background: rgba(255, 255, 255, 0.2); transition: transform 0.2s, background 0.2s; text-decoration: none; }
-        .footer-sns-btn:hover { transform: translateY(-3px); background: rgba(255, 255, 255, 0.4); }
-        .footer-sns-icon-img { width: 30px; height: 30px; object-fit: contain; filter: brightness(0) invert(1); }
-        .copyright { text-align: center; font-size: 12px; margin-top: 50px; opacity: 0.8; font-family: 'Poppins', sans-serif; }
-        @media (max-width: 768px) { .footer-container { flex-direction: column; align-items: center; text-align: center; } .footer-right { align-items: center; margin-top: 40px; } .footer-menu li a { justify-content: center; } .footer-logo { height: 150px; } }
+        /* ▼▼▼ ぶいすぽっ！風フッターデザイン ▼▼▼ */
+        #vspoFooter {
+            background-color: #111; /* 漆黒に近いグレー */
+            color: #fff;
+            padding: 60px 0 30px;
+            position: relative;
+            font-family: 'Oswald', sans-serif; /* 英字をかっこよく */
+        }
+
+        .footer-inner {
+            max-width: 1100px; /* 少し広め */
+            margin: 0 auto;
+            padding: 0 40px;
+        }
+
+        /* --- TOPへ戻るボタン --- */
+        .footer-back-to-top {
+            position: absolute;
+            top: -30px; /* フッターから少し飛び出させる */
+            right: 5%;
+            background: #27C6F5; /* あおはるカラー */
+            color: #fff;
+            width: 80px;
+            height: 80px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-decoration: none;
+            font-weight: bold;
+            font-size: 14px;
+            transition: 0.3s;
+            clip-path: polygon(0 0, 100% 0, 100% 85%, 50% 100%, 0 85%); /* ホームベース型 */
+        }
+        .footer-back-to-top:hover {
+            background: #f1c40f; /* ホバーで黄色 */
+            transform: translateY(-5px);
+        }
+        .footer-back-to-top .arrow { font-size: 18px; margin-bottom: 2px; }
+
+        /* --- 上段：ロゴとメインナビ --- */
+        .footer-top-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid #333; /* 薄い区切り線 */
+            padding-bottom: 40px;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+        .vspo-footer-logo {
+            height: 50px;
+            width: auto;
+            /* filter: brightness(0) invert(1);  ← 削除するか、このように無効化 */
+        }
+        
+        .footer-main-nav ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            display: flex;
+            gap: 30px;
+        }
+        .footer-main-nav a {
+            color: #fff;
+            text-decoration: none;
+            font-size: 18px;
+            font-weight: bold;
+            letter-spacing: 1px;
+            transition: color 0.3s;
+        }
+        .footer-main-nav a:hover {
+            color: #27C6F5; /* ホバーで水色 */
+        }
+
+        /* --- 中段：サブリンクとSNS --- */
+        .footer-middle-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 40px;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+        .footer-sub-links a {
+            color: #888;
+            text-decoration: none;
+            font-size: 13px;
+            margin-right: 25px;
+            font-weight: bold;
+            transition: 0.3s;
+        }
+        .footer-sub-links a:hover { color: #fff; }
+
+        .footer-social-icons {
+            display: flex;
+            gap: 15px;
+        }
+        .social-icon {
+            width: 40px;
+            height: 40px;
+            border: 1px solid #555;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #fff;
+            text-decoration: none;
+            font-size: 18px;
+            transition: 0.3s;
+        }
+        .social-icon:hover {
+            border-color: #27C6F5;
+            background: #27C6F5;
+            color: #111;
+        }
+
+        /* --- 下段：コピーライト --- */
+        .copyright {
+            color: #555;
+            font-size: 11px;
+            line-height: 1.6;
+        }
+
+        /* スマホ対応 */
+        @media (max-width: 768px) {
+            .footer-top-row, .footer-middle-row {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            .footer-main-nav ul {
+                flex-wrap: wrap;
+                gap: 15px 25px;
+            }
+            .footer-back-to-top {
+                width: 60px; height: 60px;
+                right: 20px;
+            }
+        }
 
         /* ガイドライン */
         .guideline-box { background: white; border-radius: 15px; padding: 30px; border: 2px solid #eee; margin-bottom: 30px; box-shadow: 0 5px 15px rgba(0,0,0,0.03); }
@@ -1689,10 +1815,6 @@
         <div class="pt-slash slash-1"></div>
         <div class="pt-slash slash-2"></div>
         <div class="pt-slash slash-white"></div>
-        
-        <div class="pt-logo-container">
-            </div>
-    </div>
         
         <div class="pt-logo-container">
             <img src="logo_high.png" alt="Loading" class="pt-logo-img">
@@ -2788,6 +2910,214 @@
                 display: none !important;
             }
         }
+
+        /* ▼▼▼ MEMBERSHIPページ（POPスタイル） ▼▼▼ */
+        
+        /* 1. ポップなヒーローエリア */
+        .pop-hero {
+            background: linear-gradient(135deg, #27C6F5 0%, #2980b9 100%);
+            color: #fff;
+            text-align: center;
+            padding: 80px 20px;
+            position: relative;
+            overflow: hidden;
+        }
+        /* ドット柄の背景装飾 */
+        .pop-bg-pattern {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background-image: radial-gradient(rgba(255,255,255,0.2) 2px, transparent 2px);
+            background-size: 20px 20px;
+            pointer-events: none;
+        }
+        .pop-title {
+            font-family: 'Oswald', sans-serif;
+            font-size: 60px;
+            margin: 0;
+            text-shadow: 4px 4px 0px #f1c40f; /* 黄色の影でPOPに！ */
+            letter-spacing: 5px;
+        }
+        .pop-subtitle {
+            font-size: 20px;
+            margin-top: 10px;
+            font-weight: bold;
+        }
+        .pop-hero-img img {
+            max-width: 200px;
+            margin-top: 30px;
+            filter: drop-shadow(0 10px 20px rgba(0,0,0,0.3));
+            animation: bounce 2s infinite; /* ぴょんぴょん跳ねさせる */
+        }
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-15px); }
+        }
+
+        /* 2. イントロ */
+        .pop-intro {
+            text-align: center;
+            margin-bottom: 60px;
+            font-size: 18px;
+            line-height: 2;
+            background: #fff;
+            padding: 40px;
+            border-radius: 20px;
+            border: 3px solid #eee;
+            box-shadow: 0 10px 0 #eee; /* 立体的な影 */
+        }
+
+        /* 3. 特典グリッド */
+        .pop-section-title {
+            text-align: center;
+            font-size: 28px;
+            font-weight: bold;
+            margin-bottom: 40px;
+            color: #333;
+        }
+        .pop-section-title span {
+            color: #27C6F5;
+            font-family: 'Oswald', sans-serif;
+            font-size: 20px;
+            display: block;
+            margin-bottom: 5px;
+        }
+        
+        .benefit-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); /* 自動折り返し */
+            gap: 20px;
+            margin-bottom: 60px;
+        }
+        .benefit-card {
+            background: #fff;
+            border: 2px solid #27C6F5;
+            border-radius: 15px;
+            padding: 20px;
+            text-align: center;
+            transition: 0.3s;
+            position: relative;
+        }
+        .benefit-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 30px rgba(39, 198, 245, 0.2);
+        }
+        .benefit-icon {
+            font-size: 40px;
+            margin-bottom: 10px;
+        }
+        .benefit-card h4 {
+            font-size: 18px;
+            color: #27C6F5;
+            margin-bottom: 10px;
+            font-weight: bold;
+        }
+        .benefit-card p {
+            font-size: 14px;
+            color: #666;
+            margin-bottom: 15px;
+        }
+        .benefit-img-placeholder {
+            height: 100px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            color: #888;
+            font-weight: bold;
+            border: 2px dashed rgba(0,0,0,0.1);
+        }
+
+        /* 4. プランカード（目玉！） */
+        .plan-card {
+            background: #fff;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.1);
+            text-align: center;
+            border: 4px solid #f1c40f; /* 黄色の枠線 */
+            max-width: 600px;
+            margin: 0 auto 60px;
+        }
+        .plan-header {
+            background: #f1c40f;
+            padding: 30px;
+            color: #333;
+            position: relative;
+        }
+        .plan-badge {
+            position: absolute;
+            top: 10px; right: 10px;
+            background: #ff4757;
+            color: #fff;
+            font-size: 12px;
+            padding: 5px 10px;
+            border-radius: 20px;
+            font-weight: bold;
+            transform: rotate(10deg);
+        }
+        .plan-header h3 { font-size: 24px; margin: 0; font-weight: bold; }
+        .plan-header .price { font-size: 18px; margin-top: 10px; font-weight: bold; }
+        .plan-header .price span { font-size: 30px; color: #fff; text-shadow: 2px 2px 0 rgba(0,0,0,0.1); }
+        
+        .plan-body { padding: 40px; }
+        .plan-list {
+            list-style: none;
+            padding: 0;
+            margin: 0 0 30px;
+            text-align: left;
+            display: inline-block;
+        }
+        .plan-list li { margin-bottom: 10px; font-size: 16px; font-weight: bold; color: #555; }
+        
+        .plan-btn {
+            display: block;
+            background: #27C6F5;
+            color: #fff;
+            text-decoration: none;
+            padding: 20px;
+            border-radius: 50px;
+            font-weight: bold;
+            font-size: 20px;
+            box-shadow: 0 10px 0 #1fa0c9; /* 立体ボタン */
+            transition: 0.2s;
+        }
+        .plan-btn:hover {
+            transform: translateY(5px);
+            box-shadow: 0 5px 0 #1fa0c9;
+        }
+        .plan-btn:active {
+            transform: translateY(10px);
+            box-shadow: none;
+        }
+        .plan-btn span { font-size: 14px; opacity: 0.8; }
+
+        /* 5. FAQ */
+        .faq-list {
+            max-width: 700px;
+            margin: 0 auto;
+            text-align: left;
+        }
+        .faq-list dt {
+            background: #f9f9f9;
+            padding: 15px 20px;
+            border-radius: 10px;
+            font-weight: bold;
+            margin-bottom: 10px;
+            border-left: 5px solid #27C6F5;
+        }
+        .faq-list dd {
+            margin: 0 0 30px 20px;
+            color: #666;
+            line-height: 1.6;
+        }
+        
+        /* スマホ対応 */
+        @media (max-width: 768px) {
+            .pop-title { font-size: 40px; }
+            .plan-btn { font-size: 16px; }
+            .benefit-grid { grid-template-columns: 1fr; } /* 1列にする */
+        }
     </style>
 </head>
 <body>
@@ -2832,15 +3162,14 @@
             <img src="logo.png" alt="AOHARU FRIENDS" class="logo-img" onclick="showPage('top')" id="headerLogo">
             
             <nav class="pc-nav">
-                <a class="pc-nav-link" onclick="showPage('news')">NEWS</a>
-                <a class="pc-nav-link" onclick="showPage('member')">MEMBER</a>
-                <a class="pc-nav-link" onclick="showPage('schedule')">SCHEDULE</a>
-                <a class="pc-nav-link" onclick="showPage('video')">VIDEO</a>
-                <a class="pc-nav-link" onclick="showPage('goods')">GOODS</a>
-                <a class="pc-nav-link" onclick="showPage('radio')">RADIO</a>
-                <a class="pc-nav-link" onclick="showPage('rakugaki')">GRAFFITI</a>
-                <a class="pc-nav-link" onclick="showPage('studio')">STUDIO</a>
-            </nav>
+    <a class="pc-nav-link" onclick="showPage('news')">NEWS</a>
+    <a class="pc-nav-link" onclick="showPage('member')">MEMBER</a>
+    <a class="pc-nav-link" onclick="showPage('schedule')">SCHEDULE</a>
+    <a class="pc-nav-link" onclick="showPage('video')">VIDEO</a>
+    <a class="pc-nav-link" onclick="showPage('goods')">GOODS</a>
+    <a class="pc-nav-link" onclick="showPage('membership')" style="color:#f1c40f;">FC</a>
+    <a class="pc-nav-link" onclick="showPage('radio')">RADIO</a>
+    </nav>
         </div>
         <div class="header-right">
             <div id="themeColorButtons" class="theme-btn-container"></div>
@@ -2863,6 +3192,7 @@
         <a href="javascript:void(0)" class="menu-link" onclick="showPage('schedule')">SCHEDULE</a>
         <a href="javascript:void(0)" class="menu-link" onclick="showPage('video')">VIDEO</a>
         <a href="javascript:void(0)" class="menu-link" onclick="showPage('goods')">GOODS</a>
+        <a href="javascript:void(0)" class="menu-link" onclick="showPage('membership')" style="color:#f1c40f;">MEMBERSHIP (FC)</a>
         <a href="javascript:void(0)" class="menu-link" onclick="showPage('radio')">RADIO</a>
         <a href="javascript:void(0)" class="menu-link" onclick="showPage('guideline')">GUIDELINE</a> 
         <a href="javascript:void(0)" class="menu-link" onclick="showPage('rakugaki')">GRAFFITI</a>
@@ -3161,8 +3491,8 @@
                     メールアドレスだけで簡単30秒登録。<br>
                     あなたも今日から「あおはる学園」の一員になりませんか？
                 </p>
-                <button class="join-btn-large" onclick="openRegisterModal()">
-                    <i class="fas fa-sign-in-alt"></i> 今すぐ無料で入学する
+                <button class="join-btn-large" onclick="showPage('membership')">
+                    <i class="fas fa-sign-in-alt"></i> 詳細はコチラ
                 </button>
             </div>
         </div>
@@ -3390,7 +3720,7 @@
         </div>
     </div>
 
-<div id="video" class="page">
+    <div id="video" class="page">
             <div class="page-header">
                 <div class="page-title-en" style="color:#ff0000;">VIDEO</div>
                 <div class="page-title-jp">動画一覧</div>
@@ -3422,13 +3752,100 @@
                 </div>
             </div>
         </div>
+        </div>
+<div id="membership" class="page">
+        
+        <div class="pop-hero">
+            <div class="pop-hero-inner">
+                <h2 class="pop-title">JOIN THE CLUB!</h2>
+                <p class="pop-subtitle">あおはる学園に入学して<br>最高の青春を楽しもう！</p>
+                <div class="pop-hero-img">
+                    <img src="logo_high.png" alt="AOHARU FRIENDS">
+                </div>
+            </div>
+            <div class="pop-bg-pattern"></div>
+        </div>
+
+        <div class="container" style="max-width: 1000px; padding: 60px 20px;">
+            
+            <div class="pop-intro">
+                <h3>あおはる☆フレンズ<br>公式ファンクラブへようこそ！</h3>
+                <p>
+                    「教室はサーバー、ツルハシがペン」<br>
+                    ここは、私たちとみんなで作り上げる秘密の放課後。<br>
+                    会員（生徒）になると、特別な授業や部活動に参加できるよ！
+                </p>
+            </div>
+
+            <div class="pop-benefits">
+                <h3 class="pop-section-title"><span>MEMBERSHIP BENEFITS</span><br>生徒だけの4大特典</h3>
+                <div class="benefit-grid">
+                    <div class="benefit-card">
+                        <div class="b-num">01</div>
+                        <div class="b-icon">💳</div>
+                        <h4>デジタル会員証</h4>
+                        <p>あなただけの学生証を発行！<br>推しメンデザインを選べるよ！</p>
+                    </div>
+                    <div class="benefit-card">
+                        <div class="b-num">02</div>
+                        <div class="b-icon">🎬</div>
+                        <h4>会員限定動画</h4>
+                        <p>配信のアフタートークや<br>NGシーン集が見放題！</p>
+                    </div>
+                    <div class="benefit-card">
+                        <div class="b-num">03</div>
+                        <div class="b-icon">🎮</div>
+                        <h4>参加型サーバー</h4>
+                        <p>マイクラ参加型企画の<br>優先参加権をゲット！</p>
+                    </div>
+                    <div class="benefit-card">
+                        <div class="b-num">04</div>
+                        <div class="b-icon">🎁</div>
+                        <h4>プレゼント企画</h4>
+                        <p>サイン入りグッズや<br>季節の壁紙をプレゼント！</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pop-plan">
+                <div class="plan-card">
+                    <div class="plan-header">
+                        <span class="plan-badge">RECOMMENDED!</span>
+                        <h3>あおはる学園 生徒会</h3>
+                        <p class="price"><span>FREE</span> / 月額無料</p>
+                    </div>
+                    <div class="plan-body">
+                        <ul class="plan-list">
+                            <li>✅ デジタル会員証の発行</li>
+                            <li>✅ 最新情報の先行配信</li>
+                            <li>✅ 参加型企画への応募</li>
+                            <li>✅ 限定コンテンツの視聴</li>
+                        </ul>
+                        <a href="#" onclick="openRegisterModal(); return false;" class="plan-btn">
+                            今すぐ入学手続きをする！<br><span>（新規会員登録へ）</span>
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pop-faq">
+                <h3 class="pop-section-title"><span>FAQ</span><br>よくある質問</h3>
+                <dl class="faq-list">
+                    <dt>Q. 入学金はかかりますか？</dt>
+                    <dd>A. 一切かかりません！現在は完全無料で全コンテンツをお楽しみいただけます。</dd>
+                    <dt>Q. スマホからでも登録できますか？</dt>
+                    <dd>A. もちろんです！スマホ、PC、タブレットどれでもOKです。</dd>
+                </dl>
+            </div>
+        </div>
+    </div>
 
     <div id="radio" class="page">
         <div class="page-header">
             <div class="page-title-en">RADIO</div>
             <div class="page-title-jp">ラジオ＆お便り</div>
         </div>
-        
+
         <div class="container">
             <div class="radio-booth-wrapper">
                 <div class="radio-header-panel">
@@ -3437,12 +3854,11 @@
                     </div>
                     <div id="onAirLamp" class="on-air-lamp">ON AIR</div>
                 </div>
-
+                
                 <div class="radio-paper-form">
                     <div style="text-align:center; margin-bottom:20px; color:#555; font-weight:bold; font-size:18px;">
                         <i class="fas fa-microphone-alt"></i> お便り募集中
                     </div>
-                    
                     <label class="form-label">ラジオネーム</label>
                     <input type="text" class="radio-input" id="radioName" placeholder="あおはる 太郎">
                     
@@ -3457,7 +3873,7 @@
                     <label class="form-label">メッセージ</label>
                     <textarea class="radio-input" id="radioMessage" rows="5" placeholder="ここに熱いメッセージを書いてね！"></textarea>
                     
-                    <button class="radio-btn" onclick="submitRadio()" style="background:#333; border:2px solid #555;">
+                    <button class="radio-btn" onclick="submitRadio()">
                         <i class="fas fa-paper-plane"></i> ON AIR (送信)
                     </button>
                 </div>
@@ -3898,34 +4314,49 @@
         </div>
     </div>
 
-    <footer>
-        <div class="footer-container">
-            <div class="footer-left">
-                <ul class="footer-menu">
-                    <li><a href="javascript:void(0)" onclick="showPage('top')">TOP<span class="footer-menu-ja">トップ</span></a></li>
-                    <li><a href="javascript:void(0)" onclick="showPage('news')">NEWS<span class="footer-menu-ja">お知らせ</span></a></li>
-                    <li><a href="javascript:void(0)" onclick="showPage('member')">MEMBER<span class="footer-menu-ja">メンバー</span></a></li>
-                    <li><a href="javascript:void(0)" onclick="showPage('schedule')">SCHEDULE<span class="footer-menu-ja">スケジュール</span></a></li>
-                    <li><a href="javascript:void(0)" onclick="showPage('video')">VIDEO<span class="footer-menu-ja">動画一覧</span></a></li>
-                    <li><a href="javascript:void(0)" onclick="showPage('goods')">GOODS<span class="footer-menu-ja">グッズ</span></a></li>
-                    <li><a href="javascript:void(0)" onclick="showPage('radio')">RADIO<span class="footer-menu-ja">ラジオ</span></a></li>
-                    <li><a href="javascript:void(0)" onclick="showPage('guideline')">GUIDELINE<span class="footer-menu-ja">ガイドライン</span></a></li> 
-                    <li><a href="javascript:void(0)" onclick="showPage('rakugaki')">GRAFFITI<span class="footer-menu-ja">落書き広場</span></a></li>
-                    <li><a href="javascript:void(0)" onclick="showPage('studio')">STUDIO<span class="footer-menu-ja">スタジオ</span></a></li>
-                    <li><a href="javascript:void(0)" onclick="showPage('business')">BUSINESS<span class="footer-menu-ja">法人の方へ</span></a></li>
-                    <li><a href="javascript:void(0)" onclick="openLoginModal()">LOGIN<span class="footer-menu-ja">ログイン</span></a></li>
-                </ul>
+        <footer id="vspoFooter">
+        <a href="#" onclick="window.scrollTo({top: 0, behavior: 'smooth'}); return false;" class="footer-back-to-top">
+            <span class="arrow">▲</span>
+            <span class="text">TOP</span>
+        </a>
+
+        <div class="footer-inner">
+            <div class="footer-top-row">
+                <div class="footer-logo-wrap">
+                    <img src="logo.png" alt="AOHARU FRIENDS" class="vspo-footer-logo">
+                </div>
+                
+                <nav class="footer-main-nav">
+                    <ul>
+                        <li><a href="#" onclick="showPage('top'); return false;">TOP</a></li>
+                        <li><a href="#" onclick="showPage('news'); return false;">NEWS</a></li>
+                        <li><a href="#" onclick="showPage('member'); return false;">MEMBER</a></li>
+                        <li><a href="#" onclick="showPage('schedule'); return false;">SCHEDULE</a></li>
+                        <li><a href="#" onclick="showPage('goods'); return false;">GOODS</a></li>
+                        <li><a href="#" onclick="showPage('radio'); return false;">RADIO</a></li>
+                    </ul>
+                </nav>
             </div>
-            <div class="footer-right">
-                <img src="logo.png" alt="AOHARU FRIENDS" class="footer-logo">
-                <div class="footer-sns">
-                    <a href="https://x.com/AO_FURE" id="footerTwitterLink" target="_blank" class="footer-sns-btn"><img src="icon_x.png" alt="X" class="footer-sns-icon-img"></a>
-                    <a href="https://www.youtube.com/@あおはるフレンズ" id="footerYoutubeLink" target="_blank" class="footer-sns-btn"><img src="icon_youtube.png" alt="YouTube" class="footer-sns-icon-img"></a>
+
+            <div class="footer-middle-row">
+                <div class="footer-sub-links">
+                    <a href="#" onclick="showPage('guideline'); return false;">GUIDELINES</a>
+                    <a href="#" onclick="showPage('business'); return false;">BUSINESS</a>
+                    <a href="#">PRIVACY POLICY</a>
+                </div>
+                
+                <div class="footer-social-icons">
+                    <a href="#" target="_blank" class="social-icon x-icon" id="footerTwitterLink">𝕏</a>
+                    <a href="#" target="_blank" class="social-icon yt-icon" id="footerYoutubeLink">▶</a>
                 </div>
             </div>
-        </div>
-        <div class="copyright" onclick="triggerSecretEvent()" style="cursor:pointer; user-select:none;">
-            © 2026 AOHARU FRIENDS All Rights Reserved.
+
+            <div class="footer-bottom-row">
+                <p class="copyright">
+                    掲載の記事・写真・イラスト等のすべてのコンテンツの無断複写・転載を禁じます。<br>
+                    &copy; AOHARU FRIENDS
+                </p>
+            </div>
         </div>
     </footer>
 
@@ -4047,6 +4478,100 @@
         <div id="gachaParticles"></div>
     </div>
     <div id="whiteFlash" class="white-flash"></div>
+
+<div id="membershipPage" class="content-section" style="display: none;">
+        
+        <div class="pop-hero">
+            <div class="pop-hero-inner">
+                <h2 class="pop-title">JOIN THE CLUB!</h2>
+                <p class="pop-subtitle">あおはる学園に入学して<br>最高の青春を楽しもう！</p>
+                <div class="pop-hero-img">
+                    <img src="logo_high.png" alt="AOHARU FRIENDS">
+                </div>
+            </div>
+            <div class="pop-bg-pattern"></div>
+        </div>
+
+        <div class="container" style="max-width: 1000px; padding: 60px 20px;">
+            
+            <div class="pop-intro">
+                <h3>あおはる☆フレンズ<br>公式ファンクラブへようこそ！</h3>
+                <p>
+                    「教室はサーバー、ツルハシがペン」<br>
+                    ここは、私たちとみんなで作り上げる秘密の放課後。<br>
+                    会員（生徒）になると、特別な授業や部活動に参加できるよ！
+                </p>
+            </div>
+
+            <div class="pop-benefits">
+                <h3 class="pop-section-title"><span>MEMBERSHIP BENEFITS</span><br>生徒だけの4大特典</h3>
+                
+                <div class="benefit-grid">
+                    <div class="benefit-card">
+                        <div class="benefit-icon">💳</div>
+                        <h4>デジタル会員証</h4>
+                        <p>あなただけの学生証を発行！<br>推しメンデザインを選べるよ！</p>
+                        <div class="benefit-img-placeholder" style="background:#e0f7ff;">CARD SAMPLE</div>
+                    </div>
+
+                    <div class="benefit-card">
+                        <div class="benefit-icon">🎬</div>
+                        <h4>会員限定動画</h4>
+                        <p>配信のアフタートークや<br>NGシーン集が見放題！</p>
+                        <div class="benefit-img-placeholder" style="background:#fff5e0;">VIDEO SAMPLE</div>
+                    </div>
+
+                    <div class="benefit-card">
+                        <div class="benefit-icon">🎮</div>
+                        <h4>参加型サーバー</h4>
+                        <p>マイクラ参加型企画の<br>優先参加権をゲット！</p>
+                        <div class="benefit-img-placeholder" style="background:#e0ffe4;">GAME SAMPLE</div>
+                    </div>
+
+                    <div class="benefit-card">
+                        <div class="benefit-icon">🎁</div>
+                        <h4>プレゼント企画</h4>
+                        <p>サイン入りグッズや<br>季節の壁紙をプレゼント！</p>
+                        <div class="benefit-img-placeholder" style="background:#ffe0e0;">GIFT SAMPLE</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pop-plan">
+                <div class="plan-card">
+                    <div class="plan-header">
+                        <span class="plan-badge">RECOMMENDED!</span>
+                        <h3>あおはる学園 生徒会</h3>
+                        <p class="price"><span>FREE</span> / 月額無料</p>
+                    </div>
+                    <div class="plan-body">
+                        <ul class="plan-list">
+                            <li>✅ デジタル会員証の発行</li>
+                            <li>✅ 最新情報の先行配信</li>
+                            <li>✅ 参加型企画への応募</li>
+                            <li>✅ 限定コンテンツの視聴</li>
+                        </ul>
+                        <a href="#" onclick="showPage('register'); return false;" class="plan-btn">今すぐ入学手続きをする！<br><span>（新規会員登録へ）</span></a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pop-faq">
+                <h3 class="pop-section-title"><span>FAQ</span><br>よくある質問</h3>
+                <dl class="faq-list">
+                    <dt>Q. 入学金はかかりますか？</dt>
+                    <dd>A. 一切かかりません！現在は完全無料で全コンテンツをお楽しみいただけます。</dd>
+                    
+                    <dt>Q. スマホからでも登録できますか？</dt>
+                    <dd>A. もちろんです！スマホ、PC、タブレットどれでもOKです。</dd>
+                    
+                    <dt>Q. 推しメンは後から変更できますか？</dt>
+                    <dd>A. マイページからいつでも変更可能です！「箱推し」も大歓迎です。</dd>
+                </dl>
+            </div>
+
+        </div>
+    </div>
 
 <script>
     // ==========================================
