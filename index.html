@@ -1209,6 +1209,102 @@
         .modal.open .modal-content { transform: translateY(0); } .modal-close-btn { position: absolute; top: 15px; right: 20px; font-size: 28px; color: #aaa; cursor: pointer; } .news-modal-content { max-width: 500px; text-align: left; } .news-modal-content .modal-title { font-size: 18px; font-weight: bold; margin: 15px 0; border-bottom: 2px solid #f0f0f0; padding-bottom: 15px; } .news-modal-content .modal-body { font-size: 15px; line-height: 1.8; color: #444; white-space: pre-wrap; }
         .auth-title { font-size: 20px; font-weight: bold; margin-bottom: 20px; color: var(--text-main); font-family: 'Poppins', sans-serif; } .auth-input { width: 100%; padding: 12px; margin-bottom: 15px; box-sizing: border-box; border: 1px solid #ddd; border-radius: 8px; background: #f9f9f9; font-size: 16px; } .auth-input:focus { border-color: var(--primary); outline: none; background: white; } .auth-btn { width: 100%; padding: 12px; background: var(--primary); color: white; border: none; border-radius: 25px; font-weight: bold; font-size: 16px; cursor: pointer; margin-top: 10px; box-shadow: 0 4px 10px rgba(39, 198, 245, 0.3); } .auth-btn:hover { background: var(--primary-dark); } .auth-link { margin-top: 20px; font-size: 14px; color: #888; } .auth-link a { color: var(--primary); text-decoration: none; font-weight: bold; cursor: pointer; } .auth-link a:hover { text-decoration: underline; } .social-login-area { margin-top: 20px; border-top: 1px solid #eee; padding-top: 20px; } .social-login-label { font-size: 12px; color: #888; margin-bottom: 10px; } .social-login-btn { width: 100%; padding: 10px; border-radius: 25px; font-weight: bold; font-size: 14px; margin-bottom: 10px; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 10px; border: 1px solid #ddd; background: white; transition: background 0.2s; } .social-login-btn:hover { background: #f5f5f5; }
 
+        /* ▼▼▼ PARTNERS セクション ▼▼▼ */
+        .partner-section {
+            background: #fafafa; /* 背景はごく薄いグレー */
+            padding: 50px 0 80px;
+            text-align: center;
+            border-top: 1px solid #eee;
+        }
+        .partner-title {
+            font-family: 'Oswald', sans-serif;
+            color: #ccc; /* 目立ちすぎないグレー */
+            letter-spacing: 4px;
+            font-size: 16px;
+            margin-bottom: 30px;
+        }
+        .partner-title::before, .partner-title::after {
+            content: '-'; margin: 0 10px;
+        }
+
+        .partner-grid {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        /* 企業ロゴ風ボックス */
+        .partner-logo {
+            width: 160px;
+            height: 90px;
+            background: #fff;
+            border: 1px solid #eee;
+            border-radius: 8px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            color: #999; /* 最初はグレー */
+            font-weight: bold;
+            font-family: sans-serif;
+            font-size: 14px;
+            transition: 0.3s;
+            cursor: default;
+        }
+        .partner-logo i {
+            font-size: 24px;
+            margin-bottom: 8px;
+            color: #ddd;
+            transition: 0.3s;
+        }
+
+        /* ホバー時の演出（色がつく） */
+        .partner-logo:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+            border-color: #27C6F5;
+            color: #333;
+        }
+        .partner-logo:hover i {
+            color: #27C6F5;
+        }
+
+        /* 募集枠（Recruitment）の特別デザイン */
+        .partner-logo.recruitment {
+            background: #f0faff; /* 薄い水色背景 */
+            border: 2px dashed #27C6F5; /* 点線 */
+            color: #27C6F5;
+            cursor: pointer; /* クリックできる指カーソル */
+            text-decoration: none;
+        }
+        .partner-logo.recruitment i {
+            color: #27C6F5;
+        }
+        .partner-logo.recruitment small {
+            font-size: 10px;
+            opacity: 0.7;
+            font-weight: normal;
+        }
+        /* 募集枠をホバーした時 */
+        .partner-logo.recruitment:hover {
+            background: #27C6F5;
+            color: #fff;
+        }
+        .partner-logo.recruitment:hover i {
+            color: #fff;
+        }
+
+        /* スマホ対応 */
+        @media (max-width: 768px) {
+            .partner-grid {
+                padding: 0 20px;
+            }
+            .partner-logo {
+                width: 45%; /* スマホでは2列表示 */
+            }
+        }
+
         /* ▼▼▼ ぶいすぽっ！風フッターデザイン ▼▼▼ */
         #vspoFooter {
             background-color: #111; /* 漆黒に近いグレー */
@@ -3438,9 +3534,13 @@
             </div>
             <div class="scroll-wrapper">
                 <button class="scroll-btn left" onclick="scrollContent('topNewsList', 'left')">◀</button>
-                <div class="scroll-grid" id="topNewsList">読み込み中...</div>
+    
+                <div class="scroll-grid" id="topNewsList">
+                    </div>
+
                 <button class="scroll-btn right" onclick="scrollContent('topNewsList', 'right')">▶</button>
             </div>
+
             <div style="text-align:center;">
                 <button onclick="showPage('news')" class="more-btn">MORE VIEW</button>
             </div>
@@ -4380,6 +4480,40 @@
         </div>
     </div>
 
+<div class="partner-section">
+        <div class="container">
+            <h3 class="partner-title">OFFICIAL PARTNERS</h3>
+            <div class="partner-grid">
+                
+                <div class="partner-logo" title="Server Solution">
+                    <i class="fas fa-server"></i>
+                    <span>CUBE SERVER</span>
+                </div>
+
+                <div class="partner-logo" title="Energy Drink">
+                    <i class="fas fa-bolt"></i>
+                    <span>Z-ENERGY</span>
+                </div>
+
+                <div class="partner-logo" title="Gaming Gear">
+                    <i class="fas fa-headset"></i>
+                    <span>PRO GEAR</span>
+                </div>
+
+                <div class="partner-logo" title="Apparel">
+                    <i class="fas fa-tshirt"></i>
+                    <span>AOHARU WEAR</span>
+                </div>
+
+                <a href="#" onclick="showPage('business'); return false;" class="partner-logo recruitment">
+                    <i class="fas fa-handshake"></i>
+                    <span>スポンサー募集中<br><small>Click to Contact</small></span>
+                </a>
+
+            </div>
+        </div>
+    </div>
+
         <footer id="vspoFooter">
         <a href="#" onclick="window.scrollTo({top: 0, behavior: 'smooth'}); return false;" class="footer-back-to-top">
             <span class="arrow">▲</span>
@@ -5039,6 +5173,24 @@
         const img = document.getElementById('modalImg');
         if (img && data.image && data.image !== "") { img.src = data.image; img.style.display = "block"; } else if (img) { img.style.display = "none"; }
         document.getElementById('newsModal').classList.add('open'); 
+    }
+
+    /* ▼▼▼ 汎用スクロール機能（矢印を動かす魔法） ▼▼▼ */
+    function scrollContainer(containerId, direction) {
+        const container = document.getElementById(containerId);
+        
+        if (container) {
+            // 1回にスクロールする量（スマホは少なめ、PCは多め）
+            const scrollAmount = window.innerWidth < 768 ? 250 : 400;
+            
+            // スクロール実行（smoothでヌルッと動く）
+            container.scrollBy({
+                left: direction * scrollAmount, 
+                behavior: 'smooth'
+            });
+        } else {
+            console.error("IDが見つかりません: " + containerId);
+        }
     }
 
     // ▼▼▼ ニュースのカテゴリー切り替え機能 ▼▼▼
@@ -7195,6 +7347,26 @@
             setTimeout(() => {
                 window.location.href = 'old_index.html';
             }, 1000);
+        }
+    }
+
+    /* ▼▼▼ 追加：すべての矢印を一括で動かす魔法のコード ▼▼▼ */
+    
+    // HTMLの "scrollContent('ID名', '方向')" という命令を受け取って動かす関数
+    function scrollContent(containerId, direction) {
+        const container = document.getElementById(containerId);
+        
+        if (container) {
+            // スクロール量（左ならマイナス、右ならプラス）
+            const scrollAmount = (direction === 'left' ? -1 : 1) * 300; 
+            
+            // ヌルッと動かす
+            container.scrollBy({
+                left: scrollAmount,
+                behavior: 'smooth'
+            });
+        } else {
+            console.error("IDが見つかりません: " + containerId);
         }
     }
 </script>
