@@ -758,7 +758,23 @@
         .video-card { flex: 0 0 200px; background: white; border-radius: 8px; overflow: hidden; box-shadow: 0 2px 5px rgba(0,0,0,0.05); transition: transform 0.3s; cursor: pointer; scroll-snap-align: start; } .video-card:hover { transform: translateY(-3px); } .video-thumb-box { position: relative; width: 100%; aspect-ratio: 16 / 9; overflow: hidden; } .video-thumb { width: 100%; height: 100%; object-fit: cover; } .play-icon { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 24px; height: 24px; background: rgba(0,0,0,0.6); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-size: 12px; } .video-info { padding: 6px; } .video-title { font-size: 10px; font-weight: bold; margin-bottom: 2px; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; line-height: 1.3; } .video-date { font-size: 9px; color: #888; }
         .member-video-card { flex: 0 0 280px; scroll-snap-align: start; cursor: pointer; position: relative; background:white; border-radius:12px; overflow:hidden; box-shadow:0 2px 5px rgba(0,0,0,0.05); border:1px solid #eee; } .mv-blur .news-img, .mv-blur .news-title { filter: blur(4px); } .mv-lock-overlay { position: absolute; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.4); z-index:10; display:flex; flex-direction:column; align-items:center; justify-content:center; color:white; } .mv-lock-icon { font-size:30px; margin-bottom:10px; } .mv-lock-text { font-family:'Oswald',sans-serif; font-weight:bold; letter-spacing:1px; }
 
-        .member-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin: 0 auto; width: 100%; }
+        /* ▼▼▼ 修正：メンバーを6人並びにする設定 ▼▼▼ */
+.member-grid {
+    display: grid;
+    /* PCでは6人並べる */
+    grid-template-columns: repeat(6, 1fr); 
+    gap: 15px; /* 間隔を少し調整 */
+    margin: 0 auto;
+    width: 100%;
+}
+
+/* スマホでは狭すぎるので「2列」に戻す（重要！） */
+@media (max-width: 768px) {
+    .member-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 10px;
+    }
+}
         .member-card-vertical { position: relative; aspect-ratio: 2 / 3; z-index: 1; border-radius: 8px; overflow: hidden; transition: transform 0.2s, box-shadow 0.2s; cursor: pointer; width: 100%; }
         .member-card-vertical::before { content: ""; position: absolute; inset: 0; background-image: var(--member-bg); background-size: cover; background-position: center; background-color: var(--member-color, #ccc); background-blend-mode: hard-light; z-index: -1; transition: transform 0.3s; }
         .member-img-wrapper { position: absolute; inset: 0; -webkit-mask-image: var(--member-bg); mask-image: var(--member-bg); -webkit-mask-size: cover; mask-size: cover; -webkit-mask-position: center; mask-position: center; }
@@ -3263,6 +3279,81 @@
             80% { transform: translate(5px, -10px) skew(-5deg); }
             100% { transform: translate(0, 0) skew(0deg); }
         }
+/* ▼▼▼ 修正版5：レアな流れ星＆ワイド幅復活 ▼▼▼ */
+
+body {
+    background-color: #f4f8fb; /* 明るい空色っぽい白 */
+    background-image: 
+        radial-gradient(#dbeafe 1px, transparent 1px); /* うっすら星空のようなドット */
+    background-size: 50px 50px;
+    color: #333;
+    position: relative;
+    overflow-x: hidden;
+    min-height: 100vh;
+}
+
+/* ▼ 流れ星のデザイン ▼ */
+.shooting-star {
+    position: fixed;
+    z-index: -1; /* コンテンツの下 */
+    width: 150px; /* 尾の長さ */
+    height: 2px;
+    background: linear-gradient(90deg, rgba(255,255,255,0), rgba(39, 198, 245, 0.8), #fff); /* 青白く光る */
+    box-shadow: 0 0 10px rgba(39, 198, 245, 0.8), 0 0 20px #fff; /* キラキラ発光 */
+    border-radius: 999px;
+    opacity: 0;
+    transform: rotate(-45deg); /* 斜めに角度をつける */
+    pointer-events: none;
+}
+
+/* 先端を光らせる（星の核） */
+.shooting-star::before {
+    content: '';
+    position: absolute;
+    right: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 6px;
+    height: 6px;
+    background: #fff;
+    border-radius: 50%;
+    box-shadow: 0 0 15px #fff, 0 0 30px #27C6F5;
+}
+
+/* 流れるアニメーション */
+@keyframes shootAcross {
+    0% {
+        transform: translateX(0) translateY(0) rotate(-45deg) scale(0.8);
+        opacity: 1;
+    }
+    100% {
+        /* 画面を大きく横切る */
+        transform: translateX(-800px) translateY(800px) rotate(-45deg) scale(1);
+        opacity: 0;
+    }
+}
+
+/* ▼ サイトの横幅を「ワイド」に強制固定 ▼ */
+.container,
+.section-inner,
+.hero-content,
+.footer-inner,
+.header-inner {
+    max-width: 1400px !important; /* 横幅を1400pxに拡張 */
+    width: 95% !important;        /* スマホでも画面端まで使う */
+    padding-left: 10px;
+    padding-right: 10px;
+    margin: 0 auto;
+}
+
+/* カード一覧も幅いっぱいに */
+.scroll-grid,
+.news-grid,
+.member-grid,
+.live-dynamic-grid {
+    width: 100% !important;
+    max-width: 100% !important;
+}
     </style>
 </head>
 <body>
@@ -4780,7 +4871,7 @@
     // ==========================================
 
     const GAS_API_URL = "https://script.google.com/macros/s/AKfycbxylJLT0sLlW3bXM73DTl3MsB7FBhKSveOdS5svbeizfyZXP7PnLp60IWZTxP0-41YCrw/exec";
-    let YOUTUBE_API_KEY = ""; 
+    let YOUTUBE_API_KEY = "AIzaSyDAvP7VhPB7L4sTu7C3X2-_c7okHJvTrxw"; 
     let GROUP_CONFIG = {};
     let memberData = [];
     let goodsData = [{ name: "Loading...", price: "-", img: "icon.png", link: "#" }]; 
@@ -7369,6 +7460,45 @@
             console.error("IDが見つかりません: " + containerId);
         }
     }
+
+    /* ▼▼▼ 追加機能：1分に1回流れるレアな流れ星 ▼▼▼ */
+    function initShootingStar() {
+        
+        const spawnStar = () => {
+            const star = document.createElement('div');
+            star.classList.add('shooting-star');
+
+            // 出現位置：画面の右上エリアのどこか（ランダム）
+            // 画面幅の50%〜120%（右側〜画面外）
+            const startX = window.innerWidth * (0.5 + Math.random() * 0.7);
+            // 画面高さの-20%〜30%（上側）
+            const startY = window.innerHeight * (Math.random() * 0.5 - 0.2);
+
+            star.style.left = startX + 'px';
+            star.style.top = startY + 'px';
+
+            // 流れる速度：2秒〜4秒かけてゆっくり美しく
+            const duration = 2 + Math.random() * 2; 
+            star.style.animation = `shootAcross ${duration}s ease-out forwards`;
+
+            document.body.appendChild(star);
+
+            // アニメーション後に消す
+            setTimeout(() => { star.remove(); }, duration * 1000);
+
+            // ▼ 次の流れ星の予約（重要！）▼
+            // 「40秒 〜 80秒」の間でランダムに待機（平均1分）
+            const nextTime = (40000 + Math.random() * 40000); 
+            console.log(`次の流れ星まで: ${Math.floor(nextTime/1000)}秒`);
+            setTimeout(spawnStar, nextTime);
+        };
+
+        // 最初の1回だけは、ページを開いて「5秒後」に流す（見逃し防止）
+        setTimeout(spawnStar, 5000);
+    }
+
+    // 読み込み完了時にスタート
+    window.addEventListener('load', initShootingStar);
 </script>
 </body>
 </html>
