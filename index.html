@@ -5788,8 +5788,16 @@ body {
         }
     }
     
-    // ▼▼▼ ソシャゲ風ガチャ演出プログラム（おみくじ豪華版） ▼▼▼
-    
+// ▼▼▼ ソシャゲ風ガチャ演出プログラム（音付き豪華版） ▼▼▼
+
+    // ★音源の設定（ファイル名を合わせてね！）
+    const SE_GACHA_ROLL = new Audio('se_garagara.mp3'); // 抽選中（ドラムロール/チャージ音）
+    const SE_GACHA_RESULT = new Audio('se_result.mp3'); // 結果（ジャジャーン！）
+
+  // ★ここで音量を調整！（0.1 〜 1.0 の間で変えてみて！）
+    SE_GACHA_ROLL.volume = 0.2;   // 20%の大きさ（ガラガラ音）
+    SE_GACHA_RESULT.volume = 0.2; // 20%の大きさ（ジャン！音）
+
     // ガチャ開始（ボタンから呼ばれる）
     function startGacha() {
         // 1. 演出画面を起動
@@ -5799,6 +5807,10 @@ body {
         const flash = document.getElementById('whiteFlash');
         
         if(!overlay) { console.error("Overlay not found"); return; }
+
+        // ★ここで「ガラガラ音（チャージ音）」スタート！
+        SE_GACHA_ROLL.currentTime = 0;
+        SE_GACHA_ROLL.play().catch(e => console.log("再生エラー:", e));
 
         overlay.classList.add('active');
         text.innerText = "ENERGY CHARGING...";
@@ -5819,6 +5831,11 @@ body {
             setTimeout(() => {
                 clearInterval(particleInterval); // 粒子停止
                 
+                // ★ここで音を切り替え！「ガラガラ停止」→「ジャン！」
+                SE_GACHA_ROLL.pause();
+                SE_GACHA_RESULT.currentTime = 0;
+                SE_GACHA_RESULT.play();
+
                 // 5. ホワイトアウト（閃光）
                 if(flash) flash.classList.add('flash-active');
                 
@@ -5885,19 +5902,21 @@ body {
             ];
         }
 
+        // --- 以下、元のコードと同じ ---
         const member = members[Math.floor(Math.random() * members.length)];
-        const fortune = fortuneTypes[Math.floor(Math.random() * fortuneTypes.length)];
-        const item = luckyItems[Math.floor(Math.random() * luckyItems.length)];
-        const comment = fortuneComments[Math.floor(Math.random() * fortuneComments.length)];
+        // fortuneTypesなどが定義されている前提
+        const fortune = typeof fortuneTypes !== 'undefined' ? fortuneTypes[Math.floor(Math.random() * fortuneTypes.length)] : "大吉";
+        const item = typeof luckyItems !== 'undefined' ? luckyItems[Math.floor(Math.random() * luckyItems.length)] : "ダイヤ";
+        const comment = typeof fortuneComments !== 'undefined' ? fortuneComments[Math.floor(Math.random() * fortuneComments.length)] : "最高の一日！";
         
         currentOmikujiResult = { member, fortune, item, comment };
         
-        // ★ここ重要：既存の結果表示関数を呼び出す
+        // ★既存の結果表示関数を呼び出す
         if(typeof showOmikujiResult === 'function') {
             showOmikujiResult(); 
         }
 
-        // ド派手に紙吹雪を飛ばす（canvas-confettiライブラリ使用）
+        // ド派手に紙吹雪を飛ばす
         if(typeof confetti === 'function') {
             var duration = 3000;
             var end = Date.now() + duration;
