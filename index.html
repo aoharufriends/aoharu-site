@@ -3354,6 +3354,252 @@ body {
     width: 100% !important;
     max-width: 100% !important;
 }
+
+/* ▼▼▼ 修正版：スクロール連動アニメーションCSS ▼▼▼ */
+
+/* 1. 背景の方眼紙アニメーション（これは常時動いてOK） */
+.membership-section {
+    position: relative;
+    overflow: hidden;
+    background: linear-gradient(135deg, #ffffff 0%, #fdfbf7 100%);
+}
+.membership-section::before {
+    content: "";
+    position: absolute;
+    inset: -50%;
+    width: 200%;
+    height: 200%;
+    background-image: 
+        linear-gradient(rgba(39, 198, 245, 0.1) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(39, 198, 245, 0.1) 1px, transparent 1px);
+    background-size: 40px 40px;
+    z-index: 0;
+    animation: gridScroll 20s linear infinite;
+    pointer-events: none;
+}
+@keyframes gridScroll {
+    0% { transform: translate(0, 0) rotate(5deg); }
+    100% { transform: translate(-40px, -40px) rotate(5deg); }
+}
+
+/* 2. タイトルと説明文 */
+.membership-section .section-title,
+.mem-intro-text {
+    position: relative;
+    z-index: 2;
+    opacity: 0; /* 最初は隠す */
+    transform: translateY(20px);
+    transition: all 0.8s ease;
+}
+/* 画面に入ったらふわっと出る */
+.membership-section.animate-active .section-title,
+.membership-section.animate-active .mem-intro-text {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* 3. 特典カードのド派手な動き */
+.benefits-grid { perspective: 1000px; }
+
+.benefit-card {
+    opacity: 0; /* 最初は隠す */
+    transform: translateY(30px) rotateX(10deg);
+    transition: transform 0.3s, box-shadow 0.3s; /* ホバー用 */
+}
+
+/* ★スイッチが入ったらアニメーション開始！ */
+.benefit-card.animate-active {
+    animation: cardPopUp 0.8s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+}
+
+/* 順番に表示させる遅延設定 */
+.benefit-card:nth-child(1).animate-active { animation-delay: 0.1s; }
+.benefit-card:nth-child(2).animate-active { animation-delay: 0.3s; }
+.benefit-card:nth-child(3).animate-active { animation-delay: 0.5s; }
+.benefit-card:nth-child(4).animate-active { animation-delay: 0.7s; }
+
+@keyframes cardPopUp {
+    0% { opacity: 0; transform: translateY(50px) scale(0.9) rotateX(10deg); }
+    100% { opacity: 1; transform: translateY(0) scale(1) rotateX(0deg); }
+}
+
+/* ホバー時の動き */
+.benefit-card:hover {
+    transform: translateY(-10px) scale(1.02) !important; /* アニメ完了後も動くように */
+    box-shadow: 0 15px 30px rgba(39, 198, 245, 0.2);
+    border-color: #27C6F5;
+    background-color: #ffffff;
+    z-index: 10;
+}
+.benefit-card:hover .b-icon {
+    background: #27C6F5; color: white;
+    transform: rotateY(180deg) scale(1.1);
+    transition: all 0.5s ease;
+    box-shadow: 0 0 15px rgba(39, 198, 245, 0.5);
+}
+
+/* 4. 入会エリア */
+.join-area {
+    opacity: 0;
+    transform: scale(0.9);
+}
+.join-area.animate-active {
+    animation: popInArea 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+    animation-delay: 1.0s; /* カードの後に出る */
+}
+@keyframes popInArea {
+    0% { opacity: 0; transform: scale(0.9); }
+    100% { opacity: 1; transform: scale(1); }
+}
+
+/* ボタンのキラキラ（常時稼働） */
+.join-btn-large {
+    position: relative; overflow: hidden;
+    animation: heartBeatBtn 2s infinite ease-in-out;
+}
+.join-btn-large::after {
+    content: ""; position: absolute; top: 0; left: -100%; width: 50%; height: 100%;
+    background: linear-gradient(to right, rgba(255,255,255,0), rgba(255,255,255,0.6), rgba(255,255,255,0));
+    transform: skewX(-20deg);
+    animation: shine-button 3s infinite;
+}
+@keyframes shine-button {
+    0% { left: -100%; } 20% { left: 200%; } 100% { left: 200%; }
+}
+@keyframes heartBeatBtn {
+    0% { transform: scale(1); box-shadow: 0 10px 20px rgba(39, 198, 245, 0.4); }
+    50% { transform: scale(1.05); box-shadow: 0 15px 30px rgba(39, 198, 245, 0.6); }
+    100% { transform: scale(1); box-shadow: 0 10px 20px rgba(39, 198, 245, 0.4); }
+}
+
+/* ▼▼▼ 落書きコーナー案内エリアのデザイン ▼▼▼ */
+
+.graffiti-promo-section {
+    position: relative;
+    padding: 80px 20px;
+    background-color: #2d3436; /* 黒板っぽい濃いグレー */
+    background-image: 
+        radial-gradient(#636e72 1px, transparent 1px), /* チョークの粉 */
+        radial-gradient(#636e72 1px, transparent 1px);
+    background-size: 20px 20px;
+    background-position: 0 0, 10px 10px;
+    overflow: hidden;
+    text-align: center;
+    color: white;
+    margin-top: 50px;
+    border-top: 10px solid #d6a45f; /* 木枠っぽいボーダー */
+    border-bottom: 10px solid #d6a45f;
+    box-shadow: inset 0 0 50px rgba(0,0,0,0.5); /* 黒板のくぼみ感 */
+}
+
+/* 浮遊するアイコン */
+.floating-icon {
+    position: absolute;
+    font-size: 40px;
+    opacity: 0.8;
+    animation: floatIcon 6s ease-in-out infinite;
+    z-index: 1;
+}
+.icon-1 { top: 10%; left: 10%; animation-delay: 0s; transform: rotate(-10deg); }
+.icon-2 { top: 20%; right: 15%; animation-delay: 1.5s; font-size: 50px; transform: rotate(10deg); }
+.icon-3 { bottom: 15%; left: 20%; animation-delay: 3s; font-size: 30px; }
+.icon-4 { bottom: 25%; right: 10%; animation-delay: 4.5s; transform: rotate(15deg); }
+
+@keyframes floatIcon {
+    0%, 100% { transform: translateY(0) rotate(0deg); }
+    50% { transform: translateY(-20px) rotate(10deg); }
+}
+
+/* コンテンツボックス */
+.promo-content-box {
+    position: relative;
+    z-index: 2;
+    max-width: 800px;
+    margin: 0 auto;
+    border: 3px dashed rgba(255,255,255,0.3); /* チョークの点線枠 */
+    padding: 40px;
+    border-radius: 20px;
+    background: rgba(0,0,0,0.3);
+    backdrop-filter: blur(2px);
+}
+
+/* チョーク風タイトル */
+.chalk-title {
+    font-family: "Yomogi", sans-serif; /* 手書き風フォントがあれば最高 */
+    font-size: 3rem;
+    line-height: 1.4;
+    margin-bottom: 20px;
+    text-shadow: 2px 2px 0px rgba(0,0,0,0.5);
+}
+
+/* 文字が左から書かれるアニメーション */
+.chalk-line {
+    display: inline-block;
+    position: relative;
+    opacity: 0;
+    animation: chalkWrite 1s forwards cubic-bezier(0.25, 1, 0.5, 1);
+}
+.chalk-line.delay {
+    animation-delay: 0.8s; /* 2行目は遅れて出る */
+    color: #ff9a9e; /* 2行目はピンクのチョーク */
+}
+
+@keyframes chalkWrite {
+    from { opacity: 0; transform: translateX(-20px) scale(0.9); filter: blur(4px); }
+    to { opacity: 1; transform: translateX(0) scale(1); filter: blur(0.5px); } /* 少しだけぼかしてチョーク感を出す */
+}
+
+/* 説明文 */
+.promo-text {
+    font-size: 1.2rem;
+    margin-bottom: 30px;
+    color: #dfe6e9;
+    font-weight: bold;
+}
+
+/* チョーク風アクションボタン */
+.promo-btn-chalk {
+    position: relative;
+    background: transparent;
+    border: 3px solid white;
+    color: white;
+    font-size: 1.5rem;
+    font-weight: bold;
+    padding: 15px 50px;
+    border-radius: 50px; /* 丸み */
+    cursor: pointer;
+    overflow: hidden;
+    transition: all 0.3s;
+    box-shadow: 0 0 10px rgba(255,255,255,0.5);
+}
+
+/* ボタンホバー時：塗りつぶしアニメ */
+.promo-btn-chalk:hover {
+    background: white;
+    color: #2d3436;
+    transform: scale(1.05) rotate(-2deg); /* ちょっと傾く */
+    box-shadow: 0 10px 20px rgba(0,0,0,0.3), 0 0 20px rgba(255,255,255,0.8);
+}
+
+/* ボタンの中の粉エフェクト */
+.promo-btn-chalk::before {
+    content: "";
+    position: absolute;
+    top: 0; left: -100%;
+    width: 100%; height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.8), transparent);
+    transition: 0.5s;
+}
+.promo-btn-chalk:hover::before {
+    left: 100%;
+}
+
+/* スマホ対応 */
+@media (max-width: 768px) {
+    .chalk-title { font-size: 2rem; }
+    .promo-content-box { padding: 20px; }
+    .promo-btn-chalk { font-size: 1.2rem; padding: 12px 30px; }
+}
     </style>
 </head>
 <body>
@@ -3773,6 +4019,34 @@ body {
                 <button class="scroll-btn right" onclick="scrollContent('topVideoList', 'right')">▶</button>
             </div>
             <div style="text-align:center;"><button class="more-btn" onclick="showPage('video')">MORE VIEW</button></div>
+
+<section class="graffiti-promo-section">
+    <div class="promo-bg-pattern"></div>
+    
+    <div class="promo-container">
+        <div class="floating-icon icon-1">🎨</div>
+        <div class="floating-icon icon-2">✏️</div>
+        <div class="floating-icon icon-3">✨</div>
+        <div class="floating-icon icon-4">❤️</div>
+
+        <div class="promo-content-box">
+            <h2 class="chalk-title">
+                <span class="chalk-line">放課後の黒板、</span><br>
+                <span class="chalk-line delay">空いてるよ！</span>
+            </h2>
+            
+            <p class="promo-text">
+                みんなで描こう！「あおはる落書き広場」オープン！<br>
+                あなたのイラストが公式サイトに載るかも！？
+            </p>
+
+            <button class="promo-btn-chalk" onclick="showPage('rakugaki'); window.scrollTo(0,0);">
+                <span class="btn-text">今すぐ描きに行く！ <i class="fas fa-arrow-right"></i></span>
+                <span class="btn-dust"></span>
+            </button>
+        </div>
+    </div>
+</section>
 
             <div class="sns-container" style="margin-top: 50px;">
                 <div class="section-title"><div class="en-title" style="letter-spacing: 5px;">OFFICIAL SNS</div><span class="ja-title">あおはる⭐︎フレンズ公式SNS</span></div>
@@ -4605,6 +4879,8 @@ body {
         </div>
     </div>
 
+
+
         <footer id="vspoFooter">
         <a href="#" onclick="window.scrollTo({top: 0, behavior: 'smooth'}); return false;" class="footer-back-to-top">
             <span class="arrow">▲</span>
@@ -4623,6 +4899,7 @@ body {
                         <li><a href="#" onclick="showPage('news'); return false;">NEWS</a></li>
                         <li><a href="#" onclick="showPage('member'); return false;">MEMBER</a></li>
                         <li><a href="#" onclick="showPage('schedule'); return false;">SCHEDULE</a></li>
+                        <li><a href="#" onclick="showPage('rakugaki'); return false;">落書きコーナー</a></li>
                         <li><a href="#" onclick="showPage('goods'); return false;">GOODS</a></li>
                         <li><a href="#" onclick="showPage('radio'); return false;">RADIO</a></li>
                     </ul>
@@ -7518,6 +7795,99 @@ body {
 
     // 読み込み完了時にスタート
     window.addEventListener('load', initShootingStar);
+
+   /* ▼▼▼ 追加：スクロールしたらアニメーション開始するスイッチ ▼▼▼ */
+    window.addEventListener('load', () => {
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('animate-active'); // 画面に入ったらクラス追加
+                }
+            });
+        }, { threshold: 0.2 }); // 20%見えたら発動
+
+        // 監視する要素を指定
+        const targets = document.querySelectorAll('.membership-section, .benefit-card, .join-area');
+        targets.forEach(el => observer.observe(el));
+    });
+   /* ▼▼▼ 修正版：GASデータ連携型 NOW ON AIR表示 ▼▼▼ */
+
+    // ※以前書いた「checkLiveStatus」や「TARGET_CHANNELS」は消してください！
+
+    // ページ読み込み＆データ取得完了後に実行される関数
+    function updateLiveFromGAS(data) {
+        const liveSection = document.getElementById('nowOnAirSection');
+        const heroArea = document.getElementById('heroLiveArea');
+        
+        // エリアをリセット
+        if(heroArea) heroArea.innerHTML = '';
+        if(liveSection) liveSection.style.display = 'none';
+
+        // GASから「live」というデータが来ていない、または空っぽなら終了
+        if (!data || !data.live || data.live.length === 0) {
+            console.log("現在配信中のメンバーはいません（GASデータ）");
+            return;
+        }
+
+        // 配信がある場合のみ表示
+        if(liveSection) liveSection.style.display = 'block';
+
+        const liveVideos = data.live;
+        const count = liveVideos.length;
+        const layoutClass = count >= 4 ? 'layout-4' : `layout-${count}`;
+        
+        const gridWrapper = document.createElement('div');
+        gridWrapper.className = `live-dynamic-grid ${layoutClass}`;
+        
+        let html = '';
+        liveVideos.forEach(video => {
+            // GASからは {名前, URL, 画像URL, タイトル} が送られてくる想定
+            // URLから動画IDを抽出 (watch?v=XXXXX)
+            let videoId = "";
+            if(video.URL.includes('v=')) {
+                videoId = video.URL.split('v=')[1].split('&')[0];
+            } else if(video.URL.includes('youtu.be/')) {
+                videoId = video.URL.split('youtu.be/')[1].split('?')[0];
+            }
+
+            html += `
+            <div class="live-grid-item">
+                <div class="live-iframe-box">
+                    <iframe class="live-iframe" src="https://www.youtube.com/embed/${videoId}?autoplay=1&mute=1" frameborder="0" allowfullscreen></iframe>
+                </div>
+                <div class="live-info-bar">
+                    <span class="live-status-badge" style="animation: blink 2s infinite;">🔴 NOW ON AIR</span>
+                    <div class="live-info-text">
+                        <div class="live-info-name">${video['名前']}</div>
+                        <div class="live-info-title">${video['タイトル']}</div>
+                    </div>
+                </div>
+            </div>`;
+        });
+        
+        if(heroArea) {
+            gridWrapper.innerHTML = html;
+            heroArea.appendChild(gridWrapper);
+        }
+    }
+
+    // ★重要：fetchDataの中でこの関数を呼ぶ必要があります。
+    // 既存の window.addEventListener('load', ...) の中にある
+    // fetchData().then(data => { ... }) の中に、以下の1行を追加してください！
+    /*
+       updateLiveFromGAS(data); 
+    */
+    
+    // もし場所がわからなければ、とりあえずこれを一番下に書いておけば
+    // データが globalData に入ったタイミングで動くようにします↓
+    window.addEventListener('load', () => {
+        // データ取得を待ってから実行（簡易的な遅延実行）
+        setTimeout(() => {
+            if(typeof globalData !== 'undefined') {
+                updateLiveFromGAS(globalData);
+            }
+        }, 2000); // 2秒後にチェック
+    });
 </script>
 </body>
 </html>
