@@ -48,10 +48,8 @@
             background-size: 50px 50px;
             z-index: -10; pointer-events: none;
         }
-        /* 2. 巨大な円弧と幾何学模様（SVGで描画）※円削除版 */
         .bg-cyber-deco {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            /* ↓↓↓ 円の記述を削除した新しい背景画像データ ↓↓↓ */
             background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100%25' height='100%25' viewBox='0 0 1920 1080'%3E%3Cdefs%3E%3ClinearGradient id='a' x1='0%25' y1='0%25' x2='100%25' y2='0%25'%3E%3Cstop offset='0%25' stop-color='%2300f0ff' stop-opacity='0.2'/%3E%3Cstop offset='100%25' stop-color='%23ff0055' stop-opacity='0.2'/%3E%3C/linearGradient%3E%3C/defs%3E%3Cpath fill='none' stroke='url(%23a)' stroke-width='2' d='M-100,600 a800,800 0 0,1 1600,-400' /%3E%3Cpath fill='none' stroke='rgba(252,238,10,0.2)' stroke-width='3' stroke-dasharray='10,20' d='M1200,100 a600,600 0 0,0 -400,800' /%3E%3Cpath fill='rgba(255,0,85,0.1)' d='M200,800 L300,700 L400,800 Z' /%3E%3C/svg%3E");
             background-size: cover;
             z-index: -5; pointer-events: none;
@@ -62,25 +60,14 @@
            ▼ COMPONENTS
            ========================================= */
 
-        /* ★新規追加：左上固定ロゴ */
+        /* 左上固定ロゴ */
         .fixed-logo {
-            position: fixed;
-            top: 25px;
-            left: 30px;
-            z-index: 1000; /* 他の要素より前に表示 */
-            width: 180px; /* PCでのサイズ */
-            transition: 0.3s;
+            position: fixed; top: 25px; left: 30px;
+            z-index: 1000; width: 180px; transition: 0.3s;
             filter: drop-shadow(0 0 5px rgba(0,0,0,0.5));
         }
-        .fixed-logo img {
-            width: 100%;
-            height: auto;
-            display: block;
-        }
-        .fixed-logo:hover {
-            transform: scale(1.05);
-            opacity: 0.9;
-        }
+        .fixed-logo img { width: 100%; height: auto; display: block; }
+        .fixed-logo:hover { transform: scale(1.05); opacity: 0.9; }
 
         /* 見出し */
         .section-header {
@@ -144,6 +131,36 @@
             color: white; letter-spacing: 1px;
         }
         .c-desc { font-size: 1rem; color: var(--text-dim); }
+
+        /* =========================================
+           ▼ NEW: BENEFITS (メリット) STYLE
+           ========================================= */
+        .benefit-card {
+            background: linear-gradient(145deg, rgba(0,240,255,0.05) 0%, rgba(0,0,0,0) 100%);
+            border: 1px solid rgba(0,240,255,0.3);
+            border-radius: 10px;
+            padding: 30px;
+            position: relative;
+            transition: 0.3s;
+            overflow: hidden;
+        }
+        .benefit-card:hover {
+            border-color: var(--accent);
+            background: linear-gradient(145deg, rgba(255,0,85,0.1) 0%, rgba(0,0,0,0) 100%);
+            transform: scale(1.03);
+        }
+        .b-num {
+            position: absolute; top: -15px; right: 10px;
+            font-family: var(--font-en); font-size: 5rem;
+            color: rgba(255,255,255,0.05); font-weight: bold;
+            transition: 0.3s;
+        }
+        .benefit-card:hover .b-num { color: rgba(255,0,85,0.2); transform: scale(1.1); }
+        .b-head {
+            color: var(--yellow); font-family: var(--font-jp-head);
+            font-size: 1.4rem; margin-bottom: 15px; position: relative;
+        }
+        .b-desc { color: #ccc; font-size: 0.95rem; }
 
         /* =========================================
            ▼ SECTIONS
@@ -272,9 +289,7 @@
 
         /* SP対応 */
         @media (max-width: 768px) {
-            /* ★スマホではロゴを小さく調整 */
             .fixed-logo { width: 120px; top: 15px; left: 15px; }
-            
             .section-en { font-size: 5rem; }
             .section-jp { font-size: 2rem; }
             .tl-row { flex-direction: column; }
@@ -313,8 +328,8 @@
         <div class="card-grid">
             <div class="cyber-card fade-in">
                 <i class="fas fa-hammer c-icon"></i>
-                <div class="c-title">クラス対抗建築</div>
-                <div class="c-desc">参加者はランダムにクラス分け！クラスメイトと協力して、文化祭の出し物や映えスポットを建築しよう。</div>
+                <div class="c-title">生徒対抗建築</div>
+                <div class="c-desc">参加者の生徒の建築勝負！他の生徒と協力して、文化祭の出し物や映えスポットを建築しよう。</div>
             </div>
             <div class="cyber-card fade-in" style="transition-delay:0.1s;">
                 <i class="fas fa-store c-icon"></i>
@@ -328,8 +343,8 @@
             </div>
             <div class="cyber-card fade-in">
                 <i class="fas fa-running c-icon"></i>
-                <div class="c-title">全校ケイドロ大会</div>
-                <div class="c-desc">学校全体を使った大規模鬼ごっこ！警察役（運営）から逃げ切れ！捕まると牢屋で強制労働！？</div>
+                <div class="c-title">全校鬼ごっこ大会</div>
+                <div class="c-desc">学校全体を使った大規模鬼ごっこ！鬼は一人じゃない！？あおはる☆フレンズのYouTubeで公開予定！</div>
             </div>
             <div class="cyber-card fade-in" style="transition-delay:0.1s;">
                 <i class="fas fa-microphone-alt c-icon"></i>
@@ -344,6 +359,45 @@
         </div>
     </section>
 
+    <section class="section" style="padding: 120px 0;">
+        <div class="section-header fade-in">
+            <div class="section-en">BENEFITS</div>
+            <div class="section-jp">参加するメリット</div>
+        </div>
+        <div class="card-grid">
+            <div class="benefit-card fade-in">
+                <div class="b-num">01</div>
+                <div class="b-head">新たな仲間との出会い</div>
+                <p class="b-desc">同じ志を持つストリーマーと交流！運命の相方が見つかるかも？</p>
+            </div>
+            <div class="benefit-card fade-in" style="transition-delay:0.1s;">
+                <div class="b-num">02</div>
+                <div class="b-head">自然なコラボチャンス</div>
+                <p class="b-desc">「クラス」や「部活」システムで、初対面でも会話が弾む仕掛けが満載！</p>
+            </div>
+            <div class="benefit-card fade-in" style="transition-delay:0.2s;">
+                <div class="b-num">03</div>
+                <div class="b-head">公式切り抜き＆拡散</div>
+                <p class="b-desc">専属エディターがあなたの活躍を動画するかも！SNSでの露出を一気に拡大。</p>
+            </div>
+            <div class="benefit-card fade-in">
+                <div class="b-num">04</div>
+                <div class="b-head">尽きない配信ネタ</div>
+                <p class="b-desc">毎日発生する突発イベントやクエストで、配信の撮れ高が止まらない！</p>
+            </div>
+            <div class="benefit-card fade-in" style="transition-delay:0.1s;">
+                <div class="b-num">05</div>
+                <div class="b-head">本気の「青春」体験</div>
+                <p class="b-desc">文化祭、キャンプファイヤー、屋上での語り合い…エモい思い出を作ろう。</p>
+            </div>
+            <div class="benefit-card fade-in" style="transition-delay:0.2s;">
+                <div class="b-num">06</div>
+                <div class="b-head">完全サポート体制</div>
+                <p class="b-desc">初心者講習会やトラブル対応も万全。安心して配信に集中できる環境。</p>
+            </div>
+        </div>
+    </section>
+
     <section class="section" style="padding: 120px 0; background:rgba(255,255,255,0.02);">
         <div class="section-header fade-in">
             <div class="section-en">MAP & SUPPORT</div>
@@ -351,7 +405,7 @@
         </div>
         <div class="grid-3 fade-in">
             <div class="info-box">
-                <div class="info-head"><i class="fas fa-map-marker-alt"></i> 旧校舎エリア</div>
+                <div class="info-head"><i class="fas fa-map-marker-alt"></i> 新校舎エリア</div>
                 <p>肝試しや脱出ゲームの舞台。夜に入ると何かが起きる…？</p>
             </div>
             <div class="info-box">
@@ -359,8 +413,8 @@
                 <p>PVPイベントのメイン会場。500席以上の観客席を完備。</p>
             </div>
             <div class="info-box">
-                <div class="info-head"><i class="fas fa-video"></i> 公式切り抜き班</div>
-                <p>専属エディターがサーバー内の面白いシーンを切り抜いて拡散！</p>
+                <div class="info-head"><i class="fas fa-video"></i> 公式からの拡散</div>
+                <p>運営があなたの切り抜きなどを拡散！</p>
             </div>
         </div>
     </section>
