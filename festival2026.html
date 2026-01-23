@@ -1,0 +1,485 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>私立青春学園 超文化祭2026 | OFFICIAL EVENT SITE</title>
+    <link rel="icon" type="image/png" href="logo_icon.png?v=2">
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Mochiy+Pop+One&family=Oswald:wght@700&family=Zen+Kurenaido&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+
+    <style>
+        /* =========================================
+           ▼ DESIGN TOKENS
+           ========================================= */
+        :root {
+            --bg-dark: #0f172a;
+            --bg-card: rgba(30, 41, 59, 0.7);
+            --primary: #00f2ff;
+            --accent: #ff0055;
+            --yellow: #ffd700;
+            --text-main: #f1f5f9;
+            --text-sub: #cbd5e1;
+            
+            --font-title: 'Mochiy Pop One', sans-serif;
+            --font-en: 'Oswald', sans-serif;
+            --font-hand: 'Zen Kurenaido', sans-serif;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        
+        body {
+            font-family: "Helvetica Neue", Arial, sans-serif;
+            background-color: var(--bg-dark);
+            color: var(--text-main);
+            overflow-x: hidden;
+            opacity: 0; transition: opacity 0.5s;
+        }
+        body.loaded { opacity: 1; }
+
+        /* =========================================
+           ▼ BACKGROUND & ANIMATIONS
+           ========================================= */
+        
+        .bg-grid {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background-image: 
+                linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+            background-size: 50px 50px;
+            z-index: -2; pointer-events: none;
+        }
+
+        .floating-shapes {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            pointer-events: none; z-index: -1; overflow: hidden;
+        }
+        .shape {
+            position: absolute; opacity: 0.2; color: var(--primary);
+            animation: float-rotate 20s infinite linear;
+            filter: drop-shadow(0 0 10px var(--primary));
+        }
+        .shape i { font-size: 4rem; }
+        @keyframes float-rotate {
+            0% { transform: translateY(0) rotate(0deg); }
+            50% { transform: translateY(-40px) rotate(180deg); }
+            100% { transform: translateY(0) rotate(360deg); }
+        }
+
+        .marquee-container {
+            position: relative; width: 100%; overflow: hidden;
+            background: var(--yellow); color: var(--bg-dark);
+            padding: 12px 0; transform: skewY(-3deg);
+            border-top: 3px solid white; border-bottom: 3px solid white;
+            margin: 80px 0; box-shadow: 0 0 20px rgba(255, 215, 0, 0.5);
+        }
+        .marquee-content {
+            display: inline-block; white-space: nowrap;
+            font-family: var(--font-en); font-weight: 900; font-size: 1.8rem;
+            animation: scroll-left 30s linear infinite;
+        }
+        @keyframes scroll-left {
+            0% { transform: translateX(0); }
+            100% { transform: translateX(-50%); }
+        }
+
+        /* =========================================
+           ▼ COMPONENTS
+           ========================================= */
+
+        .section-header {
+            text-align: center; margin: 0 auto 80px auto;
+            position: relative; width: fit-content; max-width: 90%; z-index: 2;
+        }
+        .section-title {
+            font-family: var(--font-en); font-size: clamp(3rem, 6vw, 5rem); 
+            font-weight: 900; color: transparent; 
+            -webkit-text-stroke: 2px white; letter-spacing: 2px; line-height: 1;
+            position: relative; z-index: 2;
+            text-shadow: 0 0 20px rgba(0, 242, 255, 0.3);
+        }
+        .section-sub {
+            font-family: var(--font-title); font-size: clamp(1.2rem, 3vw, 1.8rem); 
+            color: var(--bg-dark); background: var(--primary);
+            padding: 5px 20px; display: inline-block;
+            transform: skewX(-15deg);
+            box-shadow: 5px 5px 0 rgba(255,255,255,0.2);
+            position: relative; top: -15px; z-index: 3;
+        }
+        .section-sub span { display: block; transform: skewX(15deg); }
+        .section-header::before {
+            content: ''; position: absolute; top: 60%; left: 50%;
+            width: 140%; height: 40%; background: var(--accent);
+            transform: translate(-50%, -50%) skewX(-20deg);
+            z-index: 1; opacity: 0.8; filter: blur(5px);
+        }
+
+        /* カードグリッド共通 */
+        .card-grid {
+            display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 30px; max-width: 1200px; margin: 0 auto; padding: 0 20px;
+        }
+
+        /* FEATURES カード */
+        .f-card {
+            background: var(--bg-card); backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            border-radius: 20px; padding: 40px 30px;
+            position: relative; overflow: hidden;
+            transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
+        }
+        .f-card::before {
+            content: ''; position: absolute; top: 0; left: 0; width: 6px; height: 100%;
+            background: var(--primary); transform: scaleY(0);
+            transition: transform 0.4s; transform-origin: top;
+        }
+        .f-card:hover::before { transform: scaleY(1); }
+        .f-card:hover {
+            transform: translateY(-10px); background: rgba(30, 41, 59, 1);
+            border-color: var(--primary); box-shadow: 0 20px 50px rgba(0, 242, 255, 0.1);
+        }
+        .f-icon {
+            font-size: 3.5rem; margin-bottom: 25px; color: var(--primary);
+            width: 90px; height: 90px; background: rgba(0, 242, 255, 0.1);
+            display: flex; align-items: center; justify-content: center;
+            border-radius: 16px; transition: 0.4s;
+            border: 1px solid rgba(0, 242, 255, 0.2);
+        }
+        .f-card:hover .f-icon {
+            background: var(--primary); color: var(--bg-dark);
+            transform: rotate(15deg) scale(1.1); box-shadow: 0 0 30px var(--primary);
+        }
+        .f-head {
+            font-family: var(--font-title); font-size: 1.5rem; margin-bottom: 15px;
+            color: white; letter-spacing: 1px;
+        }
+        .f-desc { font-size: 1rem; line-height: 1.8; color: var(--text-sub); }
+
+        /* =========================================
+           ▼ 新規セクション用スタイル
+           ========================================= */
+
+        /* MAP AREA */
+        .map-area {
+            max-width: 1200px; margin: 0 auto; padding: 0 20px;
+            display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px;
+        }
+        .map-item {
+            position: relative; border-radius: 20px; overflow: hidden; aspect-ratio: 16/9;
+            border: 2px solid rgba(255,255,255,0.1); group;
+        }
+        .map-bg {
+            width: 100%; height: 100%; background: #333; /* 仮のグレー背景 */
+            display: flex; align-items: center; justify-content: center;
+            font-family: var(--font-en); font-size: 2rem; color: rgba(255,255,255,0.1);
+            transition: 0.5s;
+        }
+        .map-info {
+            position: absolute; bottom: 0; left: 0; width: 100%;
+            background: linear-gradient(transparent, rgba(0,0,0,0.9));
+            padding: 20px; transform: translateY(100%); transition: 0.4s;
+        }
+        .map-item:hover .map-info { transform: translateY(0); }
+        .map-item:hover .map-bg { transform: scale(1.1); filter: brightness(0.5); }
+        .map-title { color: var(--yellow); font-family: var(--font-title); font-size: 1.2rem; }
+
+        /* SUPPORT AREA */
+        .support-box {
+            background: linear-gradient(135deg, rgba(255, 0, 85, 0.1), rgba(0, 0, 0, 0));
+            border: 1px solid var(--accent); border-radius: 20px;
+            padding: 40px; text-align: center; height: 100%;
+            transition: 0.3s;
+        }
+        .support-box:hover { transform: translateY(-5px); background: rgba(255, 0, 85, 0.2); }
+        .support-num {
+            font-family: var(--font-en); font-size: 3rem; color: var(--accent);
+            opacity: 0.5; line-height: 1; margin-bottom: 10px;
+        }
+
+        /* FAQ AREA */
+        .faq-grid { max-width: 900px; margin: 0 auto; padding: 0 20px; display: grid; gap: 20px; }
+        .faq-item {
+            background: rgba(255,255,255,0.05); border-left: 4px solid var(--primary);
+            padding: 20px 30px; border-radius: 0 10px 10px 0; transition: 0.3s;
+        }
+        .faq-item:hover { background: rgba(255,255,255,0.1); padding-left: 40px; }
+        .faq-q {
+            font-weight: bold; color: var(--primary); margin-bottom: 10px;
+            display: flex; align-items: center; font-size: 1.1rem;
+        }
+        .faq-q i { margin-right: 10px; }
+        .faq-a { color: var(--text-sub); line-height: 1.6; }
+
+        /* =========================================
+           ▼ SECTIONS
+           ========================================= */
+
+        /* 1. HERO */
+        .hero {
+            height: 100vh; min-height: 700px; display: flex; align-items: center; justify-content: center;
+            position: relative; overflow: hidden; background: #0f172a;
+        }
+        .hero-bg {
+            position: absolute; inset: 0;
+            background: url('main_visual.png') center/cover no-repeat;
+            transition: transform 10s ease;
+        }
+        body.loaded .hero-bg { transform: scale(1.1); }
+
+        /* 2. SCHEDULE */
+        .timeline {
+            max-width: 800px; margin: 0 auto; padding: 0 20px;
+            position: relative; border-left: 4px solid rgba(255,255,255,0.1);
+        }
+        .tl-item { margin-bottom: 60px; padding-left: 50px; position: relative; }
+        .tl-dot {
+            position: absolute; left: -12px; top: 5px; width: 20px; height: 20px;
+            background: var(--bg-dark); border: 4px solid var(--primary);
+            border-radius: 50%; box-shadow: 0 0 15px var(--primary); transition: 0.3s;
+        }
+        .tl-item:hover .tl-dot { transform: scale(1.5); background: var(--primary); }
+        .tl-date {
+            font-family: var(--font-en); font-size: 1.8rem; color: var(--primary);
+            margin-bottom: 5px; font-weight: bold; letter-spacing: 1px;
+        }
+        .tl-title { font-size: 1.4rem; font-weight: bold; margin-bottom: 10px; color: white; }
+        .tl-desc { color: var(--text-sub); }
+
+        /* 3. ENTRY */
+        .cta-btn {
+            display: inline-flex; align-items: center; justify-content: center;
+            background: linear-gradient(45deg, #ff0055, #ff5e00);
+            color: white; font-family: var(--font-title); font-size: 2rem;
+            padding: 25px 90px; border-radius: 50px; text-decoration: none;
+            box-shadow: 0 10px 40px rgba(255, 0, 85, 0.4);
+            transition: 0.3s; position: relative; overflow: hidden;
+            border: 3px solid rgba(255,255,255,0.5);
+        }
+        .cta-btn:hover {
+            transform: scale(1.05) translateY(-5px);
+            box-shadow: 0 20px 60px rgba(255, 0, 85, 0.6); filter: brightness(1.2);
+        }
+        .cta-btn::after {
+            content: ''; position: absolute; top: -50%; left: -50%;
+            width: 200%; height: 200%;
+            background: linear-gradient(transparent, rgba(255,255,255,0.6), transparent);
+            transform: rotate(45deg); animation: shine 3s infinite;
+        }
+        @keyframes shine { 0% { left: -100%; } 20% { left: 100%; } 100% { left: 100%; } }
+
+        .fade-up { opacity: 0; transform: translateY(40px); transition: 0.8s cubic-bezier(0.25, 1, 0.5, 1); }
+        .fade-up.visible { opacity: 1; transform: translateY(0); }
+
+        @media (max-width: 768px) {
+            .section-title { font-size: 3rem; }
+            .section-sub { font-size: 1rem; }
+            .cta-btn { width: 90%; font-size: 1.5rem; padding: 20px; }
+            .f-card { padding: 30px 20px; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="bg-grid"></div>
+    <div class="floating-shapes">
+        <div class="shape" style="top:10%; left:10%; color:var(--primary); animation-duration:25s;"><i class="fas fa-gamepad"></i></div>
+        <div class="shape" style="top:20%; right:15%; color:var(--accent); animation-duration:20s;"><i class="fas fa-ghost"></i></div>
+        <div class="shape" style="bottom:15%; left:20%; color:var(--yellow); animation-duration:30s;"><i class="fas fa-star"></i></div>
+        <div class="shape" style="bottom:30%; right:10%; color:var(--primary); animation-duration:35s;"><i class="fas fa-cube"></i></div>
+    </div>
+
+    <header class="hero">
+        <div class="hero-bg"></div>
+    </header>
+
+    <div class="marquee-container">
+        <div class="marquee-content">
+            AOHARU SCHOOL FESTIVAL 2026 ★ MINECRAFT STREAMER SERVER ★ ENTRY NOW ★ AOHARU SCHOOL FESTIVAL 2026 ★ MINECRAFT STREAMER SERVER ★ ENTRY NOW ★
+        </div>
+    </div>
+
+    <section class="section" style="padding: 100px 0;">
+        <div class="section-header fade-up">
+            <h2 class="section-title">FEATURES</h2>
+            <div class="section-sub"><span>超文化祭でできること</span></div>
+        </div>
+        <div class="card-grid">
+            <div class="f-card fade-up">
+                <div class="f-icon"><i class="fas fa-hammer"></i></div>
+                <div class="f-head">クラス対抗建築</div>
+                <div class="f-desc">参加者はランダムにクラス分け！クラスメイトと協力して、文化祭の出し物や映えスポットを建築しよう。</div>
+            </div>
+            <div class="f-card fade-up" style="transition-delay:0.1s;">
+                <div class="f-icon"><i class="fas fa-store"></i></div>
+                <div class="f-head">ロールプレイ経営</div>
+                <div class="f-desc">カフェ、お化け屋敷、カジノ…。独自通貨システムで経済を回そう。ぼったくりバーも経営可能！？</div>
+            </div>
+            <div class="f-card fade-up" style="transition-delay:0.2s;">
+                <div class="f-icon"><i class="fas fa-camera"></i></div>
+                <div class="f-head">24時間 映え放題</div>
+                <div class="f-desc">花火システムやシェーダー映えするスポットが多数。スクショコンテストも開催予定！</div>
+            </div>
+            <div class="f-card fade-up">
+                <div class="f-icon"><i class="fas fa-running"></i></div>
+                <div class="f-head">全校ケイドロ大会</div>
+                <div class="f-desc">学校全体を使った大規模鬼ごっこ！警察役（運営）から逃げ切れ！捕まると牢屋で強制労働！？</div>
+            </div>
+            <div class="f-card fade-up" style="transition-delay:0.1s;">
+                <div class="f-icon"><i class="fas fa-microphone-alt"></i></div>
+                <div class="f-head">校内放送ラジオ</div>
+                <div class="f-desc">お昼休みと放課後は「校内放送」の時間。VCを繋いでゲストを呼んだり、告白コーナーをしたり自由に配信！</div>
+            </div>
+            <div class="f-card fade-up" style="transition-delay:0.2s;">
+                <div class="f-icon"><i class="fas fa-fire"></i></div>
+                <div class="f-head">後夜祭PvP</div>
+                <div class="f-desc">最終日は無礼講！最強のストリーマーを決めるコロシアムバトル。優勝者には豪華トロフィー授与。</div>
+            </div>
+        </div>
+    </section>
+
+    <section class="section" style="padding: 100px 0;">
+        <div class="section-header fade-up">
+            <h2 class="section-title">SCHOOL MAP</h2>
+            <div class="section-sub"><span>舞台はここだ！</span></div>
+        </div>
+        <div class="map-area fade-up">
+            <div class="map-item">
+                <div class="map-bg">MAIN BUILDING</div>
+                <div class="map-info"><div class="map-title">旧校舎エリア</div><p style="font-size:0.9rem;">肝試しや脱出ゲームの舞台。夜に入ると…？</p></div>
+            </div>
+            <div class="map-item">
+                <div class="map-bg">STADIUM</div>
+                <div class="map-info"><div class="map-title">大闘技場</div><p style="font-size:0.9rem;">PVPイベントのメイン会場。観客席完備。</p></div>
+            </div>
+            <div class="map-item">
+                <div class="map-bg">SHOPPING STREET</div>
+                <div class="map-info"><div class="map-title">屋台ストリート</div><p style="font-size:0.9rem;">プレイヤー経営のお店が並ぶメインストリート。</p></div>
+            </div>
+        </div>
+    </section>
+
+    <section class="section" style="padding: 100px 0;">
+        <div class="section-header fade-up">
+            <h2 class="section-title">SUPPORT</h2>
+            <div class="section-sub"><span>配信活動を全力応援</span></div>
+        </div>
+        <div class="card-grid">
+            <div class="support-box fade-up">
+                <div class="support-num">01</div>
+                <h3 class="f-head" style="color:var(--accent);">公式切り抜き班</h3>
+                <p class="f-desc">専属エディターがサーバー内の面白いシーンを切り抜いて公式SNSで拡散！あなたの知名度UPをサポートします。</p>
+            </div>
+            <div class="support-box fade-up" style="transition-delay:0.1s;">
+                <div class="support-num">02</div>
+                <h3 class="f-head" style="color:var(--accent);">全体通知機能</h3>
+                <p class="f-desc">「今から凸待ちします！」「イベント始めます！」などの告知をサーバー全体に通知可能。人が集まりやすい環境です。</p>
+            </div>
+            <div class="support-box fade-up" style="transition-delay:0.2s;">
+                <div class="support-num">03</div>
+                <h3 class="f-head" style="color:var(--accent);">コラボ推奨週間</h3>
+                <p class="f-desc">話したことのない配信者とも自然に交流できる「ペア対抗イベント」などを定期開催。横のつながりが広がります。</p>
+            </div>
+        </div>
+    </section>
+
+    <div class="marquee-container" style="background:var(--primary); transform: skewY(2deg);">
+        <div class="marquee-content" style="animation-direction: reverse; color:var(--bg-dark);">
+             SPECIAL EVENTS ★ LIVE STAGE ★ FIREWORKS ★ PVP BATTLE ★ SPECIAL EVENTS ★ LIVE STAGE ★ FIREWORKS ★ PVP BATTLE ★
+        </div>
+    </div>
+
+    <section class="section" style="padding: 100px 0;">
+        <div class="section-header fade-up">
+            <h2 class="section-title">SCHEDULE</h2>
+            <div class="section-sub"><span>開催までの流れ</span></div>
+        </div>
+        <div class="timeline">
+            <div class="tl-item fade-up">
+                <div class="tl-dot"></div>
+                <div class="tl-date">NOW!!</div>
+                <div class="tl-title">参加者募集開始</div>
+                <div class="tl-desc">応募フォームよりエントリーを受付中。定員に達し次第終了。</div>
+            </div>
+            <div class="tl-item fade-up">
+                <div class="tl-dot"></div>
+                <div class="tl-date">2026.03.20</div>
+                <div class="tl-title">クラス分け・招待状送付</div>
+                <div class="tl-desc">運営Discordにてクラス発表。あなたのクラスメイトは誰だ！？</div>
+            </div>
+            <div class="tl-item fade-up">
+                <div class="tl-dot"></div>
+                <div class="tl-date">2026.04.01</div>
+                <div class="tl-title">開校式・サーバーオープン</div>
+                <div class="tl-desc">19:00 全校集会（開会式）スタート。サバイバル生活開始！</div>
+            </div>
+            <div class="tl-item fade-up">
+                <div class="tl-dot"></div>
+                <div class="tl-date">2026.04.25</div>
+                <div class="tl-title">文化祭当日・後夜祭</div>
+                <div class="tl-desc">建築物の一般公開と、全サーバー対抗PVP大会、フィナーレ花火。</div>
+            </div>
+        </div>
+    </section>
+
+    <section class="section" style="padding: 100px 0; background:rgba(0,0,0,0.2);">
+        <div class="section-header fade-up">
+            <h2 class="section-title">SCHOOL RULES</h2>
+            <div class="section-sub"><span>よくある質問・校則</span></div>
+        </div>
+        <div class="faq-grid">
+            <div class="faq-item fade-up">
+                <div class="faq-q"><i class="fas fa-question-circle"></i> マイクラ初心者でも大丈夫？</div>
+                <div class="faq-a">大歓迎です！整地班、建築班、素材集め班など、スキルに合わせて活躍できる場所があります。</div>
+            </div>
+            <div class="faq-item fade-up">
+                <div class="faq-q"><i class="fas fa-question-circle"></i> 毎日ログイン必須ですか？</div>
+                <div class="faq-a">強制ではありません。ご自身のペースで楽しんでください。（※イベント時はログイン推奨です）</div>
+            </div>
+            <div class="faq-item fade-up">
+                <div class="faq-q"><i class="fas fa-question-circle"></i> 配信外での作業はOK？</div>
+                <div class="faq-a">基本的には「配信をつけてのプレイ」を推奨していますが、単純な整地作業などは裏作業OKとしています。</div>
+            </div>
+            <div class="faq-item fade-up">
+                <div class="faq-q"><i class="fas fa-question-circle"></i> 顔出しやVtuberモデルは必須？</div>
+                <div class="faq-a">いいえ、声のみ（ラジオスタイル）での参加も可能です。Discordでの通話が可能であればOKです。</div>
+            </div>
+        </div>
+    </section>
+
+    <section class="section" style="text-align:center; padding: 150px 0;" id="entry">
+        <div class="section-header fade-up">
+            <h2 class="section-title">ENTRY</h2>
+            <div class="section-sub"><span>入学届を提出する</span></div>
+        </div>
+        <p class="fade-up" style="font-size:1.3rem; margin-bottom:60px; color:var(--text-main); font-weight:bold;">
+            伝説の1ページを、一緒に刻もう。<br>定員100名に達し次第、募集を締め切ります。
+        </p>
+        <a href="https://docs.google.com/forms/d/e/1FAIpQLSc4rPTaXT1kseIdghXI-NeyWsf0dGpkWNINlXm2fqlIFirhRA/viewform" target="_blank" class="cta-btn fade-up">
+            ENTRY FORM <i class="fas fa-paper-plane" style="margin-left:15px;"></i>
+        </a>
+        <div style="margin-top:100px; opacity:0.6;">
+            <a href="index.html" style="color:white; text-decoration:none; border-bottom:1px solid white; padding-bottom:5px;">OFFICIAL SITE TOP</a>
+            <p style="margin-top:20px; font-size:0.8rem;">© 2026 AOHARU FRIENDS PROJECT</p>
+        </div>
+    </section>
+
+    <script>
+        window.addEventListener('load', () => {
+            document.body.classList.add('loaded');
+            initObserver();
+        });
+
+        function initObserver() {
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) entry.target.classList.add('visible');
+                });
+            }, { threshold: 0.1 });
+            document.querySelectorAll('.fade-up').forEach(el => observer.observe(el));
+        }
+    </script>
+</body>
+</html>
