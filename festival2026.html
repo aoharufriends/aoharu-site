@@ -50,6 +50,7 @@
         }
         .bg-cyber-deco {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            /* 円を削除した背景装飾 */
             background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100%25' height='100%25' viewBox='0 0 1920 1080'%3E%3Cdefs%3E%3ClinearGradient id='a' x1='0%25' y1='0%25' x2='100%25' y2='0%25'%3E%3Cstop offset='0%25' stop-color='%2300f0ff' stop-opacity='0.2'/%3E%3Cstop offset='100%25' stop-color='%23ff0055' stop-opacity='0.2'/%3E%3C/linearGradient%3E%3C/defs%3E%3Cpath fill='none' stroke='url(%23a)' stroke-width='2' d='M-100,600 a800,800 0 0,1 1600,-400' /%3E%3Cpath fill='none' stroke='rgba(252,238,10,0.2)' stroke-width='3' stroke-dasharray='10,20' d='M1200,100 a600,600 0 0,0 -400,800' /%3E%3Cpath fill='rgba(255,0,85,0.1)' d='M200,800 L300,700 L400,800 Z' /%3E%3C/svg%3E");
             background-size: cover;
             z-index: -5; pointer-events: none;
@@ -68,6 +69,26 @@
         }
         .fixed-logo img { width: 100%; height: auto; display: block; }
         .fixed-logo:hover { transform: scale(1.05); opacity: 0.9; }
+
+        /* ★新規追加：言語切り替えボタン（右上） */
+        .lang-switch {
+            position: fixed; top: 30px; right: 30px; z-index: 1001;
+            display: flex; gap: 0;
+            border: 1px solid var(--primary);
+            background: rgba(0,0,0,0.8);
+            transform: skewX(-10deg);
+        }
+        .lang-btn {
+            background: transparent; border: none;
+            color: var(--text-dim);
+            font-family: var(--font-en); font-size: 1.2rem; font-weight: bold;
+            padding: 5px 15px; cursor: pointer; transition: 0.3s;
+        }
+        .lang-btn:hover { color: white; }
+        .lang-btn.active {
+            background: var(--primary); color: black;
+            box-shadow: 0 0 15px var(--primary);
+        }
 
         /* 見出し */
         .section-header {
@@ -132,17 +153,12 @@
         }
         .c-desc { font-size: 1rem; color: var(--text-dim); }
 
-        /* =========================================
-           ▼ NEW: BENEFITS (メリット) STYLE
-           ========================================= */
+        /* BENEFITS STYLE */
         .benefit-card {
             background: linear-gradient(145deg, rgba(0,240,255,0.05) 0%, rgba(0,0,0,0) 100%);
             border: 1px solid rgba(0,240,255,0.3);
-            border-radius: 10px;
-            padding: 30px;
-            position: relative;
-            transition: 0.3s;
-            overflow: hidden;
+            border-radius: 10px; padding: 30px;
+            position: relative; transition: 0.3s; overflow: hidden;
         }
         .benefit-card:hover {
             border-color: var(--accent);
@@ -152,8 +168,7 @@
         .b-num {
             position: absolute; top: -15px; right: 10px;
             font-family: var(--font-en); font-size: 5rem;
-            color: rgba(255,255,255,0.05); font-weight: bold;
-            transition: 0.3s;
+            color: rgba(255,255,255,0.05); font-weight: bold; transition: 0.3s;
         }
         .benefit-card:hover .b-num { color: rgba(255,0,85,0.2); transform: scale(1.1); }
         .b-head {
@@ -162,11 +177,7 @@
         }
         .b-desc { color: #ccc; font-size: 0.95rem; }
 
-        /* =========================================
-           ▼ SECTIONS
-           ========================================= */
-
-        /* 1. HERO */
+        /* SECTIONS */
         .hero {
             height: 100vh; min-height: 600px;
             display: flex; align-items: center; justify-content: center;
@@ -179,7 +190,6 @@
             z-index: 1; filter: none; opacity: 1;
         }
 
-        /* マーキー */
         .marquee-strip {
             background: var(--yellow); color: #000;
             font-family: var(--font-en); font-weight: 700; font-size: 2rem;
@@ -195,7 +205,6 @@
         .marquee-item { margin-right: 60px; }
         @keyframes scroll { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
 
-        /* SCHEDULE */
         .timeline-box { max-width: 900px; margin: 0 auto; padding: 0 20px; }
         .tl-row {
             display: flex; align-items: flex-start; margin-bottom: 50px; position: relative;
@@ -221,7 +230,6 @@
             font-family: var(--font-jp-head); font-size: 1.6rem; margin-bottom: 10px; color: white;
         }
 
-        /* ENTRY BUTTON */
         .cyber-btn-box { position: relative; display: inline-block; z-index: 1; }
         .cyber-btn-box::before {
             content: ''; position: absolute; top: 10px; left: 10px; width: 100%; height: 100%;
@@ -243,7 +251,6 @@
         }
         .cyber-btn-box:hover::before { transform: translate(5px, 5px); opacity: 0.8; }
 
-        /* 共通グリッド */
         .grid-3 {
             display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
             gap: 25px; max-width: 1200px; margin: 0 auto; padding: 0 20px;
@@ -265,7 +272,6 @@
         }
         .info-head i { margin-right: 15px; color: var(--primary); }
 
-        /* アニメーション & BGM PANEL */
         .fade-in { opacity: 0; transform: translateY(50px); transition: 0.8s ease; }
         .fade-in.visible { opacity: 1; transform: translateY(0); }
         
@@ -287,7 +293,6 @@
             -webkit-appearance: none; width: 14px; height: 14px; background: var(--primary); cursor: pointer; border-radius: 0;
         }
 
-        /* SP対応 */
         @media (max-width: 768px) {
             .fixed-logo { width: 120px; top: 15px; left: 15px; }
             .section-en { font-size: 5rem; }
@@ -295,6 +300,7 @@
             .tl-row { flex-direction: column; }
             .tl-date { text-align: left; width: 100%; margin-bottom: 15px; padding-bottom: 10px; border-bottom: 2px solid rgba(255,255,255,0.1); }
             .cyber-btn { font-size: 1.8rem; padding: 20px 40px; }
+            .lang-switch { top: 20px; right: 20px; transform: skewX(-10deg) scale(0.8); }
         }
     </style>
 </head>
@@ -303,6 +309,11 @@
     <a href="index.html" class="fixed-logo">
         <img src="event_logo.png" alt="超文化祭2026 ロゴ">
     </a>
+
+    <div class="lang-switch">
+        <button class="lang-btn active" onclick="setLang('ja')">JP</button>
+        <button class="lang-btn" onclick="setLang('en')">EN</button>
+    </div>
 
     <div class="bg-grid-base"></div>
     <div class="bg-cyber-deco"></div>
@@ -323,38 +334,38 @@
     <section class="section" style="padding: 120px 0;">
         <div class="section-header fade-in">
             <div class="section-en">FEATURES</div>
-            <div class="section-jp">超文化祭でできること</div>
+            <div class="section-jp" data-t="features_title">超文化祭でできること</div>
         </div>
         <div class="card-grid">
             <div class="cyber-card fade-in">
                 <i class="fas fa-hammer c-icon"></i>
-                <div class="c-title">生徒対抗建築</div>
-                <div class="c-desc">参加者の生徒の建築勝負！他の生徒と協力して、文化祭の出し物や映えスポットを建築しよう。</div>
+                <div class="c-title" data-t="f1_title">生徒対抗建築</div>
+                <div class="c-desc" data-t="f1_desc">参加者の生徒の建築勝負！他の生徒と協力して、文化祭の出し物や映えスポットを建築しよう。</div>
             </div>
             <div class="cyber-card fade-in" style="transition-delay:0.1s;">
                 <i class="fas fa-store c-icon"></i>
-                <div class="c-title">ロールプレイ経営</div>
-                <div class="c-desc">カフェ、お化け屋敷、カジノ…。独自通貨システムで経済を回そう。ぼったくりバーも経営可能！？</div>
+                <div class="c-title" data-t="f2_title">ロールプレイ経営</div>
+                <div class="c-desc" data-t="f2_desc">カフェ、お化け屋敷、カジノ…。独自通貨システムで経済を回そう。ぼったくりバーも経営可能！？</div>
             </div>
             <div class="cyber-card fade-in" style="transition-delay:0.2s;">
                 <i class="fas fa-camera c-icon"></i>
-                <div class="c-title">24時間 映え放題</div>
-                <div class="c-desc">花火システムやシェーダー映えするスポットが多数。スクショコンテストも開催予定！</div>
+                <div class="c-title" data-t="f3_title">24時間 映え放題</div>
+                <div class="c-desc" data-t="f3_desc">花火システムやシェーダー映えするスポットが多数。スクショコンテストも開催予定！</div>
             </div>
             <div class="cyber-card fade-in">
                 <i class="fas fa-running c-icon"></i>
-                <div class="c-title">全校鬼ごっこ大会</div>
-                <div class="c-desc">学校全体を使った大規模鬼ごっこ！鬼は一人じゃない！？あおはる☆フレンズのYouTubeで公開予定！</div>
+                <div class="c-title" data-t="f4_title">全校鬼ごっこ大会</div>
+                <div class="c-desc" data-t="f4_desc">学校全体を使った大規模鬼ごっこ！鬼は一人じゃない！？あおはる☆フレンズのYouTubeで公開予定！</div>
             </div>
             <div class="cyber-card fade-in" style="transition-delay:0.1s;">
                 <i class="fas fa-microphone-alt c-icon"></i>
-                <div class="c-title">校内放送ラジオ</div>
-                <div class="c-desc">お昼休みと放課後は「校内放送」の時間。VCを繋いでゲストを呼んだり、告白コーナーをしたり自由に配信！</div>
+                <div class="c-title" data-t="f5_title">校内放送ラジオ</div>
+                <div class="c-desc" data-t="f5_desc">お昼休みと放課後は「校内放送」の時間。VCを繋いでゲストを呼んだり、告白コーナーをしたり自由に配信！</div>
             </div>
             <div class="cyber-card fade-in" style="transition-delay:0.2s;">
                 <i class="fas fa-fire c-icon"></i>
-                <div class="c-title">後夜祭PvP</div>
-                <div class="c-desc">最終日は無礼講！最強のストリーマーを決めるコロシアムバトル。優勝者には豪華トロフィー授与。</div>
+                <div class="c-title" data-t="f6_title">後夜祭PvP</div>
+                <div class="c-desc" data-t="f6_desc">最終日は無礼講！最強のストリーマーを決めるコロシアムバトル。優勝者には豪華トロフィー授与。</div>
             </div>
         </div>
     </section>
@@ -362,38 +373,38 @@
     <section class="section" style="padding: 120px 0;">
         <div class="section-header fade-in">
             <div class="section-en">BENEFITS</div>
-            <div class="section-jp">参加するメリット</div>
+            <div class="section-jp" data-t="benefits_title">参加するメリット</div>
         </div>
         <div class="card-grid">
             <div class="benefit-card fade-in">
                 <div class="b-num">01</div>
-                <div class="b-head">新たな仲間との出会い</div>
-                <p class="b-desc">同じ志を持つストリーマーと交流！運命の相方が見つかるかも？</p>
+                <div class="b-head" data-t="b1_title">新たな仲間との出会い</div>
+                <p class="b-desc" data-t="b1_desc">同じ志を持つストリーマーと交流！運命の相方が見つかるかも？</p>
             </div>
             <div class="benefit-card fade-in" style="transition-delay:0.1s;">
                 <div class="b-num">02</div>
-                <div class="b-head">自然なコラボチャンス</div>
-                <p class="b-desc">「クラス」や「部活」システムで、初対面でも会話が弾む仕掛けが満載！</p>
+                <div class="b-head" data-t="b2_title">自然なコラボチャンス</div>
+                <p class="b-desc" data-t="b2_desc">「クラス」や「部活」システムで、初対面でも会話が弾む仕掛けが満載！</p>
             </div>
             <div class="benefit-card fade-in" style="transition-delay:0.2s;">
                 <div class="b-num">03</div>
-                <div class="b-head">公式切り抜き＆拡散</div>
-                <p class="b-desc">専属エディターがあなたの活躍を動画するかも！SNSでの露出を一気に拡大。</p>
+                <div class="b-head" data-t="b3_title">公式切り抜き＆拡散</div>
+                <p class="b-desc" data-t="b3_desc">専属エディターがあなたの活躍を動画するかも！SNSでの露出を一気に拡大。</p>
             </div>
             <div class="benefit-card fade-in">
                 <div class="b-num">04</div>
-                <div class="b-head">尽きない配信ネタ</div>
-                <p class="b-desc">毎日発生する突発イベントやクエストで、配信の撮れ高が止まらない！</p>
+                <div class="b-head" data-t="b4_title">尽きない配信ネタ</div>
+                <p class="b-desc" data-t="b4_desc">毎日発生する突発イベントやクエストで、配信の撮れ高が止まらない！</p>
             </div>
             <div class="benefit-card fade-in" style="transition-delay:0.1s;">
                 <div class="b-num">05</div>
-                <div class="b-head">本気の「青春」体験</div>
-                <p class="b-desc">文化祭、キャンプファイヤー、屋上での語り合い…エモい思い出を作ろう。</p>
+                <div class="b-head" data-t="b5_title">本気の「青春」体験</div>
+                <p class="b-desc" data-t="b5_desc">文化祭、キャンプファイヤー、屋上での語り合い…エモい思い出を作ろう。</p>
             </div>
             <div class="benefit-card fade-in" style="transition-delay:0.2s;">
                 <div class="b-num">06</div>
-                <div class="b-head">完全サポート体制</div>
-                <p class="b-desc">初心者講習会やトラブル対応も万全。安心して配信に集中できる環境。</p>
+                <div class="b-head" data-t="b6_title">完全サポート体制</div>
+                <p class="b-desc" data-t="b6_desc">初心者講習会やトラブル対応も万全。安心して配信に集中できる環境。</p>
             </div>
         </div>
     </section>
@@ -401,20 +412,20 @@
     <section class="section" style="padding: 120px 0; background:rgba(255,255,255,0.02);">
         <div class="section-header fade-in">
             <div class="section-en">MAP & SUPPORT</div>
-            <div class="section-jp">舞台とサポート</div>
+            <div class="section-jp" data-t="map_title">舞台とサポート</div>
         </div>
         <div class="grid-3 fade-in">
             <div class="info-box">
-                <div class="info-head"><i class="fas fa-map-marker-alt"></i> 新校舎エリア</div>
-                <p>肝試しや脱出ゲームの舞台。夜に入ると何かが起きる…？</p>
+                <div class="info-head"><i class="fas fa-map-marker-alt"></i> <span data-t="m1_title">新校舎エリア</span></div>
+                <p data-t="m1_desc">肝試しや脱出ゲームの舞台。夜に入ると何かが起きる…？</p>
             </div>
             <div class="info-box">
-                <div class="info-head"><i class="fas fa-trophy"></i> 大闘技場</div>
-                <p>PVPイベントのメイン会場。500席以上の観客席を完備。</p>
+                <div class="info-head"><i class="fas fa-trophy"></i> <span data-t="m2_title">大闘技場</span></div>
+                <p data-t="m2_desc">PVPイベントのメイン会場。500席以上の観客席を完備。</p>
             </div>
             <div class="info-box">
-                <div class="info-head"><i class="fas fa-video"></i> 公式からの拡散</div>
-                <p>運営があなたの切り抜きなどを拡散！</p>
+                <div class="info-head"><i class="fas fa-video"></i> <span data-t="m3_title">公式からの拡散</span></div>
+                <p data-t="m3_desc">運営があなたの切り抜きなどを拡散！</p>
             </div>
         </div>
     </section>
@@ -422,35 +433,35 @@
     <section class="section" style="padding: 120px 0;">
         <div class="section-header fade-in">
             <div class="section-en">SCHEDULE</div>
-            <div class="section-jp">開催までの流れ</div>
+            <div class="section-jp" data-t="sch_title">開催までの流れ</div>
         </div>
         <div class="timeline-box">
             <div class="tl-row fade-in">
                 <div class="tl-date">NOW</div>
                 <div class="tl-content">
-                    <div class="tl-head">参加者募集開始</div>
-                    <p>応募フォームよりエントリーを受付中。定員に達し次第終了。</p>
+                    <div class="tl-head" data-t="s1_title">参加者募集開始</div>
+                    <p data-t="s1_desc">応募フォームよりエントリーを受付中。定員に達し次第終了。</p>
                 </div>
             </div>
             <div class="tl-row fade-in">
                 <div class="tl-date">03.20</div>
                 <div class="tl-content">
-                    <div class="tl-head">クラス分け・招待状送付</div>
-                    <p>運営Discordにてクラス発表。あなたのクラスメイトは誰だ！？</p>
+                    <div class="tl-head" data-t="s2_title">クラス分け・招待状送付</div>
+                    <p data-t="s2_desc">運営Discordにてクラス発表。あなたのクラスメイトは誰だ！？</p>
                 </div>
             </div>
             <div class="tl-row fade-in">
                 <div class="tl-date">04.01</div>
                 <div class="tl-content">
-                    <div class="tl-head">開校式・サーバーオープン</div>
-                    <p>19:00 全校集会（開会式）スタート。サバイバル生活開始！</p>
+                    <div class="tl-head" data-t="s3_title">開校式・サーバーオープン</div>
+                    <p data-t="s3_desc">19:00 全校集会（開会式）スタート。サバイバル生活開始！</p>
                 </div>
             </div>
             <div class="tl-row fade-in">
                 <div class="tl-date">04.25</div>
                 <div class="tl-content">
-                    <div class="tl-head">文化祭当日・後夜祭</div>
-                    <p>建築物の一般公開と、全サーバー対抗PVP大会、フィナーレ花火。</p>
+                    <div class="tl-head" data-t="s4_title">文化祭当日・後夜祭</div>
+                    <p data-t="s4_desc">建築物の一般公開と、全サーバー対抗PVP大会、フィナーレ花火。</p>
                 </div>
             </div>
         </div>
@@ -459,20 +470,20 @@
     <section class="section" style="padding: 50px 0 120px; background:rgba(255,255,255,0.02);">
         <div class="section-header fade-in">
             <div class="section-en">Q & A</div>
-            <div class="section-jp">よくある質問</div>
+            <div class="section-jp" data-t="faq_title">よくある質問</div>
         </div>
         <div class="grid-3 fade-in" style="gap:20px;">
             <div class="info-box">
-                <div class="info-head"><i class="fas fa-question-circle"></i> 初心者でも大丈夫？</div>
-                <p>大歓迎です！整地班や素材集め班など活躍の場は多数あります。</p>
+                <div class="info-head"><i class="fas fa-question-circle"></i> <span data-t="q1_q">初心者でも大丈夫？</span></div>
+                <p data-t="q1_a">大歓迎です！整地班や素材集め班など活躍の場は多数あります。</p>
             </div>
             <div class="info-box">
-                <div class="info-head"><i class="fas fa-question-circle"></i> 毎日ログイン必須？</div>
-                <p>強制ではありません。ご自身のペースで楽しんでください。</p>
+                <div class="info-head"><i class="fas fa-question-circle"></i> <span data-t="q2_q">毎日ログイン必須？</span></div>
+                <p data-t="q2_a">強制ではありません。ご自身のペースで楽しんでください。</p>
             </div>
             <div class="info-box">
-                <div class="info-head"><i class="fas fa-question-circle"></i> 顔出しは必須？</div>
-                <p>いいえ、声のみ（ラジオスタイル）やVtuberでも参加可能です。</p>
+                <div class="info-head"><i class="fas fa-question-circle"></i> <span data-t="q3_q">顔出しは必須？</span></div>
+                <p data-t="q3_a">いいえ、声のみ（ラジオスタイル）やVtuberでも参加可能です。</p>
             </div>
         </div>
     </section>
@@ -480,15 +491,14 @@
     <section class="section" style="text-align:center; padding: 150px 0 250px;" id="entry">
         <div class="section-header fade-in">
             <div class="section-en">ENTRY</div>
-            <div class="section-jp">入学届を提出する</div>
+            <div class="section-jp" data-t="entry_title">入学届を提出する</div>
         </div>
         <p class="fade-in" style="font-size:1.4rem; margin-bottom:80px; color:var(--text-main);">
-            伝説の1ページを、一緒に刻もう。<br>
-            定員 <span style="color:var(--yellow); font-size:2rem; font-family:var(--font-en);">100</span> 名に達し次第、募集を締め切ります。
+            <span data-t="entry_desc">伝説の1ページを、一緒に刻もう。<br>定員 100 名に達し次第、募集を締め切ります。</span>
         </p>
         <div class="cyber-btn-box fade-in">
             <a href="https://docs.google.com/forms/d/e/1FAIpQLSc4rPTaXT1kseIdghXI-NeyWsf0dGpkWNINlXm2fqlIFirhRA/viewform" target="_blank" class="cyber-btn">
-                ENTRY FORM <i class="fas fa-chevron-right" style="margin-left:15px; font-size:0.8em;"></i>
+                <span data-t="entry_btn">ENTRY FORM</span> <i class="fas fa-chevron-right" style="margin-left:15px; font-size:0.8em;"></i>
             </a>
         </div>
         <div style="margin-top:120px; opacity:0.5; font-size:0.9rem;">
@@ -518,6 +528,100 @@
             }, { threshold: 0.1 });
             document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
         });
+
+        /* ============================
+           ▼ 言語切り替えロジック
+           ============================ */
+        const translations = {
+            ja: {
+                features_title: "超文化祭でできること",
+                f1_title: "生徒対抗建築", f1_desc: "参加者の生徒の建築勝負！他の生徒と協力して、文化祭の出し物や映えスポットを建築しよう。",
+                f2_title: "ロールプレイ経営", f2_desc: "カフェ、お化け屋敷、カジノ…。独自通貨システムで経済を回そう。ぼったくりバーも経営可能！？",
+                f3_title: "24時間 映え放題", f3_desc: "花火システムやシェーダー映えするスポットが多数。スクショコンテストも開催予定！",
+                f4_title: "全校鬼ごっこ大会", f4_desc: "学校全体を使った大規模鬼ごっこ！鬼は一人じゃない！？あおはる☆フレンズのYouTubeで公開予定！",
+                f5_title: "校内放送ラジオ", f5_desc: "お昼休みと放課後は「校内放送」の時間。VCを繋いでゲストを呼んだり、告白コーナーをしたり自由に配信！",
+                f6_title: "後夜祭PvP", f6_desc: "最終日は無礼講！最強のストリーマーを決めるコロシアムバトル。優勝者には豪華トロフィー授与。",
+                
+                benefits_title: "参加するメリット",
+                b1_title: "新たな仲間との出会い", b1_desc: "同じ志を持つストリーマーと交流！運命の相方が見つかるかも？",
+                b2_title: "自然なコラボチャンス", b2_desc: "「クラス」や「部活」システムで、初対面でも会話が弾む仕掛けが満載！",
+                b3_title: "公式切り抜き＆拡散", b3_desc: "専属エディターがあなたの活躍を動画するかも！SNSでの露出を一気に拡大。",
+                b4_title: "尽きない配信ネタ", b4_desc: "毎日発生する突発イベントやクエストで、配信の撮れ高が止まらない！",
+                b5_title: "本気の「青春」体験", b5_desc: "文化祭、キャンプファイヤー、屋上での語り合い…エモい思い出を作ろう。",
+                b6_title: "完全サポート体制", b6_desc: "初心者講習会やトラブル対応も万全。安心して配信に集中できる環境。",
+
+                map_title: "舞台とサポート",
+                m1_title: "新校舎エリア", m1_desc: "肝試しや脱出ゲームの舞台。夜に入ると何かが起きる…？",
+                m2_title: "大闘技場", m2_desc: "PVPイベントのメイン会場。500席以上の観客席を完備。",
+                m3_title: "公式からの拡散", m3_desc: "運営があなたの切り抜きなどを拡散！",
+
+                sch_title: "開催までの流れ",
+                s1_title: "参加者募集開始", s1_desc: "応募フォームよりエントリーを受付中。定員に達し次第終了。",
+                s2_title: "クラス分け・招待状送付", s2_desc: "運営Discordにてクラス発表。あなたのクラスメイトは誰だ！？",
+                s3_title: "開校式・サーバーオープン", s3_desc: "19:00 全校集会（開会式）スタート。サバイバル生活開始！",
+                s4_title: "文化祭当日・後夜祭", s4_desc: "建築物の一般公開と、全サーバー対抗PVP大会、フィナーレ花火。",
+
+                faq_title: "よくある質問",
+                q1_q: "初心者でも大丈夫？", q1_a: "大歓迎です！整地班や素材集め班など活躍の場は多数あります。",
+                q2_q: "毎日ログイン必須？", q2_a: "強制ではありません。ご自身のペースで楽しんでください。",
+                q3_q: "顔出しは必須？", q3_a: "いいえ、声のみ（ラジオスタイル）やVtuberでも参加可能です。",
+
+                entry_title: "入学届を提出する",
+                entry_desc: "伝説の1ページを、一緒に刻もう。<br>定員 100 名に達し次第、募集を締め切ります。",
+                entry_btn: "ENTRY FORM"
+            },
+            en: {
+                features_title: "WHAT YOU CAN DO",
+                f1_title: "CLASS BUILDING BATTLE", f1_desc: "Collaborate with classmates to build festival attractions and photo spots!",
+                f2_title: "ROLEPLAY BUSINESS", f2_desc: "Cafes, haunted houses, casinos... Run your own economy with our unique currency system.",
+                f3_title: "PHOTOGENIC WORLD", f3_desc: "Fireworks systems and shader-friendly spots everywhere. Screenshot contest coming soon!",
+                f4_title: "SCHOOL-WIDE TAG", f4_desc: "Massive game of tag using the whole school! Survive the Onis! To be featured on YouTube.",
+                f5_title: "SCHOOL RADIO", f5_desc: "Lunchtime & After-school are radio time. Connect VC to host guests or confess your love!",
+                f6_title: "AFTER-PARTY PVP", f6_desc: "The final battle in the Colosseum to decide the strongest streamer. Trophy for the winner.",
+                
+                benefits_title: "BENEFITS",
+                b1_title: "MEET NEW FRIENDS", b1_desc: "Connect with like-minded streamers! You might find your best partner.",
+                b2_title: "COLLAB CHANCES", b2_desc: "Class and Club systems make it easy to start conversations with new people!",
+                b3_title: "OFFICIAL CLIPS", b3_desc: "Our editors might clip your best moments! Boost your SNS presence.",
+                b4_title: "ENDLESS CONTENT", b4_desc: "Daily random events and quests mean you'll never run out of streaming ideas!",
+                b5_title: "REAL YOUTH VIBES", b5_desc: "School festival, campfire, rooftop talks... Make emotional memories.",
+                b6_title: "FULL SUPPORT", b6_desc: "Tutorials for beginners and full support available. Focus on your stream.",
+
+                map_title: "STAGE & SUPPORT",
+                m1_title: "NEW SCHOOL BLDG", m1_desc: "Stage for horror & escape games. What happens when you enter at night...?",
+                m2_title: "GRAND COLOSSEUM", m2_desc: "Main venue for PVP events. Equipped with over 500 spectator seats.",
+                m3_title: "OFFICIAL PROMO", m3_desc: "Management will spread your clips and activities!",
+
+                sch_title: "EVENT SCHEDULE",
+                s1_title: "RECRUITMENT START", s1_desc: "Entry now open via form. Closes when capacity is reached.",
+                s2_title: "CLASS ANNOUNCEMENT", s2_desc: "Class assignments announced on Discord. Who will be your classmate!?",
+                s3_title: "OPENING CEREMONY", s3_desc: "19:00 Opening Assembly. Survival life starts immediately after!",
+                s4_title: "FESTIVAL DAY", s4_desc: "Public viewing of buildings, PVP tournament, and Finale Fireworks.",
+
+                faq_title: "FAQ",
+                q1_q: "Is Minecraft beginner OK?", q1_a: "Absolutely! We need everyone for gathering materials and clearing land.",
+                q2_q: "Must I login daily?", q2_a: "No force. Please enjoy at your own pace.",
+                q3_q: "Face cam required?", q3_a: "No. Vtuber avatars or Voice-only (Radio style) are totally welcome.",
+
+                entry_title: "SUBMIT APPLICATION",
+                entry_desc: "Carve a page in the legend together.<br>Applications close when we reach 100 members.",
+                entry_btn: "ENTRY FORM"
+            }
+        };
+
+        function setLang(lang) {
+            // ボタンの見た目更新
+            document.querySelectorAll('.lang-btn').forEach(btn => btn.classList.remove('active'));
+            document.querySelector(`.lang-btn[onclick="setLang('${lang}')"]`).classList.add('active');
+
+            // テキスト書き換え
+            document.querySelectorAll('[data-t]').forEach(el => {
+                const key = el.getAttribute('data-t');
+                if(translations[lang][key]) {
+                    el.innerHTML = translations[lang][key];
+                }
+            });
+        }
 
         // BGM Control
         const audio = document.getElementById('bgmAudio');
