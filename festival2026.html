@@ -50,7 +50,6 @@
         }
         .bg-cyber-deco {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            /* 円を削除した背景装飾 */
             background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100%25' height='100%25' viewBox='0 0 1920 1080'%3E%3Cdefs%3E%3ClinearGradient id='a' x1='0%25' y1='0%25' x2='100%25' y2='0%25'%3E%3Cstop offset='0%25' stop-color='%2300f0ff' stop-opacity='0.2'/%3E%3Cstop offset='100%25' stop-color='%23ff0055' stop-opacity='0.2'/%3E%3C/linearGradient%3E%3C/defs%3E%3Cpath fill='none' stroke='url(%23a)' stroke-width='2' d='M-100,600 a800,800 0 0,1 1600,-400' /%3E%3Cpath fill='none' stroke='rgba(252,238,10,0.2)' stroke-width='3' stroke-dasharray='10,20' d='M1200,100 a600,600 0 0,0 -400,800' /%3E%3Cpath fill='rgba(255,0,85,0.1)' d='M200,800 L300,700 L400,800 Z' /%3E%3C/svg%3E");
             background-size: cover;
             z-index: -5; pointer-events: none;
@@ -70,7 +69,7 @@
         .fixed-logo img { width: 100%; height: auto; display: block; }
         .fixed-logo:hover { transform: scale(1.05); opacity: 0.9; }
 
-        /* ★新規追加：言語切り替えボタン（右上） */
+        /* 言語切り替えボタン（右上） */
         .lang-switch {
             position: fixed; top: 30px; right: 30px; z-index: 1001;
             display: flex; gap: 0;
@@ -384,7 +383,7 @@
             <div class="benefit-card fade-in" style="transition-delay:0.1s;">
                 <div class="b-num">02</div>
                 <div class="b-head" data-t="b2_title">自然なコラボチャンス</div>
-                <p class="b-desc" data-t="b2_desc">「クラス」や「部活」システムで、初対面でも会話が弾む仕掛けが満載！</p>
+                <p class="b-desc" data-t="b2_desc">「クラス」や「お店」や「ダンジョン」システムで、初対面でも会話が弾む仕掛けが満載！</p>
             </div>
             <div class="benefit-card fade-in" style="transition-delay:0.2s;">
                 <div class="b-num">03</div>
@@ -444,24 +443,31 @@
                 </div>
             </div>
             <div class="tl-row fade-in">
-                <div class="tl-date">03.20</div>
+                <div class="tl-date">03.10</div>
                 <div class="tl-content">
-                    <div class="tl-head" data-t="s2_title">クラス分け・招待状送付</div>
-                    <p data-t="s2_desc">運営Discordにてクラス発表。あなたのクラスメイトは誰だ！？</p>
+                    <div class="tl-head" data-t="s2_title">招待状送付・入学者への案内</div>
+                    <p data-t="s2_desc">XのDMに運営よりご案内が届く。青春間近！？</p>
+                </div>
+            </div>
+            <div class="tl-row fade-in">
+                <div class="tl-date">03.28</div>
+                <div class="tl-content">
+                    <div class="tl-head" data-t="s3_title">サーバー負荷テスト</div>
+                    <p data-t="s3_desc">参加者による事前入室し、負荷テスト予定</p>
                 </div>
             </div>
             <div class="tl-row fade-in">
                 <div class="tl-date">04.01</div>
                 <div class="tl-content">
-                    <div class="tl-head" data-t="s3_title">開校式・サーバーオープン</div>
-                    <p data-t="s3_desc">19:00 全校集会（開会式）スタート。サバイバル生活開始！</p>
+                    <div class="tl-head" data-t="s4_title">開校式・サーバーオープン</div>
+                    <p data-t="s4_desc">19:00 全校集会（開会式）スタート。サバイバル生活開始！</p>
                 </div>
             </div>
             <div class="tl-row fade-in">
                 <div class="tl-date">04.25</div>
                 <div class="tl-content">
-                    <div class="tl-head" data-t="s4_title">文化祭当日・後夜祭</div>
-                    <p data-t="s4_desc">建築物の一般公開と、全サーバー対抗PVP大会、フィナーレ花火。</p>
+                    <div class="tl-head" data-t="s5_title">文化祭当日・後夜祭・閉会式</div>
+                    <p data-t="s5_desc">全サーバー対抗PVP大会、閉会式、フィナーレ花火。</p>
                 </div>
             </div>
         </div>
@@ -485,6 +491,18 @@
                 <div class="info-head"><i class="fas fa-question-circle"></i> <span data-t="q3_q">顔出しは必須？</span></div>
                 <p data-t="q3_a">いいえ、声のみ（ラジオスタイル）やVtuberでも参加可能です。</p>
             </div>
+            <div class="info-box">
+                <div class="info-head"><i class="fas fa-question-circle"></i> <span data-t="q4_q">Java版のみ？</span></div>
+                <p data-t="q4_a">はい。Minecraft Java版のみが参加可能となっております。</p>
+            </div>
+            <div class="info-box">
+                <div class="info-head"><i class="fas fa-question-circle"></i> <span data-t="q5_q">途中参加や途中退出は可能ですか？？</span></div>
+                <p data-t="q5_a">可能です。19時から2時の中でご自由にご参加ください。</p>
+            </div>
+            <div class="info-box">
+                <div class="info-head"><i class="fas fa-question-circle"></i> <span data-t="q6_q">Discordなどは必須ですか？</span></div>
+                <p data-t="q6_a">ゲーム内にボイスチャットがございますのでそちらをご使用ください。</p>
+            </div>
         </div>
     </section>
 
@@ -498,7 +516,7 @@
         </p>
         <div class="cyber-btn-box fade-in">
             <a href="https://docs.google.com/forms/d/e/1FAIpQLSc4rPTaXT1kseIdghXI-NeyWsf0dGpkWNINlXm2fqlIFirhRA/viewform" target="_blank" class="cyber-btn">
-                <span data-t="entry_btn">ENTRY FORM</span> <i class="fas fa-chevron-right" style="margin-left:15px; font-size:0.8em;"></i>
+                <span data-t="entry_btn">申し込む</span> <i class="fas fa-chevron-right" style="margin-left:15px; font-size:0.8em;"></i>
             </a>
         </div>
         <div style="margin-top:120px; opacity:0.5; font-size:0.9rem;">
@@ -557,14 +575,18 @@
 
                 sch_title: "開催までの流れ",
                 s1_title: "参加者募集開始", s1_desc: "応募フォームよりエントリーを受付中。定員に達し次第終了。",
-                s2_title: "クラス分け・招待状送付", s2_desc: "運営Discordにてクラス発表。あなたのクラスメイトは誰だ！？",
-                s3_title: "開校式・サーバーオープン", s3_desc: "19:00 全校集会（開会式）スタート。サバイバル生活開始！",
-                s4_title: "文化祭当日・後夜祭", s4_desc: "建築物の一般公開と、全サーバー対抗PVP大会、フィナーレ花火。",
+                s2_title: "招待状送付・入学者への案内", s2_desc: "XのDMに運営よりご案内が届く。青春間近！？",
+                s3_title: "サーバー負荷テスト", s3_desc: "参加者による事前入室し、負荷テスト予定",
+                s4_title: "開校式・サーバーオープン", s4_desc: "19:00 全校集会（開会式）スタート。サバイバル生活開始！",
+                s5_title: "文化祭当日・後夜祭・閉会式", s5_desc: "全サーバー対抗PVP大会、閉会式、フィナーレ花火。",
 
                 faq_title: "よくある質問",
                 q1_q: "初心者でも大丈夫？", q1_a: "大歓迎です！整地班や素材集め班など活躍の場は多数あります。",
                 q2_q: "毎日ログイン必須？", q2_a: "強制ではありません。ご自身のペースで楽しんでください。",
                 q3_q: "顔出しは必須？", q3_a: "いいえ、声のみ（ラジオスタイル）やVtuberでも参加可能です。",
+                q4_q: "Java版のみ？", q4_a: "はい。Minecraft Java版のみが参加可能となっております。",
+                q5_q: "途中参加や途中退出は可能ですか？？", q5_a: "可能です。19時から2時の中でご自由にご参加ください。",
+                q6_q: "Discordなどは必須ですか？", q6_a: "ゲーム内にボイスチャットがございますのでそちらをご使用ください。",
 
                 entry_title: "入学届を提出する",
                 entry_desc: "伝説の1ページを、一緒に刻もう。<br>定員 100 名に達し次第、募集を締め切ります。",
@@ -594,14 +616,18 @@
 
                 sch_title: "EVENT SCHEDULE",
                 s1_title: "RECRUITMENT START", s1_desc: "Entry now open via form. Closes when capacity is reached.",
-                s2_title: "CLASS ANNOUNCEMENT", s2_desc: "Class assignments announced on Discord. Who will be your classmate!?",
-                s3_title: "OPENING CEREMONY", s3_desc: "19:00 Opening Assembly. Survival life starts immediately after!",
-                s4_title: "FESTIVAL DAY", s4_desc: "Public viewing of buildings, PVP tournament, and Finale Fireworks.",
+                s2_title: "INVITATIONS SENT", s2_desc: "Management will send details via X (Twitter) DM. Youth is fast approaching!",
+                s3_title: "SERVER STRESS TEST", s3_desc: "Pre-login event for participants to test connection and server load.",
+                s4_title: "OPENING CEREMONY", s4_desc: "19:00 Opening Assembly. Survival life starts immediately after!",
+                s5_title: "FESTIVAL DAY & FINALE", s5_desc: "PVP tournament, Closing Ceremony, and Grand Finale Fireworks.",
 
                 faq_title: "FAQ",
                 q1_q: "Is Minecraft beginner OK?", q1_a: "Absolutely! We need everyone for gathering materials and clearing land.",
                 q2_q: "Must I login daily?", q2_a: "No force. Please enjoy at your own pace.",
                 q3_q: "Face cam required?", q3_a: "No. Vtuber avatars or Voice-only (Radio style) are totally welcome.",
+                q4_q: "Java Edition only?", q4_a: "Yes. Only Minecraft Java Edition is supported (No Switch/PS4/Mobile).",
+                q5_q: "Can I join/leave mid-event?", q5_a: "Yes! Feel free to hop in and out anytime between 19:00 and 02:00.",
+                q6_q: "Is Discord required?", q6_a: "We use an In-game Proximity Chat mod, so please use that for calls.",
 
                 entry_title: "SUBMIT APPLICATION",
                 entry_desc: "Carve a page in the legend together.<br>Applications close when we reach 100 members.",
