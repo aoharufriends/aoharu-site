@@ -83,20 +83,47 @@
         }
 
         /* 1. PARTICIPANTS LIST */
+        /* ▼▼▼ 修正：ページ全体の幅を広げる ▼▼▼ */
+        .container { 
+            max-width: 95%; /* 1200pxから変更して、画面端まで使えるようにする */
+            margin: 0 auto; 
+            padding: 0 20px; 
+        }
+
+        /* ... (中略) ... */
+
+        /* ▼▼▼ 修正：PCで7人横並びにする設定 ▼▼▼ */
         .member-list {
-            display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 25px;
+            display: grid; 
+            grid-template-columns: repeat(7, 1fr); /* 強制的に7分割する */
+            gap: 15px; /* 間隔を少し狭くして入りきるように調整 */
         }
+        
+        /* 1つ1つのカードの文字サイズなども少し調整 */
         .member-card {
-            background: rgba(0,240,255,0.05); border: 1px solid rgba(0,240,255,0.3);
-            padding: 20px; text-align: center; transition: 0.3s;
-            display: flex; flex-direction: column; align-items: center;
-            position: relative; overflow: hidden;
+            background: rgba(0,240,255,0.05); 
+            border: 1px solid rgba(0,240,255,0.3);
+            padding: 15px 5px; /* 横の余白を減らす */
+            text-align: center; 
+            transition: 0.3s;
+            display: flex; 
+            flex-direction: column; 
+            align-items: center;
+            position: relative; 
+            overflow: hidden;
         }
-        .member-card:hover { background: rgba(0,240,255,0.15); border-color: var(--yellow); transform: translateY(-5px); }
         
         .member-icon {
-            width: 100px; height: 100px; background: #333; border-radius: 50%; margin-bottom: 10px;
-            border: 3px solid white; display: flex; align-items: center; justify-content: center; overflow: hidden;
+            width: 80px; /* アイコンを少し小さくして横並びに合わせる */
+            height: 80px; 
+            background: #333; 
+            border-radius: 50%; 
+            margin-bottom: 10px;
+            border: 3px solid white; 
+            display: flex; 
+            align-items: center; 
+            justify-content: center; 
+            overflow: hidden;
             box-shadow: 0 0 15px rgba(0,0,0,0.5);
         }
         .member-icon img { width: 100%; height: 100%; object-fit: cover; }
