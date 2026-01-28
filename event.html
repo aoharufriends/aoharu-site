@@ -7,7 +7,7 @@
     <link rel="icon" type="image/png" href="logo_icon.png?v=2">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Dela+Gothic+One&family=Kanit:ital,wght@1,900&family=Teko:wght@300;500;700&family=Zen+Kaku+Gothic+New:wght@400;700;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,500;0,700;0,900;1,900&family=Noto+Sans+JP:wght@400;700;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
 
     <style>
@@ -21,9 +21,16 @@
             --yellow: #fcee0a;
             --text-main: #ffffff;
             --text-dim: #b0b0b0;
-            --font-jp-head: 'Dela Gothic One', sans-serif;
-            --font-en: 'Teko', sans-serif;
-            --font-body: 'Zen Kaku Gothic New', sans-serif;
+            
+            /* ▼▼▼ フォント設定を「公式・大手イベント風」に変更 ▼▼▼ */
+            /* 見出し用（日本語）：太くて読みやすいゴシック */
+            --font-jp-head: 'Noto Sans JP', sans-serif;
+            
+            /* 見出し用（英語）：幾何学的でモダンなサンセリフ */
+            --font-en: 'Montserrat', sans-serif;
+            
+            /* 本文用：読みやすさ重視 */
+            --font-body: 'Noto Sans JP', sans-serif;
         }
         * { box-sizing: border-box; margin: 0; padding: 0; }
         body {
@@ -76,18 +83,75 @@
             background: radial-gradient(circle at center, rgba(0,240,255,0.1) 0%, #050505 80%);
             border-bottom: 2px solid var(--primary); margin-bottom: 50px;
         }
+        /* ▼▼▼ 公式感のあるスタイリッシュなタイトル（修正版） ▼▼▼ */
         .page-title {
-            font-family: 'Kanit', sans-serif; font-size: clamp(3.5rem, 10vw, 8rem);
-            font-style: italic; font-weight: 900; line-height: 0.9; letter-spacing: 0.03em; color: #ffffff;
-            text-align: center; transform: skewX(-5deg); -webkit-text-stroke: 2px #000000;
-            text-shadow: 4px 4px 0 #000000, 8px 8px 0 var(--primary), 12px 12px 0 var(--accent), 0 0 40px rgba(0, 240, 255, 0.4);
-            margin-bottom: 20px;
+            font-family: var(--font-en); /* Montserrat */
+            font-weight: 900; /* 極太 */
+            font-style: italic; /* 少し斜体でスピード感を出す */
+            
+            /* サイズを小さく調整 (以前は最大7rem → 今回は最大4.5rem) */
+            font-size: clamp(2.2rem, 5vw, 4.5rem);
+            
+            line-height: 1.1;
+            letter-spacing: 0.05em; /* 文字間を少し広げて高級感 */
+            color: #ffffff;
+            text-align: center;
+            
+            /* 変形（Skew）をなくして読みやすく */
+            transform: none; 
+            
+            /* 線をなくし、光るような影に変更 */
+            -webkit-text-stroke: 0;
+            text-shadow: 0 5px 15px rgba(0, 0, 0, 0.8), 0 0 30px rgba(0, 240, 255, 0.3);
+            
+            margin-bottom: 0;
         }
+
+        /* 下の日本語（イベント詳細情報） */
         .page-title span {
-            display: block; font-family: var(--font-jp-head); font-style: normal; font-weight: 400;
-            font-size: clamp(1.2rem, 3vw, 2rem); margin-top: 25px; letter-spacing: 0.2em; transform: skewX(5deg);
-            color: #fff; -webkit-text-stroke: 1px #000; text-shadow: 3px 3px 0 rgba(0,0,0,0.8);
-            background: none; -webkit-background-clip: border-box; opacity: 1;
+            display: block;
+            font-family: var(--font-jp-head); /* Noto Sans JP */
+            font-weight: 700;
+            font-style: normal; /* 斜体解除 */
+            
+            /* サイズを大幅に小さく (以前は最大2rem → 今回は最大1.1rem) */
+            font-size: clamp(0.8rem, 1.5vw, 1.1rem);
+            
+            margin-top: 15px;
+            letter-spacing: 0.4em; /* 文字間をかなり広げて公式っぽく */
+            
+            /* 色を白ではなく、テーマカラー（水色）にしてアクセントに */
+            color: var(--primary); 
+            text-shadow: 0 0 10px rgba(0, 240, 255, 0.4);
+            
+            background: none;
+            opacity: 1;
+        }
+
+        /* セクション英語タイトル */
+        .section-en {
+            font-family: var(--font-en);
+            font-weight: 900;
+            letter-spacing: 0.05em;
+            /* 以前の設定を引き継ぎ */
+            font-size: clamp(4rem, 10vw, 8rem);
+            background: linear-gradient(to bottom, rgba(255,255,255,0.1), rgba(0,0,0,0));
+            -webkit-background-clip: text; color: transparent;
+            -webkit-text-stroke: 1px rgba(0,240,255,0.3);
+            position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
+            z-index: -1; white-space: nowrap; pointer-events: none;
+        }
+
+        /* 企業名などを読みやすく */
+        .sp-name {
+            font-family: var(--font-jp-head);
+            font-weight: 700; /* 太字でクッキリ */
+            font-size: 1.5rem;
+            color: white;
+            margin-bottom: 20px;
+            border-left: 5px solid var(--accent);
+            padding-left: 15px;
+            display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 10px;
         }
 
         /* MEMBER LIST */
