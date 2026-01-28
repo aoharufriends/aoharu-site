@@ -39,7 +39,22 @@
                         linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px);
             background-size: 50px 50px; z-index: -10; pointer-events: none;
         }
-        .container { max-width: 95%; margin: 0 auto; padding: 0 20px; }
+        
+        /* 基本コンテナ（画面幅いっぱい使う用＝参加者一覧など） */
+        .container { 
+            max-width: 95%; 
+            margin: 0 auto; 
+            padding: 0 20px; 
+        }
+
+        /* ▼▼▼ 幅を狭くする用のクラス (NEW!) ▼▼▼ */
+        /* 協賛・ギャラリー・クレジット用 */
+        .narrow-box {
+            max-width: 1000px !important; /* ここで幅を制限！ */
+            margin-left: auto;
+            margin-right: auto;
+        }
+
         .section-header { text-align: center; margin: 100px auto 60px; position: relative; }
         .section-en {
             font-family: var(--font-en); font-size: clamp(4rem, 10vw, 8rem); font-weight: 700;
@@ -98,7 +113,6 @@
         .cat-aoharu { background: var(--primary); color: black; box-shadow: 0 0 5px var(--primary); }
         .cat-admin { background: var(--yellow); color: black; box-shadow: 0 0 5px var(--yellow); }
         .cat-participant { background: #333; border: 1px solid #555; }
-        
         .member-links { display: flex; gap: 10px; justify-content: center; }
         .sns-btn {
             width: 30px; height: 30px; border-radius: 50%; background: #222; color: white;
@@ -121,12 +135,20 @@
         .sp-name {
             font-family: var(--font-jp-head); font-size: 1.8rem; color: white;
             margin-bottom: 20px; border-left: 5px solid var(--accent); padding-left: 15px;
-            display: flex; align-items: center; justify-content: space-between;
+            display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 10px;
         }
         .sp-rank {
             font-family: var(--font-en); font-size: 1rem; background: var(--yellow); color: black;
             padding: 2px 10px; transform: skewX(-10deg); font-weight: bold;
         }
+        /* 企業HPリンクボタン */
+        .sp-link-btn {
+            font-family: var(--font-en); font-size: 1rem; color: var(--primary); border: 1px solid var(--primary);
+            padding: 2px 15px; border-radius: 20px; text-decoration: none; margin-left: auto;
+            display: flex; align-items: center; gap: 5px; transition: 0.3s; background: rgba(0, 240, 255, 0.1);
+        }
+        .sp-link-btn:hover { background: var(--primary); color: black; box-shadow: 0 0 10px var(--primary); }
+
         .sp-content { display: grid; grid-template-columns: 1fr 1.5fr; gap: 30px; align-items: flex-start; }
         .sp-left-col { display: flex; flex-direction: column; gap: 20px; }
         .sp-logo-area {
@@ -158,27 +180,23 @@
         .gallery-item img { width: 100%; height: 100%; object-fit: cover; transition: 0.5s; }
         .gallery-item:hover img { opacity: 0.8; }
 
-        /* CREDITS (Dynamic) */
-        .credit-list { list-style: none; border-top: 1px solid rgba(255,255,255,0.2); max-width: 800px; margin: 0 auto; }
+        /* CREDITS */
+        .credit-list { list-style: none; border-top: 1px solid rgba(255,255,255,0.2); }
         .credit-item {
             display: flex; justify-content: space-between; align-items: center;
             padding: 15px 10px; border-bottom: 1px solid rgba(255,255,255,0.1); transition: 0.3s;
         }
         .credit-item:hover { background: rgba(255,255,255,0.03); padding-left: 20px; border-color: var(--primary); }
-        
         .cr-left { display: flex; align-items: center; gap: 15px; }
         .cr-type {
             font-size: 0.8rem; padding: 2px 8px; border-radius: 3px; font-family: var(--font-en);
             min-width: 60px; text-align: center; font-weight: bold;
             background: #333; color: #ccc; border: 1px solid #555;
         }
-        /* バッジのカラーリング */
         .cr-type[data-type="MOD"] { background: rgba(0, 240, 255, 0.2); color: var(--primary); border-color: var(--primary); }
         .cr-type[data-type="BGM"] { background: rgba(252, 238, 10, 0.2); color: var(--yellow); border-color: var(--yellow); }
         .cr-type[data-type="WORLD"] { background: rgba(255, 0, 85, 0.2); color: var(--accent); border-color: var(--accent); }
-
         .cr-name { font-weight: bold; color: white; font-size: 1.1rem; }
-        
         .cr-link { 
             color: var(--text-dim); font-size: 0.9rem; text-decoration: none; 
             display: flex; align-items: center; gap: 5px; transition: 0.3s;
@@ -204,7 +222,8 @@
             .sns-btn { width: 24px; height: 24px; font-size: 0.8rem; border-width: 0; }
             
             .sp-content { grid-template-columns: 1fr; gap: 20px; }
-            .sp-name { font-size: 1.4rem; flex-direction: column; align-items: flex-start; gap: 10px; }
+            .sp-name { font-size: 1.4rem; align-items: flex-start; }
+            .sp-link-btn { margin-left: 0; margin-top: 5px; font-size: 0.9rem; }
             
             .credit-item { flex-direction: column; align-items: flex-start; gap: 10px; }
             .cr-link { align-self: flex-end; }
@@ -229,7 +248,7 @@
         </div>
     </section>
 
-    <section class="container" style="margin-bottom: 100px;">
+    <section class="container narrow-box" style="margin-bottom: 100px;">
         <div class="section-header">
             <div class="section-en">PARTNERS</div>
             <div class="section-jp">協賛・CM・提供</div>
@@ -239,7 +258,7 @@
         </div>
     </section>
 
-    <section class="container" style="margin-bottom: 100px;">
+    <section class="container narrow-box" style="margin-bottom: 100px;">
         <div class="section-header">
             <div class="section-en">GALLERY</div>
             <div class="section-jp">イベント風景</div>
@@ -249,7 +268,7 @@
         </div>
     </section>
 
-    <section class="container" style="margin-bottom: 100px;">
+    <section class="container narrow-box" style="margin-bottom: 100px;">
         <div class="section-header">
             <div class="section-en">CREDITS</div>
             <div class="section-jp">使用素材・MOD</div>
@@ -266,7 +285,7 @@
 
     <script>
         // ★★★重要：ここにGASのウェブアプリURLを貼り付けてください！★★★
-        const GAS_URL = 'https://script.google.com/macros/s/AKfycbzi31i9BW6TRnpBR-Uv5XmySWBSS75gzQ0t-Vj0NpmEAsCOyADQ-g2cMKiEsxysWFMW/exec'; 
+        const GAS_URL = 'https://script.google.com/macros/s/AKfycbyQk44uCG1830bOuRAJPzFDL0jfOReWdRleIfDyA7A9A2rVx4P6f2JQZN3al4oTZrhU/exec'; 
 
         document.addEventListener('DOMContentLoaded', () => {
             const memberArea = document.getElementById('memberListArea');
@@ -300,7 +319,6 @@
                             if(pType === 'YouTube') { iconClass = 'fa-youtube'; btnClass = 'sns-youtube'; }
                             else if(pType === 'Twitch') { iconClass = 'fa-twitch'; btnClass = 'sns-twitch'; }
                             else if(pType === 'TikTok') { iconClass = 'fa-tiktok'; btnClass = 'sns-tiktok'; }
-
                             if(iconClass) {
                                 linksHtml += `<a href="${member.platformUrl}" target="_blank" class="sns-btn ${btnClass}"><i class="fab ${iconClass}"></i></a>`;
                             }
@@ -322,7 +340,7 @@
                 }
 
                 // ==========================
-                // 2. PARTNERS
+                // 2. PARTNERS (Link Button Added)
                 // ==========================
                 partnersArea.innerHTML = '';
                 if(data.partners && data.partners.length > 0) {
@@ -360,11 +378,18 @@
                              `;
                         }
 
+                        // 企業HPリンクボタンの作成
+                        let linkBtnHtml = '';
+                        if(partner.website) {
+                            linkBtnHtml = `<a href="${partner.website}" target="_blank" class="sp-link-btn">OFFICIAL SITE <i class="fas fa-external-link-alt"></i></a>`;
+                        }
+
                         const logoSrc = partner.logo ? partner.logo : 'https://placehold.jp/ffffff/000000/400x200.png?text=LOGO';
 
                         pCard.innerHTML = `
                             <div class="sp-name">
-                                ${partner.company} <span class="sp-rank">${partner.rank || 'SPONSOR'}</span>
+                                <div>${partner.company} <span class="sp-rank">${partner.rank || 'SPONSOR'}</span></div>
+                                ${linkBtnHtml}
                             </div>
                             <div class="sp-content">
                                 <div class="sp-left-col">
@@ -405,16 +430,14 @@
                 }
 
                 // ==========================
-                // 4. CREDITS (NEW!)
+                // 4. CREDITS
                 // ==========================
                 creditsArea.innerHTML = '';
                 if(data.credits && data.credits.length > 0) {
                     data.credits.forEach(item => {
                         const li = document.createElement('li');
                         li.className = 'credit-item';
-                        
                         const typeText = item.type || 'ETC';
-                        
                         li.innerHTML = `
                             <div class="cr-left">
                                 <span class="cr-type" data-type="${typeText}">${typeText}</span>
@@ -432,7 +455,6 @@
             })
             .catch(error => {
                 console.error('Error:', error);
-                // エラー表示
                 const errorMsg = '<p style="color:red; text-align:center; width:100%;">読み込みに失敗しました。</p>';
                 memberArea.innerHTML = errorMsg;
                 galleryArea.innerHTML = errorMsg;
