@@ -7,7 +7,7 @@
     <link rel="icon" type="image/png" href="logo_icon.png?v=2">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Dela+Gothic+One&family=Teko:wght@300;500;700&family=Zen+Kaku+Gothic+New:wght@400;700;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Dela+Gothic+One&family=Kanit:ital,wght@1,900&family=Teko:wght@300;500;700&family=Zen+Kaku+Gothic+New:wght@400;700;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
 
     <style>
@@ -55,7 +55,11 @@
             color: var(--text-main); text-shadow: 0 0 15px var(--primary);
             border-bottom: 4px solid var(--accent); display: inline-block;
         }
-        .container { max-width: 1200px; margin: 0 auto; padding: 0 20px; }
+        .container { 
+            max-width: 95%; /* 画面いっぱい使う */
+            margin: 0 auto; 
+            padding: 0 20px; 
+        }
 
         /* HEADER AREA */
         .page-header {
@@ -63,94 +67,84 @@
             background: radial-gradient(circle at center, rgba(0,240,255,0.1) 0%, #050505 80%);
             border-bottom: 2px solid var(--primary); margin-bottom: 50px;
         }
+        
+        /* ▼▼▼ プロ風タイトル装飾（視認性UP版） ▼▼▼ */
         .page-title {
-            font-family: 'Dela Gothic One', sans-serif;
-            font-size: clamp(3.5rem, 8vw, 7rem);
+            font-family: 'Kanit', sans-serif;
+            font-size: clamp(3.5rem, 10vw, 8rem);
             font-style: italic;
+            font-weight: 900;
             line-height: 0.9;
-            letter-spacing: 0.02em;
-            color: #fff;
-            -webkit-text-stroke: 2px var(--primary);
-            text-shadow: 5px 5px 0px var(--accent), 0 0 30px rgba(0, 240, 255, 0.6);
+            letter-spacing: 0.03em;
+            color: #ffffff;
             text-align: center;
             transform: skewX(-5deg);
+            -webkit-text-stroke: 2px #000000; /* 黒フチ */
+            text-shadow: 
+                4px 4px 0 #000000,
+                8px 8px 0 var(--primary),
+                12px 12px 0 var(--accent),
+                0 0 40px rgba(0, 240, 255, 0.4);
+            margin-bottom: 20px;
         }
         .page-title span {
-            display: block; font-family: var(--font-body); font-style: normal; font-weight: 900;
-            font-size: clamp(1rem, 2.5vw, 1.5rem); margin-top: 20px; letter-spacing: 0.3em; transform: skewX(5deg);
-            background: linear-gradient(90deg, var(--primary), #fff, var(--primary));
-            -webkit-background-clip: text; color: transparent; text-shadow: none; -webkit-text-stroke: 0; opacity: 0.9;
+            display: block;
+            font-family: var(--font-jp-head);
+            font-style: normal;
+            font-weight: 400;
+            font-size: clamp(1.2rem, 3vw, 2rem);
+            margin-top: 25px;
+            letter-spacing: 0.2em;
+            transform: skewX(5deg);
+            color: #fff;
+            -webkit-text-stroke: 1px #000;
+            text-shadow: 3px 3px 0 rgba(0,0,0,0.8);
+            background: none;
+            -webkit-background-clip: border-box;
+            opacity: 1;
         }
 
         /* 1. PARTICIPANTS LIST */
-        /* ▼▼▼ 修正：ページ全体の幅を広げる ▼▼▼ */
-        .container { 
-            max-width: 95%; /* 1200pxから変更して、画面端まで使えるようにする */
-            margin: 0 auto; 
-            padding: 0 20px; 
-        }
-
-        /* ... (中略) ... */
-
-        /* ▼▼▼ 修正：PCで7人横並びにする設定 ▼▼▼ */
         .member-list {
             display: grid; 
-            grid-template-columns: repeat(7, 1fr); /* 強制的に7分割する */
-            gap: 15px; /* 間隔を少し狭くして入りきるように調整 */
+            grid-template-columns: repeat(7, 1fr); /* PCは7列 */
+            gap: 15px;
         }
-        
-        /* 1つ1つのカードの文字サイズなども少し調整 */
         .member-card {
-            background: rgba(0,240,255,0.05); 
-            border: 1px solid rgba(0,240,255,0.3);
-            padding: 15px 5px; /* 横の余白を減らす */
-            text-align: center; 
-            transition: 0.3s;
-            display: flex; 
-            flex-direction: column; 
-            align-items: center;
-            position: relative; 
-            overflow: hidden;
+            background: rgba(0,240,255,0.05); border: 1px solid rgba(0,240,255,0.3);
+            padding: 15px 5px; text-align: center; transition: 0.3s;
+            display: flex; flex-direction: column; align-items: center;
+            position: relative; overflow: hidden;
         }
+        .member-card:hover { background: rgba(0,240,255,0.15); border-color: var(--yellow); transform: translateY(-5px); }
         
         .member-icon {
-            width: 80px; /* アイコンを少し小さくして横並びに合わせる */
-            height: 80px; 
-            background: #333; 
-            border-radius: 50%; 
-            margin-bottom: 10px;
-            border: 3px solid white; 
-            display: flex; 
-            align-items: center; 
-            justify-content: center; 
-            overflow: hidden;
+            width: 80px; height: 80px; background: #333; border-radius: 50%; margin-bottom: 10px;
+            border: 3px solid white; display: flex; align-items: center; justify-content: center; overflow: hidden;
             box-shadow: 0 0 15px rgba(0,0,0,0.5);
         }
         .member-icon img { width: 100%; height: 100%; object-fit: cover; }
         
-        .member-name { font-weight: bold; color: var(--primary); font-size: 1.2rem; margin-bottom: 10px; line-height: 1.2; }
+        .member-name { font-weight: bold; color: var(--primary); font-size: 1rem; margin-bottom: 10px; line-height: 1.2; }
 
-        /* ▼▼▼ カテゴリーバッジのデザイン ▼▼▼ */
+        /* カテゴリーバッジ */
         .cat-badge {
             font-size: 0.75rem; padding: 2px 10px; border-radius: 12px;
             color: white; font-weight: bold; margin-bottom: 15px; display: inline-block;
             letter-spacing: 1px;
         }
-        /* カテゴリー別の色設定 */
-        .cat-invite { background: var(--accent); box-shadow: 0 0 5px var(--accent); } /* 特別招待：ピンク */
-        .cat-aoharu { background: var(--primary); color: black; box-shadow: 0 0 5px var(--primary); } /* あおはる：水色 */
-        .cat-admin { background: var(--yellow); color: black; box-shadow: 0 0 5px var(--yellow); } /* 運営：黄色 */
-        .cat-participant { background: #333; border: 1px solid #555; } /* 参加者：シンプル */
+        .cat-invite { background: var(--accent); box-shadow: 0 0 5px var(--accent); }
+        .cat-aoharu { background: var(--primary); color: black; box-shadow: 0 0 5px var(--primary); }
+        .cat-admin { background: var(--yellow); color: black; box-shadow: 0 0 5px var(--yellow); }
+        .cat-participant { background: #333; border: 1px solid #555; }
 
-        /* SNS Links */
         .member-links { display: flex; gap: 10px; justify-content: center; }
         .sns-btn {
-            width: 35px; height: 35px; border-radius: 50%; background: #222; color: white;
+            width: 30px; height: 30px; border-radius: 50%; background: #222; color: white;
             display: flex; align-items: center; justify-content: center; text-decoration: none;
-            transition: 0.3s; border: 1px solid #444; font-size: 1.1rem;
+            transition: 0.3s; border: 1px solid #444; font-size: 1rem;
         }
         .sns-btn:hover { transform: scale(1.1); }
-        
         .sns-youtube:hover { background: #ff0000; border-color: #ff0000; }
         .sns-twitch:hover { background: #9146ff; border-color: #9146ff; }
         .sns-tiktok:hover { background: #000000; border-color: #25F4EE; box-shadow: 2px 2px 0 #FE2C55, -2px -2px 0 #25F4EE; }
@@ -197,7 +191,11 @@
         }
 
         /* 3. GALLERY */
-        .gallery-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 15px; }
+        .gallery-grid { 
+            display: grid; 
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); 
+            gap: 15px; 
+        }
         .gallery-item {
             position: relative; aspect-ratio: 16/9; overflow: hidden; border: 1px solid rgba(255,255,255,0.2);
             background: #111; cursor: pointer; transition: 0.3s;
@@ -228,47 +226,16 @@
         }
         .back-btn:hover { background: white; color: black; border-color: white; }
 
+        /* SP Styles */
         @media (max-width: 768px) {
-            .page-title { font-size: 2rem; }
-            
-            .sp-content { grid-template-columns: 1fr; gap: 20px; }
-            .sp-name { font-size: 1.4rem; flex-direction: column; align-items: flex-start; gap: 10px; }
-
-            /* ▼▼▼ スマホで参加者を3列にする設定 ▼▼▼ */
-            .member-list {
-                grid-template-columns: repeat(3, 1fr); /* 強制的に3列にする */
-                gap: 8px; /* カード同士の隙間を狭く */
-            }
-            .member-card {
-                padding: 10px 5px; /* カードの内側の余白を減らす */
-            }
-            .member-icon {
-                width: 55px; /* アイコンを小さく (100px -> 55px) */
-                height: 55px;
-                margin-bottom: 5px;
-                border-width: 2px;
-            }
-            .member-name {
-                font-size: 0.7rem; /* 名前を小さく */
-                margin-bottom: 3px;
-                word-wrap: break-word; /* 長い名前でも改行させる */
-            }
-            .cat-badge {
-                font-size: 0.6rem; /* バッジの文字を極小に */
-                padding: 1px 6px;
-                margin-bottom: 5px;
-                white-space: nowrap; /* 折り返し防止 */
-                transform: scale(0.9); /* さらに少し縮小 */
-            }
-            .member-links {
-                gap: 4px; /* ボタンの間隔を詰める */
-            }
-            .sns-btn {
-                width: 24px; /* ボタンを小さく */
-                height: 24px;
-                font-size: 0.8rem;
-                border-width: 0; /* 枠線を消してスッキリさせる */
-            }
+            .page-title { font-size: 2rem; -webkit-text-stroke: 1px #000; }
+            .member-list { grid-template-columns: repeat(3, 1fr); gap: 8px; }
+            .member-card { padding: 10px 5px; }
+            .member-icon { width: 55px; height: 55px; margin-bottom: 5px; border-width: 2px; }
+            .member-name { font-size: 0.7rem; margin-bottom: 3px; word-wrap: break-word; }
+            .cat-badge { font-size: 0.6rem; padding: 1px 6px; margin-bottom: 5px; white-space: nowrap; transform: scale(0.9); }
+            .member-links { gap: 4px; }
+            .sns-btn { width: 24px; height: 24px; font-size: 0.8rem; border-width: 0; }
         }
     </style>
 </head>
@@ -298,7 +265,7 @@
         
         <div class="sponsor-card">
             <div class="sp-name">
-                協賛企業様現在準備中 <span class="sp-rank">SPECIAL SPONSOR</span>
+                株式会社〇〇〇〇 <span class="sp-rank">SPECIAL SPONSOR</span>
             </div>
             <div class="sp-content">
                 <div class="sp-left-col">
@@ -321,7 +288,7 @@
 
         <div class="sponsor-card">
             <div class="sp-name">
-                協賛企業様現在準備中 <span class="sp-rank" style="background:var(--primary);">SPONSOR</span>
+                〇〇ゲーミング <span class="sp-rank" style="background:var(--primary);">SPONSOR</span>
             </div>
             <div class="sp-content">
                 <div class="sp-left-col">
@@ -341,13 +308,8 @@
             <div class="section-en">GALLERY</div>
             <div class="section-jp">イベント風景</div>
         </div>
-        <div class="gallery-grid">
-            <div class="gallery-item"><img src="https://placehold.jp/3d4070/ffffff/600x400.png?text=SCREENSHOT+1" alt="SS1"></div>
-            <div class="gallery-item"><img src="https://placehold.jp/3d4070/ffffff/600x400.png?text=SCREENSHOT+2" alt="SS2"></div>
-            <div class="gallery-item"><img src="https://placehold.jp/3d4070/ffffff/600x400.png?text=SCREENSHOT+3" alt="SS3"></div>
-            <div class="gallery-item"><img src="https://placehold.jp/3d4070/ffffff/600x400.png?text=SCREENSHOT+4" alt="SS4"></div>
-            <div class="gallery-item"><img src="https://placehold.jp/3d4070/ffffff/600x400.png?text=SCREENSHOT+5" alt="SS5"></div>
-            <div class="gallery-item"><img src="https://placehold.jp/3d4070/ffffff/600x400.png?text=SCREENSHOT+6" alt="SS6"></div>
+        <div class="gallery-grid" id="galleryArea">
+            <p style="text-align:center; color:white; width:100%;">Loading Gallery...</p>
         </div>
     </section>
 
@@ -395,82 +357,89 @@
 
     <script>
         // ★★★重要：ここにGASのウェブアプリURLを貼り付けてください！★★★
-        const GAS_URL = 'https://script.google.com/macros/s/AKfycbwK1AFFm5UqrQ0z3BceqlHrRHxL94RNnDOIYsf_AZKkhIiywUb6aOjIXcab_KAxjlaq/exec'; 
+        const GAS_URL = 'https://script.google.com/macros/s/AKfycbx7P8Nmn4BCNE1_PL2gFy0_uz46eT9t8jMlY5ftPPMx6YrK44vHZNuEx0mibJ4PynJQ/exec'; 
 
         document.addEventListener('DOMContentLoaded', () => {
             const memberArea = document.getElementById('memberListArea');
+            const galleryArea = document.getElementById('galleryArea');
 
             fetch(GAS_URL)
             .then(response => response.json())
             .then(data => {
-                memberArea.innerHTML = ''; 
+                // ==========================
+                // 1. 参加者リストの生成
+                // ==========================
+                memberArea.innerHTML = '';
+                if(data.members && data.members.length > 0) {
+                    data.members.forEach(member => {
+                        const card = document.createElement('div');
+                        card.className = 'member-card';
+                        const iconUrl = member.icon ? member.icon : 'https://placehold.jp/333333/ffffff/150x150.png?text=NO+IMG';
+                        
+                        // カテゴリーバッジ
+                        let catClass = 'cat-participant'; 
+                        const catText = member.category ? member.category.trim() : '参加者';
+                        if(catText === '特別招待') catClass = 'cat-invite';
+                        else if(catText === 'あおはる☆フレンズ') catClass = 'cat-aoharu';
+                        else if(catText === '運営') catClass = 'cat-admin';
 
-                if(data.length === 0) {
-                    memberArea.innerHTML = '<p style="color:white;">参加者はまだいません。</p>';
-                    return;
+                        // SNSリンク
+                        let linksHtml = '';
+                        if(member.platformType && member.platformUrl) {
+                            let iconClass = ''; let btnClass = '';
+                            const pType = member.platformType.trim();
+                            if(pType === 'YouTube') { iconClass = 'fa-youtube'; btnClass = 'sns-youtube'; }
+                            else if(pType === 'Twitch') { iconClass = 'fa-twitch'; btnClass = 'sns-twitch'; }
+                            else if(pType === 'TikTok') { iconClass = 'fa-tiktok'; btnClass = 'sns-tiktok'; }
+
+                            if(iconClass) {
+                                linksHtml += `<a href="${member.platformUrl}" target="_blank" class="sns-btn ${btnClass}"><i class="fab ${iconClass}"></i></a>`;
+                            }
+                        }
+                        if(member.twitterUrl) {
+                            linksHtml += `<a href="${member.twitterUrl}" target="_blank" class="sns-btn sns-twitter"><i class="fab fa-x-twitter"></i></a>`;
+                        }
+
+                        card.innerHTML = `
+                            <div class="member-icon"><img src="${iconUrl}" alt="${member.name}" loading="lazy"></div>
+                            <div class="member-name">${member.name}</div>
+                            <span class="cat-badge ${catClass}">${catText}</span>
+                            <div class="member-links">${linksHtml}</div>
+                        `;
+                        memberArea.appendChild(card);
+                    });
+                } else {
+                    memberArea.innerHTML = '<p style="color:white; grid-column:1/-1; text-align:center;">現在、参加者はいません。</p>';
                 }
 
-                data.forEach(member => {
-                    const card = document.createElement('div');
-                    card.className = 'member-card';
-                    
-                    const iconUrl = member.icon ? member.icon : 'https://placehold.jp/333333/ffffff/150x150.png?text=NO+IMG';
-                    
-                    // カテゴリーに応じたバッジ色設定
-                    let catClass = 'cat-participant'; // デフォルト
-                    const catText = member.category ? member.category.trim() : '参加者';
-                    
-                    if(catText === '特別招待') catClass = 'cat-invite';
-                    else if(catText === 'あおはる☆フレンズ') catClass = 'cat-aoharu';
-                    else if(catText === '運営') catClass = 'cat-admin';
+                // ==========================
+                // 2. ギャラリーの生成
+                // ==========================
+                galleryArea.innerHTML = '';
+                if(data.gallery && data.gallery.length > 0) {
+                    data.gallery.forEach(item => {
+                        // URLがない場合はスキップ
+                        if(!item.url) return;
 
-                    // SNSリンク生成ロジック
-                    let linksHtml = '';
-                    
-                    // 配信サイト (C列の種類を見て、D列のURLをリンクにする)
-                    if(member.platformType && member.platformUrl) {
-                        let iconClass = '';
-                        let btnClass = '';
-                        const pType = member.platformType.trim();
+                        const gItem = document.createElement('div');
+                        gItem.className = 'gallery-item';
+                        
+                        const img = document.createElement('img');
+                        img.src = item.url;
+                        img.alt = item.caption || 'Event Screenshot';
+                        img.loading = 'lazy'; // 遅延読み込み
 
-                        if(pType === 'YouTube') {
-                            iconClass = 'fa-youtube';
-                            btnClass = 'sns-youtube';
-                        } else if(pType === 'Twitch') {
-                            iconClass = 'fa-twitch';
-                            btnClass = 'sns-twitch';
-                        } else if(pType === 'TikTok') {
-                            iconClass = 'fa-tiktok';
-                            btnClass = 'sns-tiktok';
-                        }
-
-                        if(iconClass) {
-                            linksHtml += `<a href="${member.platformUrl}" target="_blank" class="sns-btn ${btnClass}"><i class="fab ${iconClass}"></i></a>`;
-                        }
-                    }
-
-                    // Twitter (E列があれば表示)
-                    if(member.twitterUrl) {
-                        linksHtml += `<a href="${member.twitterUrl}" target="_blank" class="sns-btn sns-twitter"><i class="fab fa-x-twitter"></i></a>`;
-                    }
-
-                    card.innerHTML = `
-                        <div class="member-icon">
-                            <img src="${iconUrl}" alt="${member.name}" loading="lazy">
-                        </div>
-                        <div class="member-name">${member.name}</div>
-                        <span class="cat-badge ${catClass}">${catText}</span>
-                        <div class="member-links">
-                            ${linksHtml}
-                        </div>
-                    `;
-                    
-                    memberArea.appendChild(card);
-                });
+                        gItem.appendChild(img);
+                        galleryArea.appendChild(gItem);
+                    });
+                } else {
+                    galleryArea.innerHTML = '<p style="color:#aaa; grid-column:1/-1; text-align:center;">写真がまだありません。</p>';
+                }
             })
             .catch(error => {
                 console.error('Error:', error);
-                memberArea.innerHTML = '<p style="color:red;">データの読み込みに失敗しました。</p>';
+                memberArea.innerHTML = '<p style="color:red; grid-column:1/-1;">読み込みエラーが発生しました。</p>';
+                galleryArea.innerHTML = '<p style="color:red; grid-column:1/-1;">読み込みエラーが発生しました。</p>';
             });
         });
     </script>
