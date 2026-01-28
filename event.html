@@ -39,8 +39,7 @@
                         linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px);
             background-size: 50px 50px; z-index: -10; pointer-events: none;
         }
-
-        /* 共通パーツ */
+        .container { max-width: 95%; margin: 0 auto; padding: 0 20px; }
         .section-header { text-align: center; margin: 100px auto 60px; position: relative; }
         .section-en {
             font-family: var(--font-en); font-size: clamp(4rem, 10vw, 8rem); font-weight: 700;
@@ -55,11 +54,6 @@
             color: var(--text-main); text-shadow: 0 0 15px var(--primary);
             border-bottom: 4px solid var(--accent); display: inline-block;
         }
-        .container { 
-            max-width: 95%; /* 画面いっぱい使う */
-            margin: 0 auto; 
-            padding: 0 20px; 
-        }
 
         /* HEADER AREA */
         .page-header {
@@ -67,77 +61,44 @@
             background: radial-gradient(circle at center, rgba(0,240,255,0.1) 0%, #050505 80%);
             border-bottom: 2px solid var(--primary); margin-bottom: 50px;
         }
-        
-        /* ▼▼▼ プロ風タイトル装飾（視認性UP版） ▼▼▼ */
         .page-title {
-            font-family: 'Kanit', sans-serif;
-            font-size: clamp(3.5rem, 10vw, 8rem);
-            font-style: italic;
-            font-weight: 900;
-            line-height: 0.9;
-            letter-spacing: 0.03em;
-            color: #ffffff;
-            text-align: center;
-            transform: skewX(-5deg);
-            -webkit-text-stroke: 2px #000000; /* 黒フチ */
-            text-shadow: 
-                4px 4px 0 #000000,
-                8px 8px 0 var(--primary),
-                12px 12px 0 var(--accent),
-                0 0 40px rgba(0, 240, 255, 0.4);
+            font-family: 'Kanit', sans-serif; font-size: clamp(3.5rem, 10vw, 8rem);
+            font-style: italic; font-weight: 900; line-height: 0.9; letter-spacing: 0.03em; color: #ffffff;
+            text-align: center; transform: skewX(-5deg); -webkit-text-stroke: 2px #000000;
+            text-shadow: 4px 4px 0 #000000, 8px 8px 0 var(--primary), 12px 12px 0 var(--accent), 0 0 40px rgba(0, 240, 255, 0.4);
             margin-bottom: 20px;
         }
         .page-title span {
-            display: block;
-            font-family: var(--font-jp-head);
-            font-style: normal;
-            font-weight: 400;
-            font-size: clamp(1.2rem, 3vw, 2rem);
-            margin-top: 25px;
-            letter-spacing: 0.2em;
-            transform: skewX(5deg);
-            color: #fff;
-            -webkit-text-stroke: 1px #000;
-            text-shadow: 3px 3px 0 rgba(0,0,0,0.8);
-            background: none;
-            -webkit-background-clip: border-box;
-            opacity: 1;
+            display: block; font-family: var(--font-jp-head); font-style: normal; font-weight: 400;
+            font-size: clamp(1.2rem, 3vw, 2rem); margin-top: 25px; letter-spacing: 0.2em; transform: skewX(5deg);
+            color: #fff; -webkit-text-stroke: 1px #000; text-shadow: 3px 3px 0 rgba(0,0,0,0.8);
+            background: none; -webkit-background-clip: border-box; opacity: 1;
         }
 
-        /* 1. PARTICIPANTS LIST */
-        .member-list {
-            display: grid; 
-            grid-template-columns: repeat(7, 1fr); /* PCは7列 */
-            gap: 15px;
-        }
+        /* MEMBER LIST */
+        .member-list { display: grid; grid-template-columns: repeat(7, 1fr); gap: 15px; }
         .member-card {
             background: rgba(0,240,255,0.05); border: 1px solid rgba(0,240,255,0.3);
             padding: 15px 5px; text-align: center; transition: 0.3s;
-            display: flex; flex-direction: column; align-items: center;
-            position: relative; overflow: hidden;
+            display: flex; flex-direction: column; align-items: center; position: relative; overflow: hidden;
         }
         .member-card:hover { background: rgba(0,240,255,0.15); border-color: var(--yellow); transform: translateY(-5px); }
-        
         .member-icon {
             width: 80px; height: 80px; background: #333; border-radius: 50%; margin-bottom: 10px;
             border: 3px solid white; display: flex; align-items: center; justify-content: center; overflow: hidden;
             box-shadow: 0 0 15px rgba(0,0,0,0.5);
         }
         .member-icon img { width: 100%; height: 100%; object-fit: cover; }
-        
         .member-name { font-weight: bold; color: var(--primary); font-size: 1rem; margin-bottom: 10px; line-height: 1.2; }
-
-        /* カテゴリーバッジ */
         .cat-badge {
             font-size: 0.75rem; padding: 2px 10px; border-radius: 12px;
-            color: white; font-weight: bold; margin-bottom: 15px; display: inline-block;
-            letter-spacing: 1px;
+            color: white; font-weight: bold; margin-bottom: 15px; display: inline-block; letter-spacing: 1px;
         }
         .cat-invite { background: var(--accent); box-shadow: 0 0 5px var(--accent); }
         .cat-aoharu { background: var(--primary); color: black; box-shadow: 0 0 5px var(--primary); }
         .cat-admin { background: var(--yellow); color: black; box-shadow: 0 0 5px var(--yellow); }
         .cat-participant { background: #333; border: 1px solid #555; }
-
+        
         .member-links { display: flex; gap: 10px; justify-content: center; }
         .sns-btn {
             width: 30px; height: 30px; border-radius: 50%; background: #222; color: white;
@@ -150,7 +111,7 @@
         .sns-tiktok:hover { background: #000000; border-color: #25F4EE; box-shadow: 2px 2px 0 #FE2C55, -2px -2px 0 #25F4EE; }
         .sns-twitter:hover { background: #000; border-color: white; }
 
-        /* 2. SPONSORS */
+        /* PARTNERS */
         .sponsor-card {
             background: rgba(0, 0, 0, 0.7); border: 1px solid rgba(255,255,255,0.2);
             margin-bottom: 40px; padding: 30px; position: relative; overflow: hidden;
@@ -177,25 +138,18 @@
             background: rgba(255,255,255,0.05); border: 1px dashed var(--text-dim); padding: 15px;
             display: flex; gap: 15px; align-items: center;
         }
-        .sp-item-thumb { width: 60px; height: 60px; background: #000; border: 1px solid #555; object-fit: cover; }
+        .sp-item-thumb { width: 80px; height: 80px; background: #000; border: 1px solid #555; object-fit: cover; flex-shrink: 0; }
         .sp-item-text { font-size: 0.9rem; color: var(--text-dim); }
-        .sp-item-text strong { display: block; color: var(--yellow); font-size: 1rem; }
+        .sp-item-text .item-label { display: block; font-size: 0.8rem; color: #fff; margin-bottom: 2px; }
+        .sp-item-text strong { display: block; color: var(--yellow); font-size: 1.1rem; line-height: 1.3; }
         .sp-video-area {
             position: relative; width: 100%; padding-bottom: 56.25%;
             background: black; border: 1px solid #333;
         }
         .sp-video-area iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; }
-        @media (max-width: 768px) {
-            .sp-content { grid-template-columns: 1fr; gap: 20px; }
-            .sp-name { font-size: 1.4rem; flex-direction: column; align-items: flex-start; gap: 10px; }
-        }
 
-        /* 3. GALLERY */
-        .gallery-grid { 
-            display: grid; 
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); 
-            gap: 15px; 
-        }
+        /* GALLERY */
+        .gallery-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 15px; }
         .gallery-item {
             position: relative; aspect-ratio: 16/9; overflow: hidden; border: 1px solid rgba(255,255,255,0.2);
             background: #111; cursor: pointer; transition: 0.3s;
@@ -204,19 +158,31 @@
         .gallery-item img { width: 100%; height: 100%; object-fit: cover; transition: 0.5s; }
         .gallery-item:hover img { opacity: 0.8; }
 
-        /* 5. CREDITS */
-        .credit-list { list-style: none; border-top: 1px solid rgba(255,255,255,0.2); }
+        /* CREDITS (Dynamic) */
+        .credit-list { list-style: none; border-top: 1px solid rgba(255,255,255,0.2); max-width: 800px; margin: 0 auto; }
         .credit-item {
             display: flex; justify-content: space-between; align-items: center;
-            padding: 15px 0; border-bottom: 1px solid rgba(255,255,255,0.1); transition: 0.3s;
+            padding: 15px 10px; border-bottom: 1px solid rgba(255,255,255,0.1); transition: 0.3s;
         }
-        .credit-item:hover { background: rgba(255,255,255,0.03); padding-left: 10px; }
+        .credit-item:hover { background: rgba(255,255,255,0.03); padding-left: 20px; border-color: var(--primary); }
+        
+        .cr-left { display: flex; align-items: center; gap: 15px; }
         .cr-type {
-            background: #333; color: #ccc; font-size: 0.8rem; padding: 2px 8px;
-            margin-right: 10px; border-radius: 3px; font-family: var(--font-en);
+            font-size: 0.8rem; padding: 2px 8px; border-radius: 3px; font-family: var(--font-en);
+            min-width: 60px; text-align: center; font-weight: bold;
+            background: #333; color: #ccc; border: 1px solid #555;
         }
-        .cr-name { font-weight: bold; color: white; }
-        .cr-link { color: var(--text-dim); font-size: 0.9rem; text-decoration: none; }
+        /* バッジのカラーリング */
+        .cr-type[data-type="MOD"] { background: rgba(0, 240, 255, 0.2); color: var(--primary); border-color: var(--primary); }
+        .cr-type[data-type="BGM"] { background: rgba(252, 238, 10, 0.2); color: var(--yellow); border-color: var(--yellow); }
+        .cr-type[data-type="WORLD"] { background: rgba(255, 0, 85, 0.2); color: var(--accent); border-color: var(--accent); }
+
+        .cr-name { font-weight: bold; color: white; font-size: 1.1rem; }
+        
+        .cr-link { 
+            color: var(--text-dim); font-size: 0.9rem; text-decoration: none; 
+            display: flex; align-items: center; gap: 5px; transition: 0.3s;
+        }
         .cr-link:hover { color: var(--primary); text-decoration: underline; }
 
         .back-btn {
@@ -226,7 +192,7 @@
         }
         .back-btn:hover { background: white; color: black; border-color: white; }
 
-        /* SP Styles */
+        /* RESPONSIVE */
         @media (max-width: 768px) {
             .page-title { font-size: 2rem; -webkit-text-stroke: 1px #000; }
             .member-list { grid-template-columns: repeat(3, 1fr); gap: 8px; }
@@ -236,6 +202,12 @@
             .cat-badge { font-size: 0.6rem; padding: 1px 6px; margin-bottom: 5px; white-space: nowrap; transform: scale(0.9); }
             .member-links { gap: 4px; }
             .sns-btn { width: 24px; height: 24px; font-size: 0.8rem; border-width: 0; }
+            
+            .sp-content { grid-template-columns: 1fr; gap: 20px; }
+            .sp-name { font-size: 1.4rem; flex-direction: column; align-items: flex-start; gap: 10px; }
+            
+            .credit-item { flex-direction: column; align-items: flex-start; gap: 10px; }
+            .cr-link { align-self: flex-end; }
         }
     </style>
 </head>
@@ -262,44 +234,8 @@
             <div class="section-en">PARTNERS</div>
             <div class="section-jp">協賛・CM・提供</div>
         </div>
-        
-        <div class="sponsor-card">
-            <div class="sp-name">
-                株式会社〇〇〇〇 <span class="sp-rank">SPECIAL SPONSOR</span>
-            </div>
-            <div class="sp-content">
-                <div class="sp-left-col">
-                    <div class="sp-logo-area">
-                        <img src="https://placehold.jp/ffffff/000000/400x200.png?text=LOGO+IMAGE" alt="企業ロゴ">
-                    </div>
-                    <div class="sp-item-box">
-                        <img src="https://placehold.jp/333333/ffffff/100x100.png?text=ITEM" alt="商品" class="sp-item-thumb">
-                        <div class="sp-item-text">
-                            <span>ご提供賞品</span>
-                            <strong>ハイエンドゲーミングモニター 240Hz</strong>
-                        </div>
-                    </div>
-                </div>
-                <div class="sp-video-area">
-                    <iframe width="560" height="315" src="https://www.youtube.com/embed/VIDEO_ID_1" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-                </div>
-            </div>
-        </div>
-
-        <div class="sponsor-card">
-            <div class="sp-name">
-                〇〇ゲーミング <span class="sp-rank" style="background:var(--primary);">SPONSOR</span>
-            </div>
-            <div class="sp-content">
-                <div class="sp-left-col">
-                    <div class="sp-logo-area">
-                        <img src="https://placehold.jp/ffffff/000000/400x200.png?text=LOGO+IMAGE" alt="企業ロゴ">
-                    </div>
-                </div>
-                <div class="sp-video-area">
-                    <iframe width="560" height="315" src="https://www.youtube.com/embed/VIDEO_ID_2" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-                </div>
-            </div>
+        <div id="partnersArea">
+            <p style="text-align:center; color:white;">Loading Partners...</p>
         </div>
     </section>
 
@@ -318,35 +254,8 @@
             <div class="section-en">CREDITS</div>
             <div class="section-jp">使用素材・MOD</div>
         </div>
-        <ul class="credit-list">
-            <li class="credit-item">
-                <div>
-                    <span class="cr-type">MOD</span>
-                    <span class="cr-name">Custom NPC Mod</span>
-                </div>
-                <a href="#" class="cr-link">配布ページへ <i class="fas fa-external-link-alt"></i></a>
-            </li>
-            <li class="credit-item">
-                <div>
-                    <span class="cr-type">DATAPACK</span>
-                    <span class="cr-name">Hanabi Datapack 2026</span>
-                </div>
-                <a href="#" class="cr-link">制作者: CreatorName</a>
-            </li>
-            <li class="credit-item">
-                <div>
-                    <span class="cr-type">RESOURCE</span>
-                    <span class="cr-name">School Texture Pack</span>
-                </div>
-                <a href="#" class="cr-link">配布ページへ <i class="fas fa-external-link-alt"></i></a>
-            </li>
-            <li class="credit-item">
-                <div>
-                    <span class="cr-type">BGM</span>
-                    <span class="cr-name">DOVA-SYNDROME</span>
-                </div>
-                <a href="#" class="cr-link">公式サイト <i class="fas fa-external-link-alt"></i></a>
-            </li>
+        <ul class="credit-list" id="creditsArea">
+            <p style="text-align:center; color:white;">Loading Credits...</p>
         </ul>
     </section>
 
@@ -357,17 +266,19 @@
 
     <script>
         // ★★★重要：ここにGASのウェブアプリURLを貼り付けてください！★★★
-        const GAS_URL = 'https://script.google.com/macros/s/AKfycbx7P8Nmn4BCNE1_PL2gFy0_uz46eT9t8jMlY5ftPPMx6YrK44vHZNuEx0mibJ4PynJQ/exec'; 
+        const GAS_URL = 'https://script.google.com/macros/s/AKfycbzi31i9BW6TRnpBR-Uv5XmySWBSS75gzQ0t-Vj0NpmEAsCOyADQ-g2cMKiEsxysWFMW/exec'; 
 
         document.addEventListener('DOMContentLoaded', () => {
             const memberArea = document.getElementById('memberListArea');
             const galleryArea = document.getElementById('galleryArea');
+            const partnersArea = document.getElementById('partnersArea');
+            const creditsArea = document.getElementById('creditsArea');
 
             fetch(GAS_URL)
             .then(response => response.json())
             .then(data => {
                 // ==========================
-                // 1. 参加者リストの生成
+                // 1. MEMBER
                 // ==========================
                 memberArea.innerHTML = '';
                 if(data.members && data.members.length > 0) {
@@ -376,14 +287,12 @@
                         card.className = 'member-card';
                         const iconUrl = member.icon ? member.icon : 'https://placehold.jp/333333/ffffff/150x150.png?text=NO+IMG';
                         
-                        // カテゴリーバッジ
                         let catClass = 'cat-participant'; 
                         const catText = member.category ? member.category.trim() : '参加者';
                         if(catText === '特別招待') catClass = 'cat-invite';
                         else if(catText === 'あおはる☆フレンズ') catClass = 'cat-aoharu';
                         else if(catText === '運営') catClass = 'cat-admin';
 
-                        // SNSリンク
                         let linksHtml = '';
                         if(member.platformType && member.platformUrl) {
                             let iconClass = ''; let btnClass = '';
@@ -413,33 +322,122 @@
                 }
 
                 // ==========================
-                // 2. ギャラリーの生成
+                // 2. PARTNERS
+                // ==========================
+                partnersArea.innerHTML = '';
+                if(data.partners && data.partners.length > 0) {
+                    data.partners.forEach(partner => {
+                        const pCard = document.createElement('div');
+                        pCard.className = 'sponsor-card';
+
+                        let videoHtml = '';
+                        if(partner.videoUrl) {
+                            let videoId = '';
+                            const url = partner.videoUrl;
+                            if(url.includes('youtube.com/watch?v=')) {
+                                videoId = url.split('v=')[1].split('&')[0];
+                            } else if(url.includes('youtu.be/')) {
+                                videoId = url.split('youtu.be/')[1].split('?')[0];
+                            }
+                            if(videoId) {
+                                videoHtml = `<iframe width="560" height="315" src="https://www.youtube.com/embed/${videoId}?controls=1" title="Partner Video" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>`;
+                            }
+                        } else {
+                             videoHtml = '<div style="width:100%; height:100%; display:flex; align-items:center; justify-content:center; color:#555;">No Video</div>';
+                        }
+
+                        let itemHtml = '';
+                        if(partner.itemName) {
+                             const itemImg = partner.itemImage ? partner.itemImage : 'https://placehold.jp/333333/ffffff/100x100.png?text=NO+IMG';
+                             itemHtml = `
+                                <div class="sp-item-box">
+                                    <img src="${itemImg}" alt="${partner.itemName}" class="sp-item-thumb">
+                                    <div class="sp-item-text">
+                                        <span class="item-label">${partner.prizeType || '提供賞品'}</span>
+                                        <strong>${partner.itemName}</strong>
+                                    </div>
+                                </div>
+                             `;
+                        }
+
+                        const logoSrc = partner.logo ? partner.logo : 'https://placehold.jp/ffffff/000000/400x200.png?text=LOGO';
+
+                        pCard.innerHTML = `
+                            <div class="sp-name">
+                                ${partner.company} <span class="sp-rank">${partner.rank || 'SPONSOR'}</span>
+                            </div>
+                            <div class="sp-content">
+                                <div class="sp-left-col">
+                                    <div class="sp-logo-area">
+                                        <img src="${logoSrc}" alt="${partner.company}" loading="lazy">
+                                    </div>
+                                    ${itemHtml}
+                                </div>
+                                <div class="sp-video-area">
+                                    ${videoHtml}
+                                </div>
+                            </div>
+                        `;
+                        partnersArea.appendChild(pCard);
+                    });
+                } else {
+                    partnersArea.innerHTML = '<p style="color:#aaa; text-align:center;">現在、パートナー情報はありません。</p>';
+                }
+
+                // ==========================
+                // 3. GALLERY
                 // ==========================
                 galleryArea.innerHTML = '';
                 if(data.gallery && data.gallery.length > 0) {
                     data.gallery.forEach(item => {
-                        // URLがない場合はスキップ
                         if(!item.url) return;
-
                         const gItem = document.createElement('div');
                         gItem.className = 'gallery-item';
-                        
                         const img = document.createElement('img');
                         img.src = item.url;
-                        img.alt = item.caption || 'Event Screenshot';
-                        img.loading = 'lazy'; // 遅延読み込み
-
+                        img.alt = item.caption || 'Event Photo';
+                        img.loading = 'lazy';
                         gItem.appendChild(img);
                         galleryArea.appendChild(gItem);
                     });
                 } else {
                     galleryArea.innerHTML = '<p style="color:#aaa; grid-column:1/-1; text-align:center;">写真がまだありません。</p>';
                 }
+
+                // ==========================
+                // 4. CREDITS (NEW!)
+                // ==========================
+                creditsArea.innerHTML = '';
+                if(data.credits && data.credits.length > 0) {
+                    data.credits.forEach(item => {
+                        const li = document.createElement('li');
+                        li.className = 'credit-item';
+                        
+                        const typeText = item.type || 'ETC';
+                        
+                        li.innerHTML = `
+                            <div class="cr-left">
+                                <span class="cr-type" data-type="${typeText}">${typeText}</span>
+                                <span class="cr-name">${item.name}</span>
+                            </div>
+                            <a href="${item.url || '#'}" target="_blank" class="cr-link">
+                                ${item.label || 'Link'} <i class="fas fa-external-link-alt"></i>
+                            </a>
+                        `;
+                        creditsArea.appendChild(li);
+                    });
+                } else {
+                    creditsArea.innerHTML = '<p style="color:#aaa; text-align:center;">情報がありません。</p>';
+                }
             })
             .catch(error => {
                 console.error('Error:', error);
-                memberArea.innerHTML = '<p style="color:red; grid-column:1/-1;">読み込みエラーが発生しました。</p>';
-                galleryArea.innerHTML = '<p style="color:red; grid-column:1/-1;">読み込みエラーが発生しました。</p>';
+                // エラー表示
+                const errorMsg = '<p style="color:red; text-align:center; width:100%;">読み込みに失敗しました。</p>';
+                memberArea.innerHTML = errorMsg;
+                galleryArea.innerHTML = errorMsg;
+                partnersArea.innerHTML = errorMsg;
+                creditsArea.innerHTML = errorMsg;
             });
         });
     </script>
