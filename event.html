@@ -342,7 +342,7 @@
 
     <script>
         // ★★★重要：ここにGASのウェブアプリURLを貼り付けてください！★★★
-        const GAS_URL = 'https://script.google.com/macros/s/AKfycbzRMpYQ2GQ5jpsWzNihFAc0pxjjLwxwHJL1YcRr4HerCyhKOl3nZObvjrketVYkXVEk/exec'; 
+        const GAS_URL = 'https://script.google.com/macros/s/AKfycby94sshs9tIlzblL6oeWQGAG29UxjiqXYBkCtvjEQiITDYOWzz48rG3O3sWAuQCfBpn/exec'; 
 
         document.addEventListener('DOMContentLoaded', () => {
             const memberArea = document.getElementById('memberListArea');
@@ -406,35 +406,45 @@
                         const pCard = document.createElement('div');
                         pCard.className = 'sponsor-card';
 
+                        // ▼▼▼ 動画判定ロジック（YouTube / Google Drive / MP4） ▼▼▼
                         let videoHtml = '';
                         if(partner.videoUrl) {
-                            let videoId = '';
-                            const url = partner.videoUrl;
-                            if(url.includes('youtube.com/watch?v=')) {
-                                videoId = url.split('v=')[1].split('&')[0];
-                            } else if(url.includes('youtu.be/')) {
-                                videoId = url.split('youtu.be/')[1].split('?')[0];
+                            const url = partner.videoUrl.trim();
+                            
+                            // パターンA: YouTube
+                            if(url.includes('youtube.com') || url.includes('youtu.be')) {
+                                let videoId = '';
+                                if(url.includes('v=')) {
+                                    videoId = url.split('v=')[1].split('&')[0];
+                                } else if(url.includes('youtu.be/')) {
+                                    videoId = url.split('youtu.be/')[1].split('?')[0];
+                                }
+                                if(videoId) {
+                                    videoHtml = `<iframe width="100%" height="100%" src="https://www.youtube.com/embed/${videoId}?controls=1" title="Partner Video" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen style="position:absolute; top:0; left:0;"></iframe>`;
+                                }
                             }
-                            if(videoId) {
-                                videoHtml = `<iframe width="560" height="315" src="https://www.youtube.com/embed/${videoId}?controls=1" title="Partner Video" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>`;
+                            // パターンB: Google Drive（共有リンク）
+                            else if(url.includes('drive.google.com')) {
+                                // "/view" を "/preview" に変換して埋め込む
+                                const driveEmbedUrl = url.replace('/view', '/preview').replace('/usp=sharing', '');
+                                videoHtml = `<iframe src="${driveEmbedUrl}" width="100%" height="100%" frameborder="0" allow="autoplay" style="position:absolute; top:0; left:0;"></iframe>`;
                             }
-                        } else {
+                            // パターンC: MP4ファイル（直リンク）
+                            else if(url.match(/\.(mp4|mov|webm)$/i)) {
+                                videoHtml = `
+                                    <video controls playsinline style="width:100%; height:100%; object-fit:contain; background:#000; position:absolute; top:0; left:0;">
+                                        <source src="${url}" type="video/mp4">
+                                        <p>動画を再生できません</p>
+                                    </video>
+                                `;
+                            }
+                        }
+                        
+                        // 動画がない場合の表示
+                        if(!videoHtml) {
                              videoHtml = '<div style="width:100%; height:100%; display:flex; align-items:center; justify-content:center; color:#555;">No Video</div>';
                         }
-
-                        let itemHtml = '';
-                        if(partner.itemName) {
-                             const itemImg = partner.itemImage ? partner.itemImage : 'https://placehold.jp/333333/ffffff/100x100.png?text=NO+IMG';
-                             itemHtml = `
-                                <div class="sp-item-box">
-                                    <img src="${itemImg}" alt="${partner.itemName}" class="sp-item-thumb">
-                                    <div class="sp-item-text">
-                                        <span class="item-label">${partner.prizeType || '提供賞品'}</span>
-                                        <strong>${partner.itemName}</strong>
-                                    </div>
-                                </div>
-                             `;
-                        }
+                        // ▲▲▲ 動画判定ロジック終了 ▲▲▲
 
                         let linkBtnHtml = '';
                         if(partner.website) {
