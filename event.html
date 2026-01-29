@@ -292,6 +292,51 @@
             .credit-item { flex-direction: column; align-items: flex-start; gap: 10px; }
             .cr-link { align-self: flex-end; }
         }
+
+　　　　/* ▼▼▼ スマホ表示の緊急修正（ここを一番下に追加！） ▼▼▼ */
+        @media (max-width: 768px) {
+            /* 1. カードの余白を減らす（30pxだとスマホには広すぎるため） */
+            .sponsor-card {
+                padding: 15px !important; /* 強制的に狭くする */
+            }
+
+            /* 2. Gridレイアウトの修正（画像がはみ出すのを防ぐ魔法の記述） */
+            .sp-content {
+                display: flex !important; /* GridをやめてFlexにする（スマホで安定します） */
+                flex-direction: column;
+                gap: 20px;
+                width: 100%;
+            }
+
+            /* 3. 画像エリアの幅を強制調整 */
+            .sp-left-col, 
+            .sp-logo-area, 
+            .sp-video-area {
+                width: 100% !important; /* 親枠からはみ出さない */
+                max-width: 100% !important;
+            }
+
+            /* 4. 画像自体もしっかり縮める */
+            .sp-logo-area img {
+                width: auto;
+                max-width: 100%;
+                height: auto;
+                max-height: 100%;
+            }
+
+            /* 5. 商品情報の調整 */
+            .sp-item-box {
+                flex-direction: row; /* 横並び維持 */
+                align-items: center;
+                width: 100%;
+            }
+            /* 商品名が長すぎると崩れるので調整 */
+            .sp-item-text {
+                flex: 1; /* 残りの幅を全部使う */
+                min-width: 0; /* 文字のはみ出し防止 */
+                word-break: break-all; /* 長い単語を折り返す */
+            }
+        }
     </style>
 </head>
 <body>
