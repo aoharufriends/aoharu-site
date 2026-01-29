@@ -146,7 +146,7 @@
             padding: 20px; position: relative; overflow: hidden;
             box-shadow: 0 0 20px rgba(0,0,0,0.5); transition: 0.3s;
             display: flex; flex-direction: column;
-            min-width: 400px; /* 幅広 */
+            min-width: 400px;
             max-width: 400px;
             flex-shrink: 0;
         }
@@ -194,36 +194,62 @@
         .sp-item-text { font-size: 0.8rem; color: var(--text-dim); line-height: 1.2; word-break: break-all; }
         .sp-item-text strong { display: block; color: var(--yellow); font-size: 0.9rem; }
 
-        /* INDIVIDUAL SPONSORS (New Style with Prize Image) */
+        /* ▼▼▼ INDIVIDUAL SPONSORS (大幅リニューアル: 縦型大サイズ) ▼▼▼ */
         #individualArea {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-            gap: 15px;
+            grid-template-columns: repeat(auto-fill, minmax(340px, 1fr)); /* 幅を340pxに拡大 */
+            gap: 20px;
         }
         .indi-card {
             background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.1);
-            padding: 15px; border-radius: 8px; display: flex; align-items: flex-start; gap: 15px; transition: 0.3s;
+            padding: 25px; border-radius: 8px; 
+            display: flex; flex-direction: column; /* 縦積みに変更 */
+            align-items: center; /* 中央揃え */
+            gap: 15px; transition: 0.3s;
+            text-align: center;
         }
-        .indi-card:hover { background: rgba(255, 255, 255, 0.1); border-color: var(--primary); transform: translateY(-3px); }
+        .indi-card:hover { 
+            background: rgba(255, 255, 255, 0.1); 
+            border-color: var(--primary); 
+            transform: translateY(-5px);
+            box-shadow: 0 0 20px rgba(0, 240, 255, 0.1);
+        }
+        
+        /* アイコンを大きく */
         .indi-icon {
-            width: 60px; height: 60px; border-radius: 50%; background: #333; object-fit: cover; border: 2px solid var(--accent); flex-shrink: 0;
+            width: 90px; height: 90px; border-radius: 50%; 
+            background: #333; object-fit: cover; 
+            border: 3px solid var(--accent);
+            box-shadow: 0 0 10px rgba(255, 0, 85, 0.3);
         }
-        .indi-info { flex: 1; min-width: 0; }
-        .indi-name { font-weight: bold; font-size: 1rem; color: white; margin-bottom: 2px; display: flex; align-items: center; gap: 8px; }
-        .indi-x-link { color: #ccc; font-size: 0.9rem; transition: 0.3s; }
-        .indi-x-link:hover { color: white; }
+        
+        .indi-info { width: 100%; display: flex; flex-direction: column; gap: 10px; }
+        
+        .indi-name { 
+            font-weight: bold; font-size: 1.2rem; color: white; 
+            display: flex; align-items: center; justify-content: center; gap: 10px; 
+        }
+        .indi-x-link { color: #ccc; font-size: 1rem; transition: 0.3s; }
+        .indi-x-link:hover { color: white; transform: scale(1.2); }
         
         .indi-prize {
-            font-size: 0.8rem; color: var(--yellow); font-weight: bold; margin-bottom: 5px;
-            border-bottom: 1px dashed rgba(255,255,255,0.2); padding-bottom: 5px;
-            display: flex; align-items: center; flex-wrap: wrap; gap: 5px;
-        }
-        /* 賞品画像のスタイル (NEW!) */
-        .indi-prize-img {
-            height: 40px; width: auto; border: 1px solid #555; border-radius: 3px; object-fit: cover;
+            font-size: 0.9rem; color: var(--yellow); font-weight: bold; 
+            border-bottom: 1px dashed rgba(255,255,255,0.2); padding-bottom: 10px;
+            width: 100%;
         }
         
-        .indi-intro { font-size: 0.8rem; color: var(--text-dim); line-height: 1.3; }
+        /* 賞品画像を大きく表示 */
+        .indi-prize-img {
+            width: 100%;
+            height: 180px; /* 大きく確保 */
+            object-fit: contain; /* 画像全体を見せる */
+            background: rgba(0,0,0,0.3);
+            border: 1px solid #555; 
+            border-radius: 5px; 
+            margin-top: 10px;
+        }
+        
+        .indi-intro { font-size: 0.85rem; color: var(--text-dim); line-height: 1.4; }
 
         /* GALLERY */
         .gallery-item {
@@ -358,7 +384,7 @@
 
     <script>
         // ★★★重要：ここにGASのウェブアプリURLを貼り付けてください！★★★
-        const GAS_URL = 'https://script.google.com/macros/s/AKfycbzK5jLnPtGz83rIEeNp9-7Kfk4hieQ1wWJRFHEVkXteXTwZL5af6zMz4Qhumt6x_wM/exec'; 
+        const GAS_URL = 'https://script.google.com/macros/s/AKfycbzWoAOwbbbDz4Ak2VGqrLgu1hrkxTks716aVpeAshRdxKURJcIkWmmyIT2hUEPn-OI-/exec'; 
 
         // カルーセルのスクロール関数
         function scrollCarousel(id, amount) {
@@ -432,8 +458,6 @@
                         let videoHtml = '';
                         if(partner.videoUrl) {
                             const url = partner.videoUrl.trim();
-                            
-                            // YouTube判定
                             if(url.includes('youtube.com') || url.includes('youtu.be')) {
                                 let videoId = '';
                                 if(url.includes('/shorts/')) {
@@ -443,18 +467,13 @@
                                 } else if(url.includes('youtu.be/')) {
                                     videoId = url.split('youtu.be/')[1].split('?')[0];
                                 }
-                                
                                 if(videoId) {
                                     videoHtml = `<iframe src="https://www.youtube.com/embed/${videoId}?autoplay=1&mute=1&loop=1&playlist=${videoId}&controls=1&playsinline=1&rel=0" title="Partner Video" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>`;
                                 }
-                            }
-                            // Google Drive
-                            else if(url.includes('drive.google.com')) {
+                            } else if(url.includes('drive.google.com')) {
                                 const driveEmbedUrl = url.replace('/view', '/preview').replace('/usp=sharing', '');
                                 videoHtml = `<iframe src="${driveEmbedUrl}" frameborder="0" allow="autoplay"></iframe>`;
-                            }
-                            // MP4
-                            else if(url.match(/\.(mp4|mov|webm)$/i)) {
+                            } else if(url.match(/\.(mp4|mov|webm)$/i)) {
                                 videoHtml = `
                                     <video controls autoplay muted loop playsinline style="width:100%; height:100%; object-fit:contain; background:#000;">
                                         <source src="${url}" type="video/mp4">
@@ -512,31 +531,32 @@
                 }
 
                 // ==========================
-                // 2-B. INDIVIDUAL SPONSORS (With Prize Image)
+                // 2-B. INDIVIDUAL SPONSORS (New Large Design)
                 // ==========================
                 individualArea.innerHTML = '';
                 if(data.individuals && data.individuals.length > 0) {
                     data.individuals.forEach(indi => {
                         const iCard = document.createElement('div');
                         iCard.className = 'indi-card';
+                        
                         const iconSrc = indi.icon ? indi.icon : 'https://placehold.jp/333333/ffffff/100x100.png?text=USER';
                         let xLinkHtml = '';
                         if(indi.xUrl) {
                             xLinkHtml = `<a href="${indi.xUrl}" target="_blank" class="indi-x-link"><i class="fab fa-x-twitter"></i></a>`;
                         }
                         
-                        // 賞品画像
                         let prizeImgHtml = '';
                         if(indi.prizeImg) {
-                            prizeImgHtml = `<img src="${indi.prizeImg}" class="indi-prize-img" alt="Prize">`;
+                            // 賞品画像をドーンと表示
+                            prizeImgHtml = `<img src="${indi.prizeImg}" class="indi-prize-img" alt="Prize" loading="lazy">`;
                         }
 
                         iCard.innerHTML = `
-                            <img src="${iconSrc}" class="indi-icon" alt="${indi.name}">
+                            <img src="${iconSrc}" class="indi-icon" alt="${indi.name}" loading="lazy">
                             <div class="indi-info">
                                 <div class="indi-name">${indi.name} ${xLinkHtml}</div>
                                 <div class="indi-prize">
-                                    ${indi.prize || 'ご支援'}
+                                    <span>${indi.prize || 'ご支援'}</span>
                                     ${prizeImgHtml}
                                 </div>
                                 <div class="indi-intro">${indi.intro || ''}</div>
