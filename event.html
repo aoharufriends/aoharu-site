@@ -41,8 +41,8 @@
         }
         
         .container { max-width: 95%; margin: 0 auto; padding: 0 20px; }
-        /* 協賛などを少し幅広に戻す（3列にするため） */
-        .narrow-box { max-width: 1200px !important; margin-left: auto; margin-right: auto; }
+        /* 幅広に設定してカードの表示崩れを防ぐ */
+        .narrow-box { max-width: 1400px !important; margin-left: auto; margin-right: auto; }
 
         .section-header { text-align: center; margin: 100px auto 60px; position: relative; }
         .section-en {
@@ -78,7 +78,7 @@
             color: var(--primary); text-shadow: 0 0 10px rgba(0, 240, 255, 0.4);
         }
 
-        /* MEMBER LIST (横7列) */
+        /* MEMBER LIST */
         .member-list { display: grid; grid-template-columns: repeat(7, 1fr); gap: 15px; }
         .member-card {
             background: rgba(0,240,255,0.05); border: 1px solid rgba(0,240,255,0.3);
@@ -113,30 +113,67 @@
         .sns-tiktok:hover { background: #000000; border-color: #25F4EE; box-shadow: 2px 2px 0 #FE2C55, -2px -2px 0 #25F4EE; }
         .sns-twitter:hover { background: #000; border-color: white; }
 
-        /* ▼▼▼ 修正：PARTNERS GRID (3列表示) ▼▼▼ */
-        #partnersArea {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr); /* 強制的に3列 */
-            gap: 20px;
+        /* CAROUSEL */
+        .carousel-wrapper {
+            position: relative;
+            display: flex;
+            align-items: center;
         }
+        .carousel-track {
+            display: flex;
+            overflow-x: auto;
+            scroll-behavior: smooth;
+            gap: 20px;
+            padding: 10px 5px;
+            width: 100%;
+            scrollbar-width: none;
+        }
+        .carousel-track::-webkit-scrollbar { display: none; }
+        
+        .nav-btn {
+            background: rgba(0, 0, 0, 0.8); border: 2px solid var(--primary); color: var(--primary);
+            width: 50px; height: 50px; border-radius: 50%; cursor: pointer; z-index: 10;
+            display: flex; align-items: center; justify-content: center; font-size: 1.5rem;
+            transition: 0.3s; flex-shrink: 0;
+        }
+        .nav-btn:hover { background: var(--primary); color: black; box-shadow: 0 0 15px var(--primary); }
+        .nav-btn.prev { margin-right: 15px; }
+        .nav-btn.next { margin-left: 15px; }
+
+
+        /* PARTNERS CARD (デザイン変更：ランクを一番上に) */
         .sponsor-card {
             background: rgba(0, 0, 0, 0.7); border: 1px solid rgba(255,255,255,0.2);
             padding: 20px; position: relative; overflow: hidden;
             box-shadow: 0 0 20px rgba(0,0,0,0.5); transition: 0.3s;
-            display: flex; flex-direction: column; /* 縦積みに変更 */
-            height: 100%;
+            display: flex; flex-direction: column;
+            min-width: 400px; /* 横幅しっかり確保 */
+            max-width: 400px;
+            flex-shrink: 0;
         }
         .sponsor-card:hover { border-color: var(--primary); box-shadow: 0 0 30px rgba(0, 240, 255, 0.1); }
         
         .sp-name {
             font-family: var(--font-jp-head); font-weight: 700; font-size: 1.2rem; color: white;
             margin-bottom: 15px; border-left: 4px solid var(--accent); padding-left: 10px;
-            display: flex; flex-direction: column; gap: 5px; /* 縦並び */
+            display: flex; flex-direction: column; gap: 5px;
         }
+        
+        /* ランク（SPECIAL SPONSOR）を改行させない */
         .sp-rank {
-            font-family: var(--font-en); font-size: 0.8rem; background: var(--yellow); color: black;
-            padding: 2px 8px; transform: skewX(-10deg); font-weight: bold; width: fit-content;
+            font-family: var(--font-en); 
+            font-size: 0.8rem; 
+            background: var(--yellow); 
+            color: black;
+            padding: 2px 8px; 
+            transform: skewX(-10deg); 
+            font-weight: bold; 
+            width: max-content; 
+            white-space: nowrap; /* これで絶対改行しません */
+            display: inline-block;
+            margin-bottom: 5px;
         }
+        
         .sp-link-btn {
             font-family: var(--font-en); font-size: 0.8rem; color: var(--primary); border: 1px solid var(--primary);
             padding: 2px 10px; border-radius: 20px; text-decoration: none; width: fit-content; margin-top: 5px;
@@ -144,84 +181,60 @@
         }
         .sp-link-btn:hover { background: var(--primary); color: black; }
 
-        /* 中身を縦に積むレイアウトに変更 */
-        .sp-content { 
-            display: flex; flex-direction: column; gap: 15px; 
-        }
-        .sp-left-col { width: 100%; }
+        .sp-content { display: flex; flex-direction: column; gap: 15px; flex: 1; }
         .sp-logo-area {
-            background: white; width: 100%; aspect-ratio: 16/9; display: flex; align-items: center; justify-content: center;
-            border-radius: 5px; padding: 10px; margin-bottom: 10px;
+            background: white; width: 100%; height: 160px;
+            display: flex; align-items: center; justify-content: center;
+            border-radius: 5px; padding: 10px;
         }
         .sp-logo-area img { max-width: 100%; max-height: 100%; object-fit: contain; }
         
         .sp-video-area {
-            position: relative; width: 100%; padding-bottom: 56.25%;
-            background: black; border: 1px solid #333;
+            position: relative; width: 100%; aspect-ratio: 16 / 9;
+            background: black; border: 1px solid #333; overflow: hidden;
         }
-        .sp-video-area iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; }
+        .sp-video-area iframe, 
+        .sp-video-area video { 
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%; 
+        }
 
-        /* 商品情報の簡易化 */
         .sp-item-box {
             background: rgba(255,255,255,0.05); border: 1px dashed var(--text-dim); padding: 10px;
-            display: flex; gap: 10px; align-items: center; margin-top: 10px;
+            display: flex; gap: 10px; align-items: center; margin-top: auto;
         }
         .sp-item-thumb { width: 50px; height: 50px; background: #000; border: 1px solid #555; object-fit: cover; flex-shrink: 0; }
         .sp-item-text { font-size: 0.8rem; color: var(--text-dim); line-height: 1.2; word-break: break-all; }
         .sp-item-text strong { display: block; color: var(--yellow); font-size: 0.9rem; }
 
-
-        /* ▼▼▼ 個人協賛エリアのスタイル (NEW!) ▼▼▼ */
+        /* INDIVIDUAL SPONSORS */
         #individualArea {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); /* 自動折り返し */
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
             gap: 15px;
         }
         .indi-card {
-            background: rgba(255, 255, 255, 0.05);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            padding: 15px;
-            border-radius: 8px;
-            display: flex;
-            align-items: flex-start;
-            gap: 15px;
-            transition: 0.3s;
+            background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 15px; border-radius: 8px; display: flex; align-items: flex-start; gap: 15px; transition: 0.3s;
         }
-        .indi-card:hover {
-            background: rgba(255, 255, 255, 0.1);
-            border-color: var(--primary);
-            transform: translateY(-3px);
-        }
+        .indi-card:hover { background: rgba(255, 255, 255, 0.1); border-color: var(--primary); transform: translateY(-3px); }
         .indi-icon {
-            width: 60px; height: 60px; border-radius: 50%;
-            background: #333; object-fit: cover; border: 2px solid var(--accent);
-            flex-shrink: 0;
+            width: 60px; height: 60px; border-radius: 50%; background: #333; object-fit: cover; border: 2px solid var(--accent); flex-shrink: 0;
         }
         .indi-info { flex: 1; min-width: 0; }
-        .indi-name {
-            font-weight: bold; font-size: 1rem; color: white; margin-bottom: 2px;
-            display: flex; align-items: center; gap: 8px;
-        }
+        .indi-name { font-weight: bold; font-size: 1rem; color: white; margin-bottom: 2px; display: flex; align-items: center; gap: 8px; }
         .indi-x-link { color: #ccc; font-size: 0.9rem; transition: 0.3s; }
         .indi-x-link:hover { color: white; }
-        
         .indi-prize {
             font-size: 0.8rem; color: var(--yellow); font-weight: bold; margin-bottom: 5px;
-            border-bottom: 1px dashed rgba(255,255,255,0.2); padding-bottom: 2px;
-            display: inline-block;
+            border-bottom: 1px dashed rgba(255,255,255,0.2); padding-bottom: 2px; display: inline-block;
         }
         .indi-intro { font-size: 0.8rem; color: var(--text-dim); line-height: 1.3; }
 
-
-        /* ▼▼▼ 修正：GALLERY GRID (3列固定) ▼▼▼ */
-        .gallery-grid { 
-            display: grid; 
-            grid-template-columns: repeat(3, 1fr); /* 強制的に3列 */
-            gap: 15px; 
-        }
+        /* GALLERY */
         .gallery-item {
             position: relative; aspect-ratio: 16/9; overflow: hidden; border: 1px solid rgba(255,255,255,0.2);
             background: #111; cursor: pointer; transition: 0.3s;
+            min-width: 320px; max-width: 320px; flex-shrink: 0;
         }
         .gallery-item:hover { transform: scale(1.02); border-color: var(--yellow); z-index: 2; box-shadow: 0 0 20px rgba(252,238,10,0.3); }
         .gallery-item img { width: 100%; height: 100%; object-fit: cover; transition: 0.5s; }
@@ -268,11 +281,9 @@
             .member-links { gap: 4px; }
             .sns-btn { width: 24px; height: 24px; font-size: 0.8rem; border-width: 0; }
             
-            /* スマホでは1列に戻す */
-            #partnersArea { grid-template-columns: 1fr; }
-            .gallery-grid { grid-template-columns: 1fr; }
+            .nav-btn { display: none; }
+            .carousel-track { padding-right: 20px; }
             #individualArea { grid-template-columns: 1fr; }
-            
             .credit-item { flex-direction: column; align-items: flex-start; gap: 10px; }
             .cr-link { align-self: flex-end; }
         }
@@ -301,8 +312,13 @@
             <div class="section-en">PARTNERS</div>
             <div class="section-jp">協賛・CM・提供</div>
         </div>
-        <div id="partnersArea">
-            <p style="text-align:center; color:white;">Loading Partners...</p>
+        
+        <div class="carousel-wrapper">
+            <button class="nav-btn prev" onclick="scrollCarousel('partnersArea', -420)"><i class="fas fa-chevron-left"></i></button>
+            <div class="carousel-track" id="partnersArea">
+                <p style="text-align:center; color:white; width:100%;">Loading Partners...</p>
+            </div>
+            <button class="nav-btn next" onclick="scrollCarousel('partnersArea', 420)"><i class="fas fa-chevron-right"></i></button>
         </div>
 
         <div style="margin-top: 80px; padding-top: 40px; border-top: 1px solid rgba(255,255,255,0.2);">
@@ -320,8 +336,13 @@
             <div class="section-en">GALLERY</div>
             <div class="section-jp">イベント風景</div>
         </div>
-        <div class="gallery-grid" id="galleryArea">
-            <p style="text-align:center; color:white; width:100%;">Loading Gallery...</p>
+        
+        <div class="carousel-wrapper">
+            <button class="nav-btn prev" onclick="scrollCarousel('galleryArea', -340)"><i class="fas fa-chevron-left"></i></button>
+            <div class="carousel-track" id="galleryArea">
+                <p style="text-align:center; color:white; width:100%;">Loading Gallery...</p>
+            </div>
+            <button class="nav-btn next" onclick="scrollCarousel('galleryArea', 340)"><i class="fas fa-chevron-right"></i></button>
         </div>
     </section>
 
@@ -340,9 +361,15 @@
         <p style="margin-top:30px; font-family:var(--font-en); letter-spacing:2px; font-size:0.9rem; color:rgba(255,255,255,0.5);">© 2026 AOHARU FRIENDS PROJECT</p>
     </div>
 
-<script>
+    <script>
         // ★★★重要：ここにGASのウェブアプリURLを貼り付けてください！★★★
         const GAS_URL = 'https://script.google.com/macros/s/AKfycbzWoAOwbbbDz4Ak2VGqrLgu1hrkxTks716aVpeAshRdxKURJcIkWmmyIT2hUEPn-OI-/exec'; 
+
+        // カルーセルのスクロール関数
+        function scrollCarousel(id, amount) {
+            const container = document.getElementById(id);
+            container.scrollBy({ left: amount, behavior: 'smooth' });
+        }
 
         document.addEventListener('DOMContentLoaded', () => {
             const memberArea = document.getElementById('memberListArea');
@@ -398,7 +425,7 @@
                 }
 
                 // ==========================
-                // 2. PARTNERS (3列表示)
+                // 2. PARTNERS (Autoplay Muted)
                 // ==========================
                 partnersArea.innerHTML = '';
                 if(data.partners && data.partners.length > 0) {
@@ -406,10 +433,12 @@
                         const pCard = document.createElement('div');
                         pCard.className = 'sponsor-card';
 
-                        // --- A. 動画判定ロジック ---
+                        // ▼▼▼ YouTube推奨対応 ▼▼▼
                         let videoHtml = '';
                         if(partner.videoUrl) {
                             const url = partner.videoUrl.trim();
+                            
+                            // YouTube: autoplay=1, mute=1 (これで再生される)
                             if(url.includes('youtube.com') || url.includes('youtu.be')) {
                                 let videoId = '';
                                 if(url.includes('v=')) {
@@ -418,14 +447,20 @@
                                     videoId = url.split('youtu.be/')[1].split('?')[0];
                                 }
                                 if(videoId) {
-                                    videoHtml = `<iframe width="100%" height="100%" src="https://www.youtube.com/embed/${videoId}?controls=1" title="Partner Video" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen style="position:absolute; top:0; left:0;"></iframe>`;
+                                    // controls=1: 音量ボタンなどを表示
+                                    // mute=1: 自動再生のために最初は消音
+                                    videoHtml = `<iframe src="https://www.youtube.com/embed/${videoId}?autoplay=1&mute=1&loop=1&playlist=${videoId}&controls=1&playsinline=1" title="Partner Video" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>`;
                                 }
-                            } else if(url.includes('drive.google.com')) {
+                            }
+                            // Google Drive (警告: 音量ボタンなし)
+                            else if(url.includes('drive.google.com')) {
                                 const driveEmbedUrl = url.replace('/view', '/preview').replace('/usp=sharing', '');
-                                videoHtml = `<iframe src="${driveEmbedUrl}" width="100%" height="100%" frameborder="0" allow="autoplay" style="position:absolute; top:0; left:0;"></iframe>`;
-                            } else if(url.match(/\.(mp4|mov|webm)$/i)) {
+                                videoHtml = `<iframe src="${driveEmbedUrl}" frameborder="0" allow="autoplay"></iframe>`;
+                            }
+                            // MP4
+                            else if(url.match(/\.(mp4|mov|webm)$/i)) {
                                 videoHtml = `
-                                    <video controls playsinline style="width:100%; height:100%; object-fit:contain; background:#000; position:absolute; top:0; left:0;">
+                                    <video controls autoplay muted loop playsinline style="width:100%; height:100%; object-fit:contain; background:#000;">
                                         <source src="${url}" type="video/mp4">
                                         <p>動画を再生できません</p>
                                     </video>
@@ -436,13 +471,11 @@
                              videoHtml = '<div style="width:100%; height:100%; display:flex; align-items:center; justify-content:center; color:#555;">No Video</div>';
                         }
 
-                        // --- B. リンクボタン ---
                         let linkBtnHtml = '';
                         if(partner.website) {
                             linkBtnHtml = `<a href="${partner.website}" target="_blank" class="sp-link-btn">OFFICIAL SITE <i class="fas fa-external-link-alt"></i></a>`;
                         }
 
-                        // --- C. 賞品情報 (★ここが抜けていました！) ---
                         let itemHtml = '';
                         if(partner.itemName) {
                              const itemImg = partner.itemImage ? partner.itemImage : 'https://placehold.jp/333333/ffffff/100x100.png?text=NO+IMG';
@@ -459,28 +492,27 @@
 
                         const logoSrc = partner.logo ? partner.logo : 'https://placehold.jp/ffffff/000000/400x200.png?text=LOGO';
 
-                        // --- 組み立て ---
+                        // デザイン変更: ランクを上に
                         pCard.innerHTML = `
                             <div class="sp-name">
-                                <div>${partner.company} <span class="sp-rank">${partner.rank || 'SPONSOR'}</span></div>
+                                <span class="sp-rank">${partner.rank || 'SPONSOR'}</span>
+                                <div style="font-size:1.4rem;">${partner.company}</div>
                                 ${linkBtnHtml}
                             </div>
                             <div class="sp-content">
-                                <div class="sp-left-col">
-                                    <div class="sp-logo-area">
-                                        <img src="${logoSrc}" alt="${partner.company}" loading="lazy">
-                                    </div>
-                                    ${itemHtml}
+                                <div class="sp-logo-area">
+                                    <img src="${logoSrc}" alt="${partner.company}" loading="lazy">
                                 </div>
                                 <div class="sp-video-area">
                                     ${videoHtml}
                                 </div>
+                                ${itemHtml}
                             </div>
                         `;
                         partnersArea.appendChild(pCard);
                     });
                 } else {
-                    partnersArea.innerHTML = '<p style="color:#aaa; text-align:center; grid-column:1/-1;">現在、パートナー情報はありません。</p>';
+                    partnersArea.innerHTML = '<p style="color:#aaa; text-align:center; width:100%;">現在、パートナー情報はありません。</p>';
                 }
 
                 // ==========================
@@ -491,14 +523,11 @@
                     data.individuals.forEach(indi => {
                         const iCard = document.createElement('div');
                         iCard.className = 'indi-card';
-                        
                         const iconSrc = indi.icon ? indi.icon : 'https://placehold.jp/333333/ffffff/100x100.png?text=USER';
-                        
                         let xLinkHtml = '';
                         if(indi.xUrl) {
                             xLinkHtml = `<a href="${indi.xUrl}" target="_blank" class="indi-x-link"><i class="fab fa-x-twitter"></i></a>`;
                         }
-
                         iCard.innerHTML = `
                             <img src="${iconSrc}" class="indi-icon" alt="${indi.name}">
                             <div class="indi-info">
@@ -514,7 +543,7 @@
                 }
 
                 // ==========================
-                // 3. GALLERY
+                // 3. GALLERY (Carousel)
                 // ==========================
                 galleryArea.innerHTML = '';
                 if(data.gallery && data.gallery.length > 0) {
@@ -530,7 +559,7 @@
                         galleryArea.appendChild(gItem);
                     });
                 } else {
-                    galleryArea.innerHTML = '<p style="color:#aaa; grid-column:1/-1; text-align:center;">写真がまだありません。</p>';
+                    galleryArea.innerHTML = '<p style="color:#aaa; text-align:center; width:100%;">写真がまだありません。</p>';
                 }
 
                 // ==========================
@@ -567,5 +596,6 @@
                 creditsArea.innerHTML = errorMsg;
             });
         });
-    </script></body>
+    </script>
+</body>
 </html>
