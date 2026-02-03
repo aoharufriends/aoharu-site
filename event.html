@@ -100,6 +100,7 @@
         .cat-aoharu { background: var(--primary); color: black; box-shadow: 0 0 5px var(--primary); }
         .cat-admin { background: var(--yellow); color: black; box-shadow: 0 0 5px var(--yellow); }
         .cat-participant { background: #333; border: 1px solid #555; }
+        
         .member-links { display: flex; gap: 10px; justify-content: center; }
         .sns-btn {
             width: 30px; height: 30px; border-radius: 50%; background: #222; color: white;
@@ -110,6 +111,8 @@
         .sns-youtube:hover { background: #ff0000; border-color: #ff0000; }
         .sns-twitch:hover { background: #9146ff; border-color: #9146ff; }
         .sns-tiktok:hover { background: #000000; border-color: #25F4EE; box-shadow: 2px 2px 0 #FE2C55, -2px -2px 0 #25F4EE; }
+        /* ツイキャス用 (NEW!) */
+        .sns-twitcasting:hover { background: #0273a9; border-color: #0273a9; }
         .sns-twitter:hover { background: #000; border-color: white; }
 
         /* CAROUSEL */
@@ -194,17 +197,17 @@
         .sp-item-text { font-size: 0.8rem; color: var(--text-dim); line-height: 1.2; word-break: break-all; }
         .sp-item-text strong { display: block; color: var(--yellow); font-size: 0.9rem; }
 
-        /* ▼▼▼ INDIVIDUAL SPONSORS (大幅リニューアル: 縦型大サイズ) ▼▼▼ */
+        /* INDIVIDUAL SPONSORS */
         #individualArea {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(340px, 1fr)); /* 幅を340pxに拡大 */
+            grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
             gap: 20px;
         }
         .indi-card {
             background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.1);
             padding: 25px; border-radius: 8px; 
-            display: flex; flex-direction: column; /* 縦積みに変更 */
-            align-items: center; /* 中央揃え */
+            display: flex; flex-direction: column;
+            align-items: center;
             gap: 15px; transition: 0.3s;
             text-align: center;
         }
@@ -214,41 +217,33 @@
             transform: translateY(-5px);
             box-shadow: 0 0 20px rgba(0, 240, 255, 0.1);
         }
-        
-        /* アイコンを大きく */
         .indi-icon {
             width: 90px; height: 90px; border-radius: 50%; 
             background: #333; object-fit: cover; 
             border: 3px solid var(--accent);
             box-shadow: 0 0 10px rgba(255, 0, 85, 0.3);
         }
-        
         .indi-info { width: 100%; display: flex; flex-direction: column; gap: 10px; }
-        
         .indi-name { 
             font-weight: bold; font-size: 1.2rem; color: white; 
             display: flex; align-items: center; justify-content: center; gap: 10px; 
         }
         .indi-x-link { color: #ccc; font-size: 1rem; transition: 0.3s; }
         .indi-x-link:hover { color: white; transform: scale(1.2); }
-        
         .indi-prize {
             font-size: 0.9rem; color: var(--yellow); font-weight: bold; 
             border-bottom: 1px dashed rgba(255,255,255,0.2); padding-bottom: 10px;
             width: 100%;
         }
-        
-        /* 賞品画像を大きく表示 */
         .indi-prize-img {
             width: 100%;
-            height: 180px; /* 大きく確保 */
-            object-fit: contain; /* 画像全体を見せる */
+            height: 180px;
+            object-fit: contain;
             background: rgba(0,0,0,0.3);
             border: 1px solid #555; 
             border-radius: 5px; 
             margin-top: 10px;
         }
-        
         .indi-intro { font-size: 0.85rem; color: var(--text-dim); line-height: 1.4; }
 
         /* GALLERY */
@@ -420,13 +415,21 @@
 
                         let linksHtml = '';
                         if(member.platformType && member.platformUrl) {
-                            let iconClass = ''; let btnClass = '';
+                            let iconClass = ''; let btnClass = ''; let iconPrefix = 'fab'; // デフォルトはブランドアイコン
                             const pType = member.platformType.trim();
+                            
                             if(pType === 'YouTube') { iconClass = 'fa-youtube'; btnClass = 'sns-youtube'; }
                             else if(pType === 'Twitch') { iconClass = 'fa-twitch'; btnClass = 'sns-twitch'; }
                             else if(pType === 'TikTok') { iconClass = 'fa-tiktok'; btnClass = 'sns-tiktok'; }
+                            // ▼▼▼ ツイキャス対応 (NEW!) ▼▼▼
+                            else if(pType === 'TwitCasting' || pType === 'ツイキャス') { 
+                                iconClass = 'fa-video'; 
+                                btnClass = 'sns-twitcasting'; 
+                                iconPrefix = 'fas'; // ビデオアイコンはSolidタイプ
+                            }
+
                             if(iconClass) {
-                                linksHtml += `<a href="${member.platformUrl}" target="_blank" class="sns-btn ${btnClass}"><i class="fab ${iconClass}"></i></a>`;
+                                linksHtml += `<a href="${member.platformUrl}" target="_blank" class="sns-btn ${btnClass}"><i class="${iconPrefix} ${iconClass}"></i></a>`;
                             }
                         }
                         if(member.twitterUrl) {
@@ -454,7 +457,7 @@
                         const pCard = document.createElement('div');
                         pCard.className = 'sponsor-card';
 
-                        // ▼▼▼ 動画URLの判定強化版 ▼▼▼
+                        // 動画URLの判定
                         let videoHtml = '';
                         if(partner.videoUrl) {
                             const url = partner.videoUrl.trim();
@@ -531,7 +534,7 @@
                 }
 
                 // ==========================
-                // 2-B. INDIVIDUAL SPONSORS (New Large Design)
+                // 2-B. INDIVIDUAL SPONSORS
                 // ==========================
                 individualArea.innerHTML = '';
                 if(data.individuals && data.individuals.length > 0) {
@@ -547,8 +550,14 @@
                         
                         let prizeImgHtml = '';
                         if(indi.prizeImg) {
-                            // 賞品画像をドーンと表示
-                            prizeImgHtml = `<img src="${indi.prizeImg}" class="indi-prize-img" alt="Prize" loading="lazy">`;
+                            let imgUrl = indi.prizeImg;
+                            if(imgUrl.includes('drive.google.com') && imgUrl.includes('/view')) {
+                                const idMatch = imgUrl.match(/\/d\/(.*?)\//);
+                                if(idMatch) {
+                                    imgUrl = `https://drive.google.com/uc?export=view&id=${idMatch[1]}`;
+                                }
+                            }
+                            prizeImgHtml = `<img src="${imgUrl}" class="indi-prize-img" alt="Prize" loading="lazy">`;
                         }
 
                         iCard.innerHTML = `
@@ -569,7 +578,7 @@
                 }
 
                 // ==========================
-                // 3. GALLERY (Carousel)
+                // 3. GALLERY
                 // ==========================
                 galleryArea.innerHTML = '';
                 if(data.gallery && data.gallery.length > 0) {
