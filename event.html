@@ -89,7 +89,7 @@
         }
         .member-card:hover { background: rgba(0,240,255,0.15); border-color: var(--yellow); transform: translateY(-5px); }
         
-        /* ▼▼▼ 生徒会（特別ゲスト）用スタイル ▼▼▼ */
+        /* 生徒会（特別ゲスト）用スタイル */
         .member-card.student-council {
             background: linear-gradient(135deg, rgba(30, 58, 138, 0.4), rgba(0, 0, 0, 0.9));
             border: 1px solid var(--gold);
@@ -101,19 +101,15 @@
             border-color: white;
         }
 
-        /* アイコン画像サイズ（元の設定: 80px） */
         .member-icon {
             width: 80px; height: 80px; background: #333; border-radius: 50%; margin-bottom: 10px;
             border: 3px solid white; display: flex; align-items: center; justify-content: center; overflow: hidden;
             box-shadow: 0 0 15px rgba(0,0,0,0.5);
         }
-        /* 生徒会はアイコン枠もゴールド */
         .member-card.student-council .member-icon { border-color: var(--gold); }
-        
         .member-icon img { width: 100%; height: 100%; object-fit: cover; }
 
         .member-name { font-weight: bold; color: var(--primary); font-size: 1rem; margin-bottom: 10px; line-height: 1.2; }
-        /* 生徒会は名前も特別色 */
         .member-card.student-council .member-name { color: var(--gold); text-shadow: 0 0 5px rgba(255,215,0,0.5); }
 
         .cat-badge {
@@ -124,7 +120,6 @@
         .cat-aoharu { background: var(--primary); color: black; box-shadow: 0 0 5px var(--primary); }
         .cat-admin { background: var(--yellow); color: black; box-shadow: 0 0 5px var(--yellow); }
         .cat-participant { background: #333; border: 1px solid #555; }
-        /* 生徒会バッジ */
         .cat-student-council-badge { 
             background: linear-gradient(45deg, var(--royal), var(--gold)); 
             color: white; border: 1px solid var(--gold);
@@ -172,13 +167,13 @@
         .nav-btn.next { margin-left: 15px; }
 
 
-        /* PARTNERS CARD */
+        /* PARTNERS CARD & INDIVIDUAL SPONSOR CARD (共通スタイル) */
         .sponsor-card {
             background: rgba(0, 0, 0, 0.7); border: 1px solid rgba(255,255,255,0.2);
             padding: 20px; position: relative; overflow: hidden;
             box-shadow: 0 0 20px rgba(0,0,0,0.5); transition: 0.3s;
             display: flex; flex-direction: column;
-            min-width: 400px;
+            min-width: 400px; /* カード幅 */
             max-width: 400px;
             flex-shrink: 0;
         }
@@ -202,20 +197,29 @@
         .sp-link-btn:hover { background: var(--primary); color: black; }
 
         .sp-content { display: flex; flex-direction: column; gap: 15px; flex: 1; }
+        
+        /* ロゴ/アイコンエリア */
         .sp-logo-area {
             background: white; width: 100%; height: 160px;
             display: flex; align-items: center; justify-content: center;
             border-radius: 5px; padding: 10px;
         }
         .sp-logo-area img { max-width: 100%; max-height: 100%; object-fit: contain; }
+        /* 個人協賛アイコン用調整 */
+        .indi-icon-style {
+            border-radius: 50%; border: 3px solid #333;
+        }
         
+        /* メディアエリア (動画・画像 共通) */
         .sp-video-area {
             position: relative; width: 100%; aspect-ratio: 16 / 9;
             background: black; border: 1px solid #333; overflow: hidden;
         }
         .sp-video-area iframe, 
-        .sp-video-area video { 
+        .sp-video-area video,
+        .sp-video-area img { 
             position: absolute; top: 0; left: 0; width: 100%; height: 100%; 
+            object-fit: cover; /* 画像の場合は枠いっぱいに */
         }
 
         .sp-item-box {
@@ -226,53 +230,12 @@
         .sp-item-text { font-size: 0.8rem; color: var(--text-dim); line-height: 1.2; word-break: break-all; }
         .sp-item-text strong { display: block; color: var(--yellow); font-size: 0.9rem; }
 
-        /* ▼▼▼ INDIVIDUAL SPONSORS (元の横長スタイルに戻しました) ▼▼▼ */
+        /* INDIVIDUAL SPONSORS AREA (カードスタイルは sponsor-card を共有) */
         #individualArea {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
-            gap: 15px;
+            display: flex; /* カルーセル構造のためflex */
+            gap: 20px;
+            /* JSでcarousel-trackにクラス付与されるのでここは初期スタイル */
         }
-        .indi-card {
-            background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.1);
-            padding: 15px; border-radius: 8px; 
-            display: flex; align-items: flex-start; /* 横並びに戻す */
-            gap: 15px; transition: 0.3s;
-        }
-        .indi-card:hover { 
-            background: rgba(255, 255, 255, 0.1); 
-            border-color: var(--primary); 
-            transform: translateY(-3px);
-        }
-        /* アイコンサイズを 60px に戻しました */
-        .indi-icon {
-            width: 60px; height: 60px; border-radius: 50%; 
-            background: #333; object-fit: cover; 
-            border: 2px solid var(--accent);
-            flex-shrink: 0;
-        }
-        .indi-info { flex: 1; min-width: 0; }
-        .indi-name { 
-            font-weight: bold; font-size: 1rem; color: white; margin-bottom: 2px;
-            display: flex; align-items: center; gap: 8px; 
-        }
-        .indi-x-link { color: #ccc; font-size: 0.9rem; transition: 0.3s; }
-        .indi-x-link:hover { color: white; }
-        
-        .indi-prize {
-            font-size: 0.8rem; color: var(--yellow); font-weight: bold; margin-bottom: 5px;
-            border-bottom: 1px dashed rgba(255,255,255,0.2); padding-bottom: 5px;
-        }
-        
-        .indi-prize-img {
-            height: 60px; /* 横長カードに合わせて調整 */
-            width: auto; 
-            border: 1px solid #555; 
-            border-radius: 3px; 
-            object-fit: contain;
-            margin-top: 5px; display: block;
-        }
-        
-        .indi-intro { font-size: 0.8rem; color: var(--text-dim); line-height: 1.3; }
 
         /* GALLERY */
         .gallery-item {
@@ -327,7 +290,8 @@
             
             .nav-btn { display: none; }
             .carousel-track { padding-right: 20px; }
-            #individualArea { grid-template-columns: 1fr; }
+            /* スマホでの個人協賛表示 */
+            #individualArea { gap: 15px; }
             .credit-item { flex-direction: column; align-items: flex-start; gap: 10px; }
             .cr-link { align-self: flex-end; }
         }
@@ -369,8 +333,13 @@
             <h3 style="text-align:center; font-family:var(--font-jp-head); color:var(--text-main); margin-bottom: 30px; font-size: 1.5rem;">
                 <span style="color:var(--yellow); margin-right:10px;">★</span> INDIVIDUAL SPONSOR / 個人協賛
             </h3>
-            <div id="individualArea">
-                <p style="text-align:center; color:white;">Loading Individual Sponsors...</p>
+            
+            <div class="carousel-wrapper">
+                <button class="nav-btn prev" onclick="scrollCarousel('individualArea', -420)"><i class="fas fa-chevron-left"></i></button>
+                <div class="carousel-track" id="individualArea">
+                    <p style="text-align:center; color:white; width:100%;">Loading Individual Sponsors...</p>
+                </div>
+                <button class="nav-btn next" onclick="scrollCarousel('individualArea', 420)"><i class="fas fa-chevron-right"></i></button>
             </div>
         </div>
     </section>
@@ -414,6 +383,45 @@
             container.scrollBy({ left: amount, behavior: 'smooth' });
         }
 
+        // ▼▼▼ 万能メディア生成関数 (画像も動画もDriveも自動判別) ▼▼▼
+        function getMediaHtml(url) {
+            if (!url) return '<div style="width:100%; height:100%; display:flex; align-items:center; justify-content:center; color:#555;">No Media</div>';
+            
+            url = url.trim();
+            
+            // 1. 画像URL (.jpg, .png, .gif, .webp 等)
+            if (url.match(/\.(jpeg|jpg|gif|png|webp)($|\?)/i)) {
+                return `<img src="${url}" alt="Media" loading="lazy">`;
+            }
+            
+            // 2. YouTube (通常, 短縮, Shorts対応)
+            if (url.includes('youtube.com') || url.includes('youtu.be')) {
+                let videoId = '';
+                if (url.includes('/shorts/')) videoId = url.split('/shorts/')[1].split('?')[0];
+                else if (url.includes('v=')) videoId = url.split('v=')[1].split('&')[0];
+                else if (url.includes('youtu.be/')) videoId = url.split('youtu.be/')[1].split('?')[0];
+                
+                if (videoId) {
+                    return `<iframe src="https://www.youtube.com/embed/${videoId}?autoplay=1&mute=1&loop=1&playlist=${videoId}&controls=1&playsinline=1&rel=0" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>`;
+                }
+            }
+            
+            // 3. Google Drive (画像も動画もPreviewで表示するのが一番安全)
+            if (url.includes('drive.google.com')) {
+                // /view を /preview に変換してiframeで表示
+                const driveEmbedUrl = url.replace('/view', '/preview').replace('/usp=sharing', '');
+                return `<iframe src="${driveEmbedUrl}" frameborder="0" allow="autoplay"></iframe>`;
+            }
+            
+            // 4. MP4/WebM 動画ファイル
+            if (url.match(/\.(mp4|mov|webm)($|\?)/i)) {
+                return `<video controls autoplay muted loop playsinline><source src="${url}" type="video/mp4"><p>再生不可</p></video>`;
+            }
+
+            // 5. その他 (とりあえず画像としてトライ)
+            return `<img src="${url}" alt="Media" loading="lazy" onerror="this.style.display='none';">`;
+        }
+
         document.addEventListener('DOMContentLoaded', () => {
             const memberArea = document.getElementById('memberListArea');
             const galleryArea = document.getElementById('galleryArea');
@@ -424,20 +432,20 @@
             fetch(GAS_URL)
             .then(response => response.json())
             .then(data => {
-                // 1. MEMBER (生徒会ロジック追加)
+                // 1. MEMBER
                 memberArea.innerHTML = '';
                 if(data.members && data.members.length > 0) {
                     data.members.forEach(member => {
                         let catClass = 'cat-participant'; 
-                        let cardClass = 'member-card'; // デフォルト
+                        let cardClass = 'member-card';
                         const catText = member.category ? member.category.trim() : '参加者';
                         
-                        if(catText === '特別招待') { catClass = 'cat-invite'; }
-                        else if(catText === 'あおはる☆フレンズ') { catClass = 'cat-aoharu'; }
-                        else if(catText === '運営') { catClass = 'cat-admin'; }
+                        if(catText === '特別招待') catClass = 'cat-invite';
+                        else if(catText === 'あおはる☆フレンズ') catClass = 'cat-aoharu';
+                        else if(catText === '運営') catClass = 'cat-admin';
                         else if(catText === '生徒会') { 
                             catClass = 'cat-student-council-badge'; 
-                            cardClass += ' student-council'; // 特別クラス追加
+                            cardClass += ' student-council'; 
                         }
 
                         const card = document.createElement('div');
@@ -470,33 +478,17 @@
                         `;
                         memberArea.appendChild(card);
                     });
-                } else {
-                    memberArea.innerHTML = '<p style="color:white; grid-column:1/-1; text-align:center;">現在、参加者はいません。</p>';
-                }
+                } else { memberArea.innerHTML = '<p style="color:white; grid-column:1/-1; text-align:center;">現在、参加者はいません。</p>'; }
 
-                // 2. PARTNERS (Youtube)
+                // 2. PARTNERS (統合メディア対応)
                 partnersArea.innerHTML = '';
                 if(data.partners && data.partners.length > 0) {
                     data.partners.forEach(partner => {
                         const pCard = document.createElement('div');
                         pCard.className = 'sponsor-card';
-                        let videoHtml = '';
-                        if(partner.videoUrl) {
-                            const url = partner.videoUrl.trim();
-                            if(url.includes('youtube.com') || url.includes('youtu.be')) {
-                                let videoId = '';
-                                if(url.includes('/shorts/')) videoId = url.split('/shorts/')[1].split('?')[0];
-                                else if(url.includes('v=')) videoId = url.split('v=')[1].split('&')[0];
-                                else if(url.includes('youtu.be/')) videoId = url.split('youtu.be/')[1].split('?')[0];
-                                if(videoId) videoHtml = `<iframe src="https://www.youtube.com/embed/${videoId}?autoplay=1&mute=1&loop=1&playlist=${videoId}&controls=1&playsinline=1&rel=0" title="Partner Video" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>`;
-                            } else if(url.includes('drive.google.com')) {
-                                const driveEmbedUrl = url.replace('/view', '/preview').replace('/usp=sharing', '');
-                                videoHtml = `<iframe src="${driveEmbedUrl}" frameborder="0" allow="autoplay"></iframe>`;
-                            } else if(url.match(/\.(mp4|mov|webm)$/i)) {
-                                videoHtml = `<video controls autoplay muted loop playsinline style="width:100%; height:100%; object-fit:contain; background:#000;"><source src="${url}" type="video/mp4"><p>動画を再生できません</p></video>`;
-                            }
-                        }
-                        if(!videoHtml) videoHtml = '<div style="width:100%; height:100%; display:flex; align-items:center; justify-content:center; color:#555;">No Video</div>';
+                        
+                        // 画像も動画もOKな関数を使う
+                        const mediaHtml = getMediaHtml(partner.videoUrl);
 
                         let linkBtnHtml = '';
                         if(partner.website) linkBtnHtml = `<a href="${partner.website}" target="_blank" class="sp-link-btn">OFFICIAL SITE <i class="fas fa-external-link-alt"></i></a>`;
@@ -507,44 +499,76 @@
                              itemHtml = `<div class="sp-item-box"><img src="${itemImg}" alt="${partner.itemName}" class="sp-item-thumb"><div class="sp-item-text"><span class="item-label">${partner.prizeType || '提供賞品'}</span><strong>${partner.itemName}</strong></div></div>`;
                         }
                         const logoSrc = partner.logo ? partner.logo : 'https://placehold.jp/ffffff/000000/400x200.png?text=LOGO';
-                        pCard.innerHTML = `<div class="sp-name"><span class="sp-rank">${partner.rank || 'SPONSOR'}</span><div style="font-size:1.4rem;">${partner.company}</div>${linkBtnHtml}</div><div class="sp-content"><div class="sp-logo-area"><img src="${logoSrc}" alt="${partner.company}" loading="lazy"></div><div class="sp-video-area">${videoHtml}</div>${itemHtml}</div>`;
+                        
+                        pCard.innerHTML = `
+                            <div class="sp-name">
+                                <span class="sp-rank">${partner.rank || 'SPONSOR'}</span>
+                                <div style="font-size:1.4rem;">${partner.company}</div>
+                                ${linkBtnHtml}
+                            </div>
+                            <div class="sp-content">
+                                <div class="sp-logo-area">
+                                    <img src="${logoSrc}" alt="${partner.company}" loading="lazy">
+                                </div>
+                                <div class="sp-video-area">
+                                    ${mediaHtml}
+                                </div>
+                                ${itemHtml}
+                            </div>
+                        `;
                         partnersArea.appendChild(pCard);
                     });
                 } else { partnersArea.innerHTML = '<p style="color:#aaa; text-align:center; width:100%;">現在、パートナー情報はありません。</p>'; }
 
-                // 2-B. INDIVIDUAL SPONSORS (賞品画像あり、カードは元の横長サイズ)
+                // 3. INDIVIDUAL SPONSORS (パートナー枠と同じデザイン + 統合メディア)
                 individualArea.innerHTML = '';
                 if(data.individuals && data.individuals.length > 0) {
                     data.individuals.forEach(indi => {
+                        // パートナーと同じ 'sponsor-card' クラスを使用
                         const iCard = document.createElement('div');
-                        iCard.className = 'indi-card';
-                        const iconSrc = indi.icon ? indi.icon : 'https://placehold.jp/333333/ffffff/100x100.png?text=USER';
-                        let xLinkHtml = '';
-                        if(indi.xUrl) xLinkHtml = `<a href="${indi.xUrl}" target="_blank" class="indi-x-link"><i class="fab fa-x-twitter"></i></a>`;
+                        iCard.className = 'sponsor-card';
                         
-                        let prizeImgHtml = '';
-                        if(indi.prizeImg) {
-                            let imgUrl = indi.prizeImg;
-                            if(imgUrl.includes('drive.google.com') && imgUrl.includes('/view')) {
-                                const idMatch = imgUrl.match(/\/d\/(.*?)\//);
-                                if(idMatch) imgUrl = `https://drive.google.com/uc?export=view&id=${idMatch[1]}`;
-                            }
-                            prizeImgHtml = `<img src="${imgUrl}" class="indi-prize-img" alt="Prize" loading="lazy">`;
+                        // F列(prizeImg)をメディアとして使用 (動画も画像もOK)
+                        const mediaHtml = getMediaHtml(indi.prizeImg);
+                        
+                        const iconSrc = indi.icon ? indi.icon : 'https://placehold.jp/333333/ffffff/100x100.png?text=USER';
+                        let linkBtnHtml = '';
+                        if(indi.xUrl) {
+                            linkBtnHtml = `<a href="${indi.xUrl}" target="_blank" class="sp-link-btn">X (Twitter) <i class="fab fa-x-twitter"></i></a>`;
                         }
 
+                        // 下部エリア(Intro等)
+                        const introHtml = `
+                            <div class="sp-item-box">
+                                <div class="sp-item-text" style="width:100%;">
+                                    <span class="item-label">${indi.prize || 'ご支援'}</span>
+                                    <div style="margin-top:5px; font-size:0.85rem;">${indi.intro || ''}</div>
+                                </div>
+                            </div>
+                        `;
+
+                        // 構成: 名前エリア -> ロゴエリア(アイコン) -> メディアエリア -> 下部エリア
                         iCard.innerHTML = `
-                            <img src="${iconSrc}" class="indi-icon" alt="${indi.name}" loading="lazy">
-                            <div class="indi-info">
-                                <div class="indi-name">${indi.name} ${xLinkHtml}</div>
-                                <div class="indi-prize"><span>${indi.prize || 'ご支援'}</span>${prizeImgHtml}</div>
-                                <div class="indi-intro">${indi.intro || ''}</div>
+                            <div class="sp-name">
+                                <span class="sp-rank" style="background:#ff0055; color:white;">INDIVIDUAL</span>
+                                <div style="font-size:1.2rem;">${indi.name}</div>
+                                ${linkBtnHtml}
+                            </div>
+                            <div class="sp-content">
+                                <div class="sp-logo-area">
+                                    <img src="${iconSrc}" alt="${indi.name}" class="indi-icon-style" loading="lazy">
+                                </div>
+                                <div class="sp-video-area">
+                                    ${mediaHtml}
+                                </div>
+                                ${introHtml}
                             </div>
                         `;
                         individualArea.appendChild(iCard);
                     });
-                } else { individualArea.innerHTML = '<p style="color:#aaa; text-align:center; grid-column:1/-1;">現在、個人協賛情報はありません。</p>'; }
+                } else { individualArea.innerHTML = '<p style="color:#aaa; text-align:center; width:100%;">現在、個人協賛情報はありません。</p>'; }
 
-                // 3. GALLERY
+                // 4. GALLERY
                 galleryArea.innerHTML = '';
                 if(data.gallery && data.gallery.length > 0) {
                     data.gallery.forEach(item => {
@@ -557,7 +581,7 @@
                     });
                 } else { galleryArea.innerHTML = '<p style="color:#aaa; text-align:center; width:100%;">写真がまだありません。</p>'; }
 
-                // 4. CREDITS
+                // 5. CREDITS
                 creditsArea.innerHTML = '';
                 if(data.credits && data.credits.length > 0) {
                     data.credits.forEach(item => {
